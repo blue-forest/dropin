@@ -1,4 +1,6 @@
+
 # drop'in compiler
+
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 
 This source code is in an experimental state and will be fully documented in its final version.
@@ -7,6 +9,6 @@ Warning : **we do not recommend to use this code in a production environment**, 
 
 You are free to explore the code and fork it, we are open to Issues and Pull Requests.
 
-The codebase is [licensed under GPLv3](./LICENSE), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
+The codebase is [licensed under GNU General Public License v3](./LICENSE), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
 
 If you want to join the development and contribute to the project, please reach us at contact@blueforest.cc.

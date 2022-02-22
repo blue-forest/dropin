@@ -5,8 +5,6 @@
 ![Stable](https://img.shields.io/badge/stable-no-red.svg)
 ![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/theblueforest/dropin-compiler?include_prereleases)
 
-https://img.shields.io/badge/stable-yes-green.svg
-
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 
 This source code is in an experimental state and will be fully documented in its final version.

@@ -12,3 +12,7 @@ You are free to explore the code and fork it, we are open to Issues and Pull Req
 The codebase is [licensed under GNU General Public License v3](./LICENSE), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
 
 If you want to join the development and contribute to the project, please reach us at contact@blueforest.cc.
+
+## Contributors
+- Nazim Lachter ([@n4zim](https://github.com/n4zim))
+- Vulcain ([@vulc41n](https://github.com/vulc41n))

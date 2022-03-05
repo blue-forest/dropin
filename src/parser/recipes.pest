@@ -1,0 +1,263 @@
+main      = _{
+  SOI ~ ( 
+    component |
+    style |
+    pipeline |
+    user |
+    collection |
+    issue
+  ) ~ NEWLINE* ~ EOI
+}
+s         = _{ SPACE_SEPARATOR+ }
+n         = _{ NEWLINE+ ~ PEEK_ALL }
+i         = _{ n ~ PUSH((" " | "\t")+) }
+COMMENT   = _{ "/*" ~ (!"*/" ~ ANY)* ~ "*/" }
+options   =  { "options"   ~ i ~ keyed_formats ~ DROP }
+variables =  { "variables" ~ i ~ keyed_formats ~ DROP }
+result    =  { "result"    ~ i ~ keyed_formats ~ DROP }
+
+// HEADER
+header               =  {
+  s ~ id_model_recipe ~ n ~
+  header_text? ~ header_text? ~ header_icon? ~ header_separator_big
+}
+header_text          = _{ header_separator ~ ( text | object ) ~ n }
+header_icon          = _{ header_separator ~ id_recipe ~ n }
+header_separator_big = _{ "===" ~ "="* ~ n }
+header_separator     = _{ "---" ~ "-"* ~ n }
+
+// VALUES
+value         =  { (s ~ value_inline) | (i ~ value_newline ~ DROP) }
+value_inline  = _{ setter | getter | quantity | boolean | text }
+value_newline = _{ list | object }
+list          =  { list_item ~ (n ~ list_item)* }
+list_item     = _{ value_inline | ("\\" ~ i ~ value_newline ~ DROP) }
+object        =  { key_value ~ ( n ~ key_value )* }
+key_value     =  { key ~ value }
+getter        =  { "$" ~ query }
+boolean       =  { "true" | "false" }
+quantity      =  @{
+  "-"?
+  ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*)
+  ~ ("." ~ ASCII_DIGIT*)?
+  ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+}// TODO: decimals (copy json)
+text          = _{ "\"" ~ text_inner ~ "\"" }
+text_inner    = @{ char* }
+char          =  {
+  !("\"" | "\\") ~ ANY
+  | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+  | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+}
+
+// SETTERS
+setter          =  { setter_not | setter_long | setter_short }
+setter_short    =  {
+  "(" ~ s?
+    ~ value_inline ~ s? ~ setter_operator ~ s? ~ value_inline
+  ~ s? ~ ")"
+}
+setter_long     =  { "~" ~ key ~ value? }
+setter_not      =  { "!" ~ value_inline }
+setter_operator =  { comparator | arithmetic | logic }
+comparator      = _{ "=" | "!" | ">=" | "<=" | ">" | "<" }
+arithmetic      = _{ "+" | "-" | "/" | "*" | "^" | "%" }
+logic           = _{ "|" | "&" }
+
+// KEYS
+id_recipe         =  { id_recipe_ | id_short }
+id_recipe_        = _{ key_id ~ ":" ~ namespaced }
+id_model_version_ = _{ id_recipe_ ~ ":" ~ namespaced }
+id_model_version  =  { id_model_version_ | id_short }
+id_model_recipe_  = _{ id_model_version_ ~ ":" ~ namespaced }
+id_model_recipe   =  { id_model_recipe_ | id_short }
+id_short          = ${ ":" ~ namespaced }
+namespaced        =  { key_id ~ ( "/" ~ key_id )* }
+query             =  { key ~ ( "." ~ key )* }
+set_append        =  { ".+" }
+set_query         =  { query ~ set_append? }
+key               = @{ key_char+ | "''" }
+key_id            =  { (key_char | ".")+ }
+key_char          = _{
+  'À'..'Ö' | 'Ø'..'ö' | 'ø'..'ÿ'| ASCII_ALPHANUMERIC | "-" | "_"
+}
+
+// HANDLERS
+handler            = _{ set | print | handler_if | iterate }
+set                =  { "set" ~ s ~ set_query ~ value }
+print              =  { "print" ~ value }
+handler_if         =  {
+  "if" ~ value ~ i ~ component_handlers ~ DROP ~ handler_else?
+}
+handler_else_start = _{ n ~ "else" }
+handler_else       =  {
+  &handler_else_start ~ handler_else_start ~ i ~ component_handlers ~ DROP
+}
+iterate            = {
+  "iterate" ~ s ~ iterate_key ~ ("," ~ s ~ iterate_value)? ~ s 
+  ~ "in" ~ value ~ i ~ component_handlers ~ DROP
+}
+iterate_key        =  { iterate_ignore | query }
+iterate_value      =  { iterate_ignore | query }
+iterate_ignore     =  { "_" }
+sub_handlers       =  { component_handler ~ ( n ~ component_handler )* }
+
+
+
+
+
+// COMPONENTS
+component          =  { "components" ~ header ~ component_content }
+component_content  =  { (options ~ n)? ~ (variables ~ n)? ~ component_handlers }
+component_handlers =  { "%" ~ n ~ sub_handlers }
+component_handler  = _{ handler_children | handler }
+handler_children   =  {
+  ">" ~ (handler_divider | handler_children_generic)
+}
+handler_children_generic = _{
+  (id_model_recipe | key) ~ ( i
+    ~ (
+      (handler_children_options ~ (n ~ component_handlers)?) |
+      component_handlers)
+  ~ DROP )?
+}
+
+// COMPONENTS - OPTIONS
+handler_children_options =  {
+  handler_children_option ~ (n ~ handler_children_option)*
+}
+handler_children_option  = _{
+  handler_children_on | handler_children_styles | handler_divider
+  | handler_children_page | key_value
+}
+
+// COMPONENTS - EVENTS & DIVIDER
+handler_divider =  {
+  "Divider" ~ i ~ handler_divider_width ~ n ~ subhandler_keys ~ DROP
+}
+handler_divider_width =  {
+  "width" ~ (s ~ style_value)? ~ (
+    i ~ (
+      (handler_divider_min ~ (n ~ handler_divider_max)?)
+      | handler_divider_max
+    ) ~ DROP
+  )?
+}
+handler_divider_min =  { "min" ~ s ~ quantity }
+handler_divider_max =  { "max" ~ s ~ quantity }
+handler_children_on =  { "on" ~ i ~ subhandler_keys ~ DROP }
+subhandler_keys     = _{
+  subhandler_key ~ (n ~ subhandler_key )*
+}
+subhandler_key      =  { key ~ i ~ sub_handlers ~ DROP }
+
+// COMPONENTS - PAGE
+handler_children_page    =  { "page" ~ s ~ page_instance }
+page_instance            = _{ id_model_recipe ~ (i ~ object ~ DROP)? }
+handler_children_styles  =  { "styles" ~ i
+  ~ handler_children_style ~ (n ~ handler_children_style)* ~ DROP }
+handler_children_style   =  { id_model_recipe ~ i ~ key ~ (n ~ key)* ~ DROP }
+
+
+
+
+
+
+// PIPELINES
+pipeline           =  { "pipelines" ~ header ~ pipeline_content }
+pipeline_content   = _{ options? ~ variables? ~ result? }
+
+
+
+
+
+
+// TYPES
+keyed_formats    = _{ keyed_format ~ (n ~ keyed_format)* }
+keyed_format     =  { key ~ s ~ format }
+format           =  {
+  ((&id_model_recipe ~ id_model_recipe) | key) ~
+  format_inputs? ~ subformat? ~ format_default?
+}
+unknown_format   =  { // keyed or not
+  (&id_model_recipe ~ id_model_recipe) | key ~ (s ~ key)? ~
+  format_inputs? ~ subformat? ~ format_default?
+}
+unknown_formats  =  {
+  unknown_format ~ (n ~ unknown_format)*
+}
+subformat        =  { &(n ~ (" "|"\t")+) ~ i ~ unknown_formats ~ DROP }
+format_inputs    = _{ (s ~ format_flag)? ~ format_options? }
+format_flag      = @{ "#" ~ key }
+format_options   =  {
+  &(n ~ (" "|"\t")+ ~ "(") ~ i ~ "(" ~ i ~ object ~ DROP ~ n ~ ")" ~ DROP
+}
+format_default   = _{ (s ~ "=" ~ value) | (&(n ~ "=") ~ n ~ "=" ~ value) }
+format_templates =  { "<" ~ key ~ (s ~ key)* ~ ">" }
+
+
+
+
+
+
+// STYLES
+style                =  { "styles" ~ header ~ style_content }
+style_content        =  { style_class ~ (n ~ style_class)* }
+style_class          =  { key ~ i ~ style_instructions ~ DROP }
+style_instructions   = _{ style_instruction ~ (n ~ style_instruction)* }
+style_instruction    = _{ style_property | style_rule | style_rule_and }
+style_property       =  {
+  key ~ (s ~ style_value)? ~ (i ~ style_instructions ~ DROP)?
+}
+style_rule_and       =  { "&" ~ i ~ style_rule ~ (n ~ style_rule)* ~ DROP }
+style_rule           =  { "@" ~ style_rule_key_value }
+style_rule_value     =  {
+  (s ~ style_rule_inline) | (i ~ style_rule_newline ~ DROP)
+}
+style_rule_inline    =  { value_inline | key }
+style_rule_newline   = _{ style_rule_key_value ~ (n ~ style_rule_key_value)* }
+style_rule_key_value =  {
+  key ~ (s ~ style_rule_inline)? ~ (i ~ style_rule_newline ~ DROP)?
+}
+style_value          = _{ percentage | value_inline }
+percentage           =  { quantity ~ "%" }
+
+
+
+
+
+
+// USERS
+user   =  { "users" ~ header ~ emails }
+emails = _{ email ~ (n ~ email){, 2} }
+email  = @{ key_id ~ "@" ~ key_id }
+
+
+
+
+
+
+// COLLECTIONS
+collection           =  { "collections" ~ header ~ collection_content }
+collection_content   = _{
+  "fields" ~ i ~ keyed_formats ~ DROP ~ n ~ collection_required?
+}
+collection_required  =  {
+  "required" ~ i ~ collection_required_ ~ (n ~ collection_required_)+ ~ DROP
+}
+collection_required_ =  { key ~ (s ~ "=" ~ value)? }
+
+
+
+
+
+
+// ISSUES
+issue           =  { "issues" ~ header ~ issue_content }
+issue_content   =  { issue_level ~ n ~ issue_format ~ n ~ issue_http? }
+issue_level     =  { "level" ~ s ~ issue_levels }
+issue_levels    =  { "ERROR" | "WARNING" | "FATAL" }
+issue_format    =  { "format" ~ s ~ format }
+issue_http      =  { "http" ~ i ~ "code" ~ s ~ issue_http_code ~ DROP }
+issue_http_code =  { "EXPECTATION_FAILED" }
+

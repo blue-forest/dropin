@@ -1,8 +1,12 @@
 [package]
-name = "dropin"
+name = "dropin-compiler"
 version = "0.6.0"
 edition = "2021"
 
 [dependencies]
+pest = "2.1.3"
+pest_derive = "2.1.0"
+structopt = "0.3"
+termion = "1.5.6"
 wasmtime = "0.34.1"
 wasmtime-wasi = "0.34.1"

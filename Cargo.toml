@@ -1,7 +1,12 @@
 [package]
-name = "dropin-compiler"
-version = "0.6.0"
+name = "dropin"
+version = "5.3.0"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
+description = "drop'in WebAssembly compiler [ALPHA]"
+repository = "https://github.com/theblueforest/dropin-compiler"
+license = "GPL-3.0"
+keywords = ["WebAssembly"]
 
 [dependencies]
 pest = "2.1.3"

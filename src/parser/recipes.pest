@@ -1,10 +1,7 @@
 main      = _{
   SOI ~ ( 
-    component |
-    style |
+    type_ |
     pipeline |
-    user |
-    collection |
     issue
   ) ~ NEWLINE* ~ EOI
 }
@@ -83,80 +80,28 @@ key_char          = _{
 }
 
 // HANDLERS
+handlers           = _{ "%" ~ n ~ sub_handlers }
 handler            = _{ set | print | handler_if | iterate }
 set                =  { "set" ~ s ~ set_query ~ value }
 print              =  { "print" ~ value }
 handler_if         =  {
-  "if" ~ value ~ i ~ component_handlers ~ DROP ~ handler_else?
+  "if" ~ value ~ i ~ handlers ~ DROP ~ handler_else?
 }
 handler_else_start = _{ n ~ "else" }
 handler_else       =  {
-  &handler_else_start ~ handler_else_start ~ i ~ component_handlers ~ DROP
+  &handler_else_start ~ handler_else_start ~ i ~ handlers ~ DROP
 }
 iterate            = {
   "iterate" ~ s ~ iterate_key ~ ("," ~ s ~ iterate_value)? ~ s 
-  ~ "in" ~ value ~ i ~ component_handlers ~ DROP
+  ~ "in" ~ value ~ i ~ handlers ~ DROP
 }
 iterate_key        =  { iterate_ignore | query }
 iterate_value      =  { iterate_ignore | query }
 iterate_ignore     =  { "_" }
-sub_handlers       =  { component_handler ~ ( n ~ component_handler )* }
+sub_handlers       =  { handler ~ ( n ~ handler )* }
 
 
 
-
-
-// COMPONENTS
-component          =  { "components" ~ header ~ component_content }
-component_content  =  { (options ~ n)? ~ (variables ~ n)? ~ component_handlers }
-component_handlers =  { "%" ~ n ~ sub_handlers }
-component_handler  = _{ handler_children | handler }
-handler_children   =  {
-  ">" ~ (handler_divider | handler_children_generic)
-}
-handler_children_generic = _{
-  (id_model_recipe | key) ~ ( i
-    ~ (
-      (handler_children_options ~ (n ~ component_handlers)?) |
-      component_handlers)
-  ~ DROP )?
-}
-
-// COMPONENTS - OPTIONS
-handler_children_options =  {
-  handler_children_option ~ (n ~ handler_children_option)*
-}
-handler_children_option  = _{
-  handler_children_on | handler_children_styles | handler_divider
-  | handler_children_page | key_value
-}
-
-// COMPONENTS - EVENTS & DIVIDER
-handler_divider =  {
-  "Divider" ~ i ~ handler_divider_width ~ n ~ subhandler_keys ~ DROP
-}
-handler_divider_width =  {
-  "width" ~ (s ~ style_value)? ~ (
-    i ~ (
-      (handler_divider_min ~ (n ~ handler_divider_max)?)
-      | handler_divider_max
-    ) ~ DROP
-  )?
-}
-handler_divider_min =  { "min" ~ s ~ quantity }
-handler_divider_max =  { "max" ~ s ~ quantity }
-handler_children_on =  { "on" ~ i ~ subhandler_keys ~ DROP }
-subhandler_keys     = _{
-  subhandler_key ~ (n ~ subhandler_key )*
-}
-subhandler_key      =  { key ~ i ~ sub_handlers ~ DROP }
-
-// COMPONENTS - PAGE
-handler_children_page    =  { "page" ~ s ~ page_instance }
-page_instance            = _{ id_model_recipe ~ (i ~ object ~ DROP)? }
-handler_children_styles  =  { "styles" ~ i
-  ~ handler_children_style ~ (n ~ handler_children_style)* ~ DROP }
-handler_children_style   =  { id_model_recipe ~ i ~ key ~ (n ~ key)* ~ DROP }
 
 
 
@@ -165,14 +110,16 @@ handler_children_style   =  { id_model_recipe ~ i ~ key ~ (n ~ key)* ~ DROP }
 
 // PIPELINES
 pipeline           =  { "pipelines" ~ header ~ pipeline_content }
-pipeline_content   = _{ options? ~ variables? ~ result? }
-
+pipeline_content   =  { options? ~ variables? ~ result? }
 
 
 
 
 
 // TYPES
+type_            =  { "types" ~ header ~ type_content }
+type_content     =  { type_templates }
+type_templates   =  { "templates" ~ i ~ keyed_formats }
 keyed_formats    = _{ keyed_format ~ (n ~ keyed_format)* }
 keyed_format     =  { key ~ s ~ format }
 format           =  {
@@ -183,7 +130,7 @@ unknown_format   =  { // keyed or not
   (&id_model_recipe ~ id_model_recipe) | key ~ (s ~ key)? ~
   format_inputs? ~ subformat? ~ format_default?
 }
-unknown_formats  =  {
+unknown_formats  = _{
   unknown_format ~ (n ~ unknown_format)*
 }
 subformat        =  { &(n ~ (" "|"\t")+) ~ i ~ unknown_formats ~ DROP }
@@ -194,58 +141,6 @@ format_options   =  {
 }
 format_default   = _{ (s ~ "=" ~ value) | (&(n ~ "=") ~ n ~ "=" ~ value) }
 format_templates =  { "<" ~ key ~ (s ~ key)* ~ ">" }
-
-
-
-
-
-
-// STYLES
-style                =  { "styles" ~ header ~ style_content }
-style_content        =  { style_class ~ (n ~ style_class)* }
-style_class          =  { key ~ i ~ style_instructions ~ DROP }
-style_instructions   = _{ style_instruction ~ (n ~ style_instruction)* }
-style_instruction    = _{ style_property | style_rule | style_rule_and }
-style_property       =  {
-  key ~ (s ~ style_value)? ~ (i ~ style_instructions ~ DROP)?
-}
-style_rule_and       =  { "&" ~ i ~ style_rule ~ (n ~ style_rule)* ~ DROP }
-style_rule           =  { "@" ~ style_rule_key_value }
-style_rule_value     =  {
-  (s ~ style_rule_inline) | (i ~ style_rule_newline ~ DROP)
-}
-style_rule_inline    =  { value_inline | key }
-style_rule_newline   = _{ style_rule_key_value ~ (n ~ style_rule_key_value)* }
-style_rule_key_value =  {
-  key ~ (s ~ style_rule_inline)? ~ (i ~ style_rule_newline ~ DROP)?
-}
-style_value          = _{ percentage | value_inline }
-percentage           =  { quantity ~ "%" }
-
-
-
-
-
-
-// USERS
-user   =  { "users" ~ header ~ emails }
-emails = _{ email ~ (n ~ email){, 2} }
-email  = @{ key_id ~ "@" ~ key_id }
-
-
-
-
-
-
-// COLLECTIONS
-collection           =  { "collections" ~ header ~ collection_content }
-collection_content   = _{
-  "fields" ~ i ~ keyed_formats ~ DROP ~ n ~ collection_required?
-}
-collection_required  =  {
-  "required" ~ i ~ collection_required_ ~ (n ~ collection_required_)+ ~ DROP
-}
-collection_required_ =  { key ~ (s ~ "=" ~ value)? }
 
 
 

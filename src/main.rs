@@ -1,14 +1,20 @@
 use structopt::StructOpt;
-use wasmtime_wasi::sync::WasiCtxBuilder;
-use wasmtime::*;
+// use wasmtime_wasi::sync::WasiCtxBuilder;
+// use wasmtime::*;
 
-use std::path::PathBuf;
 use std::fs::read_to_string;
+use std::path::PathBuf;
 
-use dropin_compiler::parser::{read_file, print_pairs};
+use dropin_compiler::parser::{print_pairs, read_file, read_type};
 
 #[derive(StructOpt, Debug)]
 enum Commands {
+  /// Compile
+  Compile {
+    /// Path to the recipe to compile
+    #[structopt(parse(from_os_str))]
+    file: PathBuf
+  },
   /// Debug tools. To learn more: dropin debug --help
   Debug {
     #[structopt(subcommand)]
@@ -17,11 +23,16 @@ enum Commands {
 }
 
 #[derive(StructOpt, Debug)]
+struct CompileOpts {
+}
+
+#[derive(StructOpt, Debug)]
 enum DebugTools {
   /// Print the recipe parser output
   Recipe {
     /// Recipe path
-    file: String,
+    #[structopt(parse(from_os_str))]
+    file: PathBuf,
   },
 }
 
@@ -35,6 +46,7 @@ pub struct Cli {
 fn main() {
   let cli = Cli::from_args();
   match cli.cmd {
+    Commands::Compile{file} => compile(file),
     Commands::Debug{cmd} => debug(cmd),
   }
   /*
@@ -54,6 +66,10 @@ fn main() {
   ).unwrap();
   start.call(&mut store, ()).unwrap();
   */
+}
+
+fn compile(path: PathBuf) {
+  read_type(path);
 }
 
 fn debug(cmd: DebugTools) {

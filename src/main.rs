@@ -5,7 +5,7 @@ use structopt::StructOpt;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use dropin_compiler::parser::{print_pairs, read_file, read_type};
+use dropin::parser::{print_pairs, read_file, read_type};
 
 #[derive(StructOpt, Debug)]
 enum Commands {

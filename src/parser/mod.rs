@@ -5,9 +5,6 @@ use pest::Parser;
 use pest::iterators::{Pair, Pairs};
 use termion::color;
 
-use std::io::{stderr, Write};
-use std::process::exit;
-
 #[derive(Parser)]
 #[grammar = "parser/recipes.pest"]
 struct RecipesParser;
@@ -15,8 +12,7 @@ struct RecipesParser;
 pub fn read_file<'a>(content: &'a str) -> Pair<'a, Rule> {
   let mut pairs = RecipesParser::parse(Rule::main, &content)
     .unwrap_or_else(|e| { 
-      stderr().write_all((e.to_string() + "\n").as_bytes()).unwrap();
-      exit(1);
+      panic!("{}", e);
     });
   pairs.next().unwrap()
 }
@@ -28,20 +24,17 @@ struct RecipeHeader {
 
 impl RecipeHeader {
   fn new(mut pairs: Pairs<Rule>) -> (RecipeHeader, Option<Pair<Rule>>) {
-    let no_header_fn = || { 
-      stderr().write_all("no header found in recipe\n".as_bytes()).unwrap();
-      exit(1);
-    };
-    let header_pair = pairs.next().unwrap_or_else(no_header_fn);
-    match header_pair.as_rule() {
-      Rule::header => {}
-      _ => { no_header_fn(); }
+    let no_header = "no header found in recipe";
+    let header_pair = pairs.next().expect(no_header);
+    if !matches!(header_pair.as_rule(), Rule::header) {
+      panic!("{}", no_header);
     }
     let mut header_pairs = header_pair.into_inner();
-    let id = header_pairs.next().unwrap_or_else(|| { 
-      stderr().write_all("no id found in recipe\n".as_bytes()).unwrap();
-      exit(1);
-    }).as_str().to_string();
+    let id = header_pairs
+      .next()
+      .expect("no id found in recipe")
+      .as_str()
+      .to_string();
     let mut header = RecipeHeader{
       id,
       name: None,

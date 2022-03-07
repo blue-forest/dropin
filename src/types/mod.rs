@@ -7,17 +7,24 @@
  */
 
 use std::collections::HashMap;
+use std::fmt::Debug;
 use std::sync::Arc;
 
-use crate::refs::{Object, Ref};
+mod text;
+pub use text::Text;
 
-pub struct Type {
+pub trait Type: Debug {}
+
+#[derive(Debug)]
+pub struct CustomType {
+  id:        String,
   templates: HashMap<String, Format>,
 }
 
-impl Type {
-  pub fn new() -> Self {
+impl CustomType {
+  pub fn new(id: String) -> Self {
     Self{
+      id,
       templates: HashMap::new(),
     }
   }
@@ -27,18 +34,21 @@ impl Type {
   }
 }
 
+impl Type for CustomType {}
+
+#[derive(Debug)]
 pub struct Format {
-  type_:   Arc<Type>,
+  type_:   Arc<dyn Type>,
   format:  HashMap<String, Format>,
-  options: Object,
+  // TODO: options: Object,
 }
 
 impl Format {
-  pub fn new(type_: Arc<Type>) -> Self {
+  pub fn new(type_: Arc<dyn Type>) -> Self {
     Self{
       type_,
       format:  HashMap::new(),
-      options: Object::new(),
+      // options: Object::new(),
     }
   }
 

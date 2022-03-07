@@ -7,20 +7,21 @@
  */
 
 use dropin::parser::read_values;
+use dropin::types::TEXT;
 
 #[test]
 fn hello_world() {
-  let ref_ = read_values(vec![
+  let value = read_values(vec![
     "values blueforest:tests:v1:hello_world",
     "======================================",
     "format text",
     "data \"hello world\"",
   ].join("\n"));
   let mut buf = Vec::new();
-  ref_.compile(&mut buf);
+  value.compile(&mut buf);
   let mut ground_truth = vec![
-    1, // text instance
-    0, // refs length
+    TEXT,
+    0, // refs (options, format, flag...) length
   ];
   ground_truth.push(11); // hello world length
   ground_truth.extend("hello world".as_bytes());

@@ -6,6 +6,9 @@
  * This code is free software distributed under GPLv3.
  */
 
+use wasm_ir::Module;
+
+use crate::Compilable;
 use super::Type;
 
 #[derive(Debug)]
@@ -16,6 +19,10 @@ impl Text {
   pub fn new() -> Self {
     Self{}
   }
+}
+
+impl Compilable for Text {
+  fn compile(&self) -> Module { todo!() }
 }
 
 impl Type for Text {}

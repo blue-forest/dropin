@@ -6,14 +6,25 @@
  * This code is free software distributed under GPLv3.
  */
 
+use wasm_ir::Module;
+
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
 
+use crate::Compilable;
+
 mod text;
 pub use text::Text;
 
-pub trait Type: Debug {}
+pub trait Type: Compilable + Debug {}
+
+pub const OBJECT  : u8 = 0x01;
+pub const INDEX   : u8 = 0x02;
+pub const LIST    : u8 = 0x03;
+pub const TEXT    : u8 = 0x04;
+pub const QUANTITY: u8 = 0x05;
+pub const BOOLEANS: u8 = 0x06;
 
 #[derive(Debug)]
 pub struct CustomType {
@@ -32,6 +43,10 @@ impl CustomType {
   pub fn add_template(&mut self, key: String, format: Format) {
     self.templates.insert(key, format);
   }
+}
+
+impl Compilable for CustomType {
+  fn compile(&self) -> Module { todo!() }
 }
 
 impl Type for CustomType {}

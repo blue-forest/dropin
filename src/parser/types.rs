@@ -13,10 +13,10 @@ use std::sync::Arc;
 use pest::iterators::Pair;
 
 use crate::types;
-use crate::types::{CustomType, Format};
-use super::{read_file, RecipeHeader, Rule, print_pairs};
+use crate::types::{CustomType, Format, Type};
+use super::{read_file, RecipeHeader, Rule};
 
-pub fn read_type(path: PathBuf) {
+pub fn read_type(path: PathBuf) -> Arc<dyn Type> {
   let content = read_to_string(path).unwrap();
   let pairs = read_file(content.as_str()).into_inner();
   let (header, content_pair_opt) = RecipeHeader::new(pairs);
@@ -26,8 +26,7 @@ pub fn read_type(path: PathBuf) {
   let template_pair = content_pairs.next().expect("expected type templates");
   let mut type_ = CustomType::new(header.id);
   read_template(&mut type_, template_pair);
-  println!("{:?}", type_);
-  print_pairs(content_pairs, 0);
+  Arc::new(type_)
 }
 
 fn read_template(type_: &mut CustomType, pair: Pair<Rule>) {

@@ -6,15 +6,9 @@
  * This code is free software distributed under GPLv3.
  */
 
-use wasm_ir::Module;
+use std::sync::Arc;
 
-pub mod parser;
-pub mod refs;
-pub mod types;
+use crate::refs::Ref;
 
-#[macro_use]
-extern crate pest_derive;
+pub fn read_values(_content: String) -> Arc<dyn Ref> { todo!() }
 
-pub trait Compilable {
-  fn compile(&self) -> Module;
-}

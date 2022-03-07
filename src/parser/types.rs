@@ -6,8 +6,6 @@
  * This code is free software distributed under GPLv3.
  */
 
-use std::fs::read_to_string;
-use std::path::PathBuf;
 use std::sync::Arc;
 
 use pest::iterators::Pair;
@@ -16,8 +14,7 @@ use crate::types;
 use crate::types::{CustomType, Format, Type};
 use super::{read_file, RecipeHeader, Rule};
 
-pub fn read_type(path: PathBuf) -> Arc<dyn Type> {
-  let content = read_to_string(path).unwrap();
+pub fn read_type(content: String) -> Arc<dyn Type> {
   let pairs = read_file(content.as_str()).into_inner();
   let (header, content_pair_opt) = RecipeHeader::new(pairs);
   let mut content_pairs = content_pair_opt

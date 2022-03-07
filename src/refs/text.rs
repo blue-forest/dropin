@@ -8,12 +8,19 @@
 
 use wasm_ir::Compilable;
 
-use std::fmt::Debug;
+use super::Ref;
 
-mod object;
-pub use object::Object;
+#[derive(Debug)]
+pub struct Text {}
 
-mod text;
-pub use text::Text;
+impl Text {
+  pub fn new(_data: String) -> Self {
+    todo!()
+  }
+}
 
-pub trait Ref: Compilable + Debug {}
+impl Compilable for Text {
+  fn compile(&self, _buf: &mut Vec<u8>) { todo!() }
+}
+
+impl Ref for Text {}

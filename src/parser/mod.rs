@@ -6,12 +6,15 @@
  * This code is free software distributed under GPLv3.
  */
 
-mod types;
-pub use types::read_type;
-
 use pest::Parser;
 use pest::iterators::{Pair, Pairs};
 use termion::color;
+
+mod types;
+pub use types::read_type;
+
+mod values;
+pub use values::read_values;
 
 #[derive(Parser)]
 #[grammar = "parser/recipes.pest"]

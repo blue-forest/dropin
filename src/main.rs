@@ -77,7 +77,7 @@ fn main() {
 }
 
 fn compile(path: PathBuf) {
-  read_type(path);
+  read_type(read_to_string(path).unwrap());
 }
 
 fn debug(cmd: DebugTools) {

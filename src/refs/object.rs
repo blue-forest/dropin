@@ -6,6 +6,8 @@
  * This code is free software distributed under GPLv3.
  */
 
+use wasm_ir::Compilable;
+
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -30,5 +32,8 @@ impl Object {
   }
 }
 
-impl Ref for Object {
+impl Compilable for Object {
+  fn compile(&self, _buf: &mut Vec<u8>) { todo!() }
 }
+
+impl Ref for Object {}

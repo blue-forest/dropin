@@ -17,14 +17,14 @@ pub trait Type: Debug {}
 
 #[derive(Debug)]
 pub struct CustomType {
-  id:        String,
+  _id:        String,
   templates: HashMap<String, Format>,
 }
 
 impl CustomType {
   pub fn new(id: String) -> Self {
     Self{
-      id,
+      _id: id,
       templates: HashMap::new(),
     }
   }
@@ -38,7 +38,7 @@ impl Type for CustomType {}
 
 #[derive(Debug)]
 pub struct Format {
-  type_:   Arc<dyn Type>,
+  _type_:   Arc<dyn Type>,
   format:  HashMap<String, Format>,
   // TODO: options: Object,
 }
@@ -46,7 +46,7 @@ pub struct Format {
 impl Format {
   pub fn new(type_: Arc<dyn Type>) -> Self {
     Self{
-      type_,
+      _type_: type_,
       format:  HashMap::new(),
       // options: Object::new(),
     }

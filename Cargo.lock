@@ -466,6 +466,7 @@ dependencies = [
  "pest_derive",
  "structopt",
  "termion",
+ "wasm-ir",
  "wasmtime",
  "wasmtime-wasi",
 ]
@@ -1404,6 +1405,12 @@ dependencies = [
  "wiggle",
  "winapi",
 ]
+
+[[package]]
+name = "wasm-ir"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7fa2249a041ee377869b70ae28eea04bfe6aa136189ed24f509a32e09aac3a9a"
 
 [[package]]
 name = "wasmparser"

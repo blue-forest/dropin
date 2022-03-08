@@ -1,9 +1,11 @@
 
 # drop'in compiler
 
+![GPL-3.0](https://img.shields.io/github/license/theblueforest/wasm-ir)
 ![Maintained](https://img.shields.io/badge/maintained-yes-green.svg)
-![Stable](https://img.shields.io/badge/stable-no-red.svg)
-![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/theblueforest/dropin-compiler?include_prereleases)
+![Unstable](https://img.shields.io/badge/stable-no-red.svg)
+![Crates.io latest version](https://img.shields.io/crates/v/dropin)
+![Crates.io total downloads](https://img.shields.io/crates/d/dropin)
 
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 

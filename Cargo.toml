@@ -1,6 +1,6 @@
 [package]
 name = "dropin"
-version = "5.3.1"
+version = "0.5.3-0"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in WebAssembly compiler [ALPHA]"

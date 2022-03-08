@@ -1,6 +1,11 @@
 (module
   ;; (File Descriptor, *iovs, iovs_len, nwritten) -> Returns number of bytes written
-  (import "wasi_unstable" "fd_write" (func $fd_write (param i32 i32 i32 i32) (result i32)))
+  (import "wasi_unstable" "fd_write" 
+    (func $fd_write (param i32 i32 i32 i32) (result i32))
+  )
+  (table 1 funcref)
+  (export "table" (table 0))
+  (elem (i32.const 0) $main)
 
   (memory 1)
   (export "memory" (memory 0))

@@ -1,11 +1,12 @@
 
 # drop'in compiler
 
-![GPL-3.0](https://img.shields.io/github/license/theblueforest/wasm-ir)
-![Maintained](https://img.shields.io/badge/maintained-yes-green.svg)
-![Unstable](https://img.shields.io/badge/stable-no-red.svg)
-![Crates.io latest version](https://img.shields.io/crates/v/dropin)
-![Crates.io total downloads](https://img.shields.io/crates/d/dropin)
+[![License](https://img.shields.io/github/license/theblueforest/dropin-compiler)](./COPYING)
+[![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](#)
+[![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
+[![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)
+[![Crates.io total downloads](https://img.shields.io/crates/d/dropin)](https://crates.io/crates/dropin)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/BlueForest)](https://liberapay.com/BlueForest)
 
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 
@@ -15,7 +16,7 @@ Warning : **we do not recommend to use this code in a production environment**, 
 
 You are free to explore the code and fork it, we are open to [Issues and Pull Requests](./CONTRIBUTING.md).
 
-The codebase is [licensed under GNU General Public License v3](./COPYING), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
+The codebase is [licensed under GNU Affero General Public License v3](./COPYING), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
 
 If you want to join the development and contribute to the project, please reach us at contact@blueforest.cc.
 

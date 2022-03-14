@@ -1,11 +1,14 @@
-name: crates.io publish
+name: Tests
 on:
   push:
-    branches: [ main ]
+  pull_request:
   workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
-  publish:
-    environment: crates.io
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -21,11 +24,7 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-    - uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
-    - run: cargo publish --token ${CRATES_TOKEN}
-      env:
-        CRATES_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose

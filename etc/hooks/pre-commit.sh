@@ -8,7 +8,7 @@ SRC_DIR=$ROOT_DIR/src
 
 COPYING_HEADER="\/*     _              _ _\n *  __| |_ _ ___ _ __( |_)_ _\n * \/ _\` | '_\/ _ \\\\ '_ \\\\\/| | ' \\\\\n * \\\\__,_|_| \\\\___\/ .__\/ |_|_||_| dropin-compiler - WebAssembly\n *              |_|\n * Copyright \© 2019-2022 Blue Forest\n * \n * This program is free software: you can redistribute it and\/or modify\n * it under the terms of the GNU Affero General Public License as published\n * by the Free Software Foundation, either version 3 of the License, or\n * (at your option) any later version.\n * \n * This program is distributed in the hope that it will be useful,\n * but WITHOUT ANY WARRANTY; without even the implied warranty of\n * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n * GNU Affero General Public License for more details.\n * \n * You should have received a copy of the GNU Affero General Public License\n * along with this program.  If not, see <https:\/\/www.gnu.org\/licenses\/>.\n *\/\n\n"
 
-# git stash -q --keep-index
+git stash -q --keep-index
 
 for i in $(find $SRC_DIR -name '*.rs' -or -name '*.pest'); do
   if ! grep -q "This code is free software distributed under GPLv3" $i; then
@@ -18,4 +18,4 @@ for i in $(find $SRC_DIR -name '*.rs' -or -name '*.pest'); do
   fi
 done
 
-# git stash -q --keep-index
+git stash -q --keep-index

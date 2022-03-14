@@ -1,7 +1,7 @@
 
 # drop'in compiler
 
-[![License](https://img.shields.io/github/license/theblueforest/wasm-ir)](./COPYING)
+[![License](https://img.shields.io/github/license/theblueforest/dropin-compiler)](./COPYING)
 [![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](#)
 [![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
 [![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)

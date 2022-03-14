@@ -11,7 +11,7 @@ COPYING_HEADER="\/*     _              _ _\n *  __| |_ _ ___ _ __( |_)_ _\n * \/
 git stash -q --keep-index
 
 for i in $(find $SRC_DIR -name '*.rs' -or -name '*.pest'); do
-  if ! grep -q "This code is free software distributed under GPLv3" $i; then
+  if ! grep -q "Copyright © 2019-2022 Blue Forest" $i; then
     echo "Adding license header to $i"
     sed -i "1s/^/$COPYING_HEADER/" $i
     # git add $i

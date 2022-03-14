@@ -15,7 +15,7 @@ for i in $(find {$SRC_DIR,$TEST_DIR} -name '*.rs' -or -name '*.pest'); do
   if ! grep -q "This code is free software distributed under GPLv3" $i; then
     echo "Adding license header to $i"
     sed -i "1s/^/$COPYING_HEADER/" $i
-    # git add $i
+    git add $i
   fi
 done
 

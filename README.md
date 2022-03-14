@@ -1,11 +1,12 @@
 
 # drop'in compiler
 
-![License](https://img.shields.io/github/license/theblueforest/wasm-ir)
-![Maintained](https://img.shields.io/badge/maintained-yes-green.svg)
-![Unstable](https://img.shields.io/badge/stable-no-red.svg)
-![Crates.io latest version](https://img.shields.io/crates/v/dropin)
-![Crates.io total downloads](https://img.shields.io/crates/d/dropin)
+[![License](https://img.shields.io/github/license/theblueforest/wasm-ir)](./COPYING)
+[![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](#)
+[![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
+[![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)
+[![Crates.io total downloads](https://img.shields.io/crates/d/dropin)](https://crates.io/crates/dropin)
+[![Liberapay receiving](https://img.shields.io/liberapay/receives/BlueForest)](https://liberapay.com/BlueForest)
 
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 

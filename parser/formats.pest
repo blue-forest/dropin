@@ -5,7 +5,7 @@ format           =  {
   format_inputs? ~ subformat? ~ format_default?
 }
 unknown_format   =  { // keyed or not
-  (&id_model_recipe ~ id_model_recipe) | key ~ (s ~ key)? ~
+  ((&id_model_recipe ~ id_model_recipe) | key) ~ (s ~ key)? ~
   format_inputs? ~ subformat? ~ format_default?
 }
 unknown_formats  = _{
@@ -20,3 +20,7 @@ format_options   =  {
 format_default   = _{ (s ~ "=" ~ value) | (&(n ~ "=") ~ n ~ "=" ~ value) }
 format_templates =  { "<" ~ key ~ (s ~ key)* ~ ">" }
 
+
+options   =  { "options"   ~ i ~ keyed_formats ~ DROP }
+variables =  { "variables" ~ i ~ keyed_formats ~ DROP }
+result    =  { "result"    ~ i ~ keyed_formats ~ DROP }

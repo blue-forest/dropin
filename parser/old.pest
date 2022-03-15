@@ -19,36 +19,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-// HANDLERS
-handlers           = _{ "%" ~ n ~ sub_handlers }
-handler            = _{ set | print | handler_if | iterate }
-set                =  { "set" ~ s ~ set_query ~ value }
-print              =  { "print" ~ value }
-handler_if         =  {
-  "if" ~ value ~ i ~ handlers ~ DROP ~ handler_else?
-}
-handler_else_start = _{ n ~ "else" }
-handler_else       =  {
-  &handler_else_start ~ handler_else_start ~ i ~ handlers ~ DROP
-}
-iterate            = {
-  "iterate" ~ s ~ iterate_key ~ ("," ~ s ~ iterate_value)? ~ s 
-  ~ "in" ~ value ~ i ~ handlers ~ DROP
-}
-iterate_key        =  { iterate_ignore | query }
-iterate_value      =  { iterate_ignore | query }
-iterate_ignore     =  { "_" }
-sub_handlers       =  { handler ~ ( n ~ handler )* }
-
-
-
-
-
-
-
-
-
 // PIPELINES
 pipeline           =  { "pipelines" ~ header ~ pipeline_content }
 pipeline_content   =  { options? ~ variables? ~ result? }

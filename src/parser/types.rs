@@ -43,7 +43,7 @@ pub fn read_type(path: PathBuf) -> Arc<dyn Type> {
 }
 
 fn read_template(type_: &mut CustomType, pair: Pair<Rule>) {
-  if !matches!(pair.as_rule(), Rule::type_templates) {
+  if !matches!(pair.as_rule(), Rule::templates) {
     panic!("expected type templates, got {:?}", pair.as_rule());
   }
   for template in pair.into_inner() {

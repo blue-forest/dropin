@@ -1,0 +1,22 @@
+keyed_formats    = _{ keyed_format ~ (n ~ keyed_format)* }
+keyed_format     =  { key ~ s ~ format }
+format           =  {
+  ((&id_model_recipe ~ id_model_recipe) | key) ~
+  format_inputs? ~ subformat? ~ format_default?
+}
+unknown_format   =  { // keyed or not
+  (&id_model_recipe ~ id_model_recipe) | key ~ (s ~ key)? ~
+  format_inputs? ~ subformat? ~ format_default?
+}
+unknown_formats  = _{
+  unknown_format ~ (n ~ unknown_format)*
+}
+subformat        =  { &(n ~ (" "|"\t")+) ~ i ~ unknown_formats ~ DROP }
+format_inputs    = _{ (s ~ format_flag)? ~ format_options? }
+format_flag      = @{ "#" ~ key }
+format_options   =  {
+  &(n ~ (" "|"\t")+ ~ "(") ~ i ~ "(" ~ i ~ object ~ DROP ~ n ~ ")" ~ DROP
+}
+format_default   = _{ (s ~ "=" ~ value) | (&(n ~ "=") ~ n ~ "=" ~ value) }
+format_templates =  { "<" ~ key ~ (s ~ key)* ~ ">" }
+

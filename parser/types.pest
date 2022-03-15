@@ -1,0 +1,6 @@
+<({common})>
+<({formats})>
+
+content          =  { "types" ~ header ~ type_content }
+type_content     =  { type_templates }
+type_templates   =  { "templates" ~ i ~ keyed_formats }

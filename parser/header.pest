@@ -1,0 +1,8 @@
+header               =  {
+  s ~ id_model_recipe ~ n ~
+  header_text? ~ header_text? ~ header_icon? ~ header_separator_big
+}
+header_text          = _{ header_separator ~ ( text | object ) ~ n }
+header_icon          = _{ header_separator ~ id_recipe ~ n }
+header_separator_big = _{ "===" ~ "="* ~ n }
+header_separator     = _{ "---" ~ "-"* ~ n }

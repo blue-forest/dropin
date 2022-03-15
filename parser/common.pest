@@ -1,0 +1,10 @@
+main      = _{ SOI ~ ( content ) ~ NEWLINE* ~ EOI }
+s         = _{ SPACE_SEPARATOR+ }
+n         = _{ NEWLINE+ ~ PEEK_ALL }
+i         = _{ n ~ PUSH((" " | "\t")+) }
+COMMENT   = _{ "/*" ~ (!"*/" ~ ANY)* ~ "*/" }
+
+<({header})>
+<({values})>
+<({keys})>
+

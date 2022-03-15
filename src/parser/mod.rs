@@ -27,7 +27,7 @@ use pest::iterators::{Pair, Pairs};
 use termion::color;
 
 #[derive(Parser)]
-#[grammar = "parser/recipes.pest"]
+#[grammar = "../target/parser/types.pest"]
 struct RecipesParser;
 
 pub fn read_file<'a>(content: &'a str) -> Pair<'a, Rule> {

@@ -1,0 +1,16 @@
+id_recipe         =  { id_recipe_ | id_short }
+id_recipe_        = _{ key_id ~ ":" ~ namespaced }
+id_model_version_ = _{ id_recipe_ ~ ":" ~ namespaced }
+id_model_version  =  { id_model_version_ | id_short }
+id_model_recipe_  = _{ id_model_version_ ~ ":" ~ namespaced }
+id_model_recipe   =  { id_model_recipe_ | id_short }
+id_short          = ${ ":" ~ namespaced }
+namespaced        =  { key_id ~ ( "/" ~ key_id )* }
+query             =  { key ~ ( "." ~ key )* }
+set_append        =  { ".+" }
+set_query         =  { query ~ set_append? }
+key               = @{ key_char+ | "''" }
+key_id            =  { (key_char | ".")+ }
+key_char          = _{
+  'À'..'Ö' | 'Ø'..'ö' | 'ø'..'ÿ'| ASCII_ALPHANUMERIC | "-" | "_"
+}

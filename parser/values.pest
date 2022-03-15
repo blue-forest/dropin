@@ -1,0 +1,35 @@
+value         =  { (s ~ value_inline) | (i ~ value_newline ~ DROP) }
+value_inline  = _{ setter | getter | quantity | boolean | text }
+value_newline = _{ list | object }
+list          =  { list_item ~ (n ~ list_item)* }
+list_item     = _{ value_inline | ("\\" ~ i ~ value_newline ~ DROP) }
+object        =  { key_value ~ ( n ~ key_value )* }
+key_value     =  { key ~ value }
+getter        =  { "$" ~ query }
+boolean       =  { "true" | "false" }
+quantity      =  @{
+  "-"?
+  ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*)
+  ~ ("." ~ ASCII_DIGIT*)?
+  ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+}// TODO: decimals (copy json)
+text          = _{ "\"" ~ text_inner ~ "\"" }
+text_inner    = @{ char* }
+char          =  {
+  !("\"" | "\\") ~ ANY
+  | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+  | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+}
+
+setter          =  { setter_not | setter_long | setter_short }
+setter_short    =  {
+  "(" ~ s?
+    ~ value_inline ~ s? ~ setter_operator ~ s? ~ value_inline
+  ~ s? ~ ")"
+}
+setter_long     =  { "~" ~ key ~ value? }
+setter_not      =  { "!" ~ value_inline }
+setter_operator =  { comparator | arithmetic | logic }
+comparator      = _{ "=" | "!" | ">=" | "<=" | ">" | "<" }
+arithmetic      = _{ "+" | "-" | "/" | "*" | "^" | "%" }
+logic           = _{ "|" | "&" }

@@ -70,27 +70,10 @@ fn main() {
     Commands::Compile{file} => compile(file),
     Commands::Debug{cmd} => debug(cmd),
   }
-  /*
-  let engine = Engine::default();
-  let module = Module::from_file(&engine, "sandbox/gen.wasm").unwrap();
-  let mut linker = Linker::new(&engine);
-
-  wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
-
-  let wasi_ctx = WasiCtxBuilder::new().inherit_stdio().build();
-  let mut store = Store::new(&engine, wasi_ctx);
-
-  let instance = linker.instantiate(&mut store, &module).unwrap();
-
-  let start = instance.get_typed_func::<(), (), _>(
-    &mut store, "_start"
-  ).unwrap();
-  start.call(&mut store, ()).unwrap();
-  */
 }
 
 fn compile(path: PathBuf) {
-  read_type(path);
+  println!("{:?}", read_type(path));
 }
 
 fn debug(cmd: DebugTools) {

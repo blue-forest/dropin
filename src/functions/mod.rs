@@ -1,28 +1,6 @@
-use std::collections::HashMap;
 use std::fmt::Debug;
 
 use crate::refs::{Query, Ref};
-use crate::types::Format;
-
-#[derive(Debug)]
-pub struct Function {
-  #[allow(dead_code)]
-  argument:  Format,
-  #[allow(dead_code)]
-  handlers:  Vec<Box<dyn Handler>>,
-  #[allow(dead_code)]
-  variables: HashMap<String, Format>,
-}
-
-impl Function {
-  pub fn new(
-    argument:  Format,
-    handlers:  Vec<Box<dyn Handler>>,
-    variables: HashMap<String, Format>,
-  ) -> Self {
-    Self{ argument, handlers, variables }
-  }
-}
 
 pub trait Handler: Debug + Send + Sync {}
 

@@ -23,44 +23,58 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
 
-use crate::functions::Function;
+use crate::collections::MethodBody;
 
 lazy_static! {
-  pub static ref BYTE:  Arc<Type> = Arc::new(Type::new("byte".to_string()));
-  pub static ref BYTES: Arc<Type> = Arc::new(Type::new("bytes".to_string()));
+  pub static ref BYTE:  Arc<Type> = Arc::new(Type::new(
+    "byte".to_string(),
+    HashMap::new(),
+    Methods::new((HashMap::new(), Vec::new()))
+  ));
+  pub static ref BYTES: Arc<Type> = Arc::new(Type::new(
+    "bytes".to_string(),
+    HashMap::new(),
+    Methods::new((HashMap::new(), Vec::new())),
+  ));
 }
 
 #[derive(Debug)]
 pub struct Type {
   #[allow(dead_code)]
   id:        String,
+  #[allow(dead_code)]
+  methods:   Methods,
+  #[allow(dead_code)]
   templates: HashMap<String, Format>,
-  functions: HashMap<String, Function>,
 }
 
 impl Type {
-  pub fn new(id: String) -> Self {
-    Self{
-      id,
-      templates: HashMap::new(),
-      functions: HashMap::new(),
-    }
+  pub fn new(
+    id:        String,
+    templates: HashMap<String, Format>,
+    methods:   Methods,
+  ) -> Self {
+    Self{ id, methods, templates }
   }
+}
 
-  pub fn add_function(&mut self, key: String, function: Function) {
-    self.functions.insert(key, function);
-  }
+#[derive(Debug)]
+pub struct Methods {
+  #[allow(dead_code)]
+  encode: MethodBody,
+}
 
-  pub fn add_template(&mut self, key: String, format: Format) {
-    self.templates.insert(key, format);
+impl Methods {
+  pub fn new(encode: MethodBody) -> Self {
+    Self{ encode }
   }
 }
 
 #[derive(Debug)]
 pub struct Format {
   #[allow(dead_code)]
-  type_:   Arc<Type>,
-  format:  HashMap<String, Format>,
+  type_:  Arc<Type>,
+  format: HashMap<String, Format>,
   // TODO: options: Object,
 }
 

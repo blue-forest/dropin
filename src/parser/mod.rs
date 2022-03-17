@@ -23,8 +23,8 @@ use pest::Parser;
 use pest::iterators::{Pair, Pairs};
 use termion::color;
 
-mod handlers;
-pub use handlers::read_handlers;
+mod functions;
+pub use functions::read_handlers;
 mod types;
 pub use types::read_type;
 mod values;

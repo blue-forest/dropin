@@ -19,6 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+pub mod collections;
 pub mod functions;
 pub mod issues;
 pub mod parser;

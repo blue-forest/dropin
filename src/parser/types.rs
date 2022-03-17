@@ -18,16 +18,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+use pest::iterators::{Pair, Pairs};
 
 use std::collections::HashMap;
 use std::fs::read_to_string;
 use std::path::PathBuf;
-use std::sync::Arc;
 
-use pest::iterators::Pair;
-
-use crate::functions::Function;
-use crate::types::{self, Type, Format};
+use crate::collections::MethodBody;
+use crate::types::{self, Format, Methods, Type};
 
 use super::{read_file, read_handlers, RecipeHeader, Rule};
 
@@ -38,26 +36,30 @@ pub fn read_type(path: PathBuf) -> Type {
   let mut content_pairs = content_pair_opt
       .expect("expected type content")
       .into_inner();
-  let template_pair = content_pairs.next().expect("expected type templates");
-  let mut type_ = Type::new(header.id);
-  read_template(&mut type_, template_pair);
-  if let Some(functions_pair) = content_pairs.next() {
-    read_functions(&mut type_, functions_pair);
-  }
-  type_
+  let templates_pair = content_pairs.next().expect("expected type templates");
+  let templates = read_templates(templates_pair);
+  let methods_pair = content_pairs.next().expect("expected methods");
+  let methods = read_methods(methods_pair);
+  Type::new(header.id, templates, methods)
 }
 
-fn read_template(type_: &mut Type, pair: Pair<Rule>) {
+fn read_templates(pair: Pair<Rule>) -> HashMap<String, Format> {
   if !matches!(pair.as_rule(), Rule::templates) {
     panic!("expected type templates, got {:?}", pair.as_rule());
   }
+  let mut result = HashMap::new();
   for template in pair.into_inner() {
-    let mut key_value = template.into_inner();
-    let key = key_value.next().expect("expected key").as_str();
-    let format_pair = key_value.next().expect("expected format");
-    let format = read_format(format_pair);
-    type_.add_template(key.to_string(), format);
+    let (key, format) = read_key_format(template.into_inner());
+    result.insert(key, format);
   }
+  result
+}
+
+pub fn read_key_format(mut pairs: Pairs<Rule>) -> (String, Format) {
+  let key = pairs.next().expect("expected key").as_str();
+  let format_pair = pairs.next().expect("expected format");
+  let format = read_format(format_pair);
+  (key.to_string(), format)
 }
 
 pub fn read_format(pair: Pair<Rule>) -> Format {
@@ -76,20 +78,26 @@ pub fn read_format(pair: Pair<Rule>) -> Format {
   Format::new(type_)
 }
 
-pub fn read_functions(type_: &mut Type, pair: Pair<Rule>) {
-  for function in pair.into_inner() {
-    let mut pairs = function.into_inner();
-    let key = pairs.next().expect("expected function key").as_str();
-    let next_pair = pairs.next().expect("expected function handlers");
+pub fn read_methods(pair: Pair<Rule>) -> Methods {
+  let mut encode: Option<MethodBody> = None;
+  for method in pair.into_inner() {
+    let mut pairs = method.into_inner();
+    let key = pairs.next().expect("expected method key").as_str();
+    let mut next_pair = pairs.next().expect("expected method handlers");
+    let mut variables = HashMap::new();
     if matches!(next_pair.as_rule(), Rule::variables) {
-      todo!("function variables");
-      // next_pair = pairs.next().expect("expected function handlers");
+      for variable in next_pair.into_inner() {
+        let (key, format) = read_key_format(variable.into_inner());
+        variables.insert(key, format);
+      }
+      next_pair = pairs.next().expect("expected method handlers");
     }
     let handlers = read_handlers(next_pair.into_inner());
-    type_.add_function(key.to_string(), Function::new(
-      Format::new(types::BYTES.clone()),
-      handlers,
-      HashMap::new(),
-    ));
+    match key {
+      "encode" => { encode = Some((variables, handlers)) }
+      _ => { panic!("unknown method: {}", key) }
+    }
   }
+  let encode_body = encode.expect("expected encode method");
+  Methods::new(encode_body)
 }

@@ -26,10 +26,10 @@ use std::sync::Arc;
 use pest::iterators::Pair;
 
 use crate::types;
-use crate::types::{CustomType, Format, Type};
-use super::{read_file, RecipeHeader, Rule};
+use crate::types::{Type, Format};
+use super::{read_file, read_handlers, RecipeHeader, Rule};
 
-pub fn read_type(path: PathBuf) -> Arc<dyn Type> {
+pub fn read_type(path: PathBuf) -> Type {
   let content = read_to_string(path).unwrap();
   let pairs = read_file(content.as_str()).into_inner();
   let (header, content_pair_opt) = RecipeHeader::new(pairs);
@@ -37,12 +37,15 @@ pub fn read_type(path: PathBuf) -> Arc<dyn Type> {
       .expect("expected type content")
       .into_inner();
   let template_pair = content_pairs.next().expect("expected type templates");
-  let mut type_ = CustomType::new(header.id);
+  let mut type_ = Type::new(header.id);
   read_template(&mut type_, template_pair);
-  Arc::new(type_)
+  if let Some(functions_pair) = content_pairs.next() {
+    read_functions(&mut type_, functions_pair);
+  }
+  type_
 }
 
-fn read_template(type_: &mut CustomType, pair: Pair<Rule>) {
+fn read_template(type_: &mut Type, pair: Pair<Rule>) {
   if !matches!(pair.as_rule(), Rule::templates) {
     panic!("expected type templates, got {:?}", pair.as_rule());
   }
@@ -62,7 +65,8 @@ pub fn read_format(pair: Pair<Rule>) -> Format {
     Some(_index) => { todo!() }
     None => {
       match type_id {
-        "text" => types::Text::new(),
+        "bytes" => types::Type::new("bytes".to_string()),
+        "byte"  => types::Type::new("byte".to_string()),
         _ => { panic!("unknown type: {}", type_id); }
       }
     }
@@ -70,3 +74,15 @@ pub fn read_format(pair: Pair<Rule>) -> Format {
   Format::new(Arc::new(type_))
 }
 
+pub fn read_functions(type_: &mut Type, pair: Pair<Rule>) {
+  for function in pair.into_inner() {
+    let mut pairs = function.into_inner();
+    let key = pairs.next().expect("expected function key");
+    let mut next_pair = pairs.next().expect("expected function handlers");
+    if matches!(next_pair.as_rule(), Rule::variables) {
+      todo!("function variables");
+      // next_pair = pairs.next().expect("expected function handlers");
+    }
+    read_handlers(next_pair.into_inner());
+  }
+}

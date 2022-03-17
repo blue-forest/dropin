@@ -5,9 +5,5 @@
 content         =  { "types" ~ header ~ recipe_content }
 recipe_content  =  { templates ~ n ~ functions }
 templates       =  { "templates" ~ i ~ keyed_formats ~ DROP }
-functions       =  {
-  "functions" ~ i ~ function ~ (n ~ function)* ~ DROP
-}
-function =  {
-  key ~ i ~ variables ~ sameline_handlers ~ DROP
-}
+functions       =  { "functions" ~ i ~ function ~ (n ~ function)* ~ DROP }
+function        =  { key ~ i ~ (variables ~ n)? ~ sameline_handlers ~ DROP }

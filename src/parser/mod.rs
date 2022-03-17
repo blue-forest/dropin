@@ -19,12 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod types;
-pub use types::read_type;
-
 use pest::Parser;
 use pest::iterators::{Pair, Pairs};
 use termion::color;
+
+mod handlers;
+pub use handlers::read_handlers;
+mod types;
+pub use types::read_type;
+mod values;
+pub use values::read_value;
 
 #[derive(Parser)]
 #[grammar = "../target/parser/types.pest"]

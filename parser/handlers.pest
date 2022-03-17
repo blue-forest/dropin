@@ -1,7 +1,7 @@
 handlers           = _{ inline_handlers | newline_handlers }
 inline_handlers    = _{ s ~ "%" ~ i ~ sub_handlers ~ DROP }
-newline_handlers   = _{ i ~ "%" ~ n ~ sub_handlers ~ DROP }
-sameline_handlers  = _{ n ~ "%" ~ n ~ sub_handlers }
+newline_handlers   = _{ i ~ sameline_handlers ~ DROP }
+sameline_handlers  = _{ "%" ~ n ~ sub_handlers }
 handler            = _{
   set |
   handler_if |

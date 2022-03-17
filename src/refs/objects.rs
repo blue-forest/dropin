@@ -43,5 +43,4 @@ impl Object {
   }
 }
 
-impl Ref for Object {
-}
+impl Ref for Object {}

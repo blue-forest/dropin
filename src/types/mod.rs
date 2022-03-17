@@ -23,18 +23,14 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
 
-mod text;
-pub use text::Text;
-
-pub trait Type: Debug {}
-
 #[derive(Debug)]
-pub struct CustomType {
+pub struct Type {
+  #[allow(dead_code)]
   id:        String,
   templates: HashMap<String, Format>,
 }
 
-impl CustomType {
+impl Type {
   pub fn new(id: String) -> Self {
     Self{
       id,
@@ -47,17 +43,16 @@ impl CustomType {
   }
 }
 
-impl Type for CustomType {}
-
 #[derive(Debug)]
 pub struct Format {
-  type_:   Arc<dyn Type>,
+  #[allow(dead_code)]
+  type_:   Arc<Type>,
   format:  HashMap<String, Format>,
   // TODO: options: Object,
 }
 
 impl Format {
-  pub fn new(type_: Arc<dyn Type>) -> Self {
+  pub fn new(type_: Arc<Type>) -> Self {
     Self{
       type_,
       format:  HashMap::new(),

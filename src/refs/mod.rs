@@ -23,6 +23,7 @@ use std::fmt::Debug;
 
 mod objects;
 pub use objects::Object;
+mod texts;
+pub use texts::Text;
 
-pub trait Ref: Debug {
-}
+pub trait Ref: Debug {}

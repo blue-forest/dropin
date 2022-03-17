@@ -11,12 +11,13 @@ fn main() {
 }
 
 fn replace_dynamics(content: &mut String) {
-  let dynamics = get_dynamics(content);
+  let dynamics = get_dynamics_and_remove_comments(content);
   let mut offset = 0;
   for (start, end) in dynamics.iter() {
     let mut path = "parser/".to_string();
     path.push_str(content.index((*start+offset)..(*end+offset)));
     path.push_str(".pest");
+    println!("{}", path);
     let mut sub_content = read_to_string(path).unwrap();
     replace_dynamics(&mut sub_content);
     content.replace_range((*start-3+offset)..(*end+3+offset), &sub_content);
@@ -24,33 +25,78 @@ fn replace_dynamics(content: &mut String) {
   }
 }
 
-fn get_dynamics(content: &String) -> Vec<(usize, usize)> {
-  let mut iter = content.chars();
-  let mut in_dynamic = false;
-  let mut i = 0;
-  let mut start = 0;
+fn get_dynamics_and_remove_comments(content: &mut String) -> Vec<(usize, usize)> {
+  let mut remove_at = Vec::new();
   let mut result = Vec::new();
-  while let Some(current_char) = iter.next() {
-    if !in_dynamic && current_char == '<' {
-      i += 1;
-      if let Some('(') = iter.next() {
+  {
+    let mut i = 0;
+    let mut start = 0;
+    let mut in_dynamic = false;
+    let mut in_line_comment = false;
+    let mut in_block_comment = false;
+    let mut iter = content.bytes();
+    while let Some(current_char) = iter.next() {
+      if !in_dynamic && !in_line_comment && !in_block_comment {
+        match current_char {
+          b'<' => {
+            i += 1;
+            if let Some(b'(') = iter.next() {
+              i += 1;
+              if let Some(b'{') = iter.next() {
+                start = i+1;
+                in_dynamic = true;
+              }
+            }
+          }
+          b'/' => {
+            i += 1;
+            if let Some(current_char) = iter.next() {
+              match current_char {
+                b'/' => {
+                  start = i-1;
+                  in_line_comment = true;
+                }
+                b'*' => {
+                  start = i-1;
+                  in_block_comment = true;
+                }
+                _ => {}
+              }
+            }
+          }
+          _ => {}
+        }
+      } else if in_dynamic && current_char == b'}' {
         i += 1;
-        if let Some('{') = iter.next() {
-          start = i+1;
-          in_dynamic = true;
+        if let Some(b')') = iter.next() {
+          i += 1;
+          if let Some(b'>') = iter.next() {
+            result.push((start, i-2));
+            in_dynamic = false;
+          }
+        }
+      } else if in_line_comment && current_char == b'\n' {
+        in_line_comment = false;
+        remove_at.push((start, i));
+        i -= i - start;
+      } else if in_block_comment && current_char == b'*' {
+        i += 1;
+        if let Some(b'/') = iter.next() {
+          in_block_comment = false;
+          remove_at.push((start, i+1));
+          println!("{} {}", i, start);
+          i -= i - start;
+          // continue so we won't add 1 to i, and the above is equivalent to
+          // i -= i + 1 - start
+          // without overflow when start = 0
+          continue
         }
       }
-    } else if in_dynamic && current_char == '}' {
       i += 1;
-      if let Some(')') = iter.next() {
-        i += 1;
-        if let Some('>') = iter.next() {
-          result.push((start, i-2));
-          in_dynamic = false;
-        }
-      }
     }
-    i += 1;
+  }
+  for (start, end) in remove_at.iter() {
+    content.replace_range(start..end, "");
   }
   result
 }

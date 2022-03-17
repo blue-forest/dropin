@@ -13,12 +13,9 @@ quantity        =  @{
   ~ ("." ~ ASCII_DIGIT*)?
   ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
 }// TODO: decimals (copy json)
-binary          =  {
-  "0" ~ (
-    ("b" ~ ("0"|"1")+) | 
-    ("x") ~ ('0'..'9'|'a'..'f'|'A'..'F')+
-  )
-}
+binary          =  { "0" ~ ( "b" ~ bits | "x" ~ hexa ) }
+bits            =  { ("0"|"1")+ }
+hexa            =  { ('0'..'9'|'a'..'f'|'A'..'F')+ }
 text            = _{ "\"" ~ text_inner ~ "\"" }
 text_inner      = @{ char* }
 char            =  {

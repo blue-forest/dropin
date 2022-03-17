@@ -1,14 +1,15 @@
-use crate::issues::Issue;
-
 #[derive(Debug)]
-pub struct Query(&'static str);
+pub struct Query(String);
+
 impl Query {
-  pub fn new(query: &'static str) -> Self {
+  pub fn new(query: String) -> Self {
     Self(query)
   }
 }
+
+/* TODO: query creates iterator
 impl Iterator for Query {
-  type Item = Result<&'static str, Issue>;
+  type Item = Result<&str, Issue>;
   fn next(&mut self) -> Option<Self::Item> {
     if self.0.is_empty() {
       None
@@ -40,3 +41,4 @@ impl Iterator for Query {
     }
   }
 }
+*/

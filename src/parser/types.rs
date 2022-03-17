@@ -19,14 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashMap;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 use std::sync::Arc;
 
 use pest::iterators::Pair;
 
-use crate::types;
-use crate::types::{Type, Format};
+use crate::functions::Function;
+use crate::types::{self, Type, Format};
+
 use super::{read_file, read_handlers, RecipeHeader, Rule};
 
 pub fn read_type(path: PathBuf) -> Type {
@@ -65,24 +67,29 @@ pub fn read_format(pair: Pair<Rule>) -> Format {
     Some(_index) => { todo!() }
     None => {
       match type_id {
-        "bytes" => types::Type::new("bytes".to_string()),
-        "byte"  => types::Type::new("byte".to_string()),
+        "bytes" => types::BYTES.clone(),
+        "byte"  => types::BYTE.clone(),
         _ => { panic!("unknown type: {}", type_id); }
       }
     }
   };
-  Format::new(Arc::new(type_))
+  Format::new(type_)
 }
 
 pub fn read_functions(type_: &mut Type, pair: Pair<Rule>) {
   for function in pair.into_inner() {
     let mut pairs = function.into_inner();
-    let key = pairs.next().expect("expected function key");
-    let mut next_pair = pairs.next().expect("expected function handlers");
+    let key = pairs.next().expect("expected function key").as_str();
+    let next_pair = pairs.next().expect("expected function handlers");
     if matches!(next_pair.as_rule(), Rule::variables) {
       todo!("function variables");
       // next_pair = pairs.next().expect("expected function handlers");
     }
-    read_handlers(next_pair.into_inner());
+    let handlers = read_handlers(next_pair.into_inner());
+    type_.add_function(key.to_string(), Function::new(
+      Format::new(types::BYTES.clone()),
+      handlers,
+      HashMap::new(),
+    ));
   }
 }

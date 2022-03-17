@@ -23,11 +23,19 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
 
+use crate::functions::Function;
+
+lazy_static! {
+  pub static ref BYTE:  Arc<Type> = Arc::new(Type::new("byte".to_string()));
+  pub static ref BYTES: Arc<Type> = Arc::new(Type::new("bytes".to_string()));
+}
+
 #[derive(Debug)]
 pub struct Type {
   #[allow(dead_code)]
   id:        String,
   templates: HashMap<String, Format>,
+  functions: HashMap<String, Function>,
 }
 
 impl Type {
@@ -35,7 +43,12 @@ impl Type {
     Self{
       id,
       templates: HashMap::new(),
+      functions: HashMap::new(),
     }
+  }
+
+  pub fn add_function(&mut self, key: String, function: Function) {
+    self.functions.insert(key, function);
   }
 
   pub fn add_template(&mut self, key: String, format: Format) {

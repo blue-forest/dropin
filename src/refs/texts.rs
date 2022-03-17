@@ -2,6 +2,7 @@ use super::Ref;
 
 #[derive(Debug)]
 pub struct Text {
+  #[allow(dead_code)]
   data: &'static [u8],
 }
 

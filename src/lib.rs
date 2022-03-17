@@ -19,12 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod handlers;
+pub mod functions;
 pub mod issues;
 pub mod parser;
-pub mod query;
 pub mod refs;
 pub mod types;
 
 #[macro_use]
 extern crate pest_derive;
+
+#[macro_use]
+extern crate lazy_static;
+

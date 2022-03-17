@@ -462,6 +462,7 @@ dependencies = [
 name = "dropin"
 version = "0.5.3-0"
 dependencies = [
+ "lazy_static",
  "pest",
  "pest_derive",
  "structopt",

@@ -9,6 +9,7 @@ license = "AGPL-3.0-only"
 keywords = ["WebAssembly"]
 
 [dependencies]
+lazy_static = "1.4.0"
 pest = "2.1.3"
 pest_derive = "2.1.0"
 structopt = "0.3"

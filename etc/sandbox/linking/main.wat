@@ -1,5 +1,5 @@
 (module
-  (import "test" "table" (table 1 funcref))
+  (import "env" "table" (table 1 funcref))
   (type $test.start (func (param i32)))
 
   (func $main (export "_start")

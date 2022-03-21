@@ -11,28 +11,30 @@
   (export "memory" (memory 0))
   ;; (elem funcref (item (ref.func $encode)))
 
-  (func $encode
-    (param $self i32)
-    (param $head i32)
-    (param $arg.addr i32)
-    (param $arg.len i32)
-    (local $addr i32)
+  ;; tb: test base      |
+  ;; tl: test len       |
+  ;; ob: other base     | tb          tl          ob          ol
+  ;; ol: other len      | 69          10          79          11
+  (data (i32.const 420) "\45\00\00\00\0a\00\00\00\4f\00\00\00\0b\00\00\00")
+  (data  $test (i32.const 69)  "old value\n")
+  (data $other (i32.const 79) "other data\n")
 
-    (i32.store (i32.const 4) (local.get $arg.addr))
-    (i32.store (i32.const 8) (local.get $arg.len))
+  (func $encode
+    (param $self     i32)
+    (param $head     i32)
+    (param $argument i32)
 
     (call $fd_write
-      (i32.const 1) ;; 1 for stdout
-      (i32.const 4) ;; *iovs
-      (i32.const 1) ;; iovs_len
-      (i32.const 0) ;; nwrite
+      (i32.const         1) ;; file_descriptor - 1 for stdout
+      (local.get $argument) ;; *iovs
+      (i32.const         1) ;; iovs_len
+      (i32.const         0) ;; nwritten
     )
     drop
-
     ;; (local.set $addr
     ;;   (select
     ;;     (local.get $arg.addr) ;; false
-    ;;     (local.get $head) ;; true
+    ;;     (local.get $head)     ;; true
     ;;     (i32.lt_s (local.get $arg.len) (i32.const 3))
     ;;   )
     ;; )
@@ -47,29 +49,34 @@
   )
 
   (func $main (export "_start")
-    (local $len  i32)
-    (local $cap  i32)
     (local $addr i32)
 
-    ;; buffer 100 bytes @ 0x00
-    (local.set $addr (i32.const 12))
-    (i32.store (i32.const 4) (local.get $addr))
-    (local.set $cap (i32.const 100))
-    (i32.store (i32.const 8) (local.get $cap))
+    (local.set $addr (i32.const 420))
 
     (call $fd_read
-      (i32.const 0) ;; 0 for stdin
-      (i32.const 4) ;; *iovs
-      (i32.const 1) ;; iovs_len
-      (i32.const 0) ;; nread
+      (i32.const     0) ;; 0 for stdin
+      (local.get $addr) ;; *iovs
+      (i32.const     1) ;; iovs_len
+      (i32.const     0) ;; nread
     )
-    (local.set $len)
+    drop
+    
+    (i32.le_u 
+      (i32.load (i32.const 0))
+      (i32.load (addr (local.get $addr) (i32.const 4))) ;; load tl
+    )
+    (call $fd_read
+      (i32.const     0) ;; 0 for stdin
+      (local.get $addr) ;; *iovs
+      (i32.const     1) ;; iovs_len
+      (i32.const   424) ;; nread
+    )
+    drop
     
     (call $encode
-      (i32.const 0)     ;; self
-      (i32.const 112)   ;; head
+      (i32.const     0)     ;; self
+      (i32.const   440)   ;; head
       (local.get $addr) ;; argument.addr
-      (local.get $len)  ;; argument.len
     )
   )
 )

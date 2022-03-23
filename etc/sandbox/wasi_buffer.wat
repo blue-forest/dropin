@@ -31,9 +31,11 @@
     (local $total_read i32)
     (local       $head i32)
     (local   $buf_size i32)
+    (local        $eof i32)
 
     (local.set     $addr (i32.const 420))
     (local.set $buf_size (i32.const   3))
+    (local.set      $eof (i32.const  10)) ;; interpret \n as EOF
     (local.set     $head (i32.add
       (local.get $addr)
       (i32.const 16)
@@ -61,9 +63,12 @@
         (local.get      $nread)
       ))
 
-      (i32.or
-        (i32.eq   (local.get $nread) (i32.const 0))
-        (i32.ge_u (local.get $nread) (local.get $buf_size))
+      (i32.ne                                       ;; last byte == eof ?
+        (i32.load (i32.sub
+          (i32.add (local.get $head) (local.get $total_read))
+          (i32.const 1)
+        ))
+        (local.get $eof)
       )
       (br_if $read)
     )

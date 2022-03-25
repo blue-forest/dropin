@@ -24,28 +24,21 @@
     (param $head     i32)
     (param $argument i32)
 
-    (call $fd_write
-      (i32.const         1) ;; file_descriptor - 1 for stdout
-      (local.get $argument) ;; *iovs
-      (i32.const         1) ;; iovs_len
-      (i32.const         0) ;; nwritten
+    (local.set $addr
+      (select
+        (local.get $arg.addr) ;; false
+        (local.get $head)     ;; true
+        (i32.lt_s (local.get $arg.len) (i32.const 3))
+      )
     )
-    drop
-    ;; (local.set $addr
-    ;;   (select
-    ;;     (local.get $arg.addr) ;; false
-    ;;     (local.get $head)     ;; true
-    ;;     (i32.lt_s (local.get $arg.len) (i32.const 3))
-    ;;   )
-    ;; )
-    ;; (i32.store16
-    ;;   (local.get $addr)
-    ;;   (i32.const 0xc0ff)
-    ;; )
-    ;; (i32.store8
-    ;;   (i32.add (local.get $addr) (i32.const 2))
-    ;;   (i32.const 0xee)
-    ;; )
+    (i32.store16
+      (local.get $addr)
+      (i32.const 0xc0ff)
+    )
+    (i32.store8
+      (i32.add (local.get $addr) (i32.const 2))
+      (i32.const 0xee)
+    )
   )
 
   (func $main (export "_start")
@@ -58,18 +51,6 @@
       (local.get $addr) ;; *iovs
       (i32.const     1) ;; iovs_len
       (i32.const     0) ;; nread
-    )
-    drop
-    
-    (i32.le_u 
-      (i32.load (i32.const 0))
-      (i32.load (addr (local.get $addr) (i32.const 4))) ;; load tl
-    )
-    (call $fd_read
-      (i32.const     0) ;; 0 for stdin
-      (local.get $addr) ;; *iovs
-      (i32.const     1) ;; iovs_len
-      (i32.const   424) ;; nread
     )
     drop
     

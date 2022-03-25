@@ -21,19 +21,22 @@
 
 use pest::iterators::Pairs;
 
-use crate::refs::{Byte, Ref};
+use std::sync::Arc;
+
+use crate::refs::{Byte, List, Data};
 use super::Rule;
 
-pub fn read_value(mut pairs: Pairs<Rule>) -> Box<dyn Ref> {
+pub fn read_value(mut pairs: Pairs<Rule>) -> Arc<dyn Data> {
   let pair = pairs.next().expect("expected value");
   let ref_ = match pair.as_rule() {
     Rule::binary => read_binary(pair.into_inner()),
+    Rule::list => read_list(pair.into_inner()),
     _ => { panic!("unknown value: {}", pair.as_str()); }
   };
-  Box::new(ref_)
+  ref_
 }
 
-pub fn read_binary(mut pairs: Pairs<Rule>) -> Byte {
+pub fn read_binary(mut pairs: Pairs<Rule>) -> Arc<dyn Data> {
   let pair = pairs.next().expect("expected binary value");
   match pair.as_rule() {
     Rule::bits => { todo!() }
@@ -46,10 +49,18 @@ pub fn read_binary(mut pairs: Pairs<Rule>) -> Byte {
       if let Some(unit) = hexa.get(1) {
         byte = byte * 16 + hexa_unit(*unit);
       }
-      Byte::new(byte)
+      Byte::create(byte)
     }
     _ => { panic!("unknown binary value: {}", pair.as_str()); }
   }
+}
+
+pub fn read_list(pairs: Pairs<Rule>) -> Arc<dyn Data> {
+  let mut data = Vec::new();
+  for pair in pairs {
+    data.push(read_value(pair.into_inner()));
+  }
+  List::create(data)
 }
 
 pub fn hexa_unit(unit: u8) -> u8 {

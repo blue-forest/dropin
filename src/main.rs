@@ -73,7 +73,10 @@ fn main() {
 }
 
 fn compile(path: PathBuf) {
-  println!("{:?}", read_type(path));
+  let type_ = read_type(path);
+  println!("{:?}", type_);
+  let ir = type_.compile();
+  println!("{:?}", ir);
 }
 
 fn debug(cmd: DebugTools) {

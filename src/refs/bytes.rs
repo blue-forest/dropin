@@ -19,7 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Ref;
+use std::sync::Arc;
+
+use super::Data;
 
 #[derive(Debug)]
 pub struct Byte {
@@ -28,9 +30,9 @@ pub struct Byte {
 }
 
 impl Byte {
-  pub fn new(data: u8) -> Self {
-    Self{ data }
+  pub fn create(data: u8) -> Arc<dyn Data> {
+    Arc::new(Self{ data })
   }
 }
 
-impl Ref for Byte {}
+impl Data for Byte {}

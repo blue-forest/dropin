@@ -22,11 +22,11 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use super::Ref;
+use super::Data;
 
 #[derive(Debug)]
 pub struct Object{
-  data: HashMap<String, Arc<dyn Ref>>,
+  data: HashMap<String, Arc<dyn Data>>,
 }
 
 impl Object {
@@ -36,11 +36,11 @@ impl Object {
     }
   }
 
-  pub fn insert(&mut self, key: String, value: Arc<dyn Ref>) {
+  pub fn insert(&mut self, key: String, value: Arc<dyn Data>) {
     if let Some(old_value) = self.data.insert(key, value) {
       panic!("overriding object value {:?}", old_value);
     }
   }
 }
 
-impl Ref for Object {}
+impl Data for Object {}

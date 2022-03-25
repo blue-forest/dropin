@@ -14,5 +14,6 @@ pest = "2.1.3"
 pest_derive = "2.1.0"
 structopt = "0.3"
 termion = "1.5.6"
+wasm-ir = { git = "https://github.com/theblueforest/wasm-ir.git", branch = "develop" }
 wasmtime = "0.34.1"
 wasmtime-wasi = "0.34.1"

@@ -23,11 +23,15 @@ use std::fmt::Debug;
 
 mod bytes;
 pub use bytes::Byte;
+mod lists;
+pub use lists::List;
 mod objects;
 pub use objects::Object;
 mod queries;
 pub use queries::Query;
+mod roots;
+pub use roots::{Root, Ref};
 mod texts;
 pub use texts::Text;
 
-pub trait Ref: Debug + Send + Sync {}
+pub trait Data: Debug + Send + Sync {}

@@ -19,53 +19,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_ir::{Local, LocalBuilder, Module};
-
 use std::collections::HashMap;
-use std::sync::Arc;
 
-use crate::Recipe;
-use crate::functions::Handler;
 use crate::types::Format;
+use super::Data;
 
-#[derive(Debug)]
-pub struct Method {
+pub struct Root {
   #[allow(dead_code)]
-  handlers:  Vec<Box<dyn Handler>>,
-  #[allow(dead_code)]
-  variables: HashMap<String, Format>,
+  nodes: HashMap<String, Ref>
 }
 
-impl Method {
-  pub fn new(
-    variables: HashMap<String, Format>,
-    handlers:  Vec<Box<dyn Handler>>,
-  ) -> Self {
-    Self{ handlers, variables }
-  }
-
-  pub fn compile(&self, _recipe: &dyn Recipe, module: &mut Module) {
-    // TODO: add variables to root
-    let mut instructions = Vec::new();
-    let mut local_builder = LocalBuilder::new();
-    for handler in self.handlers.iter() {
-      handler.compile(&mut local_builder, &mut instructions)
-    }
-    todo!()
+impl Root {
+  pub fn new(nodes: HashMap<String, Ref>) -> Self {
+    Self{ nodes }
   }
 }
 
-#[inline(always)]
-pub fn param_self() -> Arc<Local> {
-  Local::with_param(0)
+pub struct Ref {
+  #[allow(dead_code)]
+  data:   Box<dyn Data>,
+  #[allow(dead_code)]
+  format: Format,
 }
 
-#[inline(always)]
-pub fn param_head() -> Arc<Local> {
-  Local::with_param(1)
-}
-
-#[inline(always)]
-pub fn param_argument() -> Arc<Local> {
-  Local::with_param(2)
+impl Ref {
+  pub fn new(data: Box<dyn Data>, format: Format) -> Self {
+    // TODO: format.validate(data)
+    Self{ data, format }
+  }
 }

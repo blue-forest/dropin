@@ -19,22 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use wasm_ir::{Body, FunctionType, Import, Limit, LocalBuilder, Module};
+
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
 
-use crate::collections::MethodBody;
+use crate::Recipe;
+use crate::collections::Method;
 
 lazy_static! {
   pub static ref BYTE:  Arc<Type> = Arc::new(Type::new(
     "byte".to_string(),
     HashMap::new(),
-    Methods::new((HashMap::new(), Vec::new()))
+    Methods::new(Method::new(HashMap::new(), Vec::new()))
   ));
   pub static ref BYTES: Arc<Type> = Arc::new(Type::new(
     "bytes".to_string(),
     HashMap::new(),
-    Methods::new((HashMap::new(), Vec::new())),
+    Methods::new(Method::new(HashMap::new(), Vec::new())),
   ));
 }
 
@@ -56,16 +59,36 @@ impl Type {
   ) -> Self {
     Self{ id, methods, templates }
   }
+
+  pub fn compile(self) -> Module {
+    let mut module = Module::new();
+    module.import_memory(
+      Import::new("env".to_string(), "memory".to_string()),
+      Limit::new(1, None)
+    );
+
+    // TODO: compile templates & options
+    module.export_function(
+      "_start".to_string(),
+      FunctionType::new(Vec::new(), Vec::new()),
+      Body::new(LocalBuilder::new(), vec![])
+    );
+
+    self.methods.encode.compile(&self, &mut module);
+    module
+  }
 }
+
+impl Recipe for Type {}
 
 #[derive(Debug)]
 pub struct Methods {
   #[allow(dead_code)]
-  encode: MethodBody,
+  encode: Method,
 }
 
 impl Methods {
-  pub fn new(encode: MethodBody) -> Self {
+  pub fn new(encode: Method) -> Self {
     Self{ encode }
   }
 }

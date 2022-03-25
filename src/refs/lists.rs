@@ -19,43 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_ir::{Instruction, LocalBuilder};
-
-use std::fmt::Debug;
 use std::sync::Arc;
 
-use crate::refs::{Query, Data};
-
-pub trait Handler: Debug + Send + Sync {
-  fn compile(
-    &self,
-    local_builder: &mut LocalBuilder,
-    intructions: &mut Vec<Box<dyn Instruction>>,
-  );
-}
+use super::Data;
 
 #[derive(Debug)]
-pub struct Set {
+pub struct List {
   #[allow(dead_code)]
-  query: Query,
-  #[allow(dead_code)]
-  value: Arc<dyn Data>,
+  data: Vec<Arc<dyn Data>>,
 }
 
-impl Set {
-  pub fn new(query: Query, value: Arc<dyn Data>) -> Self {
-    Self{ query, value }
+impl List {
+  pub fn create(data: Vec<Arc<dyn Data>>) -> Arc<dyn Data> {
+    Arc::new(Self{ data })
   }
 }
 
-impl Handler for Set {
-  fn compile(
-    &self,
-    local_builder: &mut LocalBuilder,
-    intructions: &mut Vec<Box<dyn Instruction>>,
-  ) {
-    intructions.extend(vec![
-    ]);
-    todo!()
-  }
-}
+impl Data for List {}

@@ -24,7 +24,7 @@ use std::collections::HashMap;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use crate::collections::MethodBody;
+use crate::collections::Method;
 use crate::types::{self, Format, Methods, Type};
 
 use super::{read_file, read_handlers, RecipeHeader, Rule};
@@ -79,7 +79,7 @@ pub fn read_format(pair: Pair<Rule>) -> Format {
 }
 
 pub fn read_methods(pair: Pair<Rule>) -> Methods {
-  let mut encode: Option<MethodBody> = None;
+  let mut encode: Option<Method> = None;
   for method in pair.into_inner() {
     let mut pairs = method.into_inner();
     let key = pairs.next().expect("expected method key").as_str();
@@ -94,7 +94,7 @@ pub fn read_methods(pair: Pair<Rule>) -> Methods {
     }
     let handlers = read_handlers(next_pair.into_inner());
     match key {
-      "encode" => { encode = Some((variables, handlers)) }
+      "encode" => { encode = Some(Method::new(variables, handlers)) }
       _ => { panic!("unknown method: {}", key) }
     }
   }

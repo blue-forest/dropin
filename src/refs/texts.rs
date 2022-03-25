@@ -19,7 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Ref;
+use super::Data;
 
 #[derive(Debug)]
 pub struct Text {
@@ -33,5 +33,5 @@ impl Text {
   }
 }
 
-impl Ref for Text {}
+impl Data for Text {}
 

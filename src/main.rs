@@ -26,6 +26,7 @@ use structopt::StructOpt;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
+use dropin::config::setup_config;
 use dropin::parser::{print_pairs, read_file, read_type};
 
 #[derive(StructOpt, Debug)]
@@ -35,6 +36,12 @@ enum Commands {
     /// Path to the recipe to compile
     #[structopt(parse(from_os_str))]
     file: PathBuf
+  },
+  /// Initialize file structure
+  Config {
+    /// Name of the user
+    #[structopt()]
+    username: Option<String>,
   },
   /// Debug tools. To learn more: dropin debug --help
   Debug {
@@ -67,8 +74,9 @@ pub struct Cli {
 fn main() {
   let cli = Cli::from_args();
   match cli.cmd {
-    Commands::Compile{file} => compile(file),
-    Commands::Debug{cmd} => debug(cmd),
+    Commands::Compile{file}    => compile(file),
+    Commands::Config{username} => config(username),
+    Commands::Debug{cmd}       => debug(cmd),
   }
 }
 
@@ -77,6 +85,10 @@ fn compile(path: PathBuf) {
   println!("{:?}", type_);
   let ir = type_.compile();
   println!("{:?}", ir);
+}
+
+fn config(username: Option<String>) {
+  setup_config(username);
 }
 
 fn debug(cmd: DebugTools) {

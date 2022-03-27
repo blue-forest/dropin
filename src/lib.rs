@@ -20,6 +20,7 @@
  */
 
 pub mod collections;
+pub mod config;
 pub mod functions;
 pub mod issues;
 pub mod parser;

@@ -24,7 +24,8 @@ use dialoguer::theme::ColorfulTheme;
 
 use std::fmt::Display;
 use std::fs::create_dir;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+use std::sync::Arc;
 
 mod error;
 use error::ConfigError;
@@ -32,9 +33,12 @@ mod model;
 use model::ModelCommand;
 mod owner;
 use owner::OwnerCommand;
+mod recipe;
+use recipe::{RecipeCommand, Type};
 mod root;
 use root::get_root;
 mod utils;
+use utils::get_dirs;
 
 pub struct Cli {
   model_selected: Option<usize>,
@@ -42,6 +46,7 @@ pub struct Cli {
   owner_selected: Option<usize>,
   owners:         Vec<String>,
   root:           PathBuf,
+  version:        String,
 }
 
 impl Cli {
@@ -60,14 +65,16 @@ impl Cli {
       owner_selected: None,
       owners,
       root,
+      version: "v1".to_string(), // TODO: deal with versions
     }
   }
 
   #[inline(always)]
   pub fn run(&mut self) {
     let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(OwnerCommand{}),
+      Box::new(RecipeCommand::new(Arc::new(Type))),
       Box::new(ModelCommand{}),
+      Box::new(OwnerCommand{}),
     ];
     self.run_select("Home", &commands);
   }
@@ -85,19 +92,23 @@ impl Cli {
       select.with_prompt(self.prompt(title));
       let command = select.interact().unwrap();
       if command == 0 { break; }
-      if commands[command-1].run(self) { break; }
+      if enabled_commands[command-1].run(self) { break; }
     }
   }
 
   fn prompt(&self, title: &str) -> String {
     let mut result = String::new();
-    result.push_str(
-      if let Some(owner) = self.owner_selected {
-        &self.owners[owner]
-      } else {
-        "<no owner selected>"
+    if let Some(owner) = self.owner_selected {
+      result.push_str(&self.owners[owner]);
+      if let Some(model) = self.model_selected {
+        result.push_str(":");
+        result.push_str(&self.models[model]);
+        result.push_str(":");
+        result.push_str(&self.version);
       }
-    );
+    } else {
+      result.push_str("<no owner selected>");
+    }
     result.push_str(": ");
     result.push_str(title);
     result
@@ -113,17 +124,3 @@ trait Command: Display {
   fn is_enabled(&self, _cli: &Cli) -> bool { true }
 }
 
-fn get_dirs(path: &Path) -> Vec<String> {
-  let mut result = Vec::new();
-  for entry in path.read_dir().unwrap() {
-    if let Ok(owner_dir) = entry {
-      let path = owner_dir.path();
-      if path.is_dir() {
-        result.push(
-          path.file_name().unwrap().to_str().unwrap().to_string(),
-        );
-      }
-    }
-  }
-  result
-}

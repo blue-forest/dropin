@@ -24,55 +24,64 @@ use dialoguer::theme::ColorfulTheme;
 
 use std::fmt::Display;
 use std::fs::create_dir;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 mod error;
 use error::ConfigError;
-mod root;
-use root::get_root;
+mod model;
+use model::ModelCommand;
 mod owner;
 use owner::OwnerCommand;
+mod root;
+use root::get_root;
+mod utils;
 
 pub struct Cli {
-  root:           PathBuf,
+  model_selected: Option<usize>,
+  models:         Vec<String>,
+  owner_selected: Option<usize>,
   owners:         Vec<String>,
-  selected_owner: Option<usize>,
+  root:           PathBuf,
 }
 
 impl Cli {
   pub fn new() -> Self {
     let root = get_root();
-    let mut owners = Vec::new();
-    if !root.exists() {
+    let owners = if !root.exists() {
       println!("Created drop'in root");
       create_dir(&root).unwrap();
+      Vec::new()
     } else {
-      for entry in root.read_dir().unwrap() {
-        if let Ok(owner_dir) = entry {
-          let path = owner_dir.path();
-          if path.is_dir() {
-            owners.push(
-              path.file_name().unwrap().to_str().unwrap().to_string(),
-            );
-          }
-        }
-      }
+      get_dirs(&root)
+    };
+    Self{
+      model_selected: None,
+      models:         Vec::new(),
+      owner_selected: None,
+      owners,
+      root,
     }
-    Self{ root, owners, selected_owner: None }
   }
 
+  #[inline(always)]
   pub fn run(&mut self) {
-    let commands: Vec<Box<dyn Command>> = vec![ Box::new(OwnerCommand{}) ];
+    let commands: Vec<Box<dyn Command>> = vec![
+      Box::new(OwnerCommand{}),
+      Box::new(ModelCommand{}),
+    ];
     self.run_select("Home", &commands);
   }
 
   fn run_select(&mut self, title: &str, commands: &[Box<dyn Command>]) {
     let theme = ColorfulTheme::default();
-    let mut select = Select::with_theme(&theme);
-    select.item("exit")
-      .items(&commands)
-      .default(1);
     loop {
+      let enabled_commands: Vec<&Box<dyn Command>> = commands.iter()
+        .filter(|x| x.is_enabled(self))
+        .collect();
+      let mut select = Select::with_theme(&theme);
+      select.item("exit")
+        .items(&enabled_commands)
+        .default(1);
       select.with_prompt(self.prompt(title));
       let command = select.interact().unwrap();
       if command == 0 { break; }
@@ -83,7 +92,7 @@ impl Cli {
   fn prompt(&self, title: &str) -> String {
     let mut result = String::new();
     result.push_str(
-      if let Some(owner) = self.selected_owner {
+      if let Some(owner) = self.owner_selected {
         &self.owners[owner]
       } else {
         "<no owner selected>"
@@ -101,4 +110,20 @@ impl Default for Cli {
 
 trait Command: Display {
   fn run(&self, cli: &mut Cli) -> bool;
+  fn is_enabled(&self, _cli: &Cli) -> bool { true }
+}
+
+fn get_dirs(path: &Path) -> Vec<String> {
+  let mut result = Vec::new();
+  for entry in path.read_dir().unwrap() {
+    if let Ok(owner_dir) = entry {
+      let path = owner_dir.path();
+      if path.is_dir() {
+        result.push(
+          path.file_name().unwrap().to_str().unwrap().to_string(),
+        );
+      }
+    }
+  }
+  result
 }

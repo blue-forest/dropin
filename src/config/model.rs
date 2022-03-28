@@ -22,36 +22,42 @@
 use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
 
-use std::fmt::{Display, Error, Formatter};
+use std::fmt::{Display, Formatter, Error};
 use std::fs::create_dir;
 
-use super::{Cli, Command};
+use super::{Cli, Command, get_dirs};
 use super::utils::validate_name;
 
-pub struct OwnerCommand;
+pub struct ModelCommand;
 
-impl Display for OwnerCommand {
+impl Display for ModelCommand {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "owner".fmt(f)
+    "model".fmt(f)
   }
 }
 
-impl Command for OwnerCommand {
+impl Command for ModelCommand {
   fn run(&self, cli: &mut Cli) -> bool {
+    let owner_path = &cli.root.join(
+      &cli.owners[cli.owner_selected.unwrap()]
+    );
+    cli.models = get_dirs(owner_path);
     let mut commands: Vec<Box<dyn Command>> = Vec::new();
-    for (i, owner) in cli.owners.iter().enumerate() {
+    for (i, model) in cli.models.iter().enumerate() {
       commands.push(Box::new(Select{
-        name:  owner.to_string(),
+        name:  model.to_string(),
         index: i,
       }));
     }
     commands.push(Box::new(Add{}));
-    cli.run_select("Owner", &commands);
+    cli.run_select("Model", &commands);
     false
   }
+
+  fn is_enabled(&self, cli: &Cli) -> bool { cli.owner_selected.is_some() }
 }
 
-struct Select{
+struct Select {
   name:  String,
   index: usize,
 }
@@ -64,7 +70,7 @@ impl Display for Select {
 
 impl Command for Select {
   fn run(&self, cli: &mut Cli) -> bool {
-    cli.owner_selected = Some(self.index);
+    cli.model_selected = Some(self.index);
     true
   }
 }
@@ -79,24 +85,28 @@ impl Display for Add {
 
 impl Command for Add {
   fn run(&self, cli: &mut Cli) -> bool {
-    let (owner_name, owner_path) = loop {
-      let owner_name: String = Input::with_theme(&ColorfulTheme::default())
-        .with_prompt("Owner name for your recipes ? (leave empty to cancel)")
+    let owner_path = &cli.root.join(
+      &cli.owners[cli.owner_selected.unwrap()]
+    );
+    let (model_name, model_path) = loop {
+      let model_name: String = Input::with_theme(&ColorfulTheme::default())
+        .with_prompt("Model name for your recipes ? (leave empty to cancel)")
         .allow_empty(true)
         .interact_text().unwrap();
-      if owner_name.is_empty() { return false; }
-      let owner_path = cli.root.join(&owner_name);
-      if let Err(err) = validate_name(&owner_path, &owner_name) {
+      if model_name.is_empty() { return false; }
+      let model_path = owner_path.join(&model_name);
+      if let Err(err) = validate_name(&model_path, &model_name) {
         println!("{}", err);
         continue;
       }
-      break (owner_name, owner_path);
+      break (model_name, model_path);
     };
-    create_dir(&owner_path).unwrap();
-    println!("Owner {} created", owner_name);
-    let index = cli.owners.len();
-    cli.owners.push(owner_name);
-    cli.owner_selected = Some(index);
+    create_dir(&model_path).unwrap();
+    create_dir(&model_path.join("v1")).unwrap();
+    println!("Model {} created", model_name);
+    let index = cli.models.len();
+    cli.models.push(model_name);
+    cli.model_selected = Some(index);
     true
   }
 }

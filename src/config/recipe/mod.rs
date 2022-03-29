@@ -67,8 +67,8 @@ impl Command for RecipeCommand {
 }
 
 fn get_entries(
-  path: &Path,
-  recipe: Arc<dyn Recipe>,
+  path:       &Path,
+  recipe:     Arc<dyn Recipe>,
   namespaces: Arc<Vec<String>>,
 ) -> Vec<Box<dyn Command>> {
   let mut commands: Vec<Box<dyn Command>> = Vec::new();

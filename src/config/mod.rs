@@ -23,7 +23,7 @@ use dialoguer::theme::ColorfulTheme;
 
 use std::fmt::Display;
 use std::fs::create_dir;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 
 mod error;

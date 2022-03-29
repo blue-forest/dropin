@@ -28,7 +28,8 @@ use std::sync::Arc;
 
 use crate::config::{Cli, Command};
 use crate::config::path::get_version;
-use super::Recipe;
+use super::{Recipe, RecipeCommand};
+use super::namespace::Namespace;
 
 pub struct Add {
   namespaces: Arc<Vec<String>>,
@@ -92,9 +93,22 @@ impl Command for Add {
       let mut file = File::create(&path).unwrap();
       file.write_all(recipe_content.as_bytes()).unwrap();
       println!("Recipe updated at {}", path.to_str().unwrap());
+      if self.namespaces.is_empty() {
+        RecipeCommand::new(self.recipe.clone()).run(cli);
+      } else {
+        let id = &self.namespaces[0];
+        let mut namespaces = (*self.namespaces).clone();
+        namespaces.pop();
+        Namespace::new(
+          self.recipe.clone(),
+          id,
+          Arc::new(namespaces),
+        ).run(cli);
+      };
+      true
     } else {
       println!("Edition Canceled");
+      false
     }
-    false
   }
 }

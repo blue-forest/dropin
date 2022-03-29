@@ -25,8 +25,9 @@ use structopt::StructOpt;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use dropin::config;
-use dropin::parser::{print_pairs, read_file, read_type};
+use dropin_compiler::parser::{print_pairs, read_file, read_type};
+
+mod interactive;
 
 #[derive(StructOpt, Debug)]
 enum Commands {
@@ -70,7 +71,7 @@ fn main() {
   let cli = Cli::from_args();
   match cli.cmd {
     Commands::Compile{file} => compile(file),
-    Commands::Config        => config::Cli::new().run(),
+    Commands::Config        => interactive::Cli::new().run(),
     Commands::Debug{cmd}    => debug(cmd),
   }
 }

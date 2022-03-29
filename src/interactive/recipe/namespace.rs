@@ -22,8 +22,8 @@
 use std::fmt::{Display, Error, Formatter};
 use std::sync::Arc;
 
-use crate::config::{Cli, Command};
-use crate::config::path::get_version;
+use crate::interactive::{Cli, Command};
+use crate::interactive::path::get_version;
 use super::{get_entries, Recipe};
 
 pub struct Namespace {

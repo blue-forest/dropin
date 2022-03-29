@@ -30,7 +30,7 @@ mod values;
 pub use values::read_value;
 
 #[derive(Parser)]
-#[grammar = "../target/parser/types.pest"]
+#[grammar = "../../target/parser/types.pest"]
 struct RecipesParser;
 
 pub fn read_file<'a>(content: &'a str) -> Pair<'a, Rule> {

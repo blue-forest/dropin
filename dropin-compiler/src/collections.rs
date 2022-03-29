@@ -18,43 +18,53 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_ir::{Instruction, LocalBuilder};
+use wasm_ir::{Local, LocalBuilder, Module};
 
-use std::fmt::Debug;
+use std::collections::HashMap;
 use std::sync::Arc;
 
-use crate::refs::{Query, Data};
-
-pub trait Handler: Debug + Send + Sync {
-  fn compile(
-    &self,
-    local_builder: &mut LocalBuilder,
-    intructions: &mut Vec<Box<dyn Instruction>>,
-  );
-}
+use crate::Recipe;
+use crate::functions::Handler;
+use crate::types::Format;
 
 #[derive(Debug)]
-pub struct Set {
+pub struct Method {
   #[allow(dead_code)]
-  query: Query,
+  handlers:  Vec<Box<dyn Handler>>,
   #[allow(dead_code)]
-  value: Arc<dyn Data>,
+  variables: HashMap<String, Format>,
 }
 
-impl Set {
-  pub fn new(query: Query, value: Arc<dyn Data>) -> Self {
-    Self{ query, value }
+impl Method {
+  pub fn new(
+    variables: HashMap<String, Format>,
+    handlers:  Vec<Box<dyn Handler>>,
+  ) -> Self {
+    Self{ handlers, variables }
   }
-}
 
-impl Handler for Set {
-  fn compile(
-    &self,
-    local_builder: &mut LocalBuilder,
-    intructions: &mut Vec<Box<dyn Instruction>>,
-  ) {
-    intructions.extend(vec![
-    ]);
+  pub fn compile(&self, _recipe: &dyn Recipe, _module: &mut Module) {
+    // TODO: add variables to root
+    let mut instructions = Vec::new();
+    let mut local_builder = LocalBuilder::new();
+    for handler in self.handlers.iter() {
+      handler.compile(&mut local_builder, &mut instructions)
+    }
     todo!()
   }
+}
+
+#[inline(always)]
+pub fn param_self() -> Arc<Local> {
+  Local::with_param(0)
+}
+
+#[inline(always)]
+pub fn param_head() -> Arc<Local> {
+  Local::with_param(1)
+}
+
+#[inline(always)]
+pub fn param_argument() -> Arc<Local> {
+  Local::with_param(2)
 }

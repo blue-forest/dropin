@@ -26,8 +26,8 @@ use std::fmt::{Display, Error, Formatter};
 use std::io::Write;
 use std::sync::Arc;
 
-use crate::config::{Cli, Command};
-use crate::config::path::get_version;
+use crate::interactive::{Cli, Command};
+use crate::interactive::path::get_version;
 use super::{Recipe, RecipeCommand};
 use super::namespace::Namespace;
 

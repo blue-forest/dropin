@@ -21,7 +21,7 @@
 
 use std::path::PathBuf;
 
-use crate::config::Cli;
+use crate::interactive::Cli;
 
 fn push_owner(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   if let Some(owner) = cli.owner_selected {
@@ -32,6 +32,7 @@ fn push_owner(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   }
 }
 
+#[allow(dead_code)] // TODO: use this instead of &cli.owners[owner]
 pub fn get_owner(cli: &Cli) -> Option<PathBuf> {
   push_owner(cli, cli.root.clone())
 }
@@ -45,6 +46,7 @@ fn push_model(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   }
 }
 
+#[allow(dead_code)] // TODO: use this instead of &cli.models[model]
 pub fn get_model(cli: &Cli) -> Option<PathBuf> {
   let mut buf = cli.root.clone();
   buf = push_owner(cli, buf).unwrap();

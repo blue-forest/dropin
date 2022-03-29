@@ -18,20 +18,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod collections;
-pub mod config;
-pub mod functions;
-pub mod issues;
-pub mod parser;
-pub mod refs;
-pub mod types;
+use wasm_ir::{Instruction, LocalBuilder};
 
-#[macro_use]
-extern crate pest_derive;
+use std::fmt::Debug;
+use std::sync::Arc;
 
-#[macro_use]
-extern crate lazy_static;
+use crate::refs::{Query, Data};
 
-pub trait Recipe {
+pub trait Handler: Debug + Send + Sync {
+  fn compile(
+    &self,
+    local_builder: &mut LocalBuilder,
+    intructions: &mut Vec<Box<dyn Instruction>>,
+  );
 }
 
+#[derive(Debug)]
+pub struct Set {
+  #[allow(dead_code)]
+  query: Query,
+  #[allow(dead_code)]
+  value: Arc<dyn Data>,
+}
+
+impl Set {
+  pub fn new(query: Query, value: Arc<dyn Data>) -> Self {
+    Self{ query, value }
+  }
+}
+
+impl Handler for Set {
+  fn compile(
+    &self,
+    _local_builder: &mut LocalBuilder,
+    intructions: &mut Vec<Box<dyn Instruction>>,
+  ) {
+    intructions.extend(vec![
+    ]);
+    todo!()
+  }
+}

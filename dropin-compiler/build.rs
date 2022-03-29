@@ -4,10 +4,9 @@ use std::ops::Index;
 fn main() {
   let mut main = read_to_string("parser/types.pest").unwrap();
   replace_dynamics(&mut main);
-  let _ = create_dir("target/parser");
-  // println!("{}", main);
-  // std::process::exit(1);
-  write("target/parser/types.pest", main).unwrap();
+  let _ = create_dir("../target/parser");
+  println!("{:?}", std::env::current_dir().unwrap());
+  write("../target/parser/types.pest", main).unwrap();
 }
 
 fn replace_dynamics(content: &mut String) {
@@ -17,7 +16,6 @@ fn replace_dynamics(content: &mut String) {
     let mut path = "parser/".to_string();
     path.push_str(content.index((*start+offset)..(*end+offset)));
     path.push_str(".pest");
-    println!("{}", path);
     let mut sub_content = read_to_string(path).unwrap();
     replace_dynamics(&mut sub_content);
     content.replace_range((*start-3+offset)..(*end+3+offset), &sub_content);
@@ -84,7 +82,6 @@ fn get_dynamics_and_remove_comments(content: &mut String) -> Vec<(usize, usize)>
         if let Some(b'/') = iter.next() {
           in_block_comment = false;
           remove_at.push((start, i+1));
-          println!("{} {}", i, start);
           i -= i - start;
           // continue so we won't add 1 to i, and the above is equivalent to
           // i -= i + 1 - start

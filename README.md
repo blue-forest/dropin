@@ -1,5 +1,4 @@
-
-# drop'in compiler
+# drop'in
 
 [![License](https://img.shields.io/github/license/theblueforest/dropin-compiler)](./COPYING)
 [![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](#)
@@ -19,6 +18,11 @@ You are free to explore the code and fork it, we are open to [Issues and Pull Re
 The codebase is [licensed under GNU Affero General Public License v3](./COPYING), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
 
 If you want to join the development and contribute to the project, please reach us at contact@blueforest.cc.
+
+
+## Documentation
+You can find the documentation of the drop'in language on [dropin.recipes](https://dropin.recipes).
+
 
 ## Contributors
 - Nazim Lachter ([@n4zim](https://github.com/n4zim))

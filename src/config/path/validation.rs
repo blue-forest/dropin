@@ -19,33 +19,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use home::home_dir;
-use path_clean::PathClean;
-
-use std::env::{var, current_dir};
 use std::path::{Path, PathBuf};
 
 use super::ConfigError;
 
-pub fn get_root() -> PathBuf {
-  if let Ok(root) = var("DROPIN_ROOT") {
-    println!("Using $DROPIN_ROOT ({})", root);
-    return PathBuf::from(root);
-  }
-  let mut path = match home_dir() {
-    Some(path) => { path.join("dropin") }
-    None       => { current_dir().unwrap().join("dropin") }
-  };
-  if path.is_relative() {
-    path = current_dir().unwrap().join(path).clean();
-  } else {
-    path = path.clean();
-  }
-  validate_path(&path).unwrap();
-  path
-}
-
-fn validate_path(path: &PathBuf) -> Result<(), ConfigError> {
+pub fn validate_path(path: &PathBuf) -> Result<(), ConfigError> {
   if !path.exists() {
     match path.parent() {
       Some(parent) => { check_permissions(parent, true) }
@@ -58,7 +36,7 @@ fn validate_path(path: &PathBuf) -> Result<(), ConfigError> {
   }
 }
 
-fn check_permissions(path: &Path, is_dir: bool) -> Result<(), ConfigError> {
+pub fn check_permissions(path: &Path, is_dir: bool) -> Result<(), ConfigError> {
   match path.metadata() {
     Ok(metadata) => {
       if metadata.is_dir() != is_dir {

@@ -27,38 +27,19 @@ use std::fmt::{Display, Error, Formatter};
 use std::io::Write;
 use std::sync::Arc;
 
-use super::{Cli, Command};
+use crate::config::{Cli, Command};
+use crate::config::path::get_version;
+use super::Recipe;
 
-pub struct RecipeCommand {
-  recipe: Arc<dyn Recipe>,
+pub struct Add {
+  namespaces: Arc<Vec<String>>,
+  recipe:     Arc<dyn Recipe>,
 }
 
-impl RecipeCommand {
-  pub fn new(recipe: Arc<dyn Recipe>) -> Self {
-    Self{ recipe }
+impl Add {
+  pub fn new(recipe: Arc<dyn Recipe>, namespaces: Arc<Vec<String>>) -> Self {
+    Self{ namespaces, recipe }
   }
-}
-
-impl Display for RecipeCommand {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    self.recipe.fmt(f)
-  }
-}
-
-impl Command for RecipeCommand {
-  fn run(&self, cli: &mut Cli) -> bool {
-    let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(Add{ recipe: self.recipe.clone() })
-    ];
-    cli.run_select(&format!("{}", self.recipe), &commands);
-    false
-  }
-
-  fn is_enabled(&self, cli: &Cli) -> bool { cli.model_selected.is_some() }
-}
-
-struct Add {
-  recipe: Arc<dyn Recipe>,
 }
 
 impl Display for Add {
@@ -74,34 +55,41 @@ impl Command for Add {
       .allow_empty(true)
       .interact_text().unwrap();
     if id.is_empty() { return false; }
-    let mut path = cli.root.clone();
-    let owner = &cli.owners[cli.owner_selected.unwrap()];
-    path.push(owner);
-    let model = &cli.models[cli.model_selected.unwrap()];
-    path.push(model);
-    path.push(&cli.version);
+
+    let owner       = &cli.owners[cli.owner_selected.unwrap()];
+    let model       = &cli.models[cli.model_selected.unwrap()];
     let recipe_name = self.recipe.dir_name();
-    path.push(&recipe_name);
-    let namespaces: Vec<&str> = id.split('/').collect();
-    for namespace in namespaces.get(..namespaces.len()-1).unwrap() {
-      path.push(namespace);
-    }
-    if !path.exists() {
-      create_dir_all(&path).unwrap();
-    }
-    path.push(&format!("{}.dropin", namespaces[namespaces.len()-1]));
-    if let Some(recipe_content) = Editor::new()
+
+    let mut full_id = String::new();
+    full_id.push_str(&self.namespaces.join("/"));
+    if !full_id.is_empty() { full_id.push('/'); }
+    full_id.push_str(&id);
+    let editor = Editor::new()
       .edit(&format!(
         "{} {}:{}:{}:{}\n{:=>width$}\n",
-        recipe_name, owner, model, cli.version, id, 
-        "", width=recipe_name.len() 
+        recipe_name, owner, model, cli.version, full_id, 
+        "", width=recipe_name.len()
           + owner.len()
           + model.len()
           + cli.version.len()
-          + id.len()
+          + full_id.len()
           + 4,
-      ))
-      .unwrap() {
+      ));
+    if let Some(recipe_content) = editor.unwrap() {
+      let mut path = get_version(cli).unwrap();
+      path.push(&recipe_name);
+      for namespace in self.namespaces.iter() {
+        path.push(namespace);
+      }
+      let namespaces: Vec<&str> = id.split('/').collect();
+      for namespace in namespaces.get(..namespaces.len()-1).unwrap() {
+        path.push(namespace);
+      }
+
+      if !path.exists() {
+        create_dir_all(&path).unwrap();
+      }
+      path.push(&format!("{}.dropin", namespaces[namespaces.len()-1]));
       let mut file = File::create(&path).unwrap();
       file.write_all(recipe_content.as_bytes()).unwrap();
       println!("Recipe updated at {}", path.to_str().unwrap());
@@ -110,20 +98,4 @@ impl Command for Add {
     }
     false
   }
-}
-
-pub trait Recipe: Display {
-  fn dir_name(&self) -> String;
-}
-
-pub struct Type;
-
-impl Display for Type {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "Type".fmt(f)
-  }
-}
-
-impl Recipe for Type {
-  fn dir_name(&self) -> String { "types".to_string() }
 }

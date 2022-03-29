@@ -24,7 +24,7 @@ use dialoguer::theme::ColorfulTheme;
 
 use std::fmt::Display;
 use std::fs::create_dir;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
 mod error;
@@ -35,8 +35,8 @@ mod owner;
 use owner::OwnerCommand;
 mod recipe;
 use recipe::{RecipeCommand, Type};
-mod root;
-use root::get_root;
+mod path;
+use path::get_root;
 mod utils;
 use utils::get_dirs;
 
@@ -86,7 +86,7 @@ impl Cli {
         .filter(|x| x.is_enabled(self))
         .collect();
       let mut select = Select::with_theme(&theme);
-      select.item("exit")
+      select.item("◀ back")
         .items(&enabled_commands)
         .default(1);
       select.with_prompt(self.prompt(title));

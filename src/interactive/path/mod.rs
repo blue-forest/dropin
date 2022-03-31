@@ -39,8 +39,8 @@ pub fn get_root() -> PathBuf {
     return PathBuf::from(root);
   }
   let mut path = match home_dir() {
-    Some(path) => { path.join("dropin") }
-    None       => { current_dir().unwrap().join("dropin") }
+    Some(path) => { path.join(".dropin.recipes") }
+    None       => { current_dir().unwrap().join(".dropin.recipes") }
   };
   if path.is_relative() {
     path = current_dir().unwrap().join(path).clean();

@@ -18,11 +18,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use super::ConfigError;
 
-pub fn validate_path(path: &PathBuf) -> Result<(), ConfigError> {
+pub fn validate_path(path: &Path) -> Result<(), ConfigError> {
   if !path.exists() {
     match path.parent() {
       Some(parent) => { check_permissions(parent, true) }

@@ -45,14 +45,12 @@ pub fn validate_name(root: &Path, name: &str) -> Result<(), ConfigError> {
 
 pub fn get_dirs(path: &Path) -> Vec<String> {
   let mut result = Vec::new();
-  for entry in path.read_dir().unwrap() {
-    if let Ok(owner_dir) = entry {
-      let path = owner_dir.path();
-      if path.is_dir() {
-        result.push(
-          path.file_name().unwrap().to_str().unwrap().to_string(),
-        );
-      }
+  for owner_dir in path.read_dir().unwrap().flatten() {
+    let path = owner_dir.path();
+    if path.is_dir() {
+      result.push(
+        path.file_name().unwrap().to_str().unwrap().to_string(),
+      );
     }
   }
   result

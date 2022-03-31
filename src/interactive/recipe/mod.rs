@@ -73,21 +73,19 @@ fn get_entries(
 ) -> Vec<Box<dyn Command>> {
   let mut commands: Vec<Box<dyn Command>> = Vec::new();
   if let Ok(dir) = read_dir(path) {
-    for entry in dir {
-      if let Ok(entry) = entry {
-        if entry.path().is_dir() {
-          commands.push(Box::new(Namespace::new(
-            recipe.clone(),
-            &entry.path().file_name().unwrap().to_str().unwrap(),
-            namespaces.clone(),
-          )));
-        } else {
-          commands.push(Box::new(Edit::new(
-            recipe.clone(),
-            &entry.path().file_stem().unwrap().to_str().unwrap(),
-            namespaces.clone(),
-          )));
-        }
+    for entry in dir.flatten() {
+      if entry.path().is_dir() {
+        commands.push(Box::new(Namespace::new(
+          recipe.clone(),
+          entry.path().file_name().unwrap().to_str().unwrap(),
+          namespaces.clone(),
+        )));
+      } else {
+        commands.push(Box::new(Edit::new(
+          recipe.clone(),
+          entry.path().file_stem().unwrap().to_str().unwrap(),
+          namespaces.clone(),
+        )));
       }
     }
   }

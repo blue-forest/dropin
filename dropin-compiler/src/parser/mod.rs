@@ -33,8 +33,8 @@ pub use values::read_value;
 #[grammar = "../../target/parser/types.pest"]
 struct RecipesParser;
 
-pub fn read_file<'a>(content: &'a str) -> Pair<'a, Rule> {
-  let mut pairs = RecipesParser::parse(Rule::main, &content)
+pub fn read_file(content: &str) -> Pair<Rule> {
+  let mut pairs = RecipesParser::parse(Rule::main, content)
     .unwrap_or_else(|e| {
       panic!("{}", e);
     });

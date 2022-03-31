@@ -54,7 +54,7 @@ pub fn get_model(cli: &Cli) -> Option<PathBuf> {
 }
 
 fn push_version(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
-  if cli.version != "" {
+  if !cli.version.is_empty() {
     buf.push(&cli.version);
     Some(buf)
   } else {

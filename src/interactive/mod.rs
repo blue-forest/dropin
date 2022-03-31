@@ -100,9 +100,9 @@ impl Cli {
     if let Some(owner) = self.owner_selected {
       result.push_str(&self.owners[owner]);
       if let Some(model) = self.model_selected {
-        result.push_str(":");
+        result.push(':');
         result.push_str(&self.models[model]);
-        result.push_str(":");
+        result.push(':');
         result.push_str(&self.version);
       }
     } else {

@@ -76,16 +76,13 @@ fn get_dynamics_and_remove_comments(content: &mut String) -> Vec<(usize, usize)>
       } else if in_line_comment && current_char == b'\n' {
         in_line_comment = false;
         remove_at.push((start, i));
-        i -= i - start;
+        i = start;
       } else if in_block_comment && current_char == b'*' {
         i += 1;
         if let Some(b'/') = iter.next() {
           in_block_comment = false;
           remove_at.push((start, i+1));
-          i -= i - start;
-          // continue so we won't add 1 to i, and the above is equivalent to
-          // i -= i + 1 - start
-          // without overflow when start = 0
+          i = start;
           continue
         }
       }

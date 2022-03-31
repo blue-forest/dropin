@@ -37,17 +37,11 @@ enum Commands {
     #[structopt(parse(from_os_str))]
     file: PathBuf
   },
-  /// Initialize file structure
-  Config,
   /// Debug tools. To learn more: dropin debug --help
   Debug {
     #[structopt(subcommand)]
     cmd: DebugTools,
   },
-}
-
-#[derive(StructOpt, Debug)]
-struct CompileOpts {
 }
 
 #[derive(StructOpt, Debug)]
@@ -64,15 +58,15 @@ enum DebugTools {
 #[structopt(name = "drop'in compiler")]
 pub struct Cli {
   #[structopt(subcommand)]
-  cmd: Commands,
+  cmd: Option<Commands>,
 }
 
 fn main() {
   let cli = Cli::from_args();
   match cli.cmd {
-    Commands::Compile{file} => compile(file),
-    Commands::Config        => interactive::Cli::new().run(),
-    Commands::Debug{cmd}    => debug(cmd),
+    Some(Commands::Compile{file}) => compile(file),
+    Some(Commands::Debug{cmd})    => debug(cmd),
+    None                          => interactive::Cli::new().run(),
   }
 }
 

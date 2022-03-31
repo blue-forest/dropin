@@ -42,4 +42,8 @@ impl Object {
   }
 }
 
+impl Default for Object {
+  fn default() -> Self { Self::new() }
+}
+
 impl Data for Object {}

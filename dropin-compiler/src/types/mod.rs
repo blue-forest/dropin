@@ -117,7 +117,7 @@ impl Format {
   }
 
   pub fn add_format(&mut self, key: String, format: Format) {
-    if let Some(_) = self.format.insert(key, format) {
+    if self.format.insert(key, format).is_some() {
       panic!("trying to set an existing key format");
     }
   }

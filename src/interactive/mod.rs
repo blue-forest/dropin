@@ -33,7 +33,13 @@ use model::ModelCommand;
 mod owner;
 use owner::OwnerCommand;
 mod recipe;
-use recipe::{RecipeCommand, Type};
+use recipe::{
+  Collections,
+  Functions,
+  Pipelines,
+  RecipeCommand,
+  Types,
+};
 mod path;
 use path::get_root;
 mod utils;
@@ -71,7 +77,10 @@ impl Cli {
   #[inline(always)]
   pub fn run(&mut self) {
     let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(RecipeCommand::new(Arc::new(Type))),
+      Box::new(RecipeCommand::new(Arc::new(Collections))),
+      Box::new(RecipeCommand::new(Arc::new(Functions))),
+      Box::new(RecipeCommand::new(Arc::new(Pipelines))),
+      Box::new(RecipeCommand::new(Arc::new(Types))),
       Box::new(ModelCommand{}),
       Box::new(OwnerCommand{}),
     ];

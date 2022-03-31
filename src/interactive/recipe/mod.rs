@@ -29,6 +29,8 @@ use super::path::get_version;
 
 mod add;
 use add::Add;
+mod concepts;
+pub use concepts::*;
 mod edit;
 use edit::Edit;
 mod namespace;
@@ -94,17 +96,7 @@ fn get_entries(
 }
 
 pub trait Recipe: Display {
+  fn title(&self) -> String;
   fn dir_name(&self) -> String;
 }
 
-pub struct Type;
-
-impl Display for Type {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "Type".fmt(f)
-  }
-}
-
-impl Recipe for Type {
-  fn dir_name(&self) -> String { "types".to_string() }
-}

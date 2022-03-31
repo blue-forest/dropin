@@ -31,7 +31,7 @@ pub struct OwnerCommand;
 
 impl Display for OwnerCommand {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "owner".fmt(f)
+    "owners".fmt(f)
   }
 }
 

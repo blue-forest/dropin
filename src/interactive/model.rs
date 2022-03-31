@@ -31,7 +31,7 @@ pub struct ModelCommand;
 
 impl Display for ModelCommand {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "model".fmt(f)
+    "models".fmt(f)
   }
 }
 

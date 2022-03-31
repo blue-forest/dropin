@@ -18,9 +18,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod parser;
-pub mod refs;
-pub mod types;
+// PIPELINES
+pipeline           =  { "pipelines" ~ header ~ pipeline_content }
+pipeline_content   =  { options? ~ variables? ~ result? }
 
-#[macro_use]
-extern crate pest_derive;
+
+
+
+
+
+
+
+
+
+// ISSUES
+issue           =  { "issues" ~ header ~ issue_content }
+issue_content   =  { issue_level ~ n ~ issue_format ~ n ~ issue_http? }
+issue_level     =  { "level" ~ s ~ issue_levels }
+issue_levels    =  { "ERROR" | "WARNING" | "FATAL" }
+issue_format    =  { "format" ~ s ~ format }
+issue_http      =  { "http" ~ i ~ "code" ~ s ~ issue_http_code ~ DROP }
+issue_http_code =  { "EXPECTATION_FAILED" }
+

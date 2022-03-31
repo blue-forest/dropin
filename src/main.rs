@@ -25,7 +25,9 @@ use structopt::StructOpt;
 use std::fs::read_to_string;
 use std::path::PathBuf;
 
-use dropin::parser::{print_pairs, read_file, read_type};
+use dropin_compiler::parser::{print_pairs, read_file, read_type};
+
+mod interactive;
 
 #[derive(StructOpt, Debug)]
 enum Commands {
@@ -43,10 +45,6 @@ enum Commands {
 }
 
 #[derive(StructOpt, Debug)]
-struct CompileOpts {
-}
-
-#[derive(StructOpt, Debug)]
 enum DebugTools {
   /// Print the recipe parser output
   Recipe {
@@ -60,36 +58,23 @@ enum DebugTools {
 #[structopt(name = "drop'in compiler")]
 pub struct Cli {
   #[structopt(subcommand)]
-  cmd: Commands,
+  cmd: Option<Commands>,
 }
 
 fn main() {
   let cli = Cli::from_args();
   match cli.cmd {
-    Commands::Compile{file} => compile(file),
-    Commands::Debug{cmd} => debug(cmd),
+    Some(Commands::Compile{file}) => compile(file),
+    Some(Commands::Debug{cmd})    => debug(cmd),
+    None                          => interactive::Cli::new().run(),
   }
-  /*
-  let engine = Engine::default();
-  let module = Module::from_file(&engine, "sandbox/gen.wasm").unwrap();
-  let mut linker = Linker::new(&engine);
-
-  wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
-
-  let wasi_ctx = WasiCtxBuilder::new().inherit_stdio().build();
-  let mut store = Store::new(&engine, wasi_ctx);
-
-  let instance = linker.instantiate(&mut store, &module).unwrap();
-
-  let start = instance.get_typed_func::<(), (), _>(
-    &mut store, "_start"
-  ).unwrap();
-  start.call(&mut store, ()).unwrap();
-  */
 }
 
 fn compile(path: PathBuf) {
-  read_type(path);
+  let type_ = read_type(path);
+  println!("{:?}", type_);
+  let ir = type_.compile();
+  println!("{:?}", ir);
 }
 
 fn debug(cmd: DebugTools) {

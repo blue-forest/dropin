@@ -18,16 +18,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Type;
+use std::sync::Arc;
+
+use super::Data;
 
 #[derive(Debug)]
-pub struct Text {
+pub struct Byte {
+  #[allow(dead_code)]
+  data: u8,
 }
 
-impl Text {
-  pub fn new() -> Self {
-    Self{}
+impl Byte {
+  pub fn create(data: u8) -> Arc<dyn Data> {
+    Arc::new(Self{ data })
   }
 }
 
-impl Type for Text {}
+impl Data for Byte {}

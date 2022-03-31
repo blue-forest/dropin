@@ -18,10 +18,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fmt::Debug;
+use std::collections::HashMap;
 
-mod objects;
-pub use objects::Object;
+use crate::types::Format;
+use super::Data;
 
-pub trait Ref: Debug {
+pub struct Root {
+  #[allow(dead_code)]
+  nodes: HashMap<String, Ref>
+}
+
+impl Root {
+  pub fn new(nodes: HashMap<String, Ref>) -> Self {
+    Self{ nodes }
+  }
+}
+
+pub struct Ref {
+  #[allow(dead_code)]
+  data:   Box<dyn Data>,
+  #[allow(dead_code)]
+  format: Format,
+}
+
+impl Ref {
+  pub fn new(data: Box<dyn Data>, format: Format) -> Self {
+    // TODO: format.validate(data)
+    Self{ data, format }
+  }
 }

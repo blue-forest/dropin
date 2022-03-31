@@ -1,0 +1,39 @@
+types blueforest:dropin:v1:Text
+===============================
+
+templates
+  text bytes
+
+methods
+  encode
+/*
+    variables
+      current_byte byte
+      byte_copy byte
+      carry byte
+*/
+    %
+    set argument
+      0xc0
+      0xff
+      0xee
+/*
+    iterate _, variables.current_byte in $argument %
+      if ($variables.current_byte < 0b10000000) %
+        constraint ($variables.carry = 0) blueforest:dropin:v1:TEXT_INVALID
+        continue
+      if ($variables.carry > 0) %
+        constraint ($variables.current_byte < 0b11000000) blueforest:dropin:v1:TEXT_INVALID
+        continue
+      set variables.byte_copy $variables.current_byte
+      while ($variables.byte_copy > 0b10000000) %
+        set variables.carry ($variables.carry + 1)
+        set variables.byte_copy ($variables.byte_copy << 1)
+      constraint ($variables.carry <= 4) blueforest:dropin:v1:TEXT_INVALID
+    // prepend length
+    set argument ~concat
+      input
+        ~length $argument
+      value $argument
+|global|...|self{refs, fields, id}|...|data|...|head
+*/

@@ -1,0 +1,51 @@
+/*     _              _ _
+ *  __| |_ _ ___ _ __( |_)_ _
+ * / _` | '_/ _ \ '_ \/| | ' \
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
+ *              |_|
+ * Copyright © 2019-2022 Blue Forest
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation under version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+handlers           = _{ inline_handlers | newline_handlers }
+inline_handlers    = _{ s ~ "%" ~ i ~ sub_handlers ~ DROP }
+newline_handlers   = _{ i ~ sameline_handlers ~ DROP }
+sameline_handlers  = _{ "%" ~ n ~ sub_handlers }
+handler            = _{
+  set |
+  handler_if |
+  iterate |
+  handler_while |
+  constraint |
+  handler_continue
+}
+set                =  { "set" ~ s ~ set_query ~ value }
+handler_if         =  {
+  "if" ~ value ~ handlers ~ handler_else?
+}
+handler_else_start = _{ n ~ "else" }
+handler_else       =  {
+  &handler_else_start ~ handler_else_start ~ handlers
+}
+iterate            = {
+  "iterate" ~ s ~ iterate_key ~ ("," ~ s ~ iterate_value)? ~ s
+  ~ "in" ~ value ~ handlers
+}
+iterate_key        =  { iterate_ignore | query }
+iterate_value      =  { iterate_ignore | query }
+iterate_ignore     =  { "_" }
+handler_while      = { "while" ~ value ~ handlers }
+handler_continue   =  { "continue" }
+constraint         =  { "constraint" ~ value ~ s ~ id_model_recipe }
+sub_handlers       =  { handler ~ ( n ~ handler )* }

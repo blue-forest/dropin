@@ -18,19 +18,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod types;
-pub use types::read_type;
-
 use pest::Parser;
 use pest::iterators::{Pair, Pairs};
 use termion::color;
 
+mod functions;
+pub use functions::read_handlers;
+mod types;
+pub use types::read_type;
+mod values;
+pub use values::read_value;
+
 #[derive(Parser)]
-#[grammar = "parser/recipes.pest"]
+#[grammar = "../../target/parser/types.pest"]
 struct RecipesParser;
 
-pub fn read_file<'a>(content: &'a str) -> Pair<'a, Rule> {
-  let mut pairs = RecipesParser::parse(Rule::main, &content)
+pub fn read_file(content: &str) -> Pair<Rule> {
+  let mut pairs = RecipesParser::parse(Rule::main, content)
     .unwrap_or_else(|e| {
       panic!("{}", e);
     });

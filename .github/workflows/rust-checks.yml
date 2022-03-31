@@ -30,4 +30,3 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: Run tests
       run: cargo test --verbose
-

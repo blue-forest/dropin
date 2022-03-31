@@ -1,17 +1,12 @@
-name: Tests
+name: Rust checks
 on:
   push:
-  pull_request:
   workflow_dispatch:
-
-env:
-  CARGO_TERM_COLOR: always
-
 jobs:
-  build:
+  rust_checks:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - uses: actions/cache@v1
       with:
         path: ~/.cargo/registry
@@ -24,6 +19,18 @@ jobs:
       with:
         path: target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        components: clippy
+        override: true
+    - uses: actions-rs/clippy-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        args: --all-features -- -D warnings
+    - uses: actions-rs/audit-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       run: cargo build --verbose
     - name: Run tests

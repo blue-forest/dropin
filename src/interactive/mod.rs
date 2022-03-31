@@ -34,8 +34,8 @@ mod owner;
 use owner::OwnerCommand;
 mod recipe;
 use recipe::{
-  Collections,
   Functions,
+  Modules,
   Pipelines,
   RecipeCommand,
   Types,
@@ -77,8 +77,8 @@ impl Cli {
   #[inline(always)]
   pub fn run(&mut self) {
     let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(RecipeCommand::new(Arc::new(Collections))),
       Box::new(RecipeCommand::new(Arc::new(Functions))),
+      Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Pipelines))),
       Box::new(RecipeCommand::new(Arc::new(Types))),
       Box::new(ModelCommand{}),

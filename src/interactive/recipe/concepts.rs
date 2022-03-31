@@ -2,19 +2,6 @@ use std::fmt::{Display, Error, Formatter};
 
 use super::Recipe;
 
-pub struct Collections;
-
-impl Display for Collections {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "collections".fmt(f)
-  }
-}
-
-impl Recipe for Collections {
-  fn title(&self) -> String { "Collections".to_string() }
-  fn dir_name(&self) -> String { "collections".to_string() }
-}
-
 pub struct Functions;
 
 impl Display for Functions {
@@ -26,6 +13,19 @@ impl Display for Functions {
 impl Recipe for Functions {
   fn title(&self) -> String { "Functions".to_string() }
   fn dir_name(&self) -> String { "types".to_string() }
+}
+
+pub struct Modules;
+
+impl Display for Modules {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "modules".fmt(f)
+  }
+}
+
+impl Recipe for Modules {
+  fn title(&self) -> String { "Modules".to_string() }
+  fn dir_name(&self) -> String { "modules".to_string() }
 }
 
 pub struct Pipelines;

@@ -2,8 +2,8 @@
 
 ## Specs
 
- - [Recipes](recipes/README.md)
- - [Planning](planning.md)
+ - [Recipes](https://dropin.recipes/)
  - [Typing](typing/README.md)
  - [Memory management](memory/README.md)
  - [Compilation](compilation/README.md)
+ - [Cli](cli.md)

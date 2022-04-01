@@ -27,7 +27,7 @@ use std::io::Write;
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
-use crate::interactive::path::get_version;
+use crate::interactive::path::get_namespace;
 use super::{Recipe, RecipeCommand};
 use super::namespace::Namespace;
 
@@ -55,48 +55,33 @@ impl Command for Add {
       .allow_empty(true)
       .interact_text().unwrap();
     if id.is_empty() { return false; }
-
-    let owner       = &cli.owners[cli.owner_selected.unwrap()];
-    let model       = &cli.models[cli.model_selected.unwrap()];
     let recipe_name = self.recipe.dir_name();
 
-    let mut full_id = String::new();
-    full_id.push_str(&self.namespaces.join("/"));
-    if !full_id.is_empty() { full_id.push('/'); }
-    full_id.push_str(&id);
     let editor = Editor::new()
       .edit(&format!(
-        "{} {}:{}:{}:{}\n{:=>width$}\n",
-        recipe_name, owner, model, cli.version, full_id, 
-        "", width=recipe_name.len()
-          + owner.len()
-          + model.len()
-          + cli.version.len()
-          + full_id.len()
-          + 4,
+        "{} {}\n{:=>width$}\n",
+        recipe_name, id, 
+        "", width=recipe_name.len() + id.len() + 1,
       ));
     if let Some(recipe_content) = editor.unwrap() {
-      let mut path = get_version(cli).unwrap();
-      path.push(&recipe_name);
-      for namespace in self.namespaces.iter() {
-        path.push(namespace);
-      }
-      let namespaces: Vec<&str> = id.split('/').collect();
-      for namespace in namespaces.get(..namespaces.len()-1).unwrap() {
-        path.push(namespace);
-      }
-
+      let mut id_split: Vec<&str> = id.split('/').collect();
+      let id = id_split.split_off(id_split.len()-1)[0];
+      let namespaces = [
+        (*self.namespaces).iter().map(|s| s.as_str()).collect(),
+        id_split,
+      ].concat();
+      let mut path = get_namespace(cli, &recipe_name, namespaces);
       if !path.exists() {
         create_dir_all(&path).unwrap();
       }
-      path.push(&format!("{}.dropin", namespaces[namespaces.len()-1]));
+      path.push(&format!("{}.dropin", id));
       let mut file = File::create(&path).unwrap();
       file.write_all(recipe_content.as_bytes()).unwrap();
       println!("Recipe updated at {}", path.to_str().unwrap());
       if self.namespaces.is_empty() {
         RecipeCommand::new(self.recipe.clone()).run(cli);
       } else {
-        let id = &self.namespaces[0];
+        let id = &self.namespaces[self.namespaces.len()-1];
         let mut namespaces = (*self.namespaces).clone();
         namespaces.pop();
         Namespace::new(

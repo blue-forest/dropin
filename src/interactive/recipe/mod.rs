@@ -31,10 +31,12 @@ mod add;
 use add::Add;
 mod concepts;
 pub use concepts::*;
+mod remove;
 mod edit;
-use edit::Edit;
 mod namespace;
 use namespace::Namespace;
+mod select;
+use select::Select;
 
 pub struct RecipeCommand {
   recipe: Arc<dyn Recipe>,
@@ -83,7 +85,7 @@ fn get_entries(
           namespaces.clone(),
         )));
       } else {
-        commands.push(Box::new(Edit::new(
+        commands.push(Box::new(Select::new(
           recipe.clone(),
           entry.path().file_stem().unwrap().to_str().unwrap(),
           namespaces.clone(),

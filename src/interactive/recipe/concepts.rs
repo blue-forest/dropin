@@ -2,17 +2,17 @@ use std::fmt::{Display, Error, Formatter};
 
 use super::Recipe;
 
-pub struct Collections;
+pub struct Modules;
 
-impl Display for Collections {
+impl Display for Modules {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "collections".fmt(f)
+    "modules".fmt(f)
   }
 }
 
-impl Recipe for Collections {
-  fn title(&self) -> String { "Collections".to_string() }
-  fn dir_name(&self) -> String { "collections".to_string() }
+impl Recipe for Modules {
+  fn title(&self) -> String { "Modules".to_string() }
+  fn dir_name(&self) -> String { "modules".to_string() }
 }
 
 pub struct Functions;
@@ -25,7 +25,7 @@ impl Display for Functions {
 
 impl Recipe for Functions {
   fn title(&self) -> String { "Functions".to_string() }
-  fn dir_name(&self) -> String { "types".to_string() }
+  fn dir_name(&self) -> String { "functions".to_string() }
 }
 
 pub struct Pipelines;
@@ -39,6 +39,19 @@ impl Display for Pipelines {
 impl Recipe for Pipelines {
   fn title(&self) -> String { "Pipelines".to_string() }
   fn dir_name(&self) -> String { "pipelines".to_string() }
+}
+
+pub struct Syntaxes;
+
+impl Display for Syntaxes {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "syntaxes".fmt(f)
+  }
+}
+
+impl Recipe for Syntaxes {
+  fn title(&self) -> String { "Syntaxes".to_string() }
+  fn dir_name(&self) -> String { "syntaxes".to_string() }
 }
 
 pub struct Types;

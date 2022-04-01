@@ -61,7 +61,7 @@ impl Command for RecipeCommand {
       self.recipe.clone(),
       Arc::new(Vec::new()),
     );
-    cli.run_select(&format!("{}", self.recipe), &commands);
+    cli.run_select(&self.recipe.title(), &commands);
     false
   }
 

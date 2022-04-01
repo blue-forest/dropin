@@ -41,6 +41,19 @@ impl Recipe for Pipelines {
   fn dir_name(&self) -> String { "pipelines".to_string() }
 }
 
+pub struct Syntaxes;
+
+impl Display for Syntaxes {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "syntaxes".fmt(f)
+  }
+}
+
+impl Recipe for Syntaxes {
+  fn title(&self) -> String { "Syntaxes".to_string() }
+  fn dir_name(&self) -> String { "syntaxes".to_string() }
+}
+
 pub struct Types;
 
 impl Display for Types {

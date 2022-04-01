@@ -38,6 +38,7 @@ use recipe::{
   Functions,
   Pipelines,
   RecipeCommand,
+  Syntaxes,
   Types,
 };
 mod path;
@@ -80,6 +81,7 @@ impl Cli {
       Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Functions))),
       Box::new(RecipeCommand::new(Arc::new(Pipelines))),
+      Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
       Box::new(RecipeCommand::new(Arc::new(Types))),
       Box::new(ModelCommand{}),
       Box::new(OwnerCommand{}),

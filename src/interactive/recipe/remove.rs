@@ -20,7 +20,7 @@
  */
 
 use std::fmt::{Display, Error, Formatter};
-use std::fs::remove_file;
+use std::fs::{remove_dir, remove_file};
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
@@ -44,21 +44,35 @@ impl Display for Remove {
 }
 
 impl Command for Remove {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let self_namespaces = self.0.namespaces();
     let namespaces = self_namespaces.iter().map(|s| s.as_str()).collect();
     let path = get_recipe(
       cli, &self.0.recipe().dir_name(), namespaces, self.0.id(),
     );
-    remove_file(path).unwrap();
-    if self_namespaces.is_empty() {
-      RecipeCommand::new(self.0.recipe()).run(cli);
-    } else {
-      let id = self_namespaces[self_namespaces.len()-1].clone();
-      let mut namespaces = (*self_namespaces).clone();
+    remove_file(&path).unwrap();
+    let mut namespaces = (*self_namespaces).clone();
+    let mut break_n = 1;
+    for p in path.parent().unwrap().ancestors() {
+      break_n += 1;
+      if namespaces.is_empty() || 
+        p.read_dir().unwrap().next().is_some() {
+        break;
+      }
       namespaces.pop();
-      Namespace::new(self.0.recipe(), &id, Arc::new(namespaces)).run(cli);
+      println!(
+        "Remove empty namespace {}",
+        p.file_name().unwrap().to_str().unwrap(),
+      );
+      remove_dir(p).unwrap();
     };
-    true
+    if namespaces.is_empty() {
+      RecipeCommand::new(self.0.recipe()).run(cli);
+      break_n
+    } else {
+      let id = namespaces.pop().unwrap();
+      Namespace::new(self.0.recipe(), &id, Arc::new(namespaces)).run(cli);
+      break_n
+    }
   }
 }

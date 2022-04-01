@@ -49,14 +49,16 @@ impl Display for Add {
 }
 
 impl Command for Add {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let id: String = Input::with_theme(&ColorfulTheme::default())
       .with_prompt("{} ID ? (split namespaces with '/', leave empty to cancel)")
       .allow_empty(true)
       .interact_text().unwrap();
-    if id.is_empty() { return false; }
+    if id.is_empty() { return 0; }
     let recipe_name = self.recipe.dir_name();
 
+    let mut id_split: Vec<&str> = id.split('/').collect();
+    let id = id_split.split_off(id_split.len()-1)[0];
     let editor = Editor::new()
       .edit(&format!(
         "{} {}\n{:=>width$}\n",
@@ -64,8 +66,6 @@ impl Command for Add {
         "", width=recipe_name.len() + id.len() + 1,
       ));
     if let Some(recipe_content) = editor.unwrap() {
-      let mut id_split: Vec<&str> = id.split('/').collect();
-      let id = id_split.split_off(id_split.len()-1)[0];
       let namespaces = [
         (*self.namespaces).iter().map(|s| s.as_str()).collect(),
         id_split,
@@ -90,10 +90,10 @@ impl Command for Add {
           Arc::new(namespaces),
         ).run(cli);
       };
-      true
+      1
     } else {
       println!("Edition Canceled");
-      false
+      0
     }
   }
 }

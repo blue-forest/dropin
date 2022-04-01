@@ -55,7 +55,7 @@ impl Display for RecipeCommand {
 }
 
 impl Command for RecipeCommand {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let mut path = get_version(cli).unwrap();
     path.push(self.recipe.dir_name());
     let commands = get_entries(
@@ -63,8 +63,7 @@ impl Command for RecipeCommand {
       self.recipe.clone(),
       Arc::new(Vec::new()),
     );
-    cli.run_select(&self.recipe.title(), &commands);
-    false
+    cli.run_select(&self.recipe.title(), &commands)
   }
 
   fn is_enabled(&self, cli: &Cli) -> bool { cli.model_selected.is_some() }

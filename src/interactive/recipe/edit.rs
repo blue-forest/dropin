@@ -45,7 +45,7 @@ impl Display for Edit {
 }
 
 impl Command for Edit {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let mut path = get_version(cli).unwrap();
     path.push(self.0.recipe().dir_name());
     for ns in self.0.namespaces().iter() {
@@ -62,6 +62,6 @@ impl Command for Edit {
     } else {
       println!("Edition Canceled");
     }
-    false
+    0
   }
 }

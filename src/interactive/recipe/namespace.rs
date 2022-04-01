@@ -49,7 +49,7 @@ impl Display for Namespace {
 }
 
 impl Command for Namespace {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let namespaces = {
       let mut namespaces = (*self.namespaces).clone();
       namespaces.push(self.id.clone());
@@ -66,7 +66,6 @@ impl Command for Namespace {
     cli.run_select(
       &format!("{} Namespace {}", self.recipe, namespaces.join("/")),
       &commands,
-    );
-    false
+    )
   }
 }

@@ -25,7 +25,7 @@ impl Display for Select {
 }
 
 impl Command for Select {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let commands: Vec<Box<dyn Command>> = vec![
       Box::new(Edit::new(self.0.clone())),
       Box::new(Remove::new(self.0.clone())),
@@ -36,8 +36,7 @@ impl Command for Select {
       id.push('/');
     }
     id.push_str(&self.0.id);
-    cli.run_select(&id, &commands);
-    false
+    cli.run_select(&id, &commands)
   }
 }
 

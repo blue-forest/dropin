@@ -4,7 +4,7 @@ version = "0.5.3-0"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in WebAssembly compiler [ALPHA]"
-repository = "https://github.com/blue-forest/dropin-compiler"
+repository = "https://github.com/blue-forest/dropin"
 license = "AGPL-3.0-only"
 keywords = ["WebAssembly"]
 

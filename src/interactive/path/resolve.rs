@@ -68,3 +68,27 @@ pub fn get_version(cli: &Cli) -> Option<PathBuf> {
   buf = push_model(cli, buf).unwrap();
   push_version(cli, buf)
 }
+
+pub fn get_namespace(
+  cli:         &Cli,
+  recipe_name: &str,
+  namespaces:  Vec<&str>,
+) -> PathBuf {
+  let mut path = get_version(cli).unwrap();
+  path.push(recipe_name);
+  for namespace in namespaces.iter() {
+    path.push(namespace);
+  }
+  path
+}
+
+pub fn get_recipe(
+  cli:         &Cli,
+  recipe_name: &str,
+  namespaces:  Vec<&str>,
+  id:          &str,
+) -> PathBuf {
+  let mut result = get_namespace(cli, recipe_name, namespaces);
+  result.push(&format!("{}.dropin", id));
+  result
+}

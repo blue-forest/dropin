@@ -36,7 +36,7 @@ impl Display for OwnerCommand {
 }
 
 impl Command for OwnerCommand {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let mut commands: Vec<Box<dyn Command>> = Vec::new();
     for (i, owner) in cli.owners.iter().enumerate() {
       commands.push(Box::new(Select{
@@ -45,8 +45,7 @@ impl Command for OwnerCommand {
       }));
     }
     commands.push(Box::new(Add{}));
-    cli.run_select("Owner", &commands);
-    false
+    cli.run_select("Owner", &commands)
   }
 }
 
@@ -62,9 +61,9 @@ impl Display for Select {
 }
 
 impl Command for Select {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     cli.owner_selected = Some(self.index);
-    true
+    1
   }
 }
 
@@ -77,13 +76,13 @@ impl Display for Add {
 }
 
 impl Command for Add {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let (owner_name, owner_path) = loop {
       let owner_name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Owner name for your recipes ? (leave empty to cancel)")
         .allow_empty(true)
         .interact_text().unwrap();
-      if owner_name.is_empty() { return false; }
+      if owner_name.is_empty() { return 0; }
       let owner_path = cli.root.join(&owner_name);
       if let Err(err) = validate_name(&owner_path, &owner_name) {
         println!("{}", err);
@@ -96,7 +95,7 @@ impl Command for Add {
     let index = cli.owners.len();
     cli.owners.push(owner_name);
     cli.owner_selected = Some(index);
-    true
+    1
   }
 }
 

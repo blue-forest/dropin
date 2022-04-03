@@ -19,49 +19,60 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::Editor;
-
 use std::fmt::{Display, Error, Formatter};
-use std::fs::{File, read_to_string};
-use std::io::Write;
+use std::fs::{remove_dir, remove_file};
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
-use crate::interactive::path::get_version;
+use crate::interactive::path::get_recipe;
+use super::RecipeCommand;
+use super::namespace::Namespace;
 use super::select::Selection;
 
-pub struct Edit(Arc<Selection>);
+pub struct Remove(Arc<Selection>);
 
-impl Edit {
+impl Remove {
   pub fn new(selection: Arc<Selection>) -> Self {
     Self(selection)
   }
 }
 
-impl Display for Edit {
+impl Display for Remove {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "edit".fmt(f)
+    "remove".fmt(f)
   }
 }
 
-impl Command for Edit {
+impl Command for Remove {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let mut path = get_version(cli).unwrap();
-    path.push(self.0.recipe().dir_name());
-    for ns in self.0.namespaces().iter() {
-      path.push(&ns);
-    }
-    path.push(format!("{}.dropin", self.0.id()));
-    let content = read_to_string(&path).unwrap();
-    let editor = Editor::new()
-      .edit(&content);
-    if let Some(updated_content) = editor.unwrap() {
-      let mut file = File::create(&path).unwrap();
-      file.write_all(updated_content.as_bytes()).unwrap();
-      println!("Recipe updated at {}", path.to_str().unwrap());
+    let self_namespaces = self.0.namespaces();
+    let namespaces = self_namespaces.iter().map(|s| s.as_str()).collect();
+    let path = get_recipe(
+      cli, &self.0.recipe().dir_name(), namespaces, self.0.id(),
+    );
+    remove_file(&path).unwrap();
+    let mut namespaces = (*self_namespaces).clone();
+    let mut break_n = 1;
+    for p in path.parent().unwrap().ancestors() {
+      break_n += 1;
+      if namespaces.is_empty() || 
+        p.read_dir().unwrap().next().is_some() {
+        break;
+      }
+      namespaces.pop();
+      println!(
+        "Remove empty namespace {}",
+        p.file_name().unwrap().to_str().unwrap(),
+      );
+      remove_dir(p).unwrap();
+    };
+    if namespaces.is_empty() {
+      RecipeCommand::new(self.0.recipe()).run(cli);
+      break_n
     } else {
-      println!("Edition Canceled");
+      let id = namespaces.pop().unwrap();
+      Namespace::new(self.0.recipe(), &id, Arc::new(namespaces)).run(cli);
+      break_n
     }
-    0
   }
 }

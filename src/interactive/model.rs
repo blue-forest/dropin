@@ -36,7 +36,7 @@ impl Display for ModelCommand {
 }
 
 impl Command for ModelCommand {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let owner_path = &cli.root.join(
       &cli.owners[cli.owner_selected.unwrap()]
     );
@@ -49,8 +49,7 @@ impl Command for ModelCommand {
       }));
     }
     commands.push(Box::new(Add{}));
-    cli.run_select("Model", &commands);
-    false
+    cli.run_select("Model", &commands)
   }
 
   fn is_enabled(&self, cli: &Cli) -> bool { cli.owner_selected.is_some() }
@@ -68,9 +67,9 @@ impl Display for Select {
 }
 
 impl Command for Select {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     cli.model_selected = Some(self.index);
-    true
+    1
   }
 }
 
@@ -83,7 +82,7 @@ impl Display for Add {
 }
 
 impl Command for Add {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let owner_path = &cli.root.join(
       &cli.owners[cli.owner_selected.unwrap()]
     );
@@ -92,7 +91,7 @@ impl Command for Add {
         .with_prompt("Model name for your recipes ? (leave empty to cancel)")
         .allow_empty(true)
         .interact_text().unwrap();
-      if model_name.is_empty() { return false; }
+      if model_name.is_empty() { return 0; }
       let model_path = owner_path.join(&model_name);
       if let Err(err) = validate_name(&model_path, &model_name) {
         println!("{}", err);
@@ -106,7 +105,7 @@ impl Command for Add {
     let index = cli.models.len();
     cli.models.push(model_name);
     cli.model_selected = Some(index);
-    true
+    1
   }
 }
 

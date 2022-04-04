@@ -491,6 +491,7 @@ version = "0.5.3-1"
 dependencies = [
  "dialoguer",
  "dropin-compiler",
+ "dropin-utils",
  "home",
  "path-clean",
  "regex",
@@ -508,6 +509,22 @@ dependencies = [
  "wasm-ir",
  "wasmtime",
  "wasmtime-wasi",
+]
+
+[[package]]
+name = "dropin-syntaxes"
+version = "0.5.3-1"
+dependencies = [
+ "dropin-utils",
+ "structopt",
+]
+
+[[package]]
+name = "dropin-utils"
+version = "0.5.3-1"
+dependencies = [
+ "home",
+ "path-clean",
 ]
 
 [[package]]

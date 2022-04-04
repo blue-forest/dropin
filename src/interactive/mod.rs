@@ -26,6 +26,8 @@ use std::fs::create_dir;
 use std::path::PathBuf;
 use std::sync::Arc;
 
+use dropin_utils::path::get_root;
+
 mod error;
 use error::ConfigError;
 mod model;
@@ -42,7 +44,7 @@ use recipe::{
   Types,
 };
 mod path;
-use path::get_root;
+use path::validate_path;
 mod utils;
 use utils::get_dirs;
 
@@ -58,6 +60,7 @@ pub struct Cli {
 impl Cli {
   pub fn new() -> Self {
     let root = get_root();
+    validate_path(&root).unwrap();
     let owners = if !root.exists() {
       println!("Created drop'in root");
       create_dir(&root).unwrap();

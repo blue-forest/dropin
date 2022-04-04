@@ -2,6 +2,8 @@
 
 members = [
   "dropin-compiler",
+  "dropin-utils",
+  "dropin-syntaxes",
 ]
 
 [package]
@@ -10,7 +12,7 @@ name = "dropin"
 version = "0.5.3-1"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
-description = "drop'in [ALPHA]"
+description = "drop'in [WIP]"
 repository = "https://github.com/blue-forest/dropin"
 license = "AGPL-3.0-only"
 keywords = ["WebAssembly"]
@@ -18,6 +20,7 @@ keywords = ["WebAssembly"]
 [dependencies]
 
 dropin-compiler = { path = "./dropin-compiler", version = "0.5.3-1" }
+dropin-utils = { path = "./dropin-utils", version = "0.5.3-1" }
 dialoguer = "0.10.0"
 home = "0.5.3"
 path-clean = "0.1.0"

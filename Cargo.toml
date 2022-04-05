@@ -5,6 +5,7 @@ members = [
   "dropin-utils",
   "dropin-syntaxes",
 ]
+exclude = ["etc/sandbox"]
 
 [package]
 

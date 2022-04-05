@@ -1,4 +1,5 @@
 target/
 *.swp
 *.swo
+*.swn
 *.wasm

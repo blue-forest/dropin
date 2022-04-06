@@ -1,10 +1,10 @@
-use wasmtime::{self, Engine, Extern, Linker, Store, Memory};
+use wasmtime::{self, Engine, Linker, Store};
 use wasmtime_wasi::sync::{Dir, WasiCtxBuilder};
 
 use wasm_encoder::{
   BlockType, CodeSection, EntityType, Export, ExportSection, Function,
-  FunctionSection, ImportSection, Instruction, MemArg, MemoryType, Module,
-  TypeSection, ValType,
+  FunctionSection, ImportSection, Instruction, MemArg, MemorySection,
+  MemoryType, Module, TypeSection, ValType,
 };
 
 use std::fs::{File, write};
@@ -15,6 +15,7 @@ fn main() {
   set_types(&mut m);
   set_imports(&mut m);
   set_functions(&mut m);
+  set_memory(&mut m);
   set_exports(&mut m);
   let buf_len       = 1024;
   let iovec_offset  = 1032;
@@ -43,11 +44,6 @@ fn set_types(m: &mut Module) {
 
 fn set_imports(m: &mut Module) {
   let mut imports = ImportSection::new();
-  imports.import("env", "memory", MemoryType {
-    minimum:  1,
-    maximum:  None,
-    memory64: false,
-  });
   let fd_readdir_fn = 0;
   imports.import(
     "wasi_unstable", "fd_readdir", EntityType::Function(fd_readdir_fn),
@@ -65,9 +61,19 @@ fn set_functions(m: &mut Module) {
   m.section(&functions);
 }
 
+fn set_memory(m: &mut Module) {
+  let mut memories = MemorySection::new();
+  memories.memory(MemoryType{
+    minimum:  1,
+    maximum:  None,
+    memory64: false,
+  });
+  m.section(&memories);
+}
+
 fn set_exports(m: &mut Module) {
   let mut exports = ExportSection::new();
-  exports.export("parse", Export::Function(2));
+  exports.export("_start", Export::Function(2));
   exports.export("memory", Export::Memory(0));
   m.section(&exports);
 }
@@ -80,57 +86,57 @@ fn set_codes(
   data_offset:   i32,
 ) {
   let mut codes = CodeSection::new();
-  let mut parse_code = Function::new(vec![(1, ValType::I32)]);
+  let mut code = Function::new(vec![(1, ValType::I32)]);
   let dir_offset_local = 0;
-  readdir(&mut parse_code, 3, 0, buf_len, 0, buf_len);
+  readdir(&mut code, 3, 0, buf_len, 0, buf_len);
   // *data_offset = '\n'
-  store(&mut parse_code, data_offset, vec![  
+  store(&mut code, data_offset, vec![  
     Instruction::I32Const(10),
   ]);
   // iovec[1] -> $data_offset
-  store(&mut parse_code, iovec_offset+8, vec![  
+  store(&mut code, iovec_offset+8, vec![  
     Instruction::I32Const(data_offset),
   ]);
-  store(&mut parse_code, iovec_offset+12, vec![  
+  store(&mut code, iovec_offset+12, vec![  
     Instruction::I32Const(1),
   ]);
 
-  parse_code.instruction(&Instruction::Loop(
+  code.instruction(&Instruction::Loop(
     BlockType::FunctionType(2),
   ));
-  store(&mut parse_code, iovec_offset+4, vec![
+  store(&mut code, iovec_offset+4, vec![
     Instruction::LocalGet(dir_offset_local),
     Instruction::I32Const(16), // pass d_next & inode to get name_len
     Instruction::I32Add,
     Instruction::I32Load(get_memarg())
   ]);
-  store(&mut parse_code, iovec_offset, vec![
+  store(&mut code, iovec_offset, vec![
     Instruction::LocalGet(dir_offset_local),
     Instruction::I32Const(24), // pass dirent to get name
     Instruction::I32Add,
   ]);
 
-  print(&mut parse_code, iovec_offset, fd_write_size);
+  print(&mut code, iovec_offset, fd_write_size);
 
   // $dir_offset_local += 24 + name_len
-  parse_code.instruction(&Instruction::LocalGet(dir_offset_local));
-  parse_code.instruction(&Instruction::I32Const(24));
-  parse_code.instruction(&Instruction::I32Const(iovec_offset+4));
-  parse_code.instruction(&Instruction::I32Load(get_memarg()));
-  parse_code.instruction(&Instruction::I32Add);
-  parse_code.instruction(&Instruction::I32Add);
-  parse_code.instruction(&Instruction::LocalSet(dir_offset_local));
+  code.instruction(&Instruction::LocalGet(dir_offset_local));
+  code.instruction(&Instruction::I32Const(24));
+  code.instruction(&Instruction::I32Const(iovec_offset+4));
+  code.instruction(&Instruction::I32Load(get_memarg()));
+  code.instruction(&Instruction::I32Add);
+  code.instruction(&Instruction::I32Add);
+  code.instruction(&Instruction::LocalSet(dir_offset_local));
 
   // loop if $dir_offset_local > $size
-  parse_code.instruction(&Instruction::I32Const(buf_len));
-  parse_code.instruction(&Instruction::I32Load(get_memarg()));
-  parse_code.instruction(&Instruction::LocalGet(dir_offset_local));
-  parse_code.instruction(&Instruction::I32GeU);
-  parse_code.instruction(&Instruction::BrIf(0));
-  parse_code.instruction(&Instruction::End);
+  code.instruction(&Instruction::I32Const(buf_len));
+  code.instruction(&Instruction::I32Load(get_memarg()));
+  code.instruction(&Instruction::LocalGet(dir_offset_local));
+  code.instruction(&Instruction::I32GeU);
+  code.instruction(&Instruction::BrIf(0));
+  code.instruction(&Instruction::End);
 
-  parse_code.instruction(&Instruction::End);
-  codes.function(&parse_code);
+  code.instruction(&Instruction::End);
+  codes.function(&code);
   m.section(&codes);
 }
 
@@ -191,13 +197,7 @@ fn run(binary: Vec<u8>) {
   let engine = Engine::default();
   let mut store = Store::new(&engine, wasi_ctx);
   let mut linker = Linker::new(&engine);
-  let memory = Memory::new(
-    &mut store, wasmtime::MemoryType::new(1, None),
-  ).unwrap();
-  linker.define("env", "memory", Extern::Memory(memory)).unwrap();
   wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
   let module = wasmtime::Module::new(&engine, binary).unwrap();
-  let instance = linker.instantiate(&mut store, &module).unwrap();
-  let run = instance.get_typed_func::<(), (), _>(&mut store, "parse").unwrap();
-  run.call(&mut store, ()).unwrap();
+  linker.instantiate(&mut store, &module).unwrap();
 }

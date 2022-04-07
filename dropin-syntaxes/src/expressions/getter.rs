@@ -1,7 +1,7 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use super::Expression;
+use super::{Expression, Quantifier};
 
 #[derive(Debug)]
 pub struct Getter<'a> {
@@ -15,25 +15,37 @@ impl<'a> Getter<'a> {
     iter:   &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Expression + 'a> {
     let mut start: Option<usize> = None;
-    let mut end: Option<usize> = None;
-    while let Some((i, c)) = iter.next() {
+    loop {
+      let next = iter.next();
+      if next.is_none() {
+        break Box::new(Getter{
+          query: syntax.get(start.expect("expected query")..).unwrap(),
+        });
+      }
+      let (i, c) = next.unwrap();
       if start.is_none() {
-        if c.is_whitespace() { // $ alone ?
-          break;
+        if !c.is_alphanumeric() { // $ alone ?
+          panic!("unexpected query {}", c);
         }
         start = Some(i);
+        continue;
       }
       if let Some((pi, pc)) = iter.peek() {
         if pc.is_whitespace() {
-          end = Some(*pi);
-          break;
+          break Box::new(Getter{
+            query: syntax.get(start.expect("expected query")..*pi).unwrap(),
+          });
+        }
+        if Quantifier::detect(*pc) {
+          let end = *pi;
+          break {
+            Box::new(Quantifier::new(iter, Box::new(Getter{
+              query: syntax.get(start.expect("expected query")..end).unwrap(),
+            })))
+          };
         }
       }
     }
-    let query = syntax.get(
-      start.expect("expected query")..end.unwrap_or(syntax.len())
-    ).unwrap();
-    Box::new(Getter{ query })
   }
 }
 

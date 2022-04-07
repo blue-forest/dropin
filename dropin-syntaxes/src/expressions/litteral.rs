@@ -1,3 +1,4 @@
+use std::iter::Peekable;
 use std::str::CharIndices;
 
 use super::Expression;
@@ -11,7 +12,7 @@ pub struct Litteral<'a> {
 impl<'a> Litteral<'a> {
   pub fn parse(
     syntax: &'a str,
-    iter: &mut CharIndices<'a>,
+    iter: &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Expression + 'a> {
     let mut start: Option<usize> = None;
     let mut value: Option<&str> = None;

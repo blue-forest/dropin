@@ -1,3 +1,4 @@
+use std::iter::Peekable;
 use std::str::CharIndices;
 
 use super::{Expression, Getter, Litteral};
@@ -11,7 +12,7 @@ pub struct Concat<'a> {
 impl<'a> Concat<'a> {
   pub fn parse(
     syntax: &'a str,
-    iter: &mut CharIndices<'a>,
+    iter: &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Expression + 'a> {
     let mut tokens = Vec::new();
     while let Some((_, c)) = iter.next() {
@@ -20,9 +21,20 @@ impl<'a> Concat<'a> {
           match c {
             '"' => Litteral::parse(syntax, iter),
             '$' => Getter::parse(syntax, iter),
-            _ => { panic!("unknown token {}", c); }
+            _   => { panic!("unknown token {}", c); }
           }
         );
+        if let Some((_, peeked)) = iter.peek() {
+          if !peeked.is_whitespace() {
+            panic!("unexpected '{}'", c);
+          }
+        }
+      } else if c == '\n' {
+        if let Some((_, peeked)) = iter.peek() {
+          if !peeked.is_whitespace() || *peeked == '\n' {
+            break;
+          }
+        }
       }
     }
     Box::new(Concat{ tokens })

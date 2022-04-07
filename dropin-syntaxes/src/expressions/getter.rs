@@ -1,3 +1,4 @@
+use std::iter::Peekable;
 use std::str::CharIndices;
 
 use super::Expression;
@@ -11,17 +12,22 @@ pub struct Getter<'a> {
 impl<'a> Getter<'a> {
   pub fn parse(
     syntax: &'a str,
-    iter:   &mut CharIndices<'a>,
+    iter:   &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Expression + 'a> {
     let mut start: Option<usize> = None;
     let mut end: Option<usize> = None;
     while let Some((i, c)) = iter.next() {
       if start.is_none() {
+        if c.is_whitespace() { // $ alone ?
+          break;
+        }
         start = Some(i);
       }
-      if c.is_whitespace() {
-        end = Some(i);
-        break;
+      if let Some((pi, pc)) = iter.peek() {
+        if pc.is_whitespace() {
+          end = Some(*pi);
+          break;
+        }
       }
     }
     let query = syntax.get(

@@ -56,7 +56,7 @@ impl<'a> Token<'a> for Getter<'a> {
     patterns: &'c Patterns<'a>,
     module:   &'b str,
     iter:     &mut Peekable<CharIndices<'b>>,
-    expr:     &mut Expression<'a, 'b, 'c>,
+    expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
     if self.query.starts_with("patterns.") {
       let key = self.query.get(9..).unwrap();

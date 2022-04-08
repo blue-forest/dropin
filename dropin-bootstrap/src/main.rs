@@ -18,7 +18,6 @@ struct Cli {
   module: String,
 }
 
-/**/
 fn main() {
   let cli = Cli::from_args();
   let syntax_content = &get_recipe("syntaxes", cli.syntax);
@@ -29,14 +28,3 @@ fn main() {
   println!("MODULE:      {:?}", module_content);
   println!("EXPRESSIONS: {:?}", expression);
 }
-/**/
-
-/*
-
-new:   patterns -> syntax
-parse: patterns -> expression ?
-
-expression -> modules
-           -> patterns -> syntax
-
-*/

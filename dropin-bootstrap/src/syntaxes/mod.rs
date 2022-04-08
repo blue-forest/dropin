@@ -14,7 +14,6 @@ use tokens::Concat;
 
 #[derive(Debug)]
 pub struct Pattern<'a> {
-  #[allow(dead_code)]
   key:   &'a str,
   token: Box<dyn Token<'a> + 'a>,
 }
@@ -25,10 +24,20 @@ impl<'a> Pattern<'a> {
     patterns: &'c Patterns<'a>,
     module:   &'b str,
     iter:     &mut Peekable<CharIndices<'b>>
-  ) -> Result<Expression<'a, 'b, 'c>, ParseError> {
-    let mut result = Expression::new(module, self);
-    self.token.parse(patterns, module, iter, &mut result)?;
-    Ok(result)
+  ) -> Result<Expression<'a, 'b>, ParseError> {
+    if let Some((start, _)) = iter.peek() {
+      let start = *start;
+      let mut result = Expression::new(module.get(start..).unwrap(), self);
+      self.token.parse(patterns, module, iter, &mut result)?;
+      if let Some((end, _)) = iter.peek() {
+        result.truncate(*end-start);
+      }
+      Ok(result)
+    } else {
+      Err(ParseError::new(
+        format!("unexpected end of file, expected {}", self.key)
+      ))
+    }
   }
 }
 
@@ -64,9 +73,15 @@ impl<'a> Patterns<'a> {
 
   pub fn parse<'b, 'c>(
     &'c self, module: &'b str,
-  ) -> Result<Expression<'a, 'b, 'c>, ParseError> {
+  ) -> Result<Expression<'a, 'b>, ParseError> {
     let mut iter = module.char_indices().peekable();
-    self.patterns[self.entry].parse(self, module, &mut iter)
+    let result = self.patterns[self.entry].parse(self, module, &mut iter);
+    if let Some((i, _)) = iter.peek() {
+      let remaining = module.get(*i..).unwrap();
+      Err(ParseError::new(format!("remaining tokens: \"{}\"", remaining)))
+    } else {
+      result
+    }
   }
 
 }

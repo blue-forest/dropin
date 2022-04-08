@@ -22,7 +22,7 @@ pub trait Token<'a>: Debug {
     patterns: &'c Patterns<'a>,
     module:   &'b str,
     iter:     &mut Peekable<CharIndices<'b>>,
-    expr:     &mut Expression<'a, 'b, 'c>,
+    expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError>;
 }
 

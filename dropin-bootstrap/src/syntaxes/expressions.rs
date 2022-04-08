@@ -1,21 +1,21 @@
 use crate::syntaxes::Pattern;
 
 #[derive(Debug)]
-pub struct Expression<'syntax, 'module, 'pattern> {
+pub struct Expression<'syntax, 'module> {
   #[allow(dead_code)]
   value:    &'module str,
   #[allow(dead_code)]
-  pattern:  &'pattern Pattern<'syntax>,
+  pattern:  &'syntax str,
   #[allow(dead_code)]
-  children: Vec<Expression<'syntax, 'module, 'pattern>>,
+  children: Vec<Expression<'syntax, 'module>>,
 }
 
-impl<'syntax, 'module, 'pattern> Expression<'syntax, 'module, 'pattern> {
+impl<'syntax, 'module> Expression<'syntax, 'module> {
   pub fn new(
     value: &'module str,
-    pattern:  &'pattern Pattern<'syntax>,
+    pattern:  &Pattern<'syntax>,
   ) -> Self {
-    Self{ value, pattern, children: vec![] }
+    Self{ value, pattern: pattern.key, children: vec![] }
   }
 
   #[allow(dead_code)]
@@ -23,20 +23,25 @@ impl<'syntax, 'module, 'pattern> Expression<'syntax, 'module, 'pattern> {
   #[allow(dead_code)]
   fn as_str(&self) -> &'module str { todo!() }
   #[allow(dead_code)]
-  fn iter(&self) -> Expressions<'syntax, 'module, 'pattern> { todo!() }
-  pub fn add_inner(&mut self, expr: Expression<'syntax, 'module, 'pattern>) {
+  fn iter(&self) -> Expressions<'syntax, 'module> { todo!() }
+
+  pub fn add_inner(&mut self, expr: Expression<'syntax, 'module>) {
     self.children.push(expr);
+  }
+
+  pub fn truncate(&mut self, i: usize) {
+    self.value = self.value.get(..i).unwrap()
   }
 }
 
-pub struct Expressions<'syntax, 'module, 'pattern> {
+pub struct Expressions<'syntax, 'module> {
   #[allow(dead_code)]
-  parent: &'module Expression<'syntax, 'module, 'pattern>,
+  parent: &'module Expression<'syntax, 'module>,
 }
 
-impl<'syntax, 'module, 'pattern> 
-  Iterator for Expressions<'syntax, 'module, 'pattern> {
-  type Item = Expression<'syntax, 'module, 'pattern>;
+impl<'syntax, 'module> 
+  Iterator for Expressions<'syntax, 'module> {
+  type Item = Expression<'syntax, 'module>;
   fn next(&mut self) -> Option<Self::Item> { todo!() }
 }
 

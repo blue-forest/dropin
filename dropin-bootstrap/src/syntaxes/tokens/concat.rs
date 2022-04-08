@@ -47,7 +47,7 @@ impl<'a> Token<'a> for Concat<'a> {
     patterns: &'c Patterns<'a>,
     module:   &'b str,
     iter:     &mut Peekable<CharIndices<'b>>,
-    expr:     &mut Expression<'a, 'b, 'c>,
+    expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
     for token in self.tokens.iter() {
       token.parse(patterns, module, iter, expr)?;

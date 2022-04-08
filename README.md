@@ -5,7 +5,7 @@
 [![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
 [![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)
 [![Crates.io total downloads](https://img.shields.io/crates/d/dropin)](https://crates.io/crates/dropin)
-[![Liberapay receiving](https://img.shields.io/liberapay/receives/BlueForest)](https://liberapay.com/BlueForest)
+[![Twitter](https://img.shields.io/twitter/follow/dropin_cloud?label=%40dropin_cloud)](https://twitter.com/dropin_cloud)
 
 This repository contains the source code to compile the drop'in language into WebAssembly files.
 

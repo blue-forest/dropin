@@ -1,11 +1,12 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use super::{Expression, Quantifier};
+use crate::syntaxes::{Expression, Patterns, ParseError};
+
+use super::{Quantifier, Token};
 
 #[derive(Debug)]
 pub struct Getter<'a> {
-  #[allow(dead_code)]
   query: &'a str,
 }
 
@@ -13,7 +14,7 @@ impl<'a> Getter<'a> {
   pub fn parse(
     syntax: &'a str,
     iter:   &mut Peekable<CharIndices<'a>>,
-  ) -> Box<dyn Expression + 'a> {
+  ) -> Box<dyn Token<'a> + 'a> {
     let mut start: Option<usize> = None;
     loop {
       let next = iter.next();
@@ -49,5 +50,37 @@ impl<'a> Getter<'a> {
   }
 }
 
-impl<'a> Expression for Getter<'a> {}
+impl<'a> Token<'a> for Getter<'a> {
+  fn parse<'b, 'c>(
+    &self,
+    patterns: &'c Patterns<'a>,
+    module:   &'b str,
+    iter:     &mut Peekable<CharIndices<'b>>,
+    expr:     &mut Expression<'a, 'b, 'c>,
+  ) -> Result<(), ParseError> {
+    if self.query.starts_with("patterns.") {
+      let key = self.query.get(9..).unwrap();
+      let pattern = patterns.get(key).unwrap();
+      expr.add_inner(pattern.parse(patterns, module, iter)?);
+      Ok(())
+    } else if self.query.starts_with("std.") {
+      if let Some((_, c)) = iter.peek() {
+        if c.is_alphanumeric() {
+          iter.next();
+          Ok(())
+        } else {
+          Err(ParseError::new(
+            format!("unexpected token {}, expected alphanum", c),
+          ))
+        }
+      } else {
+        Err(ParseError::new(
+          "unexpected end of file, expected alphanum".to_string(),
+        ))
+      }
+    } else {
+      return Err(ParseError::new(format!("unknown ref: {}", self.query)));
+    }
+  }
+}
 

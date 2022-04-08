@@ -1,19 +1,19 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use super::{Expression, Getter, Litteral};
+use crate::syntaxes::{Expression, Patterns, ParseError};
+use super::{Getter, Litteral, Token};
 
 #[derive(Debug)]
 pub struct Concat<'a> {
-  #[allow(dead_code)]
-  tokens: Vec<Box<dyn Expression + 'a>>,
+  tokens: Vec<Box<dyn Token<'a> + 'a>>,
 }
 
 impl<'a> Concat<'a> {
   pub fn parse(
     syntax: &'a str,
     iter: &mut Peekable<CharIndices<'a>>,
-  ) -> Box<dyn Expression + 'a> {
+  ) -> Box<dyn Token<'a> + 'a> {
     let mut tokens = Vec::new();
     while let Some((_, c)) = iter.next() {
       if !c.is_whitespace() {
@@ -41,4 +41,17 @@ impl<'a> Concat<'a> {
   }
 }
 
-impl<'a> Expression for Concat<'a> {}
+impl<'a> Token<'a> for Concat<'a> {
+  fn parse<'b, 'c>(
+    &self,
+    patterns: &'c Patterns<'a>,
+    module:   &'b str,
+    iter:     &mut Peekable<CharIndices<'b>>,
+    expr:     &mut Expression<'a, 'b, 'c>,
+  ) -> Result<(), ParseError> {
+    for token in self.tokens.iter() {
+      token.parse(patterns, module, iter, expr)?;
+    }
+    Ok(())
+  }
+}

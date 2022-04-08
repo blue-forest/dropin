@@ -499,6 +499,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "dropin-bootstrap"
+version = "0.5.3-1"
+dependencies = [
+ "dropin-utils",
+ "structopt",
+]
+
+[[package]]
 name = "dropin-compiler"
 version = "0.5.3-1"
 dependencies = [
@@ -509,14 +517,6 @@ dependencies = [
  "wasm-ir",
  "wasmtime",
  "wasmtime-wasi",
-]
-
-[[package]]
-name = "dropin-syntaxes"
-version = "0.5.3-1"
-dependencies = [
- "dropin-utils",
- "structopt",
 ]
 
 [[package]]

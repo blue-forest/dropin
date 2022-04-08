@@ -1,10 +1,10 @@
 [package]
-name = "dropin-syntaxes"
+name = "dropin-bootstrap"
 version = "0.5.3-1"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
-description = "drop'in syntaxes [WIP]"
-repository = "https://github.com/theblueforest/dropin/dropin-syntaxes"
+description = "drop'in bootstrap [WIP]"
+repository = "https://github.com/theblueforest/dropin/dropin-bootstrap"
 license = "AGPL-3.0-only"
 
 [dependencies]

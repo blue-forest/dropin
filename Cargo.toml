@@ -1,9 +1,9 @@
 [workspace]
 
 members = [
+  "dropin-bootstrap",
   "dropin-compiler",
   "dropin-utils",
-  "dropin-syntaxes",
 ]
 exclude = ["etc/sandbox"]
 

@@ -1,27 +1,54 @@
 use wasm_encoder::{Function, Instruction};
 
+use std::collections::VecDeque;
+
+use super::{MemoryAddress, MemoryBuilder};
+
 pub struct FunctionBuilder<'a> {
   type_id:      u32,
-  instructions: Vec<Instruction<'a>>,
+  instructions: VecDeque<InstructionBuilder<'a>>,
 }
 
 impl<'a> FunctionBuilder<'a> {
   pub fn new(type_id: u32) -> Self {
-    Self{ type_id, instructions: vec![] }
+    Self{ type_id, instructions: VecDeque::new() }
   }
 
   pub fn type_id(&self) -> u32 { self.type_id }
 
-  pub fn instruction(&mut self, instruction: Instruction<'a>) {
-    self.instructions.push(instruction);
+  pub fn basic(&mut self, instruction: Instruction<'a>) {
+    self.instructions.push_back(InstructionBuilder::Basic(instruction));
   }
 
-  pub fn build(&self) -> Function {
+  pub fn memory(
+    &mut self,
+    addr: MemoryAddress,
+    cb: fn(u32) -> Instruction<'a>,
+  ) {
+    self.instructions.push_back(InstructionBuilder::Memory(addr, cb));
+  }
+
+  pub fn build(mut self, memory: &MemoryBuilder) -> Function {
     let mut result = Function::new(vec![]);
-    for i in self.instructions.iter() {
-      result.instruction(&i);
+    while let Some(i) = self.instructions.pop_front() {
+      result.instruction(&i.build(memory));
     }
     result.instruction(&Instruction::End);
     result
   }
 }
+
+enum InstructionBuilder<'a> {
+  Basic(Instruction<'a>),
+  Memory(MemoryAddress, fn(u32) -> Instruction<'a>),
+}
+
+impl<'a> InstructionBuilder<'a> {
+  fn build(self, memory: &MemoryBuilder) -> Instruction<'a> {
+    match self {
+      Self::Basic(result) => result,
+      Self::Memory(addr, cb) => cb(memory.resolve_addr(addr))
+    }
+  }
+}
+

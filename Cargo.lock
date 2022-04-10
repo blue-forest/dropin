@@ -504,6 +504,7 @@ version = "0.5.3-1"
 dependencies = [
  "dropin-utils",
  "structopt",
+ "wasm-encoder",
 ]
 
 [[package]]
@@ -1533,6 +1534,15 @@ dependencies = [
  "tracing",
  "wiggle",
  "winapi",
+]
+
+[[package]]
+name = "wasm-encoder"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a35138d119147af92d7e44ae0f052f6496ee5f38e7c0cad3e0338befdb8f3753"
+dependencies = [
+ "leb128",
 ]
 
 [[package]]

@@ -74,8 +74,8 @@ impl<'a> Token<'a> for Getter<'a> {
           ))
         }
       } else {
-        Err(ParseError::new(
-          "unexpected end of file, expected alphanum".to_string(),
+        Err(ParseError::from(
+          "unexpected end of file, expected alphanum",
         ))
       }
     } else {

@@ -1,6 +1,12 @@
 use structopt::StructOpt;
 
 use std::fmt::Debug;
+use std::fs::write;
+
+mod expressions;
+
+mod modules;
+use modules::compile;
 
 mod path;
 use path::get_recipe;
@@ -23,8 +29,8 @@ fn main() {
   let syntax_content = &get_recipe("syntaxes", cli.syntax);
   let module_content = &get_recipe("modules", cli.module);
   let patterns = Patterns::new(syntax_content);
-  println!("PATTERNS:    {:?}", patterns);
-  let expression = patterns.parse(module_content);
-  println!("MODULE:      {:?}", module_content);
-  println!("EXPRESSIONS: {:?}", expression);
+  let expression = patterns.parse(module_content).unwrap();
+  let module = compile(expression).unwrap();
+  let wasm = module.finish();
+  write("module.wasm", wasm).unwrap();
 }

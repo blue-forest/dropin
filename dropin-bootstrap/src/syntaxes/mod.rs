@@ -2,11 +2,10 @@ use std::collections::HashMap;
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use crate::expressions::Expression;
+
 mod error;
 pub use error::ParseError;
-
-mod expressions;
-pub use expressions::Expression;
 
 pub mod tokens;
 pub use tokens::Token;
@@ -27,7 +26,7 @@ impl<'a> Pattern<'a> {
   ) -> Result<Expression<'a, 'b>, ParseError> {
     if let Some((start, _)) = iter.peek() {
       let start = *start;
-      let mut result = Expression::new(module.get(start..).unwrap(), self);
+      let mut result = Expression::new(module.get(start..).unwrap(), self.key);
       self.token.parse(patterns, module, iter, &mut result)?;
       if let Some((end, _)) = iter.peek() {
         result.truncate(*end-start);

@@ -14,15 +14,15 @@ pub use memory::{MemoryAddress, MemoryBuilder};
 mod wasi;
 use wasi::WASI;
 
-pub struct ModuleBuilder<'module> {
+pub struct ModuleBuilder<'module, 'memory> {
   memory:             MemoryBuilder<'module>,
   types:              TypeSection,
   functions_imported: Vec<u32>,
-  functions_local:    VecDeque<FunctionBuilder<'module>>,
+  functions_local:    VecDeque<FunctionBuilder<'module, 'memory>>,
   wasi:               WASI,
 }
 
-impl<'module> Default for ModuleBuilder<'module> {
+impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
   fn default() -> Self {
     let mut result = Self{
       memory:             MemoryBuilder::default(),
@@ -36,8 +36,8 @@ impl<'module> Default for ModuleBuilder<'module> {
   }
 }
 
-impl<'module> ModuleBuilder<'module> {
-  pub fn get_start(&mut self) -> &mut FunctionBuilder<'module> {
+impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
+  pub fn get_start(&mut self) -> &mut FunctionBuilder<'module, 'memory> {
     self.functions_local.get_mut(0).unwrap()
   }
 

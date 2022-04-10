@@ -4,12 +4,12 @@ use std::collections::VecDeque;
 
 use super::{MemoryAddress, MemoryBuilder};
 
-pub struct FunctionBuilder<'a> {
+pub struct FunctionBuilder<'a, 'b> {
   type_id:      u32,
-  instructions: VecDeque<InstructionBuilder<'a>>,
+  instructions: VecDeque<InstructionBuilder<'a, 'b>>,
 }
 
-impl<'a> FunctionBuilder<'a> {
+impl<'a, 'b> FunctionBuilder<'a, 'b> {
   pub fn new(type_id: u32) -> Self {
     Self{ type_id, instructions: VecDeque::new() }
   }
@@ -22,7 +22,7 @@ impl<'a> FunctionBuilder<'a> {
 
   pub fn memory(
     &mut self,
-    addr: MemoryAddress,
+    addr: &'b MemoryAddress,
     cb: fn(u32) -> Instruction<'a>,
   ) {
     self.instructions.push_back(InstructionBuilder::Memory(addr, cb));
@@ -38,12 +38,12 @@ impl<'a> FunctionBuilder<'a> {
   }
 }
 
-enum InstructionBuilder<'a> {
+enum InstructionBuilder<'a, 'b> {
   Basic(Instruction<'a>),
-  Memory(MemoryAddress, fn(u32) -> Instruction<'a>),
+  Memory(&'b MemoryAddress, fn(u32) -> Instruction<'a>),
 }
 
-impl<'a> InstructionBuilder<'a> {
+impl<'a, 'b> InstructionBuilder<'a, 'b> {
   fn build(self, memory: &MemoryBuilder) -> Instruction<'a> {
     match self {
       Self::Basic(result) => result,

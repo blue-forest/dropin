@@ -38,11 +38,12 @@ impl<'a> MemoryBuilder<'a> {
     result
   }
 
-  pub fn resolve_addr(&self, addr: MemoryAddress) -> u32 {
+  pub fn resolve_addr(&self, addr: &MemoryAddress) -> u32 {
+    let mut result = 16;
     if let MemoryAddress::Data(offset) = addr {
-      return offset;
+      return result + offset;
     }
-    let result = self.data_len as u32;
+    result += self.data_len as u32;
     if let MemoryAddress::Buffer(offset) = addr {
       return result + offset;
     }
@@ -53,7 +54,7 @@ impl<'a> MemoryBuilder<'a> {
     if self.data.is_empty() {
       return None;
     }
-    let mut offset = 0;
+    let mut offset = 16;
     let mut result = DataSection::new();
     for d in self.data.iter() {
       result.active(

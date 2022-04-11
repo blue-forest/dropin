@@ -1,0 +1,12 @@
+[package]
+name = "dropin-utils"
+version = "0.5.3-1"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"
+description = "drop'in utils"
+repository = "https://github.com/blue-forest/dropin"
+license = "AGPL-3.0-only"
+
+[dependencies]
+home = "0.5.3"
+path-clean = "0.1.0"

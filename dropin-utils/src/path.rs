@@ -19,10 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::ConfigError;
+use home::home_dir;
+use path_clean::PathClean;
 
-mod validation;
-pub use validation::*;
+use std::env::{var, current_dir};
+use std::path::PathBuf;
 
-mod resolve;
-pub use resolve::*;
+pub fn get_root() -> PathBuf {
+  if let Ok(root) = var("DROPIN_ROOT") {
+    println!("Using $DROPIN_ROOT ({})", root);
+    return PathBuf::from(root);
+  }
+  let mut path = match home_dir() {
+    Some(path) => { path.join(".dropin.recipes") }
+    None       => { current_dir().unwrap().join(".dropin.recipes") }
+  };
+  if path.is_relative() {
+    path = current_dir().unwrap().join(path).clean();
+  } else {
+    path = path.clean();
+  }
+  path
+}

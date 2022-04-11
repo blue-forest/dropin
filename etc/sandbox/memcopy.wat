@@ -8,13 +8,15 @@
   (export "_start" (func $main))
 
   (data (i32.const 16) "hello")
-  (data (i32.const 21) " world\n")
+  (data (i32.const 21) "world\n")
 
-  (func $main
-    (i32.store (i32.const  0) (i32.const 16)) ;; iovs[0].iov_base
-    (i32.store (i32.const  4) (i32.const  5)) ;; iovs[0].iov_len
-    (i32.store (i32.const  8) (i32.const 21)) ;; iovs[1].iov_base
-    (i32.store (i32.const 12) (i32.const  7)) ;; iovs[1].iov_len
+  (func $main (local i32)
+    (i32.add (i32.const 20) (i32.const 1)) ;; dst
+    (i32.const 16)                         ;; src
+    (i32.const  5)                         ;; size
+    (memory.copy)
+    (i32.store (i32.const  0) (i32.const 21)) ;; iovs[0].iov_base
+    (i32.store (i32.const  4) (i32.const  6)) ;; iovs[0].iov_len
     (call $fd_write
       (i32.const  1) ;; file_descriptor - 1 for stdout
       (i32.const  0) ;; *iovs

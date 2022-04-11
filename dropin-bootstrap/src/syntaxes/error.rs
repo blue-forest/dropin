@@ -4,25 +4,40 @@
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
  * Copyright © 2019-2022 Blue Forest
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::ConfigError;
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 
-mod validation;
-pub use validation::*;
+#[derive(Debug)]
+pub struct ParseError(String);
 
-mod resolve;
-pub use resolve::*;
+impl ParseError {
+  pub fn new(message: String) -> Self { Self(message) }
+}
+
+impl From<&str> for ParseError {
+  fn from(message: &str) -> Self { Self(message.to_string()) }
+}
+
+impl Display for ParseError {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+    Display::fmt(&self.0, f)
+  }
+}
+
+impl Error for ParseError {}
+

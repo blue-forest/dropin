@@ -18,72 +18,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use structopt::StructOpt;
-// use wasmtime_wasi::sync::WasiCtxBuilder;
-// use wasmtime::*;
-
-use std::fs::read_to_string;
-use std::path::PathBuf;
-
-use dropin_compiler::parser::{print_pairs, read_file, read_type};
-
 mod interactive;
 
-#[derive(StructOpt, Debug)]
-enum Commands {
-  /// Compile
-  Compile {
-    /// Path to the recipe to compile
-    #[structopt(parse(from_os_str))]
-    file: PathBuf
-  },
-  /// Debug tools. To learn more: dropin debug --help
-  Debug {
-    #[structopt(subcommand)]
-    cmd: DebugTools,
-  },
-}
-
-#[derive(StructOpt, Debug)]
-enum DebugTools {
-  /// Print the recipe parser output
-  Recipe {
-    /// Recipe path
-    #[structopt(parse(from_os_str))]
-    file: PathBuf,
-  },
-}
-
-#[derive(StructOpt, Debug)]
-#[structopt(name = "drop'in compiler")]
-pub struct Cli {
-  #[structopt(subcommand)]
-  cmd: Option<Commands>,
-}
-
 fn main() {
-  let cli = Cli::from_args();
-  match cli.cmd {
-    Some(Commands::Compile{file}) => compile(file),
-    Some(Commands::Debug{cmd})    => debug(cmd),
-    None                          => interactive::Cli::new().run(),
-  }
-}
-
-fn compile(path: PathBuf) {
-  let type_ = read_type(path);
-  println!("{:?}", type_);
-  let ir = type_.compile();
-  println!("{:?}", ir);
-}
-
-fn debug(cmd: DebugTools) {
-  match cmd {
-    DebugTools::Recipe{file} => {
-      let content = read_to_string(file).unwrap();
-      let pair = read_file(content.as_str());
-      print_pairs(pair.into_inner(), 0);
-    }
-  };
+  interactive::Cli::new().run();
 }
 

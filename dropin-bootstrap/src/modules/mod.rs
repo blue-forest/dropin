@@ -30,13 +30,31 @@ use builder::{MemoryAddress, ModuleBuilder, WASI};
 mod error;
 pub use error::CompileError;
 
+struct State<'memory> {
+  pub print:     Option<PrintState>,
+  pub wasi:      WASI<'memory>,
+  pub addresses: Vec<MemoryAddress>,
+}
+
+struct PrintState {
+  iovec_base:    usize,
+  iovec_len:     usize,
+  new_line_base: usize,
+  new_line_len:  usize,
+  new_line:      usize,
+}
+
 pub fn compile(expression: Expression) -> Result<Module, CompileError> {
   let mut builder = ModuleBuilder::default();
-  let mut wasi = WASI::default();
-  let mut addresses = Vec::new();
+  let mut state = State{
+    print:     None,
+    wasi:      WASI::default(),
+    addresses: Vec::new(),
+  };
+  let state_ptr = &mut state;
   let child = expression.iter().next().unwrap();
   match child.pattern() {
-    "print" => print(&mut builder, &mut wasi, &mut addresses, child),
+    "print" => print(&mut builder, state_ptr, child),
     pattern => { panic!("unexpected pattern: {}", pattern) }
   }
   Ok(builder.build())
@@ -44,42 +62,74 @@ pub fn compile(expression: Expression) -> Result<Module, CompileError> {
 
 fn print<'syntax, 'module, 'memory>(
   builder:    &mut ModuleBuilder<'module, 'memory>,
-  wasi:       &mut WASI<'memory>,
-  addresses:  &'memory mut Vec<MemoryAddress>,
+  state:      &'memory mut State<'memory>,
   expression: &Expression<'syntax, 'module>,
 ) {
-  let fd_write = builder.from_wasi(&wasi.fd_write);
   let mem = builder.memory();
-  let message = expression.iter().next().unwrap().as_str();
-  addresses.push(mem.data(message.as_bytes()));
-  addresses.push(mem.buffer(I32));
-  addresses.push(mem.buffer(I32));
-  let message_addr = addresses.get(addresses.len()-3).unwrap();
-  let iovec_base   = addresses.get(addresses.len()-2).unwrap();
-  let iovec_len    = addresses.get(addresses.len()-1).unwrap();
+  if state.print.is_none() {
+    state.addresses.push(mem.data(&[10]));
+    state.addresses.push(mem.buffer(I32));
+    state.addresses.push(mem.buffer(I32));
+    state.addresses.push(mem.buffer(I32));
+    state.addresses.push(mem.buffer(I32));
+    state.print = Some(PrintState{
+      new_line:      state.addresses.len()-5,
+      iovec_base:    state.addresses.len()-4,
+      iovec_len:     state.addresses.len()-3,
+      new_line_base: state.addresses.len()-2,
+      new_line_len:  state.addresses.len()-1,
+    });
+  }
 
+  let message = expression.iter().next().unwrap().as_str();
+  state.addresses.push(mem.data(message.as_bytes()));
+  let message_addr = state.addresses.get(state.addresses.len()-1).unwrap();
+
+  let print_state = state.print.as_ref().unwrap();
+  let iovec_base    = state.addresses.get( print_state.iovec_base    ).unwrap();
+  let iovec_len     = state.addresses.get( print_state.iovec_len     ).unwrap();
+  let new_line      = state.addresses.get( print_state.new_line      ).unwrap();
+  let new_line_base = state.addresses.get( print_state.new_line_base ).unwrap();
+  let new_line_len  = state.addresses.get( print_state.new_line_len  ).unwrap();
+
+  let fd_write = builder.from_wasi(&state.wasi.fd_write);
   let start = builder.get_start();
-  start.memory(iovec_base,   |addr| Instruction::I32Const(addr as i32));
-  start.memory(message_addr, |addr| Instruction::I32Const(addr as i32));
+
+  start.memory(iovec_base,    |addr| Instruction::I32Const(addr as i32));
+  start.memory(message_addr,  |addr| Instruction::I32Const(addr as i32));
   start.basic(Instruction::I32Store(MemArg{
     offset:       0,
     align:        2,
     memory_index: 0,
   }));
-  start.memory(iovec_len,    |addr| Instruction::I32Const(addr as i32));
+  start.memory(iovec_len,     |addr| Instruction::I32Const(addr as i32));
   start.basic(Instruction::I32Const(message.len() as i32));
   start.basic(Instruction::I32Store(MemArg{
     offset:       0,
     align:        2,
     memory_index: 0,
   }));
+  start.memory(new_line_base, |addr| Instruction::I32Const(addr as i32));
+  start.memory(new_line,      |addr| Instruction::I32Const(addr as i32));
+  start.basic(Instruction::I32Store(MemArg{
+    offset:       0,
+    align:        2,
+    memory_index: 0,
+  }));
+  start.memory(new_line_len,  |addr| Instruction::I32Const(addr as i32));
+  start.basic(Instruction::I32Const(1));
+  start.basic(Instruction::I32Store(MemArg{
+    offset:       0,
+    align:        2,
+    memory_index: 0,
+  }));
   /**/start.basic(Instruction::I32Const(0)); // errno -> trash to debug
-  start.basic(Instruction::I32Const(1)); // fd = stdout
-  start.memory(iovec_base,   |addr|      // iovec
+  start.basic(Instruction::I32Const(1));            // fd = stdout
+  start.memory(iovec_base,    |addr|                // iovec
     Instruction::I32Const(addr as i32)
   );
-  start.basic(Instruction::I32Const(1)); // len
-  start.basic(Instruction::I32Const(0)); // size = trash
+  start.basic(Instruction::I32Const(2));            // len
+  start.basic(Instruction::I32Const(0));            // size = trash
   start.basic(Instruction::Call(fd_write));
   /**/start.basic(Instruction::I32Store(MemArg{ // errno -> trash to debug
     offset:       0,

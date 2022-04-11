@@ -17,7 +17,7 @@ It is also a rust workspace defining the following crates:
 As the drop'in compiler is written in the drop'in language, we face the
 chicken-egg problem: to get a compiler, we need a compiler.
 
-[Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(compilers\)) is a
+[Bootstrapping](https://en.wikipedia.org/wiki/Bootstrapping_(compilers)) is a
 technique to answer this problem. The crate 
 [`dropin-bootstrap`](../dropin-bootstrap) is a minimal drop'in compiler written
 in Rust. It compiles the feature-rich compiler, which will be distributed as

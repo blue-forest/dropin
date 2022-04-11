@@ -43,7 +43,7 @@ impl<'a> MemoryBuilder<'a> {
     if let MemoryAddress::Data(offset) = addr {
       return result + offset;
     }
-    result += self.data_len as u32;
+    result += (self.data_len + 4 - (self.data_len % 4)) as u32;
     if let MemoryAddress::Buffer(offset) = addr {
       return result + offset;
     }

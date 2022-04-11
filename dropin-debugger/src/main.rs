@@ -1,4 +1,4 @@
-use pretty_hex::pretty_hex;
+use pretty_hex::{config_hex, HexConfig};
 use structopt::StructOpt;
 use wasmtime_wasi::sync::WasiCtxBuilder;
 use wasmtime::*;
@@ -12,7 +12,7 @@ enum Commands {
     file: PathBuf,
     #[structopt(long, short, default_value = "0")]
     start: usize,
-    #[structopt(long, short, default_value = "1024")]
+    #[structopt(long, short, default_value = "128")]
     len: usize,
   }
 }
@@ -53,5 +53,11 @@ fn memory(file: PathBuf, start: usize, len: usize) {
     panic!("exported member \"memory\" is not Memory");
   };
   let data = memory.data(&store).get(start..start+len).unwrap();
-  println!("{}", pretty_hex(&data));
+
+  let cfg = HexConfig {
+    title: false,
+    ..HexConfig::default()
+  };
+  println!("         0  1  2  3   4  5  6  7   8  9  a  b   c  d  e  f");
+  println!("{}", config_hex(&data, cfg));
 }

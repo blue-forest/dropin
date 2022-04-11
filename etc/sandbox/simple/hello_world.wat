@@ -10,7 +10,7 @@
   (data (i32.const 16) "hello")
   (data (i32.const 21) " world\n")
 
-  (func $main (local i32)
+  (func $main
     (i32.store (i32.const  0) (i32.const 16)) ;; iovs[0].iov_base
     (i32.store (i32.const  4) (i32.const  5)) ;; iovs[0].iov_len
     (i32.store (i32.const  8) (i32.const 21)) ;; iovs[1].iov_base

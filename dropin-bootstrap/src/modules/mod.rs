@@ -38,14 +38,14 @@ fn print<'syntax, 'module, 'memory>(
   let iovec_len    = addresses.get(addresses.len()-1).unwrap();
 
   let start = builder.get_start();
-  start.memory(iovec_base,   |addr| { Instruction::I32Const(addr as i32) });
-  start.memory(message_addr, |addr| { Instruction::I32Const(addr as i32) });
+  start.memory(iovec_base,   |addr| Instruction::I32Const(addr as i32));
+  start.memory(message_addr, |addr| Instruction::I32Const(addr as i32));
   start.basic(Instruction::I32Store(MemArg{
     offset:       0,
     align:        2,
     memory_index: 0,
   }));
-  start.memory(iovec_len,    |addr| { Instruction::I32Const(addr as i32) });
+  start.memory(iovec_len,    |addr| Instruction::I32Const(addr as i32));
   start.basic(Instruction::I32Const(message.len() as i32));
   start.basic(Instruction::I32Store(MemArg{
     offset:       0,
@@ -54,9 +54,9 @@ fn print<'syntax, 'module, 'memory>(
   }));
   /**/start.basic(Instruction::I32Const(0)); // errno -> trash to debug
   start.basic(Instruction::I32Const(1)); // fd = stdout
-  start.memory(iovec_base,   |addr| {    // iovec
+  start.memory(iovec_base,   |addr|      // iovec
     Instruction::I32Const(addr as i32)
-  });
+  );
   start.basic(Instruction::I32Const(1)); // len
   start.basic(Instruction::I32Const(0)); // size = trash
   start.basic(Instruction::Call(fd_write));

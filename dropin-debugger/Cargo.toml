@@ -1,0 +1,14 @@
+[package]
+name = "dropin-debugger"
+version = "0.5.3-1"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"
+description = "drop'in debugger [WIP]"
+repository = "https://github.com/theblueforest/dropin/dropin-debugger"
+license = "AGPL-3.0-only"
+
+[dependencies]
+pretty-hex = "0.2.1"
+structopt = "0.3"
+wasmtime = "0.34.1"
+wasmtime-wasi = "0.34.1"

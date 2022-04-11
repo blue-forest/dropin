@@ -1,30 +1,28 @@
-use wasm_encoder::ValType::{self, I32, I64};
+use wasm_encoder::ValType::{self, I32};
 
-use super::ModuleBuilder;
-
-pub struct WASI {
-  pub fd_write: WASIFunction,
+pub struct WASI<'a> {
+  pub fd_write: WASIFunction<'a>,
 }
 
-impl Default for WASI {
+impl<'a> Default for WASI<'a> {
   fn default() -> Self {
     Self{
-      fd_write: WASIFunction::new(vec![I32, I32, I32, I32], vec![I32]),
+      fd_write: WASIFunction::new(
+        "fd_write", vec![I32, I32, I32, I32], vec![I32],
+      ),
     }
   }
 }
 
-pub struct WASIFunction {
-  id:      Option<i32>,
-  params:  Vec<ValType>,
-  results: Vec<ValType>,
+pub struct WASIFunction<'a> {
+  pub id:      Option<u32>,
+  pub name:    &'a str,
+  pub params:  Vec<ValType>,
+  pub results: Vec<ValType>,
 }
 
-impl WASIFunction {
-  fn new(params: Vec<ValType>, results: Vec<ValType>) -> Self {
-    Self{ id: None, params, results }
-  }
-
-  pub fn get(&mut self, builder: &mut ModuleBuilder) {
+impl<'a> WASIFunction<'a> {
+  fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
+    Self{ id: None, name, params, results }
   }
 }

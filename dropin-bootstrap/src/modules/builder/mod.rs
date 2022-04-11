@@ -1,6 +1,6 @@
 use wasm_encoder::{
-  CodeSection, Export, ExportSection, FunctionSection, MemorySection,
-  MemoryType, Module, TypeSection,
+  CodeSection, EntityType, Export, ExportSection, FunctionSection,
+  ImportSection, MemorySection, MemoryType, Module, TypeSection,
 };
 
 use std::collections::VecDeque;
@@ -8,18 +8,20 @@ use std::collections::VecDeque;
 mod function;
 pub use function::FunctionBuilder;
 
+mod import;
+use import::FunctionImport;
+
 mod memory;
 pub use memory::{MemoryAddress, MemoryBuilder};
 
 mod wasi;
-use wasi::WASI;
+pub use wasi::{WASI, WASIFunction};
 
 pub struct ModuleBuilder<'module, 'memory> {
   memory:             MemoryBuilder<'module>,
   types:              TypeSection,
-  functions_imported: Vec<u32>,
+  functions_imported: Vec<FunctionImport<'memory>>,
   functions_local:    VecDeque<FunctionBuilder<'module, 'memory>>,
-  wasi:               WASI,
 }
 
 impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
@@ -29,7 +31,6 @@ impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
       types:              TypeSection::new(),
       functions_imported: vec![],
       functions_local:    VecDeque::from([FunctionBuilder::new(0)]),
-      wasi:               WASI::default(),
     };
     result.types.function(vec![], vec![]); // _start
     result
@@ -42,10 +43,24 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
   }
 
   pub fn memory(&mut self) -> &mut MemoryBuilder<'module> { &mut self.memory }
+  
+  pub fn from_wasi(&mut self, f: &WASIFunction<'memory>) -> u32 {
+    if let Some(id) = f.id {
+      return id;
+    }
+    let type_id = self.types.len();
+    self.types.function(f.params.clone(), f.results.clone());
+    let result = self.functions_imported.len() as u32;
+    self.functions_imported.push(FunctionImport{
+      type_id, module: "wasi_unstable", name: f.name,
+    });
+    result
+  }
 
   pub fn build(self) -> Module {
     let mut module = Module::new();
     self.build_type(&mut module)
+      .build_import(&mut module)
       .build_function(&mut module)
       .build_memory(&mut module)
       .build_export(&mut module)
@@ -56,6 +71,15 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
 
   fn build_type(self, module: &mut Module) -> Self {
     module.section(&self.types);
+    self
+  }
+
+  fn build_import(self, module: &mut Module) -> Self {
+    let mut section = ImportSection::new();
+    for f in self.functions_imported.iter() {
+      section.import(f.module, f.name, EntityType::Function(f.type_id));
+    }
+    module.section(&section);
     self
   }
 

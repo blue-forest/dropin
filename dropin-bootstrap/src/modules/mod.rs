@@ -4,17 +4,18 @@ use wasm_encoder::ValType::I32;
 use crate::expressions::Expression;
 
 mod builder;
-use builder::{MemoryAddress, ModuleBuilder};
+use builder::{MemoryAddress, ModuleBuilder, WASI};
 
 mod error;
 pub use error::CompileError;
 
 pub fn compile(expression: Expression) -> Result<Module, CompileError> {
   let mut builder = ModuleBuilder::default();
+  let mut wasi = WASI::default();
   let mut addresses = Vec::new();
   let child = expression.iter().next().unwrap();
   match child.pattern() {
-    "print" => print(&mut builder, &mut addresses, child),
+    "print" => print(&mut builder, &mut wasi, &mut addresses, child),
     pattern => { panic!("unexpected pattern: {}", pattern) }
   }
   Ok(builder.build())
@@ -22,9 +23,11 @@ pub fn compile(expression: Expression) -> Result<Module, CompileError> {
 
 fn print<'syntax, 'module, 'memory>(
   builder:    &mut ModuleBuilder<'module, 'memory>,
+  wasi:       &mut WASI<'memory>,
   addresses:  &'memory mut Vec<MemoryAddress>,
   expression: &Expression<'syntax, 'module>,
 ) {
+  let fd_write = builder.from_wasi(&wasi.fd_write);
   let mem = builder.memory();
   let message = expression.iter().next().unwrap().as_str();
   addresses.push(mem.data(message.as_bytes()));
@@ -49,13 +52,17 @@ fn print<'syntax, 'module, 'memory>(
     align:        2,
     memory_index: 0,
   }));
+  /**/start.basic(Instruction::I32Const(0)); // errno -> trash to debug
   start.basic(Instruction::I32Const(1)); // fd = stdout
   start.memory(iovec_base,   |addr| {    // iovec
     Instruction::I32Const(addr as i32)
   });
   start.basic(Instruction::I32Const(1)); // len
   start.basic(Instruction::I32Const(0)); // size = trash
-  // start.basic(Instruction::Call(0));
-  start.memory(iovec_base, |addr| { Instruction::I32Const(addr as i32) });
-  start.basic(Instruction::Drop);
+  start.basic(Instruction::Call(fd_write));
+  /**/start.basic(Instruction::I32Store(MemArg{ // errno -> trash to debug
+    offset:       0,
+    align:        2,
+    memory_index: 0,
+  }));
 }

@@ -3,6 +3,7 @@
 members = [
   "dropin-bootstrap",
   "dropin-compiler",
+  "dropin-debugger",
   "dropin-utils",
 ]
 exclude = ["etc/sandbox"]

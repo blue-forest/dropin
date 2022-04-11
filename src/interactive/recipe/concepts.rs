@@ -2,19 +2,6 @@ use std::fmt::{Display, Error, Formatter};
 
 use super::Recipe;
 
-pub struct Functions;
-
-impl Display for Functions {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "functions".fmt(f)
-  }
-}
-
-impl Recipe for Functions {
-  fn title(&self) -> String { "Functions".to_string() }
-  fn dir_name(&self) -> String { "types".to_string() }
-}
-
 pub struct Modules;
 
 impl Display for Modules {
@@ -28,6 +15,19 @@ impl Recipe for Modules {
   fn dir_name(&self) -> String { "modules".to_string() }
 }
 
+pub struct Functions;
+
+impl Display for Functions {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "functions".fmt(f)
+  }
+}
+
+impl Recipe for Functions {
+  fn title(&self) -> String { "Functions".to_string() }
+  fn dir_name(&self) -> String { "functions".to_string() }
+}
+
 pub struct Pipelines;
 
 impl Display for Pipelines {
@@ -39,6 +39,19 @@ impl Display for Pipelines {
 impl Recipe for Pipelines {
   fn title(&self) -> String { "Pipelines".to_string() }
   fn dir_name(&self) -> String { "pipelines".to_string() }
+}
+
+pub struct Syntaxes;
+
+impl Display for Syntaxes {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "syntaxes".fmt(f)
+  }
+}
+
+impl Recipe for Syntaxes {
+  fn title(&self) -> String { "Syntaxes".to_string() }
+  fn dir_name(&self) -> String { "syntaxes".to_string() }
 }
 
 pub struct Types;

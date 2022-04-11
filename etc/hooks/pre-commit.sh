@@ -11,7 +11,7 @@ COPYING_HEADER="\/*     _              _ _\n *  __| |_ _ ___ _ __( |_)_ _\n * \/
 
 for i in $(\
   git status --porcelain=1 \
-  | awk '{ if (($1 == "A") && ($2 ~ /\.(rs|pest)$/)) { print $2 } }' \
+  | awk '{ if (($1 ~ "^A") && ($2 ~ /\.(rs|pest)$/)) { print $2 } }' \
 ); do
   if ! grep -q "Copyright © 2019-2022 Blue Forest" $i; then
     echo "Adding license header to $i"

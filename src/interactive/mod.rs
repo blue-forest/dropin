@@ -34,10 +34,11 @@ mod owner;
 use owner::OwnerCommand;
 mod recipe;
 use recipe::{
-  Functions,
   Modules,
+  Functions,
   Pipelines,
   RecipeCommand,
+  Syntaxes,
   Types,
 };
 mod path;
@@ -70,16 +71,18 @@ impl Cli {
       owner_selected: None,
       owners,
       root,
-      version: "v1".to_string(), // TODO: deal with versions
+      version:        "v1".to_string(), // TODO: deal with versions
     }
   }
 
   #[inline(always)]
   pub fn run(&mut self) {
     let commands: Vec<Box<dyn Command>> = vec![
+      Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Functions))),
       Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Pipelines))),
+      Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
       Box::new(RecipeCommand::new(Arc::new(Types))),
       Box::new(ModelCommand{}),
       Box::new(OwnerCommand{}),
@@ -87,7 +90,7 @@ impl Cli {
     self.run_select("Home", &commands);
   }
 
-  fn run_select(&mut self, title: &str, commands: &[Box<dyn Command>]) {
+  fn run_select(&mut self, title: &str, commands: &[Box<dyn Command>]) -> u32 {
     let theme = ColorfulTheme::default();
     loop {
       let enabled_commands: Vec<&Box<dyn Command>> = commands.iter()
@@ -99,8 +102,9 @@ impl Cli {
         .default(1);
       select.with_prompt(self.prompt(title));
       let command = select.interact().unwrap();
-      if command == 0 { break; }
-      if enabled_commands[command-1].run(self) { break; }
+      if command == 0 { break 0; }
+      let back_n = enabled_commands[command-1].run(self);
+      if back_n > 0 { break back_n - 1; }
     }
   }
 
@@ -128,7 +132,7 @@ impl Default for Cli {
 }
 
 trait Command: Display {
-  fn run(&self, cli: &mut Cli) -> bool;
+  fn run(&self, cli: &mut Cli) -> u32;
   fn is_enabled(&self, _cli: &Cli) -> bool { true }
 }
 

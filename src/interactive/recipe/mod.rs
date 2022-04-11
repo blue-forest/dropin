@@ -31,10 +31,12 @@ mod add;
 use add::Add;
 mod concepts;
 pub use concepts::*;
+mod remove;
 mod edit;
-use edit::Edit;
 mod namespace;
 use namespace::Namespace;
+mod select;
+use select::Select;
 
 pub struct RecipeCommand {
   recipe: Arc<dyn Recipe>,
@@ -53,7 +55,7 @@ impl Display for RecipeCommand {
 }
 
 impl Command for RecipeCommand {
-  fn run(&self, cli: &mut Cli) -> bool {
+  fn run(&self, cli: &mut Cli) -> u32 {
     let mut path = get_version(cli).unwrap();
     path.push(self.recipe.dir_name());
     let commands = get_entries(
@@ -61,8 +63,7 @@ impl Command for RecipeCommand {
       self.recipe.clone(),
       Arc::new(Vec::new()),
     );
-    cli.run_select(&self.recipe.title(), &commands);
-    false
+    cli.run_select(&self.recipe.title(), &commands)
   }
 
   fn is_enabled(&self, cli: &Cli) -> bool { cli.model_selected.is_some() }
@@ -83,7 +84,7 @@ fn get_entries(
           namespaces.clone(),
         )));
       } else {
-        commands.push(Box::new(Edit::new(
+        commands.push(Box::new(Select::new(
           recipe.clone(),
           entry.path().file_stem().unwrap().to_str().unwrap(),
           namespaces.clone(),

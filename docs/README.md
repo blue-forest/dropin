@@ -1,9 +1,7 @@
-# drop'in compiler
-
-## Specs
+# drop'in
 
  - [Recipes](https://dropin.recipes/)
- - [Typing](typing/README.md)
+ - [CLI](CLI.md)
+ - [File Structure](Structure.md)
+ - [Development](Development.md)
  - [Memory management](memory/README.md)
- - [Compilation](compilation/README.md)
- - [Cli](cli.md)

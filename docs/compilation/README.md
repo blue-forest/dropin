@@ -1,3 +1,0 @@
-# Compilation
-
- - [Handler](handlers.md)

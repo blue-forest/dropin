@@ -1,3 +1,0 @@
-# Typing
-
-TODO

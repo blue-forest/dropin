@@ -9,4 +9,3 @@ When, the **root** directory is created. It is by default at
 `~/.dropin.recipes`, but you can change it by setting the environment
 variables `DROPIN_ROOT`. 
 
-**TODO**

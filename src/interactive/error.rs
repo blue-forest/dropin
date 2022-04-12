@@ -18,9 +18,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod interactive;
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 
-fn main() {
-  interactive::Cli::new().run();
+#[derive(Debug)]
+pub struct ConfigError(String);
+
+impl ConfigError {
+  pub fn new(message: String) -> Self { Self(message) }
 }
 
+impl From<&str> for ConfigError {
+  fn from(message: &str) -> Self { Self(message.to_string()) }
+}
+
+impl Display for ConfigError {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+    self.0.fmt(f)
+  }
+}
+
+impl Error for ConfigError {}

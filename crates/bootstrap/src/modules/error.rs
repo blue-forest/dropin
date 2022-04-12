@@ -7,7 +7,8 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation under version 3 of the License.
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,9 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod interactive;
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 
-fn main() {
-  interactive::Cli::new().run();
+#[derive(Debug)]
+pub struct CompileError(String);
+
+impl CompileError {
+  pub fn new(message: String) -> Self { Self(message) }
 }
+
+impl From<&str> for CompileError {
+  fn from(message: &str) -> Self { Self::new(message.to_string()) }
+}
+
+impl Display for CompileError {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+    Display::fmt(&self.0, f)
+  }
+}
+
+impl Error for CompileError {}
 

@@ -1,2 +1,5 @@
-target
+target/
 *.swp
+*.swo
+*.swn
+*.wasm

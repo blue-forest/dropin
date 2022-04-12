@@ -1,4 +1,3 @@
-
 # drop'in
 
 [![License](https://img.shields.io/github/license/blue-forest/dropin)](./COPYING)
@@ -19,6 +18,17 @@ You are free to explore the code and fork it, we are open to [Issues and Pull Re
 The codebase is [licensed under GNU Affero General Public License v3](./COPYING), you have the right to exploit this source code but it must remain open-source and under the same license, thanks for your support !
 
 If you want to join the development and contribute to the project, please reach us at contact@blueforest.cc.
+
+
+## Documentation
+You can find the documentation of the drop'in language on [dropin.recipes](https://dropin.recipes).
+
+You can find more documentation in [`docs`](./docs) about:
+ - [the CLI](docs/CLI.md)
+ - [the File Structure](docs/Structure.md)
+ - [the Development](docs/Development.md)
+ - [the Memory management](docs/memory.md)
+
 
 ## Contributors
 - Nazim Lachter ([@n4zim](https://github.com/n4zim))

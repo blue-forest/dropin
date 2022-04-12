@@ -7,7 +7,8 @@
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
- * by the Free Software Foundation under version 3 of the License.
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -18,9 +19,31 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-mod interactive;
+use wasm_encoder::ValType::{self, I32};
 
-fn main() {
-  interactive::Cli::new().run();
+pub struct WASI<'a> {
+  pub fd_write: WASIFunction<'a>,
 }
 
+impl<'a> Default for WASI<'a> {
+  fn default() -> Self {
+    Self{
+      fd_write: WASIFunction::new(
+        "fd_write", vec![I32, I32, I32, I32], vec![I32],
+      ),
+    }
+  }
+}
+
+pub struct WASIFunction<'a> {
+  pub id:      Option<u32>,
+  pub name:    &'a str,
+  pub params:  Vec<ValType>,
+  pub results: Vec<ValType>,
+}
+
+impl<'a> WASIFunction<'a> {
+  fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
+    Self{ id: None, name, params, results }
+  }
+}

@@ -1,6 +1,6 @@
 use serde_derive::{Deserialize, Serialize};
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::fs::{read_to_string, write};
 
 pub struct Config {
@@ -15,8 +15,8 @@ struct Content {
 }
 
 impl Config {
-  pub fn new(root: &PathBuf) -> Self {
-    let mut path = root.clone();
+  pub fn new(root: &Path) -> Self {
+    let mut path = root.to_path_buf();
     path.push("config.toml");
     let content = if !path.exists() {
       Content{ owner: None, model: None }

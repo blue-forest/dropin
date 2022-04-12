@@ -41,9 +41,12 @@ impl<'a> Concat<'a> {
         if c == '|' {
           return Or::parse(Box::new(Concat{ tokens }), syntax, iter);
         }
+        if c == ')' {
+          break;
+        }
         tokens.push(parse_token(syntax, iter, c));
         if let Some((_, peeked)) = iter.peek() {
-          if !peeked.is_whitespace() {
+          if *peeked != ')' && !peeked.is_whitespace() {
             panic!("unexpected '{}'", c);
           }
         }

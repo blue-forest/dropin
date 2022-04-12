@@ -66,6 +66,7 @@ fn parse_token<'a>(
     '"' => Litteral::parse(syntax, iter),
     '$' => Getter::parse(syntax, iter),
     '!' => Not::parse(syntax, iter),
+    '(' => Concat::parse(syntax, iter),
     _   => { panic!("unknown token {}", c); }
   }
 }

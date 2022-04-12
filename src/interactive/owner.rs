@@ -63,6 +63,7 @@ impl Display for Select {
 impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.owner_selected = Some(self.index);
+    cli.model_selected = None;
     1
   }
 }

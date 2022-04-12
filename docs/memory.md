@@ -23,8 +23,8 @@ unused values, or values that are used directly after their creation.
 
 ### data
 
-The data region stores all literal values. For example, in the instruction:
-```dropin
+The data region stores all constant literal values. For example, in the
+instruction: ```dropin
 print "hello world"
 ```
 the string "hello world" resides in this region.
@@ -64,10 +64,10 @@ would produce:
 ║       12        ║
 ║─────────────────║
 ║  4: data.key.0  ║
-║        3        ║
+║       24        ║
 ║─────────────────║
 ║  8: data.key.1  ║
-║        3        ║
+║       40        ║
 ╠═════════════════╣
 ║      values     ║
 ║┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄║
@@ -86,10 +86,10 @@ would produce:
 ║ 28: text        ║
 ║     "test1"     ║
 ║─────────────────║
-║ 32: length      ║
+║ 36: length      ║
 ║        5        ║
 ║╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌║
-║ 36: text        ║
+║ 40: text        ║
 ║     "test2"     ║
 ╚═════════════════╝
 ```

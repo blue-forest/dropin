@@ -95,7 +95,7 @@ impl<'a> Patterns<'a> {
     &'c self, module: &'b str,
   ) -> Result<Expression<'a, 'b>, ParseError> {
     let mut iter = module.char_indices().peekable();
-    let result = self.patterns[self.entry].parse(self, module, &mut iter);
+    let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
     if let Some((i, _)) = iter.peek() {
       let remaining = module.get(*i..).unwrap();
       // ignore new line
@@ -105,7 +105,7 @@ impl<'a> Patterns<'a> {
         )));
       }
     }
-    result
+    Ok(result)
   }
 
 }

@@ -71,11 +71,20 @@ impl<'a> Token<'a> for Litteral<'a> {
     _expr:     &mut Expression,
   ) -> Result<(), ParseError> {
     let mut is_escaped = false;
-    for chr_value in self.value.chars() {
-      if !is_escaped && chr_value == '\\' {
+    for c in self.value.chars() {
+      if !is_escaped && c == '\\' {
         is_escaped = true;
         continue;
       }
+      let chr_value = if is_escaped {
+        match c {
+          'n' => '\n',
+          't' => '\t',
+          'r' => '\r',
+          '0' => '\0',
+          _ => c,
+        }
+      } else { c };
       let ok = if let Some((_, chr_module)) = iter.peek() {
         if *chr_module == chr_value { iter.next(); true } else { false }
       } else { false };

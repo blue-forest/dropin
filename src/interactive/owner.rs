@@ -64,6 +64,7 @@ impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.owner_selected = Some(self.index);
     cli.model_selected = None;
+    cli.config.set_owner(self.name.clone());
     1
   }
 }
@@ -96,6 +97,8 @@ impl Command for Add {
     let index = cli.owners.len();
     cli.owners.push(owner_name);
     cli.owner_selected = Some(index);
+    cli.model_selected = None;
+    cli.config.set_owner(cli.owners[index].clone());
     1
   }
 }

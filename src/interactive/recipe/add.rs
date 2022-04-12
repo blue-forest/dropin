@@ -18,8 +18,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::{Editor, Input};
+use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
+use edit::edit_file;
 
 use std::fs::{create_dir_all, File};
 use std::fmt::{Display, Error, Formatter};
@@ -59,41 +60,36 @@ impl Command for Add {
 
     let mut id_split: Vec<&str> = id.split('/').collect();
     let id = id_split.split_off(id_split.len()-1)[0];
-    let editor = Editor::new()
-      .edit(&format!(
+    let namespaces = [
+      (*self.namespaces).iter().map(|s| s.as_str()).collect(),
+      id_split,
+    ].concat();
+    let mut path = get_namespace(cli, &recipe_name, namespaces);
+    if !path.exists() {
+      create_dir_all(&path).unwrap();
+    }
+    path.push(&format!("{}.dropin", id));
+    let mut file = File::create(&path).unwrap();
+    file.write_all(
+      format!(
         "{} {}\n{:=>width$}\n",
         recipe_name, id, 
         "", width=recipe_name.len() + id.len() + 1,
-      ));
-    if let Some(recipe_content) = editor.unwrap() {
-      let namespaces = [
-        (*self.namespaces).iter().map(|s| s.as_str()).collect(),
-        id_split,
-      ].concat();
-      let mut path = get_namespace(cli, &recipe_name, namespaces);
-      if !path.exists() {
-        create_dir_all(&path).unwrap();
-      }
-      path.push(&format!("{}.dropin", id));
-      let mut file = File::create(&path).unwrap();
-      file.write_all(recipe_content.as_bytes()).unwrap();
-      println!("Recipe updated at {}", path.to_str().unwrap());
-      if self.namespaces.is_empty() {
-        RecipeCommand::new(self.recipe.clone()).run(cli);
-      } else {
-        let id = &self.namespaces[self.namespaces.len()-1];
-        let mut namespaces = (*self.namespaces).clone();
-        namespaces.pop();
-        Namespace::new(
-          self.recipe.clone(),
-          id,
-          Arc::new(namespaces),
-        ).run(cli);
-      };
-      1
+      ).as_bytes(),
+    ).unwrap();
+    edit_file(path).unwrap();
+    if self.namespaces.is_empty() {
+      RecipeCommand::new(self.recipe.clone()).run(cli);
     } else {
-      println!("Edition Canceled");
-      0
-    }
+      let id = &self.namespaces[self.namespaces.len()-1];
+      let mut namespaces = (*self.namespaces).clone();
+      namespaces.pop();
+      Namespace::new(
+        self.recipe.clone(),
+        id,
+        Arc::new(namespaces),
+      ).run(cli);
+    };
+    1
   }
 }

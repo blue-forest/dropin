@@ -69,6 +69,7 @@ impl Display for Select {
 impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.model_selected = Some(self.index);
+    cli.config.set_model(self.name.clone());
     1
   }
 }
@@ -105,6 +106,7 @@ impl Command for Add {
     let index = cli.models.len();
     cli.models.push(model_name);
     cli.model_selected = Some(index);
+    cli.config.set_model(cli.models[index].clone());
     1
   }
 }

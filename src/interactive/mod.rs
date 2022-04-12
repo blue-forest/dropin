@@ -28,6 +28,8 @@ use std::sync::Arc;
 
 use dropin_utils::path::get_root;
 
+mod config;
+use self::config::Config;
 mod error;
 use error::ConfigError;
 mod model;
@@ -49,6 +51,7 @@ mod utils;
 use utils::get_dirs;
 
 pub struct Cli {
+  config:         Config,
   model_selected: Option<usize>,
   models:         Vec<String>,
   owner_selected: Option<usize>,
@@ -64,17 +67,31 @@ impl Cli {
     let owners = if !root.exists() {
       println!("Created drop'in root");
       create_dir(&root).unwrap();
-      Vec::new()
+      vec![]
     } else {
       get_dirs(&root)
     };
+    let config = Config::new(&root);
+    let mut owner_selected = None;
+    let mut model_selected = None;
+    let mut models = vec![];
+    if let Some(owner) = config.owner() {
+      owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
+      let mut owner_path = root.clone();
+      owner_path.push(owner);
+      models = get_dirs(&owner_path);
+      if let Some(model) = config.model() {
+        model_selected = Some(models.iter().position(|m| m == model).unwrap());
+      }
+    }
     Self{
-      model_selected: None,
-      models:         Vec::new(),
-      owner_selected: None,
+      config,
+      model_selected,
+      models,
+      owner_selected,
       owners,
       root,
-      version:        "v1".to_string(), // TODO: deal with versions
+      version: "v1".to_string(), // TODO: deal with versions
     }
   }
 
@@ -83,7 +100,6 @@ impl Cli {
     let commands: Vec<Box<dyn Command>> = vec![
       Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Functions))),
-      Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Pipelines))),
       Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
       Box::new(RecipeCommand::new(Arc::new(Types))),

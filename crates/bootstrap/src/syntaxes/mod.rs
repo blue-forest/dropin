@@ -98,10 +98,14 @@ impl<'a> Patterns<'a> {
     let result = self.patterns[self.entry].parse(self, module, &mut iter);
     if let Some((i, _)) = iter.peek() {
       let remaining = module.get(*i..).unwrap();
-      Err(ParseError::new(format!("remaining tokens: \"{}\"", remaining)))
-    } else {
-      result
+      // ignore new line
+      if remaining != "\n" {
+        return Err(ParseError::new(format!(
+          "remaining tokens: \"{}\"", remaining,
+        )));
+      }
     }
+    result
   }
 
 }

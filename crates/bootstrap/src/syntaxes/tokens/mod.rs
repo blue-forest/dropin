@@ -34,6 +34,9 @@ pub use getter::Getter;
 mod litteral;
 pub use litteral::Litteral;
 
+mod or;
+pub use or::Or;
+
 mod quantifier;
 pub use quantifier::Quantifier;
 

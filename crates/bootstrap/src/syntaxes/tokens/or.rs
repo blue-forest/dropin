@@ -23,45 +23,28 @@ use std::iter::Peekable;
 use std::str::CharIndices;
 
 use crate::syntaxes::{Expression, Patterns, ParseError};
-use super::{Getter, Litteral, Or, Token};
+use super::{Concat, Token};
 
 #[derive(Debug)]
-pub struct Concat<'a> {
-  tokens: Vec<Box<dyn Token<'a> + 'a>>,
+pub struct Or<'a> {
+  token1: Box<dyn Token<'a> + 'a>,
+  token2: Box<dyn Token<'a> + 'a>,
 }
 
-impl<'a> Concat<'a> {
+impl<'a> Or<'a> {
   pub fn parse(
+    first_token: Box<dyn Token<'a> + 'a>,
     syntax: &'a str,
     iter: &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Token<'a> + 'a> {
-    let mut tokens = Vec::new();
-    while let Some((_, c)) = iter.next() {
-      if !c.is_whitespace() {
-        match c {
-          '"' => tokens.push(Litteral::parse(syntax, iter)),
-          '$' => tokens.push(Getter::parse(syntax, iter)),
-          '|' => { return Or::parse(Box::new(Concat{ tokens }), syntax, iter) },
-          _   => { panic!("unknown token {}", c); }
-        }
-        if let Some((_, peeked)) = iter.peek() {
-          if !peeked.is_whitespace() {
-            panic!("unexpected '{}'", c);
-          }
-        }
-      } else if c == '\n' {
-        if let Some((_, peeked)) = iter.peek() {
-          if !peeked.is_whitespace() || *peeked == '\n' {
-            break;
-          }
-        }
-      }
-    }
-    Box::new(Concat{ tokens })
+    Box::new(Self{
+      token1: first_token,
+      token2: Concat::parse(syntax, iter),
+    })
   }
 }
 
-impl<'a> Token<'a> for Concat<'a> {
+impl<'a> Token<'a> for Or<'a> {
   fn parse<'b, 'c>(
     &self,
     patterns: &'c Patterns<'a>,
@@ -69,8 +52,15 @@ impl<'a> Token<'a> for Concat<'a> {
     iter:     &mut Peekable<CharIndices<'b>>,
     expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
-    for token in self.tokens.iter() {
-      token.parse(patterns, module, iter, expr)?;
+    let mut iter_clone = iter.clone();
+    if let Err(err1) = self.token1.parse(
+      patterns, module, &mut iter_clone, expr,
+    ) {
+      if let Err(err2) = self.token2.parse(patterns, module, iter, expr) {
+        return Err(ParseError::new(format!("{}\n{}", err1, err2)));
+      }
+    } else {
+      *iter = iter_clone;
     }
     Ok(())
   }

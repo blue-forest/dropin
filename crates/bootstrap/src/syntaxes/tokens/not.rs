@@ -22,47 +22,31 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::syntaxes::{Expression, Patterns, ParseError};
-use super::{Or, parse_token, Token};
+use crate::syntaxes::{Expression, ParseError};
+use super::{parse_token, Patterns, Token};
 
 #[derive(Debug)]
-pub struct Concat<'a> {
-  tokens: Vec<Box<dyn Token<'a> + 'a>>,
+pub struct Not<'a> {
+  token: Box<dyn Token<'a> + 'a>
 }
 
-impl<'a> Concat<'a> {
+impl<'a> Not<'a> {
   pub fn parse(
     syntax: &'a str,
     iter: &mut Peekable<CharIndices<'a>>,
   ) -> Box<dyn Token<'a> + 'a> {
-    let mut tokens = Vec::new();
     while let Some((_, c)) = iter.next() {
       if !c.is_whitespace() {
-        if c == '|' {
-          return Or::parse(Box::new(Concat{ tokens }), syntax, iter);
-        }
-        if c == ')' {
-          break;
-        }
-        tokens.push(parse_token(syntax, iter, c));
-        if let Some((_, peeked)) = iter.peek() {
-          if *peeked != ')' && !peeked.is_whitespace() {
-            panic!("unexpected '{}'", c);
-          }
-        }
-      } else if c == '\n' {
-        if let Some((_, peeked)) = iter.peek() {
-          if !peeked.is_whitespace() || *peeked == '\n' {
-            break;
-          }
-        }
+        return Box::new(Self{
+          token: parse_token(syntax, iter, c),
+        });
       }
     }
-    Box::new(Concat{ tokens })
+    panic!("unexpected end of file");
   }
 }
 
-impl<'a> Token<'a> for Concat<'a> {
+impl<'a> Token<'a> for Not<'a> {
   fn parse<'b, 'c>(
     &self,
     patterns: &'c Patterns<'a>,
@@ -70,9 +54,12 @@ impl<'a> Token<'a> for Concat<'a> {
     iter:     &mut Peekable<CharIndices<'b>>,
     expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
-    for token in self.tokens.iter() {
-      token.parse(patterns, module, iter, expr)?;
+    let mut iter_clone = iter.clone();
+    if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
+      Err(ParseError::new(format!("expected not {}", self.token.expected())))
+    } else {
+      iter.next();
+      Ok(())
     }
-    Ok(())
   }
 }

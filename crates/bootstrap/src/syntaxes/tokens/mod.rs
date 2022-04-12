@@ -34,6 +34,9 @@ pub use getter::Getter;
 mod litteral;
 pub use litteral::Litteral;
 
+mod not;
+pub use not::Not;
+
 mod or;
 pub use or::Or;
 
@@ -48,5 +51,23 @@ pub trait Token<'a>: Debug {
     iter:     &mut Peekable<CharIndices<'b>>,
     expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError>;
+
+  fn expected(&self) -> String {
+    "unknown".to_string()
+  }
+}
+
+fn parse_token<'a>(
+  syntax: &'a str,
+  iter: &mut Peekable<CharIndices<'a>>,
+  c: char,
+) -> Box<dyn Token<'a> + 'a> {
+  match c {
+    '"' => Litteral::parse(syntax, iter),
+    '$' => Getter::parse(syntax, iter),
+    '!' => Not::parse(syntax, iter),
+    '(' => Concat::parse(syntax, iter),
+    _   => { panic!("unknown token {}", c); }
+  }
 }
 

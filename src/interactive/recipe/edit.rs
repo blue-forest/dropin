@@ -19,11 +19,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::Editor;
+use edit::edit_file;
 
 use std::fmt::{Display, Error, Formatter};
-use std::fs::{File, read_to_string};
-use std::io::Write;
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
@@ -52,16 +50,7 @@ impl Command for Edit {
       path.push(&ns);
     }
     path.push(format!("{}.dropin", self.0.id()));
-    let content = read_to_string(&path).unwrap();
-    let editor = Editor::new()
-      .edit(&content);
-    if let Some(updated_content) = editor.unwrap() {
-      let mut file = File::create(&path).unwrap();
-      file.write_all(updated_content.as_bytes()).unwrap();
-      println!("Recipe updated at {}", path.to_str().unwrap());
-    } else {
-      println!("Edition Canceled");
-    }
+    edit_file(path).unwrap();
     0
   }
 }

@@ -453,7 +453,10 @@ dependencies = [
  "home",
  "path-clean",
  "regex",
+ "serde",
+ "serde_derive",
  "structopt",
+ "toml",
 ]
 
 [[package]]

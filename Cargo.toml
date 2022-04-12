@@ -1,9 +1,9 @@
 [workspace]
 
 members = [
-  "dropin-bootstrap",
-  "dropin-debugger",
-  "dropin-utils",
+  "crates/bootstrap",
+  "crates/debugger",
+  "crates/utils",
 ]
 exclude = ["etc/sandbox"]
 
@@ -20,7 +20,7 @@ keywords = ["WebAssembly"]
 
 [dependencies]
 
-dropin-utils = { path = "./dropin-utils", version = "0.5.3-1" }
+dropin-utils = { path = "./crates/utils", version = "0.5.3-1" }
 dialoguer = "0.10.0"
 edit = "0.1.3"
 home = "0.5.3"

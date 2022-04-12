@@ -18,7 +18,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::{Editor, Input};
+use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
 use edit::edit_file;
 

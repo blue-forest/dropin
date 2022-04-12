@@ -24,7 +24,8 @@ unused values, or values that are used directly after their creation.
 ### data
 
 The data region stores all constant literal values. For example, in the
-instruction: ```dropin
+instruction:
+```dropin
 print "hello world"
 ```
 the string "hello world" resides in this region.

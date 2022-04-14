@@ -1,0 +1,36 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - recipes/**/*
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      recipes_dir: ./recipes
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v2
+        working-directory: ${{env.recipes_dir}}
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v1
+        working-directory: ${{env.recipes_dir}}
+        with:
+          mdbook-version: 'latest'
+
+      - run: mdbook build
+        working-directory: ${{env.recipes_dir}}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        working-directory: ${{env.recipes_dir}}
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./book
+          cname: dropin.recipes

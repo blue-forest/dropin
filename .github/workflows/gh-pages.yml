@@ -2,17 +2,15 @@ name: github pages
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - recipes/**/*
+    branches: [ main ]
+    paths: [ recipes/**/* ]
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      recipes_dir: ./recipes
+      recipes_dir: ./docs
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:

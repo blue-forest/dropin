@@ -1,6 +1,7 @@
 name: Rust checks
 on:
   push:
+    paths: [ src/**/* ]
   workflow_dispatch:
 jobs:
   rust_checks:

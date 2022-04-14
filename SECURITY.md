@@ -1,6 +1,4 @@
 
 # Security Policy
 
-If you found a security vulnerability in our software, please let us know by emailing us at `contact@blueforest.cc`.
-
-Feel free to [create in Issue](https://github.com/blue-forest/dropin/issues) if you have any questions.
+Feel free to [create a Security Advisory](https://github.com/blue-forest/dropin/security/advisories/new) if you have found a security vulnerability in our codebase.

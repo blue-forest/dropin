@@ -23,6 +23,7 @@ use std::iter::Peekable;
 use std::str::CharIndices;
 
 use crate::syntaxes::{Expression, Patterns, ParseError};
+use crate::utils::escape_char;
 use super::Token;
 
 #[derive(Debug)]
@@ -76,15 +77,7 @@ impl<'a> Token<'a> for Litteral<'a> {
         is_escaped = true;
         continue;
       }
-      let chr_value = if is_escaped {
-        match c {
-          'n' => '\n',
-          't' => '\t',
-          'r' => '\r',
-          '0' => '\0',
-          _ => c,
-        }
-      } else { c };
+      let chr_value = if is_escaped { escape_char(c) } else { c };
       let ok = if let Some((_, chr_module)) = iter.peek() {
         if *chr_module == chr_value { iter.next(); true } else { false }
       } else { false };

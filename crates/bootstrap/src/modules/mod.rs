@@ -23,6 +23,7 @@ use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
 use crate::expressions::Expression;
+use crate::utils::escape_char;
 
 mod builder;
 use builder::{MemoryAddress, ModuleBuilder, WASI};
@@ -34,6 +35,7 @@ struct State<'memory> {
   pub print:     Option<PrintState>,
   pub wasi:      WASI<'memory>,
   pub addresses: Vec<MemoryAddress>,
+  pub data:      Vec<Vec<u8>>,
 }
 
 struct PrintState {
@@ -49,7 +51,8 @@ pub fn compile(expression: Expression) -> Result<Module, CompileError> {
   let mut state = State{
     print:     None,
     wasi:      WASI::default(),
-    addresses: Vec::new(),
+    addresses: vec![],
+    data:      vec![],
   };
   let state_ptr = &mut state;
   let child = expression.iter().next().unwrap();
@@ -82,7 +85,19 @@ fn print<'syntax, 'module, 'memory>(
   }
 
   let message = expression.iter().next().unwrap().as_str();
-  state.addresses.push(mem.data(message.as_bytes()));
+  let mut message_parsed = String::with_capacity(message.len());
+  let mut is_escaped = false;
+  for c in message.chars() {
+    if !is_escaped && c == '\\' {
+      is_escaped = true;
+      continue;
+    }
+    message_parsed.push(if is_escaped { escape_char(c) } else { c });
+    is_escaped = false;
+  }
+
+  state.data.push(message_parsed.as_bytes().to_vec());
+  state.addresses.push(mem.data(state.data.last().unwrap()));
   let message_addr = state.addresses.get(state.addresses.len()-1).unwrap();
 
   let print_state = state.print.as_ref().unwrap();

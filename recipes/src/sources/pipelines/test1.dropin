@@ -1,0 +1,18 @@
+pipeline blueforest:dropin/sandbox:v1:test1
+===
+
+variables
+  test text
+
+step1
+  request
+    connector :connector1
+    body "hello"
+  %
+  set variables.test $step.response.body
+
+step2(step1)
+  collection
+    item $ :collection1 :item1
+    set
+      response $variables.test

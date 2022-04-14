@@ -3,3 +3,5 @@ target/
 *.swo
 *.swn
 *.wasm
+
+node_modules/

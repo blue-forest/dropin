@@ -18,6 +18,11 @@ repository = "https://github.com/blue-forest/dropin"
 license = "AGPL-3.0-only"
 keywords = ["WebAssembly"]
 
+[[bin]]
+name = "dropin"
+test = false
+bench = false
+
 [dependencies]
 
 dropin-utils = { path = "./crates/utils", version = "0.5.3-1" }

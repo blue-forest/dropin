@@ -35,6 +35,7 @@ use path::get_recipe;
 mod syntaxes;
 use syntaxes::Patterns;
 
+mod utils;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "drop'in bootstrap")]

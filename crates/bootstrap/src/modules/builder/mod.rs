@@ -39,7 +39,7 @@ mod wasi;
 pub use wasi::{WASI, WASIFunction};
 
 pub struct ModuleBuilder<'module, 'memory> {
-  memory:             MemoryBuilder<'module>,
+  memory:             MemoryBuilder<'memory>,
   types:              TypeSection,
   functions_imported: Vec<FunctionImport<'memory>>,
   functions_local:    VecDeque<FunctionBuilder<'module, 'memory>>,
@@ -63,7 +63,7 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
     self.functions_local.get_mut(0).unwrap()
   }
 
-  pub fn memory(&mut self) -> &mut MemoryBuilder<'module> { &mut self.memory }
+  pub fn memory(&mut self) -> &mut MemoryBuilder<'memory> { &mut self.memory }
   
   pub fn from_wasi(&mut self, f: &WASIFunction<'memory>) -> u32 {
     if let Some(id) = f.id {

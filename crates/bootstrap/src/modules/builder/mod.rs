@@ -38,14 +38,14 @@ pub use memory::{MemoryAddress, MemoryBuilder};
 mod wasi;
 pub use wasi::{WASI, WASIFunction};
 
-pub struct ModuleBuilder<'module, 'memory> {
-  memory:             MemoryBuilder<'memory>,
+pub struct ModuleBuilder<'module, 'internals> {
+  memory:             MemoryBuilder<'internals>,
   types:              TypeSection,
-  functions_imported: Vec<FunctionImport<'memory>>,
-  functions_local:    VecDeque<FunctionBuilder<'module, 'memory>>,
+  functions_imported: Vec<FunctionImport<'internals>>,
+  functions_local:    VecDeque<FunctionBuilder<'module, 'internals>>,
 }
 
-impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
+impl<'module, 'internals> Default for ModuleBuilder<'module, 'internals> {
   fn default() -> Self {
     let mut result = Self{
       memory:             MemoryBuilder::default(),
@@ -58,14 +58,14 @@ impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
   }
 }
 
-impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
-  pub fn get_start(&mut self) -> &mut FunctionBuilder<'module, 'memory> {
+impl<'module, 'internals> ModuleBuilder<'module, 'internals> {
+  pub fn get_start(&mut self) -> &mut FunctionBuilder<'module, 'internals> {
     self.functions_local.get_mut(0).unwrap()
   }
 
-  pub fn memory(&mut self) -> &mut MemoryBuilder<'memory> { &mut self.memory }
+  pub fn memory(&mut self) -> &mut MemoryBuilder<'internals> { &mut self.memory }
   
-  pub fn from_wasi(&mut self, f: &WASIFunction<'memory>) -> u32 {
+  pub fn from_wasi(&mut self, f: &WASIFunction<'internals>) -> u32 {
     if let Some(id) = f.id {
       return id;
     }

@@ -23,7 +23,7 @@ use std::fs::read_to_string;
 use std::path::PathBuf;
 use dropin_utils::path::get_root;
 
-fn get_path(collection: &str, id: String) -> PathBuf {
+fn get_path(collection: &str, id: &str) -> PathBuf {
   let mut split = id.split(':');
   let owner = split.next().expect("expected owner");
   let model = split.next().expect("expected model");
@@ -40,7 +40,7 @@ fn get_path(collection: &str, id: String) -> PathBuf {
   result
 }
 
-pub fn get_recipe(collection: &str, id: String) -> String {
+pub fn get_recipe(collection: &str, id: &str) -> String {
   let path = get_path(collection, id);
   let content = read_to_string(path).unwrap();
   let header_split = content.find("\n===").unwrap();

@@ -3,7 +3,7 @@
 Syntaxes are sets of patterns used to parse and validate a text. When a Syntax
 parses a text, it produces **Expressions** that can be used into [Modules](../Modules/SUMMARY.md).
 
-## Litterals
+## Literals
 
 ```dropin
 syntaxes example

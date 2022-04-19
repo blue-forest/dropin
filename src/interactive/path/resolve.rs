@@ -39,6 +39,7 @@ pub fn get_owner(cli: &Cli) -> Option<PathBuf> {
 
 fn push_model(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   if let Some(model) = cli.model_selected {
+    buf.push("models");
     buf.push(&cli.models[model]);
     Some(buf)
   } else {

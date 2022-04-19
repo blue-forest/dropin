@@ -22,10 +22,11 @@ use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
 
 use std::fmt::{Display, Formatter, Error};
-use std::fs::create_dir;
+use std::fs::create_dir_all;
 
 use super::{Cli, Command, get_dirs};
 use super::utils::validate_name;
+use super::path::get_owner;
 
 pub struct ModelCommand;
 
@@ -37,10 +38,9 @@ impl Display for ModelCommand {
 
 impl Command for ModelCommand {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let owner_path = &cli.root.join(
-      &cli.owners[cli.owner_selected.unwrap()]
-    );
-    cli.models = get_dirs(owner_path);
+    let mut path = get_owner(cli).unwrap();
+    path.push("models");
+    cli.models = get_dirs(&path);
     let mut commands: Vec<Box<dyn Command>> = Vec::new();
     for (i, model) in cli.models.iter().enumerate() {
       commands.push(Box::new(Select{
@@ -84,24 +84,23 @@ impl Display for Add {
 
 impl Command for Add {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let owner_path = &cli.root.join(
-      &cli.owners[cli.owner_selected.unwrap()]
-    );
-    let (model_name, model_path) = loop {
+    let mut path = get_owner(cli).unwrap();
+    let model_name = loop {
       let model_name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Model name for your recipes ? (leave empty to cancel)")
         .allow_empty(true)
         .interact_text().unwrap();
       if model_name.is_empty() { return 0; }
-      let model_path = owner_path.join(&model_name);
-      if let Err(err) = validate_name(&model_path, &model_name) {
+      path.push("models");
+      if let Err(err) = validate_name(&path, &model_name) {
         println!("{}", err);
         continue;
       }
-      break (model_name, model_path);
+      path.push(&model_name);
+      break model_name;
     };
-    create_dir(&model_path).unwrap();
-    create_dir(&model_path.join("v1")).unwrap();
+    path.push("v1");
+    create_dir_all(&path).unwrap();
     println!("Model {} created", model_name);
     let index = cli.models.len();
     cli.models.push(model_name);

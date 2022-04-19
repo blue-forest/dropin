@@ -79,7 +79,7 @@ impl Cli {
       owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
       let mut owner_path = root.clone();
       owner_path.push(owner);
-      models = get_dirs(&owner_path);
+      models = get_dirs(&owner_path.join("models"));
       if let Some(model) = config.model() {
         model_selected = Some(models.iter().position(|m| m == model).unwrap());
       }

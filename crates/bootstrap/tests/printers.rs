@@ -13,7 +13,7 @@ fn hello_world() {
   let mut root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
   root.push("..");
   root.push("..");
-  root.push("test-recipes");
+  root.push("recipes");
 
   let syntax_content = &get_recipe(
     &root, "syntaxes", "blueforest:dropin:v1:Automations/Modules",

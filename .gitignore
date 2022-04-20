@@ -3,5 +3,6 @@ target/
 *.swo
 *.swn
 *.wasm
+test-recipes/config.toml
 
 node_modules/

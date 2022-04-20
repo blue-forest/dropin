@@ -19,7 +19,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[allow(dead_code)]
+use std::path::Path;
+
 use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
@@ -35,7 +36,6 @@ use builder::{MemoryAddress, ModuleBuilder, WASI};
 mod error;
 pub use error::CompileError;
 
-#[allow(dead_code)]
 struct State<'a> {
   pub print:     Option<PrintState>,
   pub wasi:      WASI<'a>,
@@ -43,7 +43,6 @@ struct State<'a> {
   pub data:      Vec<Vec<u8>>,
 }
 
-#[allow(dead_code)]
 struct PrintState {
   iovec_base:    usize,
   iovec_len:     usize,
@@ -52,7 +51,6 @@ struct PrintState {
   new_line:      usize,
 }
 
-#[allow(dead_code)]
 pub struct Compiler<'syntax, 'module, 'internals> {
   builder: ModuleBuilder<'module, 'internals>,
   state:   State<'internals>,
@@ -71,7 +69,9 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
     Self{ builder, state, module }
   }
 
-  pub fn compile(&self, _recipe: Recipe) -> Result<Module, CompileError> {
+  pub fn compile(
+    &self, _root: &Path, _recipe: Recipe,
+  ) -> Result<Module, CompileError> {
     /*
     let mut builder = ModuleBuilder::default();
     let mut state = State{
@@ -91,21 +91,19 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
   }
 }
 
-#[allow(dead_code)]
 fn syntax<'syntax, 'module, 'recipe>(
-  expression: &Expression<'syntax, 'module>,
+  root: &Path, expression: &Expression<'syntax, 'module>,
   recipe: &'recipe str,
 ) -> Expression<'recipe, 'module> {
   let mut children = expression.iter();
   let id = children.next().unwrap().as_str();
-  let syntax_content = &get_recipe("syntaxes", id);
+  let syntax_content = &get_recipe(root, "syntaxes", id);
   let patterns = Patterns::new(syntax_content);
   patterns.parse(recipe).unwrap();
   println!("{:?}", patterns);
   todo!()
 }
 
-#[allow(dead_code)]
 fn print<'syntax, 'module, 'internals>(
   builder:    &mut ModuleBuilder<'module, 'internals>,
   state:      &'internals mut State<'internals>,

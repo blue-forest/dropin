@@ -20,19 +20,18 @@
  */
 
 use std::fs::read_to_string;
-use std::path::PathBuf;
-use dropin_utils::path::get_root;
+use std::path::{Path, PathBuf};
 
-fn get_path(collection: &str, id: &str) -> PathBuf {
+fn get_path(root: &Path, collection: &str, id: &str) -> PathBuf {
   let mut split = id.split(':');
   let owner = split.next().expect("expected owner");
   let model = split.next().expect("expected model");
   let version = split.next().expect("expected version");
   let mut recipe = split.next().expect("expected recipe").to_string();
   recipe.push_str(".dropin");
-  let mut result = get_root();
+  let mut result = root.to_path_buf();
   result.push(owner);
-  // result.push("models");
+  result.push("models");
   result.push(model);
   result.push(version);
   result.push(collection);
@@ -40,8 +39,8 @@ fn get_path(collection: &str, id: &str) -> PathBuf {
   result
 }
 
-pub fn get_recipe(collection: &str, id: &str) -> String {
-  let path = get_path(collection, id);
+pub fn get_recipe(root: &Path, collection: &str, id: &str) -> String {
+  let path = get_path(root, collection, id);
   let content = read_to_string(path).unwrap();
   let header_split = content.find("\n===").unwrap();
   let start = content.get(header_split+4..).unwrap().find("\n").unwrap() + header_split + 5;

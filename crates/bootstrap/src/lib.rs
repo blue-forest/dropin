@@ -6,7 +6,6 @@ pub mod syntaxes;
 use syntaxes::Patterns;
 pub mod utils;
 
-#[allow(dead_code)]
 pub struct Recipe<'syntax, 'recipe> {
   syntax:     &'syntax str,
   patterns:   Patterns<'syntax>,

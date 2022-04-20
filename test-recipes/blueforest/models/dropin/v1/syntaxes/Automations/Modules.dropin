@@ -1,0 +1,18 @@
+syntaxes Modules
+================
+
+module $patterns.syntax
+
+syntax $patterns.id "\n" " "+ $patterns.key
+
+key ($std.alphanum | "_" | "-" | ".")+
+
+id $patterns.key ":" $patterns.key ":" $patterns.key ":" $patterns.key
+
+command $patterns.print
+
+print "print \"" $patterns.message "\""
+
+message $patterns.message_char+
+
+message_char "\\\"" | !"\""

@@ -1,4 +1,3 @@
-use std::env::set_var;
 use std::io::Read;
 use std::path::PathBuf;
 
@@ -15,16 +14,19 @@ fn hello_world() {
   root.push("..");
   root.push("..");
   root.push("test-recipes");
-  set_var("DROPIN_ROOT", root.to_str().unwrap());
 
-  let syntax_content = &get_recipe("syntaxes", "blueforest:tests:v1:message");
-  let module_content = &get_recipe("modules",  "blueforest:tests:v1:printer");
+  let syntax_content = &get_recipe(
+    &root, "syntaxes", "blueforest:dropin:v1:Automations/Modules",
+  );
+  let module_content = &get_recipe(
+    &root, "modules",  "blueforest:tests:v1:printers",
+  );
   let recipe_content = &get_recipe(
-    "printers", "blueforest:tests:v1:hello_world",
+    &root, "printers", "blueforest:tests:v1:hello_world",
   );
   let compiler = Compiler::new(Recipe::new(syntax_content, module_content));
   let recipe = Recipe::new(syntax_content, recipe_content);
-  let module = compiler.compile(recipe).unwrap();
+  let module = compiler.compile(&root, recipe).unwrap();
   let wasm = module.finish();
 
   let mut embedder = Embedder::new(8080);

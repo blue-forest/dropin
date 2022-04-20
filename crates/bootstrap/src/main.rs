@@ -24,6 +24,7 @@ use structopt::StructOpt;
 use std::fmt::Debug;
 use std::fs::write;
 
+use dropin_utils::path::get_root;
 use dropin_bootstrap::Recipe;
 use dropin_bootstrap::modules::Compiler;
 use dropin_bootstrap::path::get_recipe;
@@ -43,12 +44,13 @@ struct Cli {
 
 fn main() {
   let cli = Cli::from_args();
-  let syntax_content = &get_recipe("syntaxes", &cli.syntax);
-  let module_content = &get_recipe("modules", &cli.module);
-  let recipe_content = &get_recipe(&cli.collection, &cli.recipe);
+  let root = get_root();
+  let syntax_content = &get_recipe(&root, "syntaxes", &cli.syntax);
+  let module_content = &get_recipe(&root, "modules", &cli.module);
+  let recipe_content = &get_recipe(&root, &cli.collection, &cli.recipe);
   let compiler = Compiler::new(Recipe::new(syntax_content, module_content));
   let recipe = Recipe::new(syntax_content, recipe_content);
-  let module = compiler.compile(recipe).unwrap();
+  let module = compiler.compile(&root, recipe).unwrap();
   let wasm = module.finish();
   write("module.wasm", wasm).unwrap();
 }

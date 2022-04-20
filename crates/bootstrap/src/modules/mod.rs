@@ -19,10 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[allow(dead_code)]
 use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
 use crate::expressions::Expression;
+use crate::path::get_recipe;
+use crate::syntaxes::Patterns;
 use crate::utils::escape_char;
 
 mod builder;
@@ -31,13 +34,15 @@ use builder::{MemoryAddress, ModuleBuilder, WASI};
 mod error;
 pub use error::CompileError;
 
-struct State<'memory> {
+#[allow(dead_code)]
+struct State<'a> {
   pub print:     Option<PrintState>,
-  pub wasi:      WASI<'memory>,
+  pub wasi:      WASI<'a>,
   pub addresses: Vec<MemoryAddress>,
   pub data:      Vec<Vec<u8>>,
 }
 
+#[allow(dead_code)]
 struct PrintState {
   iovec_base:    usize,
   iovec_len:     usize,
@@ -46,7 +51,11 @@ struct PrintState {
   new_line:      usize,
 }
 
-pub fn compile(expression: Expression) -> Result<Module, CompileError> {
+pub fn compile(
+  expression: Expression,
+  recipe: &str,
+) -> Result<Module, CompileError> {
+  /*
   let mut builder = ModuleBuilder::default();
   let mut state = State{
     print:     None,
@@ -54,18 +63,31 @@ pub fn compile(expression: Expression) -> Result<Module, CompileError> {
     addresses: vec![],
     data:      vec![],
   };
-  let state_ptr = &mut state;
+  */
   let child = expression.iter().next().unwrap();
-  match child.pattern() {
-    "print" => print(&mut builder, state_ptr, child),
-    pattern => { panic!("unexpected pattern: {}", pattern) }
-  }
-  Ok(builder.build())
+  syntax(child, recipe);
+
+  Ok(Module::new())
+  // Ok(builder.build())
 }
 
-fn print<'syntax, 'module, 'memory>(
-  builder:    &mut ModuleBuilder<'module, 'memory>,
-  state:      &'memory mut State<'memory>,
+fn syntax<'syntax, 'module, 'recipe>(
+  expression: &Expression<'syntax, 'module>,
+  recipe: &'recipe str,
+) -> Expression<'recipe, 'module> {
+  let mut children = expression.iter();
+  let id = children.next().unwrap().as_str();
+  let syntax_content = &get_recipe("syntaxes", id);
+  let patterns = Patterns::new(syntax_content);
+  patterns.parse(recipe).unwrap();
+  println!("{:?}", patterns);
+  todo!()
+}
+
+#[allow(dead_code)]
+fn print<'syntax, 'module, 'internals>(
+  builder:    &mut ModuleBuilder<'module, 'internals>,
+  state:      &'internals mut State<'internals>,
   expression: &Expression<'syntax, 'module>,
 ) {
   let mem = builder.memory();

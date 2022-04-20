@@ -35,15 +35,28 @@ struct Cli {
   syntax: String,
   #[structopt(long, short)]
   module: String,
+  #[structopt(long, short)]
+  collection: String,
+  #[structopt(long, short)]
+  recipe: String,
+}
+
+use expressions::Expression;
+pub struct RecipeCompiler<'syntax, 'recipe> {
+  syntax:      &'syntax str,
+  patterns:    Patterns<'syntax>,
+  recipe:      &'recipe str,
+  expressions: Expression<'syntax, 'recipe>,
 }
 
 fn main() {
   let cli = Cli::from_args();
-  let syntax_content = &get_recipe("syntaxes", cli.syntax);
-  let module_content = &get_recipe("modules", cli.module);
+  let syntax_content = &get_recipe("syntaxes", &cli.syntax);
+  let module_content = &get_recipe("modules", &cli.module);
+  let recipe_content = &get_recipe(&cli.collection, &cli.recipe);
   let patterns = Patterns::new(syntax_content);
   let expression = patterns.parse(module_content).unwrap();
-  let module = compile(expression).unwrap();
+  let module = compile(expression, recipe_content).unwrap();
   let wasm = module.finish();
   write("module.wasm", wasm).unwrap();
 }

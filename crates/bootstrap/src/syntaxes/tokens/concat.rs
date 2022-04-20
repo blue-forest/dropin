@@ -49,7 +49,7 @@ impl<'a> Concat<'a> {
           if *peeked != ')' && !peeked.is_whitespace() {
             if Quantifier::detect(*peeked) {
               let token = tokens.pop().unwrap();
-              tokens.push(Box::new(Quantifier::new(iter, token)));
+              tokens.push(Box::new(Quantifier::new(syntax, iter, token)));
             } else {
               panic!("unexpected '{}'", c);
             }

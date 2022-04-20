@@ -26,24 +26,112 @@ use crate::syntaxes::{Expression, ParseError, Patterns};
 use super::Token;
 
 #[derive(Debug)]
-pub enum Quantifier<'a> {
-  AtLeastOne(Box<dyn Token<'a> + 'a>),
+pub struct Quantifier<'a> {
+  ranges: Vec<(Option<u32>, Option<u32>)>,
+  token:  Box<dyn Token<'a> + 'a>,
 }
 
 impl<'a> Quantifier<'a> {
   pub fn detect(c: char) -> bool {
-    c == '+'
+    c == '{'
   }
 
   pub fn new(
+    syntax: &'a str,
     iter:   &mut Peekable<CharIndices<'a>>,
-    expr:   Box<dyn Token<'a> + 'a>
+    token:  Box<dyn Token<'a> + 'a>
   ) -> Self {
-    let (_, c) = iter.next().unwrap();
-    match c {
-      '+' => Self::AtLeastOne(expr),
-      _   => { unreachable!() }
+    iter.next(); // skip '{'
+    let ranges = Parser::default().parse(syntax, iter);
+    Self{ ranges, token }
+  }
+}
+
+struct Parser {
+  is_parsing_min: bool,
+  current_min: Option<u32>,
+  quantity_start: Option<usize>,
+}
+
+impl Default for Parser {
+  fn default() -> Self {
+    Self{
+      is_parsing_min: true,
+      current_min: None,
+      quantity_start: None,
     }
+  }
+}
+
+impl Parser {
+  fn parse<'a>(
+    mut self,
+    syntax: &'a str,
+    iter:   &mut Peekable<CharIndices<'a>>,
+  ) -> Vec<(Option<u32>, Option<u32>)> {
+    let mut result = Vec::new();
+    loop {
+      let (i, c) = iter.next().unwrap();
+      match c {
+        '}' => {
+          result.push(self.create_range(syntax, i));
+          break;
+        }
+        '|' => {
+          result.push(self.create_range(syntax, i));
+          self.is_parsing_min = true;
+          self.quantity_start = None;
+        }
+        '.' => {
+          if !self.is_parsing_min {
+            panic!("unexpected '.' (max is already set)");
+          }
+          self.is_parsing_min = false;
+          if let Some(start) = self.quantity_start {
+            self.current_min = Some(Self::get_quantity(syntax, start, i));
+            self.quantity_start = None;
+          }
+          let (_, next) = iter.next().unwrap();
+          if next != '.' {
+            panic!("unexpected token: {}", next);
+          }
+        }
+        _ => {
+          if !c.is_ascii_digit() {
+            panic!("unexpected token: {}", c);
+          }
+          if self.quantity_start.is_none() {
+            self.quantity_start = Some(i);
+          }
+        }
+      }
+    }
+    result
+  }
+
+  fn create_range(
+    &mut self,
+    syntax: &str,
+    i:      usize,
+  ) -> (Option<u32>, Option<u32>) {
+    if self.is_parsing_min {
+      if let Some(start) = self.quantity_start {
+        let quantity = Self::get_quantity(syntax, start, i);
+        (Some(quantity), Some(quantity))
+      } else {
+        panic!("unexpected '|'");
+      }
+    } else {
+      let max = if let Some(start) = self.quantity_start {
+        Some(Self::get_quantity(syntax, start, i))
+      } else { None };
+      (self.current_min, max)
+    }
+  }
+
+  #[inline(always)]
+  fn get_quantity(syntax: &str, start: usize, end: usize) -> u32 {
+    syntax.get(start..end).unwrap().parse::<u32>().unwrap()
   }
 }
 
@@ -55,20 +143,39 @@ impl<'a> Token<'a> for Quantifier<'a> {
     iter:     &mut Peekable<CharIndices<'b>>,
     expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
-    match self {
-      Self::AtLeastOne(token) => {
-        let mut ok = false;
-        let err = loop {
-          if let Err(err) = token.parse(patterns, module, iter, expr) {
-            break Err(err);
-          }
+    let mut n = 0;
+    let err = loop {
+      if let Err(err) = self.token.parse(patterns, module, iter, expr) {
+        break Err(err);
+      }
+      n += 1;
+      if let None = iter.peek() {
+        break Ok(())
+      }
+      let (i, _) = iter.peek().unwrap();
+    };
+    let mut ok = false;
+    for (min, max) in self.ranges.iter() {
+      if let Some(min) = min {
+        if *min > n {
+          break;
+        }
+      }
+      if let Some(max) = max {
+        if *max > n {
           ok = true;
-          if let None = iter.peek() {
-            break Ok(())
-          }
-        };
-        if !ok { err } else { Ok(()) }
+          break;
+        }
+      } else {
+        ok = true;
+        break;
       }
     }
+    if !ok {
+      panic!(
+        "expected {:?} {:?}, recognized {} times",
+        self.ranges, self.token, n,
+      );
+    } else { Ok(()) }
   }
 }

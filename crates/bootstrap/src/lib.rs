@@ -17,6 +17,7 @@ impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
   pub fn new(syntax: &'syntax str, recipe: &'recipe str) -> Self {
     let patterns = Patterns::new(syntax);
     let expression = patterns.parse(recipe).unwrap();
+    println!("{:?}", expression);
     Self{ syntax, patterns, recipe, expression }
   }
 }

@@ -53,7 +53,7 @@ impl<'a> Getter<'a> {
         continue;
       }
       if let Some((pi, pc)) = iter.peek() {
-        if pc.is_whitespace() || Quantifier::detect(*pc) {
+        if pc.is_whitespace() || *pc == ')' || Quantifier::detect(*pc) {
           break Box::new(Getter{
             query: syntax.get(start.expect("expected query")..*pi).unwrap(),
           });

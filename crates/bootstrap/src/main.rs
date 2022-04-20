@@ -24,18 +24,9 @@ use structopt::StructOpt;
 use std::fmt::Debug;
 use std::fs::write;
 
-mod expressions;
-
-mod modules;
-use modules::compile;
-
-mod path;
-use path::get_recipe;
-
-mod syntaxes;
-use syntaxes::Patterns;
-
-mod utils;
+use dropin_bootstrap::modules::compile;
+use dropin_bootstrap::path::get_recipe;
+use dropin_bootstrap::syntaxes::Patterns;
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "drop'in bootstrap")]

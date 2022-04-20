@@ -463,9 +463,12 @@ dependencies = [
 name = "dropin-bootstrap"
 version = "0.5.3-2"
 dependencies = [
+ "cap-std",
  "dropin-utils",
  "structopt",
  "wasm-encoder",
+ "wasmtime",
+ "wasmtime-wasi",
 ]
 
 [[package]]

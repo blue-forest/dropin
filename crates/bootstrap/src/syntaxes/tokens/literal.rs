@@ -27,11 +27,11 @@ use crate::utils::escape_char;
 use super::Token;
 
 #[derive(Debug)]
-pub struct Litteral<'a> {
+pub struct Literal<'a> {
   value: &'a str,
 }
 
-impl<'a> Litteral<'a> {
+impl<'a> Literal<'a> {
   pub fn parse(
     syntax: &'a str,
     iter: &mut Peekable<CharIndices<'a>>,
@@ -59,11 +59,11 @@ impl<'a> Litteral<'a> {
       is_escaped = false;
     }
     let value = value.expect("expected '\"'");
-    Box::new(Litteral{ value })
+    Box::new(Literal{ value })
   }
 }
 
-impl<'a> Token<'a> for Litteral<'a> {
+impl<'a> Token<'a> for Literal<'a> {
   fn parse<'b, 'c>(
     &self,
     _patterns: &'c Patterns<'a>,

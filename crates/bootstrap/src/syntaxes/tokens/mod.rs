@@ -31,8 +31,8 @@ pub use concat::Concat;
 mod getter;
 pub use getter::Getter;
 
-mod litteral;
-pub use litteral::Litteral;
+mod literal;
+pub use literal::Literal;
 
 mod not;
 pub use not::Not;
@@ -63,7 +63,7 @@ fn parse_token<'a>(
   c: char,
 ) -> Box<dyn Token<'a> + 'a> {
   match c {
-    '"' => Litteral::parse(syntax, iter),
+    '"' => Literal::parse(syntax, iter),
     '$' => Getter::parse(syntax, iter),
     '!' => Not::parse(syntax, iter),
     '(' => Concat::parse(syntax, iter),

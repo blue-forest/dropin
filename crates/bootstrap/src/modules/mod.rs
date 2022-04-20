@@ -23,6 +23,7 @@
 use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
+use crate::Recipe;
 use crate::expressions::Expression;
 use crate::path::get_recipe;
 use crate::syntaxes::Patterns;
@@ -51,26 +52,46 @@ struct PrintState {
   new_line:      usize,
 }
 
-pub fn compile(
-  expression: Expression,
-  recipe: &str,
-) -> Result<Module, CompileError> {
-  /*
-  let mut builder = ModuleBuilder::default();
-  let mut state = State{
-    print:     None,
-    wasi:      WASI::default(),
-    addresses: vec![],
-    data:      vec![],
-  };
-  */
-  let child = expression.iter().next().unwrap();
-  syntax(child, recipe);
-
-  Ok(Module::new())
-  // Ok(builder.build())
+#[allow(dead_code)]
+pub struct Compiler<'syntax, 'module, 'internals> {
+  builder: ModuleBuilder<'module, 'internals>,
+  state:   State<'internals>,
+  module:  Recipe<'syntax, 'module>,
 }
 
+impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
+  pub fn new(module: Recipe<'syntax, 'module>) -> Self {
+    let builder = ModuleBuilder::default();
+    let state = State{
+      print:     None,
+      wasi:      WASI::default(),
+      addresses: vec![],
+      data:      vec![],
+    };
+    Self{ builder, state, module }
+  }
+
+  pub fn compile(&self, _recipe: Recipe) -> Result<Module, CompileError> {
+    /*
+    let mut builder = ModuleBuilder::default();
+    let mut state = State{
+      print:     None,
+      wasi:      WASI::default(),
+      addresses: vec![],
+      data:      vec![],
+    };
+    Ok(builder.build())
+    */
+    /*
+    let child = expression.iter().next().unwrap();
+    syntax(child, recipe);
+    */
+
+    todo!()
+  }
+}
+
+#[allow(dead_code)]
 fn syntax<'syntax, 'module, 'recipe>(
   expression: &Expression<'syntax, 'module>,
   recipe: &'recipe str,

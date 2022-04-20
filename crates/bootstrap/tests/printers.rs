@@ -1,9 +1,10 @@
 use std::env::set_var;
+use std::io::Read;
 use std::path::PathBuf;
 
-use dropin_bootstrap::modules::compile;
+use dropin_bootstrap::Recipe;
+use dropin_bootstrap::modules::Compiler;
 use dropin_bootstrap::path::get_recipe;
-use dropin_bootstrap::syntaxes::Patterns;
 
 mod common;
 use common::Embedder;
@@ -16,13 +17,20 @@ fn hello_world() {
   root.push("test-recipes");
   set_var("DROPIN_ROOT", root.to_str().unwrap());
 
-  let syntax_content = &get_recipe("syntaxes", "message");
-  let module_content = &get_recipe("modules",  "printer");
-  let recipes_content = &get_recipe("printer", "printer");
-  let patterns = Patterns::new(syntax_content);
-  let expression = patterns.parse(module_content).unwrap();
-  let module = compile(expression).unwrap();
+  let syntax_content = &get_recipe("syntaxes", "blueforest:tests:v1:message");
+  let module_content = &get_recipe("modules",  "blueforest:tests:v1:printer");
+  let recipe_content = &get_recipe(
+    "printers", "blueforest:tests:v1:hello_world",
+  );
+  let compiler = Compiler::new(Recipe::new(syntax_content, module_content));
+  let recipe = Recipe::new(syntax_content, recipe_content);
+  let module = compiler.compile(recipe).unwrap();
   let wasm = module.finish();
 
-  let embedder = Embedder::new(8080);
+  let mut embedder = Embedder::new(8080);
+  embedder.run(wasm);
+  let mut stream = embedder.listener.incoming().next().unwrap().unwrap();
+  let mut buf: [u8; 12] = [0; 12];
+  stream.read(&mut buf).unwrap();
+  assert_eq!(std::str::from_utf8(&buf).unwrap(), "Hello\nWorld\n");
 }

@@ -49,7 +49,8 @@ fn main() {
   let module_content = &get_recipe(&root, "modules", &cli.module);
   let recipe_content = &get_recipe(&root, &cli.collection, &cli.recipe);
   let compiler = Compiler::new(Recipe::new(syntax_content, module_content));
-  let recipe = Recipe::new(syntax_content, recipe_content);
+  let recipe_syntax = compiler.get_syntax(&root);
+  let recipe = Recipe::new(&recipe_syntax, recipe_content);
   let module = compiler.compile(&root, recipe).unwrap();
   let wasm = module.finish();
   write("module.wasm", wasm).unwrap();

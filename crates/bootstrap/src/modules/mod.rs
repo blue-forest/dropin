@@ -70,43 +70,37 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
   }
 
   pub fn compile(
-    &self, _root: &Path, _recipe: Recipe,
+    &self, recipe: Recipe,
   ) -> Result<Module, CompileError> {
-    /*
-    let mut builder = ModuleBuilder::default();
-    let mut state = State{
-      print:     None,
-      wasi:      WASI::default(),
-      addresses: vec![],
-      data:      vec![],
-    };
-    Ok(builder.build())
-    */
-    /*
-    let child = expression.iter().next().unwrap();
-    syntax(child, recipe);
-    */
+    let mut current_expression = recipe.expression;
+    let mut iter = self.module.expression.iter();
+    iter.next(); // skip syntax
+    let mut function = iter.next().unwrap().iter();
+    let function_name = function.next().unwrap().as_str();
+    let commands = function.next().unwrap().iter().next().unwrap();
+
+    for command in commands.iter() {
+      match command.pattern() {
+        "metaCommand" => {
+          self.command(command.iter().next().unwrap());
+        }
+        "localCommand" => { todo!() }
+        _ => { unreachable!() }
+      }
+    }
 
     todo!()
+  }
+
+  fn command(&self, expression: &Expression) {
+    println!("{}", expression.as_str());
+    todo!();
   }
 
   pub fn get_syntax(&self, root: &Path) -> String {
     let id = self.module.expression.iter().next().unwrap().as_str();
     get_recipe(root, "syntaxes", id)
   }
-}
-
-fn syntax<'syntax, 'module, 'recipe>(
-  root: &Path, expression: &Expression<'syntax, 'module>,
-  recipe: &'recipe str,
-) -> Expression<'recipe, 'module> {
-  let mut children = expression.iter();
-  let id = children.next().unwrap().as_str();
-  let syntax_content = &get_recipe(root, "syntaxes", id);
-  let patterns = Patterns::new(syntax_content);
-  patterns.parse(recipe).unwrap();
-  println!("{:?}", patterns);
-  todo!()
 }
 
 fn print<'syntax, 'module, 'internals>(

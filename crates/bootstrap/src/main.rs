@@ -51,7 +51,7 @@ fn main() {
   let compiler = Compiler::new(Recipe::new(syntax_content, module_content));
   let recipe_syntax = compiler.get_syntax(&root);
   let recipe = Recipe::new(&recipe_syntax, recipe_content);
-  let module = compiler.compile(&root, recipe).unwrap();
+  let module = compiler.compile(recipe).unwrap();
   let wasm = module.finish();
   write("module.wasm", wasm).unwrap();
 }

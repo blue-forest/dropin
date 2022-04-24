@@ -22,6 +22,7 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use crate::WasiUnwrap;
 use crate::syntaxes::{Expression, ParseError, Patterns};
 use super::Token;
 
@@ -71,7 +72,7 @@ impl Parser {
   ) -> Vec<(Option<u32>, Option<u32>)> {
     let mut result = Vec::new();
     loop {
-      let (i, c) = iter.next().unwrap();
+      let (i, c) = iter.next().wasi_unwrap();
       match c {
         '}' => {
           result.push(self.create_range(syntax, i));
@@ -91,7 +92,7 @@ impl Parser {
             self.current_min = Some(Self::get_quantity(syntax, start, i));
             self.quantity_start = None;
           }
-          let (_, next) = iter.next().unwrap();
+          let (_, next) = iter.next().wasi_unwrap();
           if next != '.' {
             panic!("unexpected token: {}", next);
           }
@@ -131,7 +132,7 @@ impl Parser {
 
   #[inline(always)]
   fn get_quantity(syntax: &str, start: usize, end: usize) -> u32 {
-    syntax.get(start..end).unwrap().parse::<u32>().unwrap()
+    syntax.get(start..end).wasi_unwrap().parse::<u32>().wasi_unwrap()
   }
 }
 
@@ -152,7 +153,7 @@ impl<'a> Token<'a> for Quantifier<'a> {
       if let None = iter.peek() {
         break Ok(())
       }
-      let (i, _) = iter.peek().unwrap();
+      let (i, _) = iter.peek().wasi_unwrap();
     };
     let mut ok = false;
     for (min, max) in self.ranges.iter() {

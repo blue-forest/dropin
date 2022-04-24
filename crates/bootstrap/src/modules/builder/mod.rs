@@ -26,6 +26,8 @@ use wasm_encoder::{
 
 use std::collections::VecDeque;
 
+use crate::WasiUnwrap;
+
 mod function;
 pub use function::FunctionBuilder;
 
@@ -60,7 +62,7 @@ impl<'module, 'internals> Default for ModuleBuilder<'module, 'internals> {
 
 impl<'module, 'internals> ModuleBuilder<'module, 'internals> {
   pub fn get_start(&mut self) -> &mut FunctionBuilder<'module, 'internals> {
-    self.functions_local.get_mut(0).unwrap()
+    self.functions_local.get_mut(0).wasi_unwrap()
   }
 
   pub fn memory(&mut self) -> &mut MemoryBuilder<'internals> { &mut self.memory }

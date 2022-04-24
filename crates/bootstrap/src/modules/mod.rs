@@ -19,15 +19,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::Path;
-
 use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
-use crate::Recipe;
+use crate::{Recipe, WasiUnwrap};
 use crate::expressions::Expression;
 use crate::path::get_recipe;
-use crate::syntaxes::Patterns;
 use crate::utils::escape_char;
 
 mod builder;
@@ -75,14 +72,14 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
     let mut current_expression = recipe.expression;
     let mut iter = self.module.expression.iter();
     iter.next(); // skip syntax
-    let mut function = iter.next().unwrap().iter();
-    let function_name = function.next().unwrap().as_str();
-    let commands = function.next().unwrap().iter().next().unwrap();
+    let mut function = iter.next().wasi_unwrap().iter();
+    let function_name = function.next().wasi_unwrap().as_str();
+    let commands = function.next().wasi_unwrap().iter().next().wasi_unwrap();
 
     for command in commands.iter() {
       match command.pattern() {
         "metaCommand" => {
-          self.command(command.iter().next().unwrap());
+          self.command(command.iter().next().wasi_unwrap());
         }
         "localCommand" => { todo!() }
         _ => { unreachable!() }
@@ -98,7 +95,7 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
   }
 
   pub fn get_syntax(&self) -> String {
-    let id = self.module.expression.iter().next().unwrap().as_str();
+    let id = self.module.expression.iter().next().wasi_unwrap().as_str();
     get_recipe("syntaxes", id)
   }
 }
@@ -124,7 +121,7 @@ fn print<'syntax, 'module, 'internals>(
     });
   }
 
-  let message = expression.iter().next().unwrap().as_str();
+  let message = expression.iter().next().wasi_unwrap().as_str();
   let mut message_parsed = String::with_capacity(message.len());
   let mut is_escaped = false;
   for c in message.chars() {
@@ -137,15 +134,20 @@ fn print<'syntax, 'module, 'internals>(
   }
 
   state.data.push(message_parsed.as_bytes().to_vec());
-  state.addresses.push(mem.data(state.data.last().unwrap()));
-  let message_addr = state.addresses.get(state.addresses.len()-1).unwrap();
+  state.addresses.push(mem.data(state.data.last().wasi_unwrap()));
+  let message_addr = state.addresses.get(state.addresses.len()-1).wasi_unwrap();
 
-  let print_state = state.print.as_ref().unwrap();
-  let iovec_base    = state.addresses.get( print_state.iovec_base    ).unwrap();
-  let iovec_len     = state.addresses.get( print_state.iovec_len     ).unwrap();
-  let new_line      = state.addresses.get( print_state.new_line      ).unwrap();
-  let new_line_base = state.addresses.get( print_state.new_line_base ).unwrap();
-  let new_line_len  = state.addresses.get( print_state.new_line_len  ).unwrap();
+  let print_state = state.print.as_ref().wasi_unwrap();
+  let iovec_base    = state.addresses.get( print_state.iovec_base    )
+    .wasi_unwrap();
+  let iovec_len     = state.addresses.get( print_state.iovec_len     )
+    .wasi_unwrap();
+  let new_line      = state.addresses.get( print_state.new_line      )
+    .wasi_unwrap();
+  let new_line_base = state.addresses.get( print_state.new_line_base )
+    .wasi_unwrap();
+  let new_line_len  = state.addresses.get( print_state.new_line_len  )
+    .wasi_unwrap();
 
   let fd_write = builder.from_wasi(&state.wasi.fd_write);
   let start = builder.get_start();

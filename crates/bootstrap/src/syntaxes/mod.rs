@@ -23,6 +23,7 @@ use std::collections::HashMap;
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use crate::{WasiExpect, WasiUnwrap};
 use crate::expressions::Expression;
 
 mod error;
@@ -47,7 +48,7 @@ impl<'a> Pattern<'a> {
   ) -> Result<Expression<'a, 'b>, ParseError> {
     if let Some((start, _)) = iter.peek() {
       let start = *start;
-      let mut result = Expression::new(module.get(start..).unwrap(), self.key);
+      let mut result = Expression::new(module.get(start..).wasi_unwrap(), self.key);
       self.token.parse(patterns, module, iter, &mut result)?;
       if let Some((end, _)) = iter.peek() {
         result.truncate(*end-start);
@@ -71,7 +72,7 @@ impl<'a> Patterns<'a> {
   pub fn new(syntax: &'a str) -> Self {
     let mut patterns = HashMap::new();
     let mut iter = syntax.char_indices().peekable();
-    let mut key = get_key(&syntax, &mut iter).expect("no pattern found");
+    let mut key = get_key(&syntax, &mut iter).wasi_expect("no pattern found");
     let entry = key;
     loop {
       let token = Concat::parse(syntax, &mut iter);
@@ -82,7 +83,7 @@ impl<'a> Patterns<'a> {
       if key_opt.is_none() {
         break
       }
-      key = key_opt.unwrap();
+      key = key_opt.wasi_unwrap();
     }
     Self{ entry, patterns }
   }
@@ -97,7 +98,7 @@ impl<'a> Patterns<'a> {
     let mut iter = module.char_indices().peekable();
     let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
     if let Some((i, _)) = iter.peek() {
-      let remaining = module.get(*i..).unwrap();
+      let remaining = module.get(*i..).wasi_unwrap();
       // ignore new line
       if remaining != "\n" {
         return Err(ParseError::new(format!(
@@ -127,7 +128,7 @@ fn get_key<'a>(
   }
   while let Some((i, c)) = iter.next() {
     if c.is_whitespace() {
-      result = Some(syntax.get(pattern_start.unwrap()..i).unwrap());
+      result = Some(syntax.get(pattern_start.wasi_unwrap()..i).wasi_unwrap());
       break;
     }
   }

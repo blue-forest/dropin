@@ -21,6 +21,8 @@
 
 use std::slice::Iter;
 
+use crate::WasiUnwrap;
+
 #[derive(Debug)]
 pub struct Expression<'syntax, 'module> {
   value:    &'module str,
@@ -49,6 +51,6 @@ impl<'syntax, 'module> Expression<'syntax, 'module> {
   }
 
   pub fn truncate(&mut self, i: usize) {
-    self.value = self.value.get(..i).unwrap()
+    self.value = self.value.get(..i).wasi_unwrap()
   }
 }

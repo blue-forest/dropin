@@ -36,7 +36,7 @@ mod memory;
 pub use memory::{MemoryAddress, MemoryBuilder};
 
 mod wasi;
-pub use wasi::{WASI, WASIFunction};
+pub use self::wasi::{WASI, WASIFunction};
 
 pub struct ModuleBuilder<'module, 'internals> {
   memory:             MemoryBuilder<'internals>,

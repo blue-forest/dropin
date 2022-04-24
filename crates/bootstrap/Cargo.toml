@@ -4,12 +4,15 @@ version = "0.5.3-2"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in bootstrap [WIP]"
-repository = "https://github.com/theblueforest/dropin/dropin-bootstrap"
+repository = "https://github.com/theblueforest/dropin/crates/dropin-bootstrap"
 license = "AGPL-3.0-only"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
-dropin-utils = { path="../utils", version = "0.5.3-1" }
 structopt = "0.3"
+wasi = "0.11.0"
 wasm-encoder = "0.11.0"
 
 [dev-dependencies]

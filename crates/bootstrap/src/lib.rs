@@ -1,9 +1,12 @@
 use std::str::{self, Utf8Error};
 
+use dropin_modules::{print, print_to};
+
+pub mod path;
+use path::get_recipe;
 pub mod expressions;
 use expressions::Expression;
 pub mod modules;
-pub mod path;
 pub mod syntaxes;
 use syntaxes::Patterns;
 pub mod utils;
@@ -18,26 +21,9 @@ pub struct Recipe<'syntax, 'recipe> {
 impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
   pub fn new(syntax: &'syntax str, recipe: &'recipe str) -> Self {
     let patterns = Patterns::new(syntax);
-    let expression = patterns.parse(recipe).unwrap();
+    let expression = patterns.parse(recipe).wasi_unwrap();
     Self{ syntax, patterns, recipe, expression }
   }
-}
-
-const NEW_LINE: &str = "\n";
-
-fn println(message: &str) {
-  let stdout = 1;
-  let data = [
-    wasi::Ciovec {
-      buf: message.as_ptr(),
-      buf_len: message.len(),
-    },
-    wasi::Ciovec {
-      buf: NEW_LINE.as_ptr(),
-      buf_len: NEW_LINE.len(),
-    },
-  ];
-  unsafe { wasi::fd_write(stdout, &data).unwrap() };
 }
 
 pub struct Args {
@@ -47,11 +33,11 @@ pub struct Args {
 
 impl Args {
   pub unsafe fn new() -> Self {
-    let (args_count, args_len) = wasi::args_sizes_get().unwrap();
+    let (args_count, args_len) = wasi::args_sizes_get().wasi_unwrap();
     let mut argv_buf = vec![0; args_len];
     let argv_buf_ptr = argv_buf.as_mut_ptr();
     let mut argv_ptrs = vec![argv_buf_ptr; args_count];
-    wasi::args_get(argv_ptrs.as_mut_ptr(), argv_buf_ptr).unwrap();
+    wasi::args_get(argv_ptrs.as_mut_ptr(), argv_buf_ptr).wasi_unwrap();
     let mut argv = Vec::new();
     for arg in argv_ptrs.iter() {
       argv.push(*arg as usize - argv_buf_ptr as usize);
@@ -60,19 +46,76 @@ impl Args {
   }
 
   pub fn get(&self, i: usize) -> Result<&str, Utf8Error> {
-    let start = *self.argv.get(i).unwrap();
+    let start = *self.argv.get(i).wasi_unwrap();
     let end = if i + 1 == self.argv.len() {
       self.argv_buf.len()
     } else {
-      *self.argv.get(i + 1).unwrap()
+      *self.argv.get(i + 1).wasi_unwrap()
     };
-    str::from_utf8(self.argv_buf.get(start..end-1).unwrap())
+    str::from_utf8(self.argv_buf.get(start..end-1).wasi_unwrap())
+  }
+  
+  pub fn len(&self) -> usize { self.argv.len() }
+}
+
+trait WasiExpect<T> {
+  fn wasi_expect(self, message: &str) -> T;
+}
+
+impl<T> WasiExpect<T> for Option<T> {
+  fn wasi_expect(self, message: &str) -> T {
+    if let Some(result) = self {
+      result
+    } else {
+      print_to(message, 2);
+      unsafe { wasi::proc_exit(1) };
+      unreachable!()
+    }
+  }
+}
+
+trait WasiUnwrap<T> {
+  fn wasi_unwrap(self) -> T;
+}
+
+use std::error::Error;
+impl<T, E: Error> WasiUnwrap<T> for Result<T, E> {
+  fn wasi_unwrap(self) -> T {
+    match self {
+      Ok(result) => result,
+      Err(err) => {
+        print_to(&format!("{}", err), 2);
+        // unsafe { wasi::proc_exit(1) };
+        unreachable!()
+      }
+    }
+  }
+}
+
+impl<T> WasiUnwrap<T> for Option<T> {
+  fn wasi_unwrap(self) -> T {
+    match self {
+      Some(result) => result,
+      None => {
+        print_to("None unwrapped", 2);
+        unsafe { wasi::proc_exit(1) };
+        unreachable!()
+      }
+    }
   }
 }
 
 #[no_mangle]
 pub fn _start() {
   let args = unsafe { Args::new() };
-  println(args.get(1).unwrap());
+  if args.len() != 3 {
+    print_to("expected arguments: <syntax> <module>", 2);
+    unsafe { wasi::proc_exit(1) };
+  }
+  let syntax_content = &get_recipe("syntaxes", args.get(1).wasi_unwrap());
+  let module_content = &get_recipe("modules",  args.get(2).wasi_unwrap());
+  let recipe = Recipe::new(syntax_content, module_content);
+  print(&format!("{:?}", recipe.patterns));
+  print(&format!("{:?}", recipe.expression));
 }
 

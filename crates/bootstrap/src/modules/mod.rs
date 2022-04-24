@@ -97,9 +97,9 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
     todo!();
   }
 
-  pub fn get_syntax(&self, root: &Path) -> String {
+  pub fn get_syntax(&self) -> String {
     let id = self.module.expression.iter().next().unwrap().as_str();
-    get_recipe(root, "syntaxes", id)
+    get_recipe("syntaxes", id)
   }
 }
 

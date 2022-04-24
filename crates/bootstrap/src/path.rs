@@ -19,17 +19,19 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs::read_to_string;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
+use std::str;
 
-fn get_path(root: &Path, collection: &str, id: &str) -> PathBuf {
+use crate::{WasiExpect, WasiUnwrap};
+
+pub fn get_path(collection: &str, id: &str) -> PathBuf {
   let mut split = id.split(':');
-  let owner = split.next().expect("expected owner");
-  let model = split.next().expect("expected model");
-  let version = split.next().expect("expected version");
-  let mut recipe = split.next().expect("expected recipe").to_string();
+  let owner = split.next().wasi_expect("expected owner");
+  let model = split.next().wasi_expect("expected model");
+  let version = split.next().wasi_expect("expected version");
+  let mut recipe = split.next().wasi_expect("expected recipe").to_string();
   recipe.push_str(".dropin");
-  let mut result = root.to_path_buf();
+  let mut result = PathBuf::new();
   result.push(owner);
   result.push("models");
   result.push(model);
@@ -39,11 +41,39 @@ fn get_path(root: &Path, collection: &str, id: &str) -> PathBuf {
   result
 }
 
-pub fn get_recipe(root: &Path, collection: &str, id: &str) -> String {
-  let path = get_path(root, collection, id);
-  let content = read_to_string(path).unwrap();
-  let header_split = content.find("\n===").unwrap();
-  let start = content.get(header_split+4..).unwrap().find("\n").unwrap() + header_split + 5;
-  content.get(start..).unwrap().to_string()
+pub fn get_recipe(collection: &str, id: &str) -> String {
+  let path = get_path(collection, id);
+  let content = unsafe {
+    let fd = wasi::path_open(
+      3, // preopened fd
+      wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
+      &path.to_str().wasi_unwrap(),
+      0, 1073741823, 1073741823, 0,
+    ).wasi_unwrap();
+    let mut content = String::new();
+    loop {
+      let mut buf = [0; 3];
+      let size = wasi::fd_read(fd, &[
+        wasi::Iovec{
+          buf:     buf.as_mut_ptr(),
+          buf_len: buf.len(),
+        }
+      ]).wasi_unwrap();
+      content.push_str(
+        str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
+      );
+      if size < buf.len() || size == 0 {
+        break
+      }
+    }
+    content
+  };
+  let header_split = content.find("\n===").wasi_unwrap();
+  let start = content
+    .get(header_split+4..)
+    .wasi_unwrap()
+    .find("\n")
+    .wasi_unwrap()
+    + header_split + 5;
+  content.get(start..).wasi_unwrap().to_string()
 }
-

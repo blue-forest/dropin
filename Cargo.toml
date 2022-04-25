@@ -1,5 +1,4 @@
 [workspace]
-
 members = [
   "crates/bootstrap",
   "crates/debugger",
@@ -9,7 +8,6 @@ members = [
 exclude = ["etc/sandbox"]
 
 [package]
-
 name = "dropin"
 version = "0.5.3-3"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
@@ -20,7 +18,6 @@ license = "AGPL-3.0-only"
 keywords = ["WebAssembly"]
 
 [dependencies]
-
 dropin-utils = { path = "./crates/utils", version = "0.5.3-1" }
 dialoguer = "0.10.0"
 edit = "0.1.3"

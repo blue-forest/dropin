@@ -29,12 +29,14 @@ use super::path::get_version;
 
 mod add;
 use add::Add;
+mod compile;
 mod concepts;
 pub use concepts::*;
-mod remove;
 mod edit;
 mod namespace;
 use namespace::Namespace;
+mod remove;
+mod run;
 mod select;
 use select::Select;
 

@@ -24,8 +24,10 @@ use std::sync::Arc;
 
 use crate::interactive::{Command, Cli};
 use super::Recipe;
-use super::remove::Remove;
+use super::compile::Compile;
 use super::edit::Edit;
+use super::remove::Remove;
+use super::run::Run;
 
 pub struct Select(Arc<Selection>);
 
@@ -48,6 +50,8 @@ impl Display for Select {
 impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     let commands: Vec<Box<dyn Command>> = vec![
+      Box::new(Run::new(self.0.clone())),
+      Box::new(Compile::new(self.0.clone())),
       Box::new(Edit::new(self.0.clone())),
       Box::new(Remove::new(self.0.clone())),
     ];

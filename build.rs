@@ -5,7 +5,7 @@ use std::path::Path;
 fn main() {
   let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
   let dropin_modules_path = Path::new(&workspace_dir).join(Path::new(
-    "../../target/wasm32-unknown-unknown/release/dropin_modules.wasm",
+    "target/wasm32-unknown-unknown/release/dropin_modules.wasm",
   ));
   if !dropin_modules_path.exists() {
     panic!(

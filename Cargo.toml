@@ -28,6 +28,8 @@ serde = "1.0.136"
 serde_derive = "1.0.136"
 structopt = "0.3"
 toml = "0.5.8"
+wasmtime = "0.36"
+wasmtime-wasi = "0.36"
 
 [[bin]]
 name = "dropin"

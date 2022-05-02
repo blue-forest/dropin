@@ -25,8 +25,7 @@ use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
 use crate::interactive::path::get_recipe;
-use super::RecipeCommand;
-use super::namespace::Namespace;
+
 use super::select::Selection;
 
 pub struct Remove(Arc<Selection>);
@@ -52,7 +51,7 @@ impl Command for Remove {
     );
     remove_file(&path).unwrap();
     let mut namespaces = (*self_namespaces).clone();
-    let mut break_n = 1;
+    let mut break_n = 0;
     for p in path.parent().unwrap().ancestors() {
       break_n += 1;
       if namespaces.is_empty() || 
@@ -66,13 +65,6 @@ impl Command for Remove {
       );
       remove_dir(p).unwrap();
     };
-    if namespaces.is_empty() {
-      RecipeCommand::new(self.0.recipe()).run(cli);
-      break_n
-    } else {
-      let id = namespaces.pop().unwrap();
-      Namespace::new(self.0.recipe(), &id, Arc::new(namespaces)).run(cli);
-      break_n
-    }
+    break_n
   }
 }

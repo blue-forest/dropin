@@ -25,8 +25,8 @@ use std::fmt::{Display, Formatter, Error};
 use std::fs::create_dir_all;
 
 use super::{Cli, Command, get_dirs};
-use super::utils::validate_name;
 use super::path::get_owner;
+use super::utils::validate_name;
 
 pub struct ModelCommand;
 
@@ -40,16 +40,18 @@ impl Command for ModelCommand {
   fn run(&self, cli: &mut Cli) -> u32 {
     let mut path = get_owner(cli).unwrap();
     path.push("models");
-    cli.models = get_dirs(&path);
-    let mut commands: Vec<Box<dyn Command>> = Vec::new();
-    for (i, model) in cli.models.iter().enumerate() {
-      commands.push(Box::new(Select{
-        name:  model.to_string(),
-        index: i,
-      }));
-    }
-    commands.push(Box::new(Add{}));
-    cli.run_select("Model", &commands)
+    cli.run_select("Model", |cli| {
+      cli.models = get_dirs(&path);
+      let mut commands: Vec<Box<dyn Command>> = Vec::new();
+      for (i, model) in cli.models.iter().enumerate() {
+        commands.push(Box::new(Select{
+          name:  model.to_string(),
+          index: i,
+        }));
+      }
+      commands.push(Box::new(Add{}));
+      commands
+    })
   }
 
   fn is_enabled(&self, cli: &Cli) -> bool { cli.owner_selected.is_some() }
@@ -84,23 +86,21 @@ impl Display for Add {
 
 impl Command for Add {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let mut path = get_owner(cli).unwrap();
     let model_name = loop {
       let model_name: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("Model name for your recipes ? (leave empty to cancel)")
         .allow_empty(true)
         .interact_text().unwrap();
       if model_name.is_empty() { return 0; }
-      path.push("models");
-      if let Err(err) = validate_name(&path, &model_name) {
+      if let Err(err) = validate_name(&cli.cwd, &model_name) {
         println!("{}", err);
         continue;
       }
-      path.push(&model_name);
+      cli.cwd.push(&model_name);
       break model_name;
     };
-    path.push("v1");
-    create_dir_all(&path).unwrap();
+    cli.cwd.push("v1");
+    create_dir_all(&cli.cwd).unwrap();
     println!("Model {} created", model_name);
     let index = cli.models.len();
     cli.models.push(model_name);

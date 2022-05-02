@@ -25,7 +25,6 @@ use std::path::Path;
 use std::sync::Arc;
 
 use super::{Cli, Command};
-use super::path::get_version;
 
 mod add;
 use add::Add;
@@ -58,14 +57,12 @@ impl Display for RecipeCommand {
 
 impl Command for RecipeCommand {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let mut path = get_version(cli).unwrap();
-    path.push(self.recipe.dir_name());
-    let commands = get_entries(
-      &path,
-      self.recipe.clone(),
-      Arc::new(Vec::new()),
+    cli.cwd.push(self.recipe.dir_name());
+    let result = cli.run_select(&self.recipe.title(), |cli|
+      get_entries(&cli.cwd, self.recipe.clone(), Arc::new(Vec::new()))
     );
-    cli.run_select(&self.recipe.title(), &commands)
+    cli.cwd.pop();
+    result
   }
 
   fn is_enabled(&self, cli: &Cli) -> bool { cli.model_selected.is_some() }
@@ -94,12 +91,13 @@ fn get_entries(
       }
     }
   }
-  commands.push(Box::new(Add::new(recipe.clone(), namespaces)));
+  commands.push(Box::new(Add::new(recipe.clone())));
   commands
 }
 
 pub trait Recipe: Display {
   fn title(&self) -> String;
   fn dir_name(&self) -> String;
+  fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> { vec![] }
 }
 

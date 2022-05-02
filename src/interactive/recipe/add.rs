@@ -28,18 +28,15 @@ use std::io::Write;
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
-use crate::interactive::path::get_namespace;
-use super::{Recipe, RecipeCommand};
-use super::namespace::Namespace;
+use super::Recipe;
 
 pub struct Add {
-  namespaces: Arc<Vec<String>>,
   recipe:     Arc<dyn Recipe>,
 }
 
 impl Add {
-  pub fn new(recipe: Arc<dyn Recipe>, namespaces: Arc<Vec<String>>) -> Self {
-    Self{ namespaces, recipe }
+  pub fn new(recipe: Arc<dyn Recipe>) -> Self {
+    Self{ recipe }
   }
 }
 
@@ -59,17 +56,16 @@ impl Command for Add {
     let recipe_name = self.recipe.dir_name();
 
     let mut id_split: Vec<&str> = id.split('/').collect();
+    let n_splits = id_split.len();
     let id = id_split.split_off(id_split.len()-1)[0];
-    let namespaces = [
-      (*self.namespaces).iter().map(|s| s.as_str()).collect(),
-      id_split,
-    ].concat();
-    let mut path = get_namespace(cli, &recipe_name, namespaces);
-    if !path.exists() {
-      create_dir_all(&path).unwrap();
+    for ns in id_split {
+      cli.cwd.push(ns);
     }
-    path.push(&format!("{}.dropin", id));
-    let mut file = File::create(&path).unwrap();
+    if !cli.cwd.exists() {
+      create_dir_all(&cli.cwd).unwrap();
+    }
+    cli.cwd.push(&format!("{}.dropin", id));
+    let mut file = File::create(&cli.cwd).unwrap();
     file.write_all(
       format!(
         "{} {}\n{:=>width$}\n",
@@ -77,19 +73,8 @@ impl Command for Add {
         "", width=recipe_name.len() + id.len() + 1,
       ).as_bytes(),
     ).unwrap();
-    edit_file(path).unwrap();
-    if self.namespaces.is_empty() {
-      RecipeCommand::new(self.recipe.clone()).run(cli);
-    } else {
-      let id = &self.namespaces[self.namespaces.len()-1];
-      let mut namespaces = (*self.namespaces).clone();
-      namespaces.pop();
-      Namespace::new(
-        self.recipe.clone(),
-        id,
-        Arc::new(namespaces),
-      ).run(cli);
-    };
-    1
+    edit_file(&cli.cwd).unwrap();
+    cli.cwd = cli.cwd.ancestors().nth(n_splits).unwrap().to_path_buf();
+    0
   }
 }

@@ -37,14 +37,7 @@ use model::ModelCommand;
 mod owner;
 use owner::OwnerCommand;
 mod recipe;
-use recipe::{
-  Modules,
-  Functions,
-  Pipelines,
-  RecipeCommand,
-  Syntaxes,
-  Types,
-};
+use recipe::{Modules, RecipeCommand, Syntaxes};
 mod path;
 use path::validate_path;
 mod utils;
@@ -52,6 +45,7 @@ use utils::get_dirs;
 
 pub struct Cli {
   config:         Config,
+  cwd:            PathBuf,
   model_selected: Option<usize>,
   models:         Vec<String>,
   owner_selected: Option<usize>,
@@ -71,21 +65,25 @@ impl Cli {
     } else {
       get_dirs(&root)
     };
+    let mut cwd = root.clone();
     let config = Config::new(&root);
     let mut owner_selected = None;
     let mut model_selected = None;
     let mut models = vec![];
     if let Some(owner) = config.owner() {
       owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
-      let mut owner_path = root.clone();
-      owner_path.push(owner);
-      models = get_dirs(&owner_path.join("models"));
+      cwd.push(owner);
+      cwd.push("models");
+      models = get_dirs(&cwd);
       if let Some(model) = config.model() {
+        cwd.push(model);
+        cwd.push("v1"); // TODO: deal with versions
         model_selected = Some(models.iter().position(|m| m == model).unwrap());
       }
     }
     Self{
       config,
+      cwd,
       model_selected,
       models,
       owner_selected,
@@ -97,22 +95,24 @@ impl Cli {
 
   #[inline(always)]
   pub fn run(&mut self) {
-    let commands: Vec<Box<dyn Command>> = vec![
+    self.run_select("Home", |_| vec![
       Box::new(RecipeCommand::new(Arc::new(Modules))),
-      Box::new(RecipeCommand::new(Arc::new(Functions))),
-      Box::new(RecipeCommand::new(Arc::new(Pipelines))),
       Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
-      Box::new(RecipeCommand::new(Arc::new(Types))),
       Box::new(ModelCommand{}),
       Box::new(OwnerCommand{}),
-    ];
-    self.run_select("Home", &commands);
+    ]);
   }
 
-  fn run_select(&mut self, title: &str, commands: &[Box<dyn Command>]) -> u32 {
+  fn run_select<F: Fn(&mut Self) -> Vec<Box<dyn Command>>>(
+    &mut self,
+    title: &str,
+    commands: F,
+  ) -> u32 {
     let theme = ColorfulTheme::default();
     loop {
-      let enabled_commands: Vec<&Box<dyn Command>> = commands.iter()
+      println!("CWD: {}", self.cwd.to_str().unwrap());
+      let current_commands = commands(self);
+      let enabled_commands: Vec<&Box<dyn Command>> = current_commands.iter()
         .filter(|x| x.is_enabled(self))
         .collect();
       let mut select = Select::with_theme(&theme);

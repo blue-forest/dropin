@@ -448,6 +448,7 @@ name = "dropin"
 version = "0.5.3-3"
 dependencies = [
  "dialoguer",
+ "dropin-bootstrap",
  "dropin-utils",
  "edit",
  "home",

@@ -20,8 +20,11 @@
  */
 
 use std::fmt::{Display, Error, Formatter};
+use std::path::Path;
 
-use super::Recipe;
+use super::{Command, Recipe};
+use super::compile::Compile;
+use super::run::Run;
 
 pub struct Modules;
 
@@ -34,8 +37,36 @@ impl Display for Modules {
 impl Recipe for Modules {
   fn title(&self) -> String { "Modules".to_string() }
   fn dir_name(&self) -> String { "modules".to_string() }
+  fn commands(&self, path: &Path) -> Vec<Box<dyn Command>> {
+    vec![]
+  }
 }
 
+pub struct CustomRecipe {
+  name: Option<String>,
+  id: String,
+}
+  // fn commands(&self, path: &Path) -> Vec<Box<dyn Command>> {
+  //   vec![
+  //     Box::new(Run::new(path)),
+  //     Box::new(Compile::new(path)),
+  //   ]
+  // }
+
+pub struct Syntaxes;
+
+impl Display for Syntaxes {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "syntaxes".fmt(f)
+  }
+}
+
+impl Recipe for Syntaxes {
+  fn title(&self) -> String { "Syntaxes".to_string() }
+  fn dir_name(&self) -> String { "syntaxes".to_string() }
+}
+
+/*
 pub struct Functions;
 
 impl Display for Functions {
@@ -62,19 +93,6 @@ impl Recipe for Pipelines {
   fn dir_name(&self) -> String { "pipelines".to_string() }
 }
 
-pub struct Syntaxes;
-
-impl Display for Syntaxes {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "syntaxes".fmt(f)
-  }
-}
-
-impl Recipe for Syntaxes {
-  fn title(&self) -> String { "Syntaxes".to_string() }
-  fn dir_name(&self) -> String { "syntaxes".to_string() }
-}
-
 pub struct Types;
 
 impl Display for Types {
@@ -87,4 +105,4 @@ impl Recipe for Types {
   fn title(&self) -> String { "Types".to_string() }
   fn dir_name(&self) -> String { "types".to_string() }
 }
-
+*/

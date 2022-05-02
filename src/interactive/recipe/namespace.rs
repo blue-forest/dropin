@@ -23,7 +23,6 @@ use std::fmt::{Display, Error, Formatter};
 use std::sync::Arc;
 
 use crate::interactive::{Cli, Command};
-use crate::interactive::path::get_version;
 use super::{get_entries, Recipe};
 
 pub struct Namespace {
@@ -55,17 +54,17 @@ impl Command for Namespace {
       namespaces.push(self.id.clone());
       Arc::new(namespaces)
     };
-    let mut path = get_version(cli).unwrap();
-    path.push(self.recipe.dir_name());
-    for ns in namespaces.iter() {
-      path.push(&ns);
-    }
-    let commands = get_entries(
-      &path, self.recipe.clone(), namespaces.clone(),
-    );
-    cli.run_select(
+    cli.cwd.push(&self.id);
+    let result = cli.run_select(
       &format!("{} Namespace {}", self.recipe, namespaces.join("/")),
-      &commands,
-    )
+      |cli| {
+        let commands = get_entries(
+          &cli.cwd, self.recipe.clone(), namespaces.clone(),
+        );
+        commands
+      }
+    );
+    cli.cwd.pop();
+    result
   }
 }

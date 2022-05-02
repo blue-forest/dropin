@@ -37,15 +37,17 @@ impl Display for OwnerCommand {
 
 impl Command for OwnerCommand {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let mut commands: Vec<Box<dyn Command>> = Vec::new();
-    for (i, owner) in cli.owners.iter().enumerate() {
-      commands.push(Box::new(Select{
-        name:  owner.to_string(),
-        index: i,
-      }));
-    }
-    commands.push(Box::new(Add{}));
-    cli.run_select("Owner", &commands)
+    cli.run_select("Owner", |cli| {
+      let mut commands: Vec<Box<dyn Command>> = Vec::new();
+      for (i, owner) in cli.owners.iter().enumerate() {
+        commands.push(Box::new(Select{
+          name:  owner.to_string(),
+          index: i,
+        }));
+      }
+      commands.push(Box::new(Add{}));
+      commands
+    })
   }
 }
 
@@ -64,6 +66,8 @@ impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.owner_selected = Some(self.index);
     cli.model_selected = None;
+    cli.cwd.push(&cli.owners[self.index]);
+    cli.cwd.push("models");
     cli.config.set_owner(self.name.clone());
     1
   }

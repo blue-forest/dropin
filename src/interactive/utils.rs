@@ -26,7 +26,7 @@ use super::ConfigError;
 
 pub fn validate_name(root: &Path, name: &str) -> Result<(), ConfigError> {
   let re = Regex::new(
-    r"^(\w|[.-_àâæçéèêëïîôœùûüÿÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ])+$"
+    r"^(\w|[.\-_àâæçéèêëïîôœùûüÿÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ])+$"
   ).unwrap();
   if !re.is_match(name) {
     return Err(ConfigError::from(

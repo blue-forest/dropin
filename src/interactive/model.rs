@@ -132,6 +132,8 @@ impl Command for Add {
         println!("{}", err);
         continue;
       }
+      cli.cwd = get_owner(cli).unwrap();
+      cli.cwd.push("models");
       cli.cwd.push(&model_name);
       break model_name;
     };

@@ -1,13 +1,14 @@
-syntaxes Modules
-================
-
-module $patterns.syntax "\n"{1..} $patterns.function{1..}
+module $patterns.syntax "\n"{1..} $patterns.function
 
 syntax $patterns.id
 
 id $patterns.key ":" $patterns.key ":" $patterns.key ":" $patterns.key
 
-function "fn " $patterns.key "()\n" $patterns.command{..}
+key ("-" | "_" | "." | $std.alphanum){1..}
+
+function "fn " $patterns.key "()" $patterns.commands
+
+commands ("\n  " $patterns.command){..}
 
 command $patterns.localCommand | $patterns.metaCommand
 
@@ -17,6 +18,6 @@ metaCommand $patterns.print
 
 print "print \"" $patterns.message "\""
 
-message $patterns.message_char+
+message $patterns.message_char{1..}
 
 message_char "\\\"" | !"\""

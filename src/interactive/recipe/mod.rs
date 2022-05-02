@@ -28,14 +28,12 @@ use super::{Cli, Command};
 
 mod add;
 use add::Add;
-mod compile;
 mod concepts;
 pub use concepts::*;
 mod edit;
 mod namespace;
 use namespace::Namespace;
 mod remove;
-mod run;
 mod select;
 use select::Select;
 

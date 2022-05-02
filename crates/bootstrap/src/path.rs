@@ -19,61 +19,62 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::str;
 
 use crate::{WasiExpect, WasiUnwrap};
 
-pub fn get_path(collection: &str, id: &str) -> PathBuf {
+pub unsafe fn read_file(path: &Path) -> String {
+  let fd = wasi::path_open(
+    3, // preopened fd
+    wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
+    &path.to_str().wasi_unwrap(),
+    0, 1073741823, 1073741823, 0,
+  ).wasi_unwrap();
+  let mut content = String::new();
+  loop {
+    let mut buf = [0; 3];
+    let size = wasi::fd_read(fd, &[
+      wasi::Iovec{
+        buf:     buf.as_mut_ptr(),
+        buf_len: buf.len(),
+      }
+    ]).wasi_unwrap();
+    content.push_str(
+      str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
+    );
+    if size < buf.len() || size == 0 {
+      break
+    }
+  }
+  content
+}
+
+pub fn get_model(id: &str) -> String {
+  let mut split = id.split(':');
+  let owner = split.next().wasi_expect("expected owner");
+  let model = split.next().wasi_expect("expected model");
+  let mut path = PathBuf::new();
+  path.push(owner);
+  path.push("models");
+  path.push(model);
+  path.push(".dropin");
+  unsafe { read_file(&path) }
+}
+
+pub fn get_recipe(collection: &str, id: &str) -> String {
   let mut split = id.split(':');
   let owner = split.next().wasi_expect("expected owner");
   let model = split.next().wasi_expect("expected model");
   let version = split.next().wasi_expect("expected version");
   let mut recipe = split.next().wasi_expect("expected recipe").to_string();
   recipe.push_str(".dropin");
-  let mut result = PathBuf::new();
-  result.push(owner);
-  result.push("models");
-  result.push(model);
-  result.push(version);
-  result.push(collection);
-  result.push(recipe);
-  result
-}
-
-pub fn get_recipe(collection: &str, id: &str) -> String {
-  let path = get_path(collection, id);
-  let content = unsafe {
-    let fd = wasi::path_open(
-      3, // preopened fd
-      wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
-      &path.to_str().wasi_unwrap(),
-      0, 1073741823, 1073741823, 0,
-    ).wasi_unwrap();
-    let mut content = String::new();
-    loop {
-      let mut buf = [0; 3];
-      let size = wasi::fd_read(fd, &[
-        wasi::Iovec{
-          buf:     buf.as_mut_ptr(),
-          buf_len: buf.len(),
-        }
-      ]).wasi_unwrap();
-      content.push_str(
-        str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
-      );
-      if size < buf.len() || size == 0 {
-        break
-      }
-    }
-    content
-  };
-  let header_split = content.find("\n===").wasi_unwrap();
-  let start = content
-    .get(header_split+4..)
-    .wasi_unwrap()
-    .find("\n")
-    .wasi_unwrap()
-    + header_split + 5;
-  content.get(start..).wasi_unwrap().to_string()
+  let mut path = PathBuf::new();
+  path.push(owner);
+  path.push("models");
+  path.push(model);
+  path.push(version);
+  path.push(collection);
+  path.push(recipe);
+  unsafe { read_file(&path) }
 }

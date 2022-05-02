@@ -3,7 +3,7 @@ use std::str::{self, Utf8Error};
 use dropin_modules::{print, print_to};
 
 pub mod path;
-use path::get_recipe;
+use path::{get_model, get_recipe};
 pub mod expressions;
 use expressions::Expression;
 pub mod modules;
@@ -105,16 +105,18 @@ impl<T> WasiUnwrap<T> for Option<T> {
   }
 }
 
+const SYNTAX_MODELS: &str = "blueforest:dropin-modules:v1:Models";
+
 #[no_mangle]
 pub fn _start() {
   let args = unsafe { Args::new() };
-  if args.len() != 3 {
-    print_to("expected arguments: <syntax> <module>", 2);
+  if args.len() != 2 {
+    print_to("expected argument: <model>", 2);
     unsafe { wasi::proc_exit(1) };
   }
-  let syntax_content = &get_recipe("syntaxes", args.get(1).wasi_unwrap());
-  let module_content = &get_recipe("modules",  args.get(2).wasi_unwrap());
-  let recipe = Recipe::new(syntax_content, module_content);
+  let syntax_content = &get_recipe("syntaxes", SYNTAX_MODELS);
+  let model_content = &get_model(args.get(1).wasi_unwrap());
+  let recipe = Recipe::new(syntax_content, model_content);
   print(&format!("{:?}", recipe.patterns));
   print(&format!("{:?}", recipe.expression));
 }

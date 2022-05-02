@@ -21,13 +21,37 @@
 use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
 use edit::edit_file;
+use wasmtime::{
+  Engine,
+  Linker,
+  Module,
+  Store,
+};
+use wasmtime_wasi::{self, WasiCtxBuilder};
+use wasmtime_wasi::sync::Dir;
 
 use std::fmt::{Display, Formatter, Error};
-use std::fs::create_dir_all;
+use std::fs::{create_dir_all, File};
+use std::path::Path;
 
 use super::{Cli, Command, get_dirs};
 use super::path::get_owner;
 use super::utils::validate_name;
+
+// https://github.com/rust-lang/rust/issues/75075
+#[cfg(host_family = "windows")]
+macro_rules! PATH_SEPARATOR {() => ( r"\")}
+
+#[cfg(not(host_family = "windows"))]
+macro_rules! PATH_SEPARATOR {() => ( r"/")}
+
+static STD_BINARY: &[u8] = include_bytes!(concat!(
+  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_modules.wasm",
+));
+
+static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
+  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_bootstrap.wasm",
+));
 
 pub struct ModelCommand;
 
@@ -74,6 +98,7 @@ impl Command for Model {
     cli.run_select(&format!("Model {}", self.name), |_| vec![
       Box::new(Select{ name: self.name.clone(), index: self.index }),
       Box::new(Edit{}),
+      Box::new(Compile{}),
     ])
   }
 }
@@ -148,3 +173,46 @@ impl Command for Add {
   }
 }
 
+struct Compile;
+
+impl Display for Compile {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "compile".fmt(f)
+  }
+}
+
+impl Command for Compile {
+  fn run(&self, cli: &mut Cli) -> u32 {
+    let engine = Engine::default();
+    let mut linker = Linker::new(&engine);
+    wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
+    let wasi_ctx = WasiCtxBuilder::new()
+      .inherit_stdio()
+      .args(&[
+        "dropin_bootstrap.wasm".to_string(),
+        format!(
+          "{}:{}",
+          cli.owners[cli.owner_selected.unwrap()],
+          cli.models[cli.model_selected.unwrap()],
+        ),
+      ]).unwrap()
+      .preopened_dir(
+        Dir::from_std_file(File::open(&cli.root).unwrap()),
+        Path::new("/"),
+      ).unwrap()
+      .build();
+    let mut store = Store::new(&engine, wasi_ctx);
+    let std = Module::from_binary(&engine, STD_BINARY).unwrap();
+    let std_instance = linker.instantiate(&mut store, &std).unwrap();
+    linker.instance(
+      &mut store, "blueforest:dropin-std:v1", std_instance,
+    ).unwrap();
+    let main = Module::from_binary(&engine, BOOTSTRAP_BINARY).unwrap();
+    let main_instance = linker.instantiate(&mut store, &main).unwrap();
+    let start = main_instance.get_typed_func::<(), (), _>(
+      &mut store, "_start"
+    ).unwrap();
+    start.call(&mut store, ()).unwrap();
+    0
+  }
+}

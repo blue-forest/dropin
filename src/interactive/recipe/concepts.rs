@@ -23,8 +23,6 @@ use std::fmt::{Display, Error, Formatter};
 use std::path::Path;
 
 use super::{Command, Recipe};
-use super::compile::Compile;
-use super::run::Run;
 
 pub struct Modules;
 

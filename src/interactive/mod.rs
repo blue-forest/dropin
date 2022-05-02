@@ -110,7 +110,6 @@ impl Cli {
   ) -> u32 {
     let theme = ColorfulTheme::default();
     loop {
-      println!("CWD: {}", self.cwd.to_str().unwrap());
       let current_commands = commands(self);
       let enabled_commands: Vec<&Box<dyn Command>> = current_commands.iter()
         .filter(|x| x.is_enabled(self))

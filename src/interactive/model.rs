@@ -20,6 +20,7 @@
 
 use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
+use edit::edit_file;
 
 use std::fmt::{Display, Formatter, Error};
 use std::fs::create_dir_all;
@@ -44,7 +45,7 @@ impl Command for ModelCommand {
       cli.models = get_dirs(&path);
       let mut commands: Vec<Box<dyn Command>> = Vec::new();
       for (i, model) in cli.models.iter().enumerate() {
-        commands.push(Box::new(Select{
+        commands.push(Box::new(Model{
           name:  model.to_string(),
           index: i,
         }));
@@ -57,6 +58,26 @@ impl Command for ModelCommand {
   fn is_enabled(&self, cli: &Cli) -> bool { cli.owner_selected.is_some() }
 }
 
+struct Model {
+  name:  String,
+  index: usize,
+}
+
+impl Display for Model {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    self.name.fmt(f)
+  }
+}
+
+impl Command for Model {
+  fn run(&self, cli: &mut Cli) -> u32 {
+    cli.run_select(&format!("Model {}", self.name), |_| vec![
+      Box::new(Select{ name: self.name.clone(), index: self.index }),
+      Box::new(Edit{}),
+    ])
+  }
+}
+
 struct Select {
   name:  String,
   index: usize,
@@ -64,7 +85,7 @@ struct Select {
 
 impl Display for Select {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    self.name.fmt(f)
+    "select".fmt(f)
   }
 }
 
@@ -72,7 +93,22 @@ impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.model_selected = Some(self.index);
     cli.config.set_model(self.name.clone());
-    1
+    2
+  }
+}
+
+struct Edit;
+
+impl Display for Edit {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "edit".fmt(f)
+  }
+}
+
+impl Command for Edit {
+  fn run(&self, cli: &mut Cli) -> u32 {
+    edit_file(&cli.cwd.parent().unwrap().join(".dropin")).unwrap();
+    0
   }
 }
 

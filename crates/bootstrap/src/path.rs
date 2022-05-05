@@ -50,30 +50,27 @@ pub unsafe fn read_file(path: &Path) -> String {
   content
 }
 
-pub fn get_model(id: &str) -> String {
-  let mut split = id.split(':');
-  let owner = split.next().wasi_expect("expected owner");
-  let model = split.next().wasi_expect("expected model");
-  let mut path = PathBuf::new();
-  path.push(owner);
-  path.push("models");
-  path.push(model);
-  path.push(".dropin");
-  unsafe { read_file(&path) }
+pub fn get_model_path(id: &str) -> PathBuf {
+  model_path(&mut id.split(':'))
 }
 
-pub fn get_recipe(collection: &str, id: &str) -> String {
-  let mut split = id.split(':');
-  let owner = split.next().wasi_expect("expected owner");
-  let model = split.next().wasi_expect("expected model");
-  let version = split.next().wasi_expect("expected version");
-  let mut recipe = split.next().wasi_expect("expected recipe").to_string();
-  recipe.push_str(".dropin");
+fn model_path<'a>(iter: &mut str::Split<'a, char>) -> PathBuf {
+  let owner   = iter.next().wasi_expect("expected owner");
+  let model   = iter.next().wasi_expect("expected model");
+  let version = iter.next().wasi_expect("expected version");
   let mut path = PathBuf::new();
   path.push(owner);
   path.push("models");
   path.push(model);
   path.push(version);
+  path
+}
+
+pub fn get_recipe(collection: &str, id: &str) -> String {
+  let mut split = id.split(':');
+  let mut path = model_path(&mut split);
+  let mut recipe = split.next().wasi_expect("expected recipe").to_string();
+  recipe.push_str(".dropin");
   path.push(collection);
   path.push(recipe);
   unsafe { read_file(&path) }

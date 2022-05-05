@@ -1,0 +1,5 @@
+blueforest:dropin-module:v1:Message
+
+fn main()
+  print "Hello"
+  >print "World"

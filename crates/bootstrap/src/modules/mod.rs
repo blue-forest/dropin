@@ -22,20 +22,24 @@
 use wasm_encoder::{Instruction, MemArg, Module};
 use wasm_encoder::ValType::I32;
 
+use std::path::Path;
+
+use dropin_modules::{print, print_to};
+
 use crate::{Recipe, WasiUnwrap};
 use crate::expressions::Expression;
 use crate::path::get_recipe;
 use crate::utils::escape_char;
 
 mod builder;
-use builder::{MemoryAddress, ModuleBuilder, WASI};
+use builder::{Local, MemoryAddress, ModuleBuilder, STD};
 
 mod error;
 pub use error::CompileError;
 
 struct State<'a> {
   pub print:     Option<PrintState>,
-  pub wasi:      WASI<'a>,
+  pub std_:      STD<'a>,
   pub addresses: Vec<MemoryAddress>,
   pub data:      Vec<Vec<u8>>,
 }
@@ -48,50 +52,88 @@ struct PrintState {
   new_line:      usize,
 }
 
-pub struct Compiler<'syntax, 'module, 'internals> {
-  builder: ModuleBuilder<'module, 'internals>,
-  state:   State<'internals>,
+pub struct Compiler<'syntax, 'module> {
   module:  Recipe<'syntax, 'module>,
 }
 
-impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
+impl<'syntax, 'module> Compiler<'syntax, 'module> {
   pub fn new(module: Recipe<'syntax, 'module>) -> Self {
-    let builder = ModuleBuilder::default();
-    let state = State{
+    Self{ module }
+  }
+
+  pub fn compile(&self, _path: &Path) -> Result<Module, CompileError> {
+    let mut builder = ModuleBuilder::default();
+    let mut state = State{
       print:     None,
-      wasi:      WASI::default(),
+      std_:      STD::default(),
       addresses: vec![],
       data:      vec![],
     };
-    Self{ builder, state, module }
-  }
 
-  pub fn compile(
-    &self, recipe: Recipe,
-  ) -> Result<Module, CompileError> {
-    let mut current_expression = recipe.expression;
     let mut iter = self.module.expression.iter();
     iter.next(); // skip syntax
     let mut function = iter.next().wasi_unwrap().iter();
-    let function_name = function.next().wasi_unwrap().as_str();
-    let commands = function.next().wasi_unwrap().iter().next().wasi_unwrap();
+    let _function_name = function.next().wasi_unwrap().as_str();
+    let commands = function.next().wasi_unwrap();
 
     for command in commands.iter() {
+      let command_child = command.iter().next().wasi_unwrap();
       match command.pattern() {
         "metaCommand" => {
-          self.command(command.iter().next().wasi_unwrap());
+          self.meta_command(command_child);
         }
-        "localCommand" => { todo!() }
+        "localCommand" => {
+          self.local_command(
+            &mut builder, &mut state, command_child.iter().next().wasi_unwrap(),
+          );
+        }
         _ => { unreachable!() }
       }
     }
-
-    todo!()
+    Ok(builder.build())
   }
 
-  fn command(&self, expression: &Expression) {
-    println!("{}", expression.as_str());
-    todo!();
+  fn meta_command(&self, expression: &Expression) {
+    match expression.pattern() {
+      "print" => print_to(expression.iter().next().unwrap().as_str(), 2),
+      pattern => {
+        print_to(&format!("unknown command: {}", pattern), 2);
+        unsafe { wasi::proc_exit(1) };
+      }
+    }
+  }
+
+  fn local_command(
+    &self,
+    builder:    &mut ModuleBuilder<'module>,
+    state:      &mut State<'module>,
+    expression: &Expression<'_, 'module>,
+  ) {
+    match expression.pattern() {
+      "print" => {
+        let message = expression.iter().next().unwrap().as_str();
+        let alloc = builder.from_std(&state.std_.alloc);
+        let print = builder.from_std(&state.std_.print);
+        let data = builder.memory().passive(message.as_bytes()) as u32;
+        let start = builder.get_start();
+        let ptr = start.add_local(I32);
+        start.basic(Instruction::I32Const(message.len() as i32)); // size
+        start.basic(Instruction::I32Const(1));                    // align
+        start.basic(Instruction::Call(alloc));                    // -> ptr
+        start.local(ptr.clone(), |ptr| Instruction::LocalSet(ptr));
+        start.local(ptr.clone(), |ptr| Instruction::LocalGet(ptr));
+        start.basic(Instruction::I32Const(0));                    // offset
+        start.basic(Instruction::I32Const(message.len() as i32)); // size
+        start.basic(Instruction::MemoryInit{ mem: 0, data });
+        start.local(ptr, |ptr| Instruction::LocalGet(ptr));
+        start.basic(Instruction::I32Const(message.len() as i32)); // len
+        start.basic(Instruction::Call(print));
+      }
+      pattern => {
+        print_to(&format!("unknown command: {}", pattern), 2);
+        unsafe { wasi::proc_exit(1) };
+      }
+    }
   }
 
   pub fn get_syntax(&self) -> String {
@@ -100,9 +142,10 @@ impl<'syntax, 'module, 'internals> Compiler<'syntax, 'module, 'internals> {
   }
 }
 
-fn print<'syntax, 'module, 'internals>(
-  builder:    &mut ModuleBuilder<'module, 'internals>,
-  state:      &'internals mut State<'internals>,
+/*
+fn print<'syntax, 'module>(
+  builder:    &mut ModuleBuilder<'module>,
+  state:      &'module mut State<'module>,
   expression: &Expression<'syntax, 'module>,
 ) {
   let mem = builder.memory();
@@ -194,3 +237,4 @@ fn print<'syntax, 'module, 'internals>(
     memory_index: 0,
   }));
 }
+*/

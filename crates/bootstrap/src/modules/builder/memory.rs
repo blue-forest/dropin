@@ -19,29 +19,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_encoder::{DataSection, Instruction, ValType};
+use wasm_encoder::{DataCountSection, DataSection, Instruction, ValType};
 
 pub struct MemoryBuilder<'a> {
-  data:       Vec<&'a [u8]>,
-  data_len:   usize,
-  buffer_len: usize,
+  active_data:  Vec<&'a [u8]>,
+  passive_data: Vec<&'a [u8]>,
+  data_len:     usize,
+  buffer_len:   usize,
 }
 
 impl<'a> Default for MemoryBuilder<'a> {
   fn default() -> Self {
     Self{
-      data:       vec![],
-      data_len:   0,
-      buffer_len: 0,
+      active_data:  vec![],
+      passive_data: vec![],
+      data_len:     0,
+      buffer_len:   0,
     }
   }
 }
 
 impl<'a> MemoryBuilder<'a> {
-  pub fn data(&mut self, data: &'a [u8]) -> MemoryAddress {
+  pub fn active(&mut self, data: &'a [u8]) -> MemoryAddress {
     let result = MemoryAddress::Data(self.data_len as u32);
     self.data_len += data.len();
-    self.data.push(data);
+    self.active_data.push(data);
+    result
+  }
+
+  pub fn passive(&mut self, data: &'a [u8]) -> usize {
+    let result = self.passive_data.len();
+    self.data_len += data.len();
+    self.passive_data.push(data);
     result
   }
 
@@ -71,13 +80,26 @@ impl<'a> MemoryBuilder<'a> {
     unreachable!()
   }
 
+  pub fn build_data_count(&self) -> Option<DataCountSection> {
+    if self.active_data.is_empty() && self.passive_data.is_empty() {
+      return None;
+    }
+    Some(DataCountSection{
+      count: (self.passive_data.len() + self.active_data.len()) as u32
+    })
+  }
+
   pub fn build_data(&self) -> Option<DataSection> {
-    if self.data.is_empty() {
+    if self.active_data.is_empty() && self.passive_data.is_empty() {
       return None;
     }
     let mut offset = 16;
     let mut result = DataSection::new();
-    for d in self.data.iter() {
+    for d in self.passive_data.iter() {
+      result.passive(d.iter().copied());
+      offset += d.len();
+    }
+    for d in self.active_data.iter() {
       result.active(
         0, &Instruction::I32Const(offset as i32), d.iter().copied(),
       );

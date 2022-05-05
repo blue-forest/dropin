@@ -42,7 +42,7 @@ impl<'syntax, 'module> Expression<'syntax, 'module> {
 
   pub fn as_str(&self) -> &'module str { self.value }
 
-  pub fn iter<'expr>(&'expr self) -> Iter<Self> {
+  pub fn iter(&self) -> Iter<Self> {
     self.children.iter()
   }
 

@@ -1,12 +1,13 @@
 use std::str::{self, Utf8Error};
 
-use dropin_modules::{print, print_to};
+use dropin_modules::print_to;
 
 pub mod path;
-use path::{get_model, get_recipe};
+use path::{get_model_path, get_recipe, read_file};
 pub mod expressions;
 use expressions::Expression;
 pub mod modules;
+use modules::Compiler;
 pub mod syntaxes;
 use syntaxes::Patterns;
 pub mod utils;
@@ -85,7 +86,7 @@ impl<T, E: Error> WasiUnwrap<T> for Result<T, E> {
       Ok(result) => result,
       Err(err) => {
         print_to(&format!("{}", err), 2);
-        // unsafe { wasi::proc_exit(1) };
+        unsafe { wasi::proc_exit(1) };
         unreachable!()
       }
     }
@@ -106,6 +107,7 @@ impl<T> WasiUnwrap<T> for Option<T> {
 }
 
 const SYNTAX_MODELS: &str = "blueforest:dropin-modules:v1:Models";
+const SYNTAX_MODULES: &str = "blueforest:dropin-modules:v1:Automations/Modules";
 
 #[no_mangle]
 pub fn _start() {
@@ -114,10 +116,29 @@ pub fn _start() {
     print_to("expected argument: <model>", 2);
     unsafe { wasi::proc_exit(1) };
   }
-  let syntax_content = &get_recipe("syntaxes", SYNTAX_MODELS);
-  let model_content = &get_model(args.get(1).wasi_unwrap());
-  let recipe = Recipe::new(syntax_content, model_content);
-  print(&format!("{:?}", recipe.patterns));
-  print(&format!("{:?}", recipe.expression));
+  let syntax_models_content = &get_recipe("syntaxes", SYNTAX_MODELS);
+  let syntax_modules_content = &get_recipe("syntaxes", SYNTAX_MODULES);
+
+  let model_path = get_model_path(args.get(1).wasi_unwrap());
+  let mut model_recipe_path = model_path.parent().wasi_unwrap().to_path_buf();
+  model_recipe_path.push(".dropin");
+  let model_content = unsafe { read_file(&model_recipe_path) };
+  let model_recipe = Recipe::new(syntax_models_content, &model_content);
+
+  let module = model_recipe.expression.iter().next().wasi_unwrap();
+  let module_id = module.iter().next().unwrap();
+
+  let module_content = &get_recipe("modules", module_id.as_str());
+  // print(&format!("{:?}", module_content));
+  let module_recipe = Recipe::new(syntax_modules_content, module_content);
+  let compiler = Compiler::new(module_recipe);
+  let binary = compiler.compile(&model_path).unwrap().finish();
+  let data = [
+    wasi::Ciovec {
+      buf: binary.as_ptr(),
+      buf_len: binary.len(),
+    },
+  ];
+  unsafe { wasi::fd_write(1, &data).unwrap() };
 }
 

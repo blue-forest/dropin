@@ -13,6 +13,9 @@ fn main() {
       cargo b -p dropin-modules --target wasm32-unknown-unknown --release"
     );
   }
+  println!(
+    "cargo:rerun-if-changed={}", dropin_modules_path.to_str().unwrap(),
+  );
   let dropin_bootstrap_path = Path::new(&workspace_dir).join(Path::new(
     "target/wasm32-unknown-unknown/release/dropin_bootstrap.wasm",
   ));
@@ -22,6 +25,9 @@ fn main() {
       cargo b -p dropin-bootstrap --target wasm32-unknown-unknown --release"
     );
   }
+  println!(
+    "cargo:rerun-if-changed={}", dropin_bootstrap_path.to_str().unwrap(),
+  );
   let out_dir = var("OUT_DIR").unwrap();
   let out_path = Path::new(&out_dir).join("dropin_modules.wasm");
   copy(dropin_modules_path, out_path).unwrap();

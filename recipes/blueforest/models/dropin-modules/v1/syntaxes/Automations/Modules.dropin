@@ -2,15 +2,17 @@ module $patterns.syntax "\n"{1..} $patterns.function
 
 syntax $patterns.id
 
-id $patterns.key ":" $patterns.key ":" $patterns.key ":" $patterns.key
+id
+  $patterns.key ":"
+  $patterns.key ":"
+  $patterns.key ":"
+  $patterns.key ("/" $patterns.key){..}
 
 key ("-" | "_" | "." | $std.alphanum){1..}
 
 function "fn " $patterns.key "()" $patterns.commands
 
-commands ("\n  " $patterns.command){..}
-
-command $patterns.localCommand | $patterns.metaCommand
+commands ("\n  " ($patterns.localCommand | $patterns.metaCommand)){..}
 
 localCommand ">" $patterns.metaCommand
 

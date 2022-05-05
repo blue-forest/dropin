@@ -89,7 +89,7 @@ fn get_entries(
       }
     }
   }
-  commands.push(Box::new(Add::new(recipe.clone())));
+  commands.push(Box::new(Add::new()));
   commands
 }
 

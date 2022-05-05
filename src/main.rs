@@ -21,6 +21,35 @@
 mod interactive;
 
 fn main() {
+  let mut args = std::env::args();
+  if args.len() > 1 {
+    let arg = args.nth(1).unwrap();
+    use wasmtime::*;
+    use wasmtime_wasi::*;
+    let engine = Engine::default();
+    let mut linker = Linker::new(&engine);
+    wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
+    let wasi_ctx = WasiCtxBuilder::new()
+      .inherit_stdio()
+      .args(&[arg.to_string()]).unwrap()
+      .build();
+    let std_binary: &[u8] = include_bytes!(concat!(
+      env!("OUT_DIR"), "/dropin_modules.wasm",
+    ));
+    let mut store = Store::new(&engine, wasi_ctx);
+    let std = Module::from_binary(&engine, std_binary).unwrap();
+    let std_instance = linker.instantiate(&mut store, &std).unwrap();
+    linker.instance(
+      &mut store, "blueforest:dropin-std:v1", std_instance,
+    ).unwrap();
+    let main = Module::from_file(&engine, arg).unwrap();
+    let main_instance = linker.instantiate(&mut store, &main).unwrap();
+    let start = main_instance.get_typed_func::<(), (), _>(
+      &mut store, "_start"
+    ).unwrap();
+    start.call(&mut store, ()).unwrap();
+    return;
+  }
   interactive::Cli::new().run();
 }
 

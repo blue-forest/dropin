@@ -453,6 +453,7 @@ dependencies = [
 name = "dropin"
 version = "0.5.3-3"
 dependencies = [
+ "cap-std",
  "dialoguer",
  "dropin-bootstrap",
  "dropin-utils",

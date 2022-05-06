@@ -19,7 +19,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use std::fs::create_dir_all;
 
 use crate::interactive::Cli;
 
@@ -61,6 +62,19 @@ fn push_version(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   } else {
     None
   }
+}
+
+pub fn get_build(cli: &Cli) -> PathBuf {
+  let owner = &cli.owners[cli.owner_selected.unwrap()];
+  let model = &cli.models[cli.model_selected.unwrap()];
+  let mut result = cli.root.clone();
+  result.push(".builds");
+  result.push(owner);
+  if !result.exists() {
+    create_dir_all(&result).unwrap();
+  }
+  result.push(&format!("{}_v1.wasm", model));
+  result
 }
 
 pub fn get_version(cli: &Cli) -> Option<PathBuf> {

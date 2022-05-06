@@ -29,13 +29,14 @@ use wasmtime::{
 };
 use wasmtime_wasi::{self, WasiCtxBuilder};
 use wasmtime_wasi::sync::Dir;
+use wasmtime_wasi::sync::stdio::stdout;
 
 use std::fmt::{Display, Formatter, Error};
 use std::fs::{create_dir_all, File};
 use std::path::Path;
 
 use super::{Cli, Command, get_dirs};
-use super::path::get_owner;
+use super::path::{get_build, get_owner};
 use super::utils::validate_name;
 
 // https://github.com/rust-lang/rust/issues/75075
@@ -186,15 +187,21 @@ impl Command for Compile {
     let engine = Engine::default();
     let mut linker = Linker::new(&engine);
     wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
+    let owner = &cli.owners[cli.owner_selected.unwrap()];
+    let model = &cli.models[cli.model_selected.unwrap()];
+    let builds_path = get_build(cli);
     let wasi_ctx = WasiCtxBuilder::new()
-      .inherit_stdio()
+      .stderr(Box::new(stdout()))
+      .stdout(Box::new(
+        wasmtime_wasi::sync::file::File::from_cap_std(
+          cap_std::fs::File::from_std(
+            File::create(builds_path).unwrap()
+          )
+        )
+      ))
       .args(&[
         "dropin_bootstrap.wasm".to_string(),
-        format!(
-          "{}:{}",
-          cli.owners[cli.owner_selected.unwrap()],
-          cli.models[cli.model_selected.unwrap()],
-        ),
+        format!("{}:{}:v1", owner, model),
       ]).unwrap()
       .preopened_dir(
         Dir::from_std_file(File::open(&cli.root).unwrap()),

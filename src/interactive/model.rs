@@ -96,11 +96,18 @@ impl Display for Model {
 
 impl Command for Model {
   fn run(&self, cli: &mut Cli) -> u32 {
-    cli.run_select(&format!("Model {}", self.name), |_| vec![
-      Box::new(Select{ name: self.name.clone(), index: self.index }),
-      Box::new(Edit{}),
-      Box::new(Compile{}),
-    ])
+    cli.run_select(&format!("Model {}", self.name), |cli| {
+      let mut result: Vec<Box<dyn Command>> = vec![
+        Box::new(Select{ name: self.name.clone(), index: self.index }),
+        Box::new(Edit{}),
+        Box::new(Compile{}),
+      ];
+      let build_path = get_build(cli);
+      if build_path.exists() {
+        result.push(Box::new(Run{}));
+      }
+      result
+    })
   }
 }
 
@@ -189,16 +196,52 @@ impl Command for Compile {
     wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
     let owner = &cli.owners[cli.owner_selected.unwrap()];
     let model = &cli.models[cli.model_selected.unwrap()];
-    let builds_path = get_build(cli);
     let wasi_ctx = WasiCtxBuilder::new()
       .stderr(Box::new(stdout()))
       .stdout(Box::new(
         wasmtime_wasi::sync::file::File::from_cap_std(
           cap_std::fs::File::from_std(
-            File::create(builds_path).unwrap()
+            File::create(get_build(cli)).unwrap()
           )
         )
       ))
+      .args(&[
+        "dropin_bootstrap.wasm".to_string(),
+        format!("{}:{}:v1", owner, model),
+      ]).unwrap()
+      .preopened_dir(
+        Dir::from_std_file(File::open(&cli.root).unwrap()),
+        Path::new("/"),
+      ).unwrap()
+      .build();
+    let mut store = Store::new(&engine, wasi_ctx);
+    let main = Module::from_binary(&engine, BOOTSTRAP_BINARY).unwrap();
+    let main_instance = linker.instantiate(&mut store, &main).unwrap();
+    let start = main_instance.get_typed_func::<(), (), _>(
+      &mut store, "_start"
+    ).unwrap();
+    start.call(&mut store, ()).unwrap();
+    0
+  }
+}
+
+struct Run;
+
+impl Display for Run {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+    "run".fmt(f)
+  }
+}
+
+impl Command for Run {
+  fn run(&self, cli: &mut Cli) -> u32 {
+    let engine = Engine::default();
+    let mut linker = Linker::new(&engine);
+    wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
+    let owner = &cli.owners[cli.owner_selected.unwrap()];
+    let model = &cli.models[cli.model_selected.unwrap()];
+    let wasi_ctx = WasiCtxBuilder::new()
+      .inherit_stdio()
       .args(&[
         "dropin_bootstrap.wasm".to_string(),
         format!("{}:{}:v1", owner, model),
@@ -214,7 +257,7 @@ impl Command for Compile {
     linker.instance(
       &mut store, "blueforest:dropin-std:v1", std_instance,
     ).unwrap();
-    let main = Module::from_binary(&engine, BOOTSTRAP_BINARY).unwrap();
+    let main = Module::from_file(&engine, get_build(cli)).unwrap();
     let main_instance = linker.instantiate(&mut store, &main).unwrap();
     let start = main_instance.get_typed_func::<(), (), _>(
       &mut store, "_start"

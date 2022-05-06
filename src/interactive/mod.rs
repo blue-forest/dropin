@@ -153,7 +153,7 @@ impl Default for Cli {
   fn default() -> Self { Self::new() }
 }
 
-trait Command: Display {
+pub trait Command: Display {
   fn run(&self, cli: &mut Cli) -> u32;
   fn is_enabled(&self, _cli: &Cli) -> bool { true }
 }

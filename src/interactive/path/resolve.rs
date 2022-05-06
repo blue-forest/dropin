@@ -19,8 +19,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::path::{Path, PathBuf};
-use std::fs::create_dir_all;
+use std::path::PathBuf;
 
 use crate::interactive::Cli;
 

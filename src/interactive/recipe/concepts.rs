@@ -35,21 +35,8 @@ impl Display for Modules {
 impl Recipe for Modules {
   fn title(&self) -> String { "Modules".to_string() }
   fn dir_name(&self) -> String { "modules".to_string() }
-  fn commands(&self, path: &Path) -> Vec<Box<dyn Command>> {
-    vec![]
-  }
+  fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> { vec![] }
 }
-
-pub struct CustomRecipe {
-  name: Option<String>,
-  id: String,
-}
-  // fn commands(&self, path: &Path) -> Vec<Box<dyn Command>> {
-  //   vec![
-  //     Box::new(Run::new(path)),
-  //     Box::new(Compile::new(path)),
-  //   ]
-  // }
 
 pub struct Syntaxes;
 
@@ -64,43 +51,3 @@ impl Recipe for Syntaxes {
   fn dir_name(&self) -> String { "syntaxes".to_string() }
 }
 
-/*
-pub struct Functions;
-
-impl Display for Functions {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "functions".fmt(f)
-  }
-}
-
-impl Recipe for Functions {
-  fn title(&self) -> String { "Functions".to_string() }
-  fn dir_name(&self) -> String { "functions".to_string() }
-}
-
-pub struct Pipelines;
-
-impl Display for Pipelines {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "pipelines".fmt(f)
-  }
-}
-
-impl Recipe for Pipelines {
-  fn title(&self) -> String { "Pipelines".to_string() }
-  fn dir_name(&self) -> String { "pipelines".to_string() }
-}
-
-pub struct Types;
-
-impl Display for Types {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "types".fmt(f)
-  }
-}
-
-impl Recipe for Types {
-  fn title(&self) -> String { "Types".to_string() }
-  fn dir_name(&self) -> String { "types".to_string() }
-}
-*/

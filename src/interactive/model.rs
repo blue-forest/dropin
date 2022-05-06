@@ -189,7 +189,7 @@ impl Command for Run {
     let root = &cli.root;
     let owner = &cli.owners[cli.owner_selected.unwrap()];
     let model = &cli.models[cli.model_selected.unwrap()];
-    cli.embedder.run(root, &get_build(root, owner, model));
+    cli.embedder.run(Some(root), &get_build(root, owner, model));
     0
   }
 }

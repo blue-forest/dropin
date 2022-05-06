@@ -18,40 +18,41 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use structopt::StructOpt;
+
+use std::path::PathBuf;
+
 mod embedder;
 pub use embedder::Embedder;
 mod interactive;
 
-fn main() {
-  let mut args = std::env::args();
-  if args.len() > 1 {
-    let arg = args.nth(1).unwrap();
-    use wasmtime::*;
-    use wasmtime_wasi::*;
-    let engine = Engine::default();
-    let mut linker = Linker::new(&engine);
-    wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
-    let wasi_ctx = WasiCtxBuilder::new()
-      .inherit_stdio()
-      .args(&[arg.to_string()]).unwrap()
-      .build();
-    let std_binary: &[u8] = include_bytes!(concat!(
-      env!("OUT_DIR"), "/dropin_modules.wasm",
-    ));
-    let mut store = Store::new(&engine, wasi_ctx);
-    let std = Module::from_binary(&engine, std_binary).unwrap();
-    let std_instance = linker.instantiate(&mut store, &std).unwrap();
-    linker.instance(
-      &mut store, "blueforest:dropin-std:v1", std_instance,
-    ).unwrap();
-    let main = Module::from_file(&engine, arg).unwrap();
-    let main_instance = linker.instantiate(&mut store, &main).unwrap();
-    let start = main_instance.get_typed_func::<(), (), _>(
-      &mut store, "_start"
-    ).unwrap();
-    start.call(&mut store, ()).unwrap();
-    return;
+#[derive(StructOpt)]
+enum Command {
+  Run{
+    #[structopt(long, parse(from_os_str))]
+    root: Option<PathBuf>,
+    #[structopt(parse(from_os_str))]
+    file: PathBuf,
   }
-  interactive::Cli::new().run();
+}
+
+#[derive(StructOpt)]
+#[structopt(name = "drop'in", about = "a universe to shape your ideas")]
+struct Opt {
+  #[structopt(subcommand)]
+  cmd: Option<Command>
+}
+
+fn main() {
+  let args = Opt::from_args();
+  if let Some(Command::Run{root, file}) = args.cmd {
+    let embedder = Embedder::default();
+    embedder.run(
+      if let Some(_) = root { Some(root.as_ref().unwrap()) } else { None },
+      &file,
+    );
+  } else {
+    interactive::Cli::new().run();
+  }
 }
 

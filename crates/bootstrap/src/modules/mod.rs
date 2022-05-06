@@ -19,37 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_encoder::{Instruction, MemArg, Module};
+use wasm_encoder::{Instruction, Module};
 use wasm_encoder::ValType::I32;
 
 use std::path::Path;
 
-use dropin_modules::{print, print_to};
+use dropin_modules::print_to;
 
 use crate::{Recipe, WasiUnwrap};
 use crate::expressions::Expression;
 use crate::path::get_recipe;
-use crate::utils::escape_char;
 
 mod builder;
-use builder::{Local, MemoryAddress, ModuleBuilder, STD};
+use builder::{ModuleBuilder, STD};
 
 mod error;
 pub use error::CompileError;
 
 struct State<'a> {
-  pub print:     Option<PrintState>,
   pub std_:      STD<'a>,
-  pub addresses: Vec<MemoryAddress>,
-  pub data:      Vec<Vec<u8>>,
-}
-
-struct PrintState {
-  iovec_base:    usize,
-  iovec_len:     usize,
-  new_line_base: usize,
-  new_line_len:  usize,
-  new_line:      usize,
 }
 
 pub struct Compiler<'syntax, 'module> {
@@ -64,10 +52,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
   pub fn compile(&self, _path: &Path) -> Result<Module, CompileError> {
     let mut builder = ModuleBuilder::default();
     let mut state = State{
-      print:     None,
       std_:      STD::default(),
-      addresses: vec![],
-      data:      vec![],
     };
 
     let mut iter = self.module.expression.iter();
@@ -141,100 +126,3 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
     get_recipe("syntaxes", id)
   }
 }
-
-/*
-fn print<'syntax, 'module>(
-  builder:    &mut ModuleBuilder<'module>,
-  state:      &'module mut State<'module>,
-  expression: &Expression<'syntax, 'module>,
-) {
-  let mem = builder.memory();
-  if state.print.is_none() {
-    state.addresses.push(mem.data(&[10]));
-    state.addresses.push(mem.buffer(I32));
-    state.addresses.push(mem.buffer(I32));
-    state.addresses.push(mem.buffer(I32));
-    state.addresses.push(mem.buffer(I32));
-    state.print = Some(PrintState{
-      new_line:      state.addresses.len()-5,
-      iovec_base:    state.addresses.len()-4,
-      iovec_len:     state.addresses.len()-3,
-      new_line_base: state.addresses.len()-2,
-      new_line_len:  state.addresses.len()-1,
-    });
-  }
-
-  let message = expression.iter().next().wasi_unwrap().as_str();
-  let mut message_parsed = String::with_capacity(message.len());
-  let mut is_escaped = false;
-  for c in message.chars() {
-    if !is_escaped && c == '\\' {
-      is_escaped = true;
-      continue;
-    }
-    message_parsed.push(if is_escaped { escape_char(c) } else { c });
-    is_escaped = false;
-  }
-
-  state.data.push(message_parsed.as_bytes().to_vec());
-  state.addresses.push(mem.data(state.data.last().wasi_unwrap()));
-  let message_addr = state.addresses.get(state.addresses.len()-1).wasi_unwrap();
-
-  let print_state = state.print.as_ref().wasi_unwrap();
-  let iovec_base    = state.addresses.get( print_state.iovec_base    )
-    .wasi_unwrap();
-  let iovec_len     = state.addresses.get( print_state.iovec_len     )
-    .wasi_unwrap();
-  let new_line      = state.addresses.get( print_state.new_line      )
-    .wasi_unwrap();
-  let new_line_base = state.addresses.get( print_state.new_line_base )
-    .wasi_unwrap();
-  let new_line_len  = state.addresses.get( print_state.new_line_len  )
-    .wasi_unwrap();
-
-  let fd_write = builder.from_wasi(&state.wasi.fd_write);
-  let start = builder.get_start();
-
-  start.memory(iovec_base,    |addr| Instruction::I32Const(addr as i32));
-  start.memory(message_addr,  |addr| Instruction::I32Const(addr as i32));
-  start.basic(Instruction::I32Store(MemArg{
-    offset:       0,
-    align:        2,
-    memory_index: 0,
-  }));
-  start.memory(iovec_len,     |addr| Instruction::I32Const(addr as i32));
-  start.basic(Instruction::I32Const(message.len() as i32));
-  start.basic(Instruction::I32Store(MemArg{
-    offset:       0,
-    align:        2,
-    memory_index: 0,
-  }));
-  start.memory(new_line_base, |addr| Instruction::I32Const(addr as i32));
-  start.memory(new_line,      |addr| Instruction::I32Const(addr as i32));
-  start.basic(Instruction::I32Store(MemArg{
-    offset:       0,
-    align:        2,
-    memory_index: 0,
-  }));
-  start.memory(new_line_len,  |addr| Instruction::I32Const(addr as i32));
-  start.basic(Instruction::I32Const(1));
-  start.basic(Instruction::I32Store(MemArg{
-    offset:       0,
-    align:        2,
-    memory_index: 0,
-  }));
-  /**/start.basic(Instruction::I32Const(0)); // errno -> trash to debug
-  start.basic(Instruction::I32Const(1));            // fd = stdout
-  start.memory(iovec_base,    |addr|                // iovec
-    Instruction::I32Const(addr as i32)
-  );
-  start.basic(Instruction::I32Const(2));            // len
-  start.basic(Instruction::I32Const(0));            // size = trash
-  start.basic(Instruction::Call(fd_write));
-  /**/start.basic(Instruction::I32Store(MemArg{ // errno -> trash to debug
-    offset:       0,
-    align:        2,
-    memory_index: 0,
-  }));
-}
-*/

@@ -22,14 +22,15 @@
 use std::path::{Path, PathBuf};
 use std::str;
 
-use crate::{WasiExpect, WasiUnwrap};
+use crate::sys::{WasiExpect, WasiUnwrap};
+use crate::sys::rights;
 
 pub unsafe fn read_file(path: &Path) -> String {
   let fd = wasi::path_open(
     3, // preopened fd
     wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
     &path.to_str().wasi_unwrap(),
-    0, 1073741823, 1073741823, 0,
+    0, rights::FD_READ, rights::FD_READ, 0,
   ).wasi_unwrap();
   let mut content = String::new();
   loop {

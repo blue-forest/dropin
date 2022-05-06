@@ -1,5 +1,8 @@
 use wasm_encoder::ValType::{self, I32};
 
+use super::ModuleBuilder;
+use super::import::FunctionImport;
+
 pub struct STD<'a> {
   pub print: STDFunction<'a>,
   pub alloc: STDFunction<'a>,
@@ -15,6 +18,21 @@ impl<'a> Default for STD<'a> {
         "alloc", vec![I32, I32], vec![I32],
       ),
     }
+  }
+}
+
+impl<'module> ModuleBuilder<'module> {
+  pub fn from_std(&mut self, f: &STDFunction<'module>) -> u32 {
+    if let Some(id) = f.id {
+      return id;
+    }
+    let type_id = self.types.len();
+    self.types.function(f.params.clone(), f.results.clone());
+    let result = self.functions_imported.len() as u32;
+    self.functions_imported.push(FunctionImport{
+      type_id, module: "blueforest:dropin-std:v1", name: f.name,
+    });
+    result
   }
 }
 

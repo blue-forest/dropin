@@ -145,7 +145,7 @@ impl<'a> Token<'a> for Quantifier<'a> {
     expr:     &mut Expression<'a, 'b>,
   ) -> Result<(), ParseError> {
     let mut n = 0;
-    let err = loop {
+    let _err = loop {
       if let Err(err) = self.token.parse(patterns, module, iter, expr) {
         break Err(err);
       }
@@ -153,7 +153,6 @@ impl<'a> Token<'a> for Quantifier<'a> {
       if let None = iter.peek() {
         break Ok(())
       }
-      let (i, _) = iter.peek().wasi_unwrap();
     };
     let mut ok = false;
     for (min, max) in self.ranges.iter() {

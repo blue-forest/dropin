@@ -23,7 +23,7 @@ use std::collections::HashMap;
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::{WasiExpect, WasiUnwrap};
+use crate::sys::{WasiExpect, WasiUnwrap};
 use crate::expressions::Expression;
 
 mod error;

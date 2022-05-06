@@ -19,97 +19,50 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasm_encoder::{DataCountSection, DataSection, Instruction, ValType};
+use wasm_encoder::{DataCountSection, DataSection};
+use super::ModuleBuilder;
 
 pub struct MemoryBuilder<'a> {
-  active_data:  Vec<&'a [u8]>,
-  passive_data: Vec<&'a [u8]>,
+  data: Vec<&'a [u8]>,
   data_len:     usize,
-  buffer_len:   usize,
 }
 
 impl<'a> Default for MemoryBuilder<'a> {
   fn default() -> Self {
     Self{
-      active_data:  vec![],
-      passive_data: vec![],
-      data_len:     0,
-      buffer_len:   0,
+      data:     vec![],
+      data_len: 0,
     }
   }
+}
+
+impl<'module> ModuleBuilder<'module> {
+  pub fn memory(&mut self) -> &mut MemoryBuilder<'module> { &mut self.memory }
 }
 
 impl<'a> MemoryBuilder<'a> {
-  pub fn active(&mut self, data: &'a [u8]) -> MemoryAddress {
-    let result = MemoryAddress::Data(self.data_len as u32);
-    self.data_len += data.len();
-    self.active_data.push(data);
-    result
-  }
-
   pub fn passive(&mut self, data: &'a [u8]) -> usize {
-    let result = self.passive_data.len();
+    let result = self.data.len();
     self.data_len += data.len();
-    self.passive_data.push(data);
+    self.data.push(data);
     result
-  }
-
-  pub fn buffer(&mut self, valtype: ValType) -> MemoryAddress {
-    let result = MemoryAddress::Buffer(self.buffer_len as u32);
-    self.buffer_len += match valtype {
-      ValType::I32       =>  4,
-      ValType::I64       =>  8,
-      ValType::F32       =>  4,
-      ValType::F64       =>  8,
-      ValType::V128      => 16,
-      ValType::FuncRef   =>  4,
-      ValType::ExternRef =>  4,
-    };
-    result
-  }
-
-  pub fn resolve_addr(&self, addr: &MemoryAddress) -> u32 {
-    let mut result = 16;
-    if let MemoryAddress::Data(offset) = addr {
-      return result + offset;
-    }
-    result += (self.data_len + 4 - (self.data_len % 4)) as u32;
-    if let MemoryAddress::Buffer(offset) = addr {
-      return result + offset;
-    }
-    unreachable!()
   }
 
   pub fn build_data_count(&self) -> Option<DataCountSection> {
-    if self.active_data.is_empty() && self.passive_data.is_empty() {
+    if self.data.is_empty() {
       return None;
     }
-    Some(DataCountSection{
-      count: (self.passive_data.len() + self.active_data.len()) as u32
-    })
+    Some(DataCountSection{ count: self.data.len() as u32 })
   }
 
   pub fn build_data(&self) -> Option<DataSection> {
-    if self.active_data.is_empty() && self.passive_data.is_empty() {
+    if self.data.is_empty() {
       return None;
     }
-    let mut offset = 16;
     let mut result = DataSection::new();
-    for d in self.passive_data.iter() {
+    for d in self.data.iter() {
       result.passive(d.iter().copied());
-      offset += d.len();
-    }
-    for d in self.active_data.iter() {
-      result.active(
-        0, &Instruction::I32Const(offset as i32), d.iter().copied(),
-      );
-      offset += d.len();
     }
     Some(result)
   }
-}
-
-pub enum MemoryAddress {
-  Data(u32),
-  Buffer(u32),
 }

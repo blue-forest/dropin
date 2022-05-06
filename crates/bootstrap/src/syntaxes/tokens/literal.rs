@@ -22,7 +22,7 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::{WasiExpect, WasiUnwrap};
+use crate::sys::{WasiExpect, WasiUnwrap};
 use crate::syntaxes::{Expression, Patterns, ParseError};
 use crate::utils::escape_char;
 use super::Token;

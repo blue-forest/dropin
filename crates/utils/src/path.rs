@@ -23,7 +23,8 @@ use home::home_dir;
 use path_clean::PathClean;
 
 use std::env::{var, current_dir};
-use std::path::PathBuf;
+use std::fs::create_dir_all;
+use std::path::{Path, PathBuf};
 
 pub fn get_root() -> PathBuf {
   if let Ok(root) = var("DROPIN_ROOT") {
@@ -41,3 +42,15 @@ pub fn get_root() -> PathBuf {
   }
   path
 }
+
+pub fn get_build(root: &Path, owner: &str, model: &str) -> PathBuf {
+  let mut result = root.to_path_buf();
+  result.push(".builds");
+  result.push(owner);
+  if !result.exists() {
+    create_dir_all(&result).unwrap();
+  }
+  result.push(&format!("{}_v1.wasm", model));
+  result
+}
+

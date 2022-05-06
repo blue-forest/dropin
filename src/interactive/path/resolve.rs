@@ -64,19 +64,6 @@ fn push_version(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   }
 }
 
-pub fn get_build(cli: &Cli) -> PathBuf {
-  let owner = &cli.owners[cli.owner_selected.unwrap()];
-  let model = &cli.models[cli.model_selected.unwrap()];
-  let mut result = cli.root.clone();
-  result.push(".builds");
-  result.push(owner);
-  if !result.exists() {
-    create_dir_all(&result).unwrap();
-  }
-  result.push(&format!("{}_v1.wasm", model));
-  result
-}
-
 pub fn get_version(cli: &Cli) -> Option<PathBuf> {
   let mut buf = cli.root.clone();
   buf = push_owner(cli, buf).unwrap();

@@ -28,6 +28,8 @@ use std::sync::Arc;
 
 use dropin_utils::path::get_root;
 
+use crate::Embedder;
+
 mod config;
 use self::config::Config;
 mod error;
@@ -46,6 +48,7 @@ use utils::get_dirs;
 pub struct Cli {
   config:         Config,
   cwd:            PathBuf,
+  embedder:       Embedder,
   model_selected: Option<usize>,
   models:         Vec<String>,
   owner_selected: Option<usize>,
@@ -84,6 +87,7 @@ impl Cli {
     Self{
       config,
       cwd,
+      embedder: Embedder::default(),
       model_selected,
       models,
       owner_selected,

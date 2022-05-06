@@ -29,21 +29,20 @@ use std::sync::Arc;
 use dropin_utils::path::get_root;
 
 use crate::Embedder;
+use crate::utils::get_dirs;
 
 mod config;
 use self::config::Config;
 mod error;
 use error::ConfigError;
 mod model;
-use model::ModelCommand;
+use model::Models;
 mod owner;
 use owner::OwnerCommand;
 mod recipe;
 use recipe::{Modules, RecipeCommand, Syntaxes};
 mod path;
 use path::validate_path;
-mod utils;
-use utils::get_dirs;
 
 pub struct Cli {
   config:         Config,
@@ -102,7 +101,7 @@ impl Cli {
     self.run_select("Home", |_| vec![
       Box::new(RecipeCommand::new(Arc::new(Modules))),
       Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
-      Box::new(ModelCommand{}),
+      Box::new(Models{}),
       Box::new(OwnerCommand{}),
     ]);
   }

@@ -20,28 +20,46 @@
 
 use regex::Regex;
 
+use std::error::Error;
+use std::fmt::{self, Display, Formatter};
 use std::path::Path;
 
-use super::ConfigError;
-
-pub fn validate_name(root: &Path, name: &str) -> Result<(), ConfigError> {
+pub fn validate_name(
+  root: &Path, name: &str,
+) -> Result<(), NameValidationError> {
   let re = Regex::new(
     r"^(\w|[.\-_àâæçéèêëïîôœùûüÿÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ])+$"
   ).unwrap();
   if !re.is_match(name) {
-    return Err(ConfigError::from(
-      "Name may only be composed of alphanumerics, '.', '-' and '_'",
-    ));
+    return Err(NameValidationError::Invalid);
   }
   let name_root = root.join(name);
   if name_root.exists() {
-    return Err(ConfigError::new(format!(
-      "{} directory already exists",
-      name_root.to_str().unwrap(),
-    )))
+    return Err(NameValidationError::Exists(name_root.to_str().unwrap().to_string()))
   }
   Ok(())
 }
+
+#[derive(Debug)]
+pub enum NameValidationError {
+  Invalid,
+  Exists(String)
+}
+
+impl Display for NameValidationError {
+  fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    match self {
+      Self::Invalid => {
+        "Name may only be composed of alphanumerics, '.', '-' and '_'".fmt(f)
+      }
+      Self::Exists(dir) => {
+        format!("{} directory already exists", dir).fmt(f)
+      }
+    }
+  }
+}
+
+impl Error for NameValidationError {}
 
 pub fn get_dirs(path: &Path) -> Vec<String> {
   let mut result = Vec::new();

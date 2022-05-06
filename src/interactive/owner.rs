@@ -24,8 +24,9 @@ use dialoguer::theme::ColorfulTheme;
 use std::fmt::{Display, Error, Formatter};
 use std::fs::create_dir;
 
+use crate::utils::validate_name;
+
 use super::{Cli, Command};
-use super::utils::validate_name;
 
 pub struct OwnerCommand;
 

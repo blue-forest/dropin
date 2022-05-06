@@ -25,6 +25,7 @@ use std::path::PathBuf;
 mod embedder;
 pub use embedder::Embedder;
 mod interactive;
+mod utils;
 
 #[derive(StructOpt)]
 enum Command {

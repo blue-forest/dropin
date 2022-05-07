@@ -32,7 +32,6 @@ fn push_owner(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   }
 }
 
-#[allow(dead_code)] // TODO: use this instead of &cli.owners[owner]
 pub fn get_owner(cli: &Cli) -> Option<PathBuf> {
   push_owner(cli, cli.root.clone())
 }
@@ -47,12 +46,13 @@ fn push_model(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   }
 }
 
-#[allow(dead_code)] // TODO: use this instead of &cli.models[model]
+/*
 pub fn get_model(cli: &Cli) -> Option<PathBuf> {
   let mut buf = cli.root.clone();
   buf = push_owner(cli, buf).unwrap();
   push_model(cli, buf)
 }
+*/
 
 fn push_version(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
   if !cli.version.is_empty() {

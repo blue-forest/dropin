@@ -24,18 +24,18 @@ use wasm_encoder::ValType::{self, I32};
 use super::ModuleBuilder;
 use super::import::FunctionImport;
 
-pub struct STD<'a> {
-  pub print: STDFunction<'a>,
-  pub alloc: STDFunction<'a>,
+pub struct Std<'a> {
+  pub print: Stdfunction<'a>,
+  pub alloc: Stdfunction<'a>,
 }
 
-impl<'a> Default for STD<'a> {
+impl<'a> Default for Std<'a> {
   fn default() -> Self {
     Self{
-      print: STDFunction::new(
+      print: Stdfunction::new(
         "print", vec![I32, I32], vec![],
       ),
-      alloc: STDFunction::new(
+      alloc: Stdfunction::new(
         "alloc", vec![I32, I32], vec![I32],
       ),
     }
@@ -43,7 +43,7 @@ impl<'a> Default for STD<'a> {
 }
 
 impl<'module> ModuleBuilder<'module> {
-  pub fn from_std(&mut self, f: &STDFunction<'module>) -> u32 {
+  pub fn get_std(&mut self, f: &Stdfunction<'module>) -> u32 {
     if let Some(id) = f.id {
       return id;
     }
@@ -57,14 +57,14 @@ impl<'module> ModuleBuilder<'module> {
   }
 }
 
-pub struct STDFunction<'a> {
+pub struct Stdfunction<'a> {
   pub id:      Option<u32>,
   pub name:    &'a str,
   pub params:  Vec<ValType>,
   pub results: Vec<ValType>,
 }
 
-impl<'a> STDFunction<'a> {
+impl<'a> Stdfunction<'a> {
   fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
     Self{ id: None, name, params, results }
   }

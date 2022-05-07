@@ -49,7 +49,7 @@ fn main() {
   if let Some(Command::Run{root, file}) = args.cmd {
     let embedder = Embedder::default();
     embedder.run(
-      if let Some(_) = root { Some(root.as_ref().unwrap()) } else { None },
+      if root.is_some() { Some(root.as_ref().unwrap()) } else { None },
       &file,
     );
   } else {

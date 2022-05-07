@@ -57,12 +57,7 @@ impl Command for Namespace {
     cli.cwd.push(&self.id);
     let result = cli.run_select(
       &format!("{} Namespace {}", self.recipe, namespaces.join("/")),
-      |cli| {
-        let commands = get_entries(
-          &cli.cwd, self.recipe.clone(), namespaces.clone(),
-        );
-        commands
-      }
+      |cli| get_entries(&cli.cwd, self.recipe.clone(), namespaces.clone())
     );
     cli.cwd.pop();
     result

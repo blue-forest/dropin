@@ -123,9 +123,9 @@ impl Parser {
         panic!("unexpected '|'");
       }
     } else {
-      let max = if let Some(start) = self.quantity_start {
-        Some(Self::get_quantity(syntax, start, i))
-      } else { None };
+      let max =  self.quantity_start.map(
+        |start| Self::get_quantity(syntax, start, i)
+      );
       (self.current_min, max)
     }
   }
@@ -150,7 +150,7 @@ impl<'a> Token<'a> for Quantifier<'a> {
         break Err(err);
       }
       n += 1;
-      if let None = iter.peek() {
+      if iter.peek().is_none() {
         break Ok(())
       }
     };

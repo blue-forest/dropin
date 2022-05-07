@@ -48,6 +48,7 @@ impl<'a> FunctionBuilder<'a> {
   }
 }
 
+#[derive(Default)]
 pub struct Locals {
   pub i32_:       u32,
   // pub i64_:       u32,
@@ -56,20 +57,6 @@ pub struct Locals {
   // pub v128:       u32,
   // pub func_ref:   u32,
   // pub extern_ref: u32,
-}
-
-impl Default for Locals {
-  fn default() -> Self {
-    Self{
-      i32_:       0,
-      // i64_:       0,
-      // f32_:       0,
-      // f64_:       0,
-      // v128:       0,
-      // func_ref:   0,
-      // extern_ref: 0,
-    }
-  }
 }
 
 impl Locals {

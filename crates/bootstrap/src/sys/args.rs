@@ -29,17 +29,19 @@ pub struct Args {
 }
 
 impl Args {
-  pub unsafe fn new() -> Self {
-    let (args_count, args_len) = wasi::args_sizes_get().wasi_unwrap();
-    let mut argv_buf = vec![0; args_len];
-    let argv_buf_ptr = argv_buf.as_mut_ptr();
-    let mut argv_ptrs = vec![argv_buf_ptr; args_count];
-    wasi::args_get(argv_ptrs.as_mut_ptr(), argv_buf_ptr).wasi_unwrap();
-    let mut argv = Vec::new();
-    for arg in argv_ptrs.iter() {
-      argv.push(*arg as usize - argv_buf_ptr as usize);
+  pub fn new() -> Self {
+    unsafe {
+      let (args_count, args_len) = wasi::args_sizes_get().wasi_unwrap();
+      let mut argv_buf = vec![0; args_len];
+      let argv_buf_ptr = argv_buf.as_mut_ptr();
+      let mut argv_ptrs = vec![argv_buf_ptr; args_count];
+      wasi::args_get(argv_ptrs.as_mut_ptr(), argv_buf_ptr).wasi_unwrap();
+      let mut argv = Vec::new();
+      for arg in argv_ptrs.iter() {
+        argv.push(*arg as usize - argv_buf_ptr as usize);
+      }
+      Self{ argv, argv_buf }
     }
-    Self{ argv, argv_buf }
   }
 
   pub fn get(&self, i: usize) -> Result<&str, Utf8Error> {
@@ -53,5 +55,10 @@ impl Args {
   }
   
   pub fn len(&self) -> usize { self.argv.len() }
+
+  pub fn is_empty(&self) -> bool { self.argv.is_empty() }
 }
 
+impl Default for Args {
+  fn default() -> Self { Self::new() }
+}

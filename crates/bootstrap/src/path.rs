@@ -25,37 +25,39 @@ use std::str;
 use crate::sys::{WasiExpect, WasiUnwrap};
 use crate::sys::rights;
 
-pub unsafe fn read_file(path: &Path) -> String {
-  let fd = wasi::path_open(
-    3, // preopened fd
-    wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
-    &path.to_str().wasi_unwrap(),
-    0, rights::FD_READ, rights::FD_READ, 0,
-  ).wasi_unwrap();
-  let mut content = String::new();
-  loop {
-    let mut buf = [0; 3];
-    let size = wasi::fd_read(fd, &[
-      wasi::Iovec{
-        buf:     buf.as_mut_ptr(),
-        buf_len: buf.len(),
+pub fn read_file(path: &Path) -> String {
+  unsafe {
+    let fd = wasi::path_open(
+      3, // preopened fd
+      wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
+      path.to_str().wasi_unwrap(),
+      0, rights::FD_READ, rights::FD_READ, 0,
+    ).wasi_unwrap();
+    let mut content = String::new();
+    loop {
+      let mut buf = [0; 3];
+      let size = wasi::fd_read(fd, &[
+        wasi::Iovec{
+          buf:     buf.as_mut_ptr(),
+          buf_len: buf.len(),
+        }
+      ]).wasi_unwrap();
+      content.push_str(
+        str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
+      );
+      if size < buf.len() || size == 0 {
+        break
       }
-    ]).wasi_unwrap();
-    content.push_str(
-      str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
-    );
-    if size < buf.len() || size == 0 {
-      break
     }
+    content
   }
-  content
 }
 
 pub fn get_model_path(id: &str) -> PathBuf {
   model_path(&mut id.split(':'))
 }
 
-fn model_path<'a>(iter: &mut str::Split<'a, char>) -> PathBuf {
+fn model_path(iter: &mut str::Split<char>) -> PathBuf {
   let owner   = iter.next().wasi_expect("expected owner");
   let model   = iter.next().wasi_expect("expected model");
   let version = iter.next().wasi_expect("expected version");
@@ -74,5 +76,5 @@ pub fn get_recipe(collection: &str, id: &str) -> String {
   recipe.push_str(".dropin");
   path.push(collection);
   path.push(recipe);
-  unsafe { read_file(&path) }
+  read_file(&path)
 }

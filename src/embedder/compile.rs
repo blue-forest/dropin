@@ -19,7 +19,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use cap_std;
 use wasmtime::{Linker, Store};
 use wasmtime_wasi::{WasiCtx, WasiCtxBuilder};
 use wasmtime_wasi::sync::Dir;
@@ -55,7 +54,7 @@ impl Embedder {
   }
 
   pub fn compile(&mut self, root: &Path, owner: &str, model: &str) {
-    if let None = self.compile_module {
+    if self.compile_module.is_none() {
       let handle = self.compile_module_handle.take().unwrap();
       self.compile_module = Some(handle.join().unwrap());
     }

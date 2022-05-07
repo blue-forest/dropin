@@ -36,7 +36,7 @@ mod memory;
 pub use memory::MemoryBuilder;
 
 mod dropin_std;
-pub use dropin_std::{STD, STDFunction};
+pub use dropin_std::{Std, Stdfunction};
 
 pub struct ModuleBuilder<'module> {
   memory:             MemoryBuilder<'module>,

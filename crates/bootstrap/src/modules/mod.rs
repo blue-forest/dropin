@@ -31,13 +31,13 @@ use crate::expressions::Expression;
 use crate::path::get_recipe;
 
 mod builder;
-use builder::{ModuleBuilder, STD};
+use builder::{ModuleBuilder, Std};
 
 mod error;
 pub use error::CompileError;
 
 struct State<'a> {
-  pub std_:      STD<'a>,
+  pub std_:      Std<'a>,
 }
 
 pub struct Compiler<'syntax, 'module> {
@@ -52,7 +52,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
   pub fn compile(&self, _path: &Path) -> Result<Module, CompileError> {
     let mut builder = ModuleBuilder::default();
     let mut state = State{
-      std_:      STD::default(),
+      std_:      Std::default(),
     };
 
     let mut iter = self.module.expression.iter();
@@ -97,20 +97,20 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
     match expression.pattern() {
       "print" => {
         let message = expression.iter().next().unwrap().as_str();
-        let alloc = builder.from_std(&state.std_.alloc);
-        let print = builder.from_std(&state.std_.print);
+        let alloc = builder.get_std(&state.std_.alloc);
+        let print = builder.get_std(&state.std_.print);
         let data = builder.memory().passive(message.as_bytes()) as u32;
         let start = builder.get_start();
         let ptr = start.add_local(I32);
         start.basic(Instruction::I32Const(message.len() as i32)); // size
         start.basic(Instruction::I32Const(1));                    // align
         start.basic(Instruction::Call(alloc));                    // -> ptr
-        start.local(ptr.clone(), |ptr| Instruction::LocalSet(ptr));
-        start.local(ptr.clone(), |ptr| Instruction::LocalGet(ptr));
+        start.local(ptr.clone(), Instruction::LocalSet);
+        start.local(ptr.clone(), Instruction::LocalGet);
         start.basic(Instruction::I32Const(0));                    // offset
         start.basic(Instruction::I32Const(message.len() as i32)); // size
         start.basic(Instruction::MemoryInit{ mem: 0, data });
-        start.local(ptr, |ptr| Instruction::LocalGet(ptr));
+        start.local(ptr, Instruction::LocalGet);
         start.basic(Instruction::I32Const(message.len() as i32)); // len
         start.basic(Instruction::Call(print));
       }

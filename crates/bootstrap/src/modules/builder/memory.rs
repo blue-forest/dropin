@@ -22,18 +22,10 @@
 use wasm_encoder::{DataCountSection, DataSection};
 use super::ModuleBuilder;
 
+#[derive(Default)]
 pub struct MemoryBuilder<'a> {
   data: Vec<&'a [u8]>,
   data_len:     usize,
-}
-
-impl<'a> Default for MemoryBuilder<'a> {
-  fn default() -> Self {
-    Self{
-      data:     vec![],
-      data_len: 0,
-    }
-  }
 }
 
 impl<'module> ModuleBuilder<'module> {

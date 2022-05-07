@@ -40,7 +40,7 @@ impl<'a> Literal<'a> {
     let mut start: Option<usize> = None;
     let mut value: Option<&str> = None;
     let mut is_escaped = false;
-    while let Some((i, c)) = iter.next() {
+    for (i, c) in iter {
       if start.is_none() {
         start = Some(i);
       }

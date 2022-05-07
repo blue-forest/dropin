@@ -53,7 +53,7 @@ const SYNTAX_MODULES: &str = "blueforest:dropin-modules:v1:Automations/Modules";
 
 #[no_mangle]
 pub fn _start() {
-  let args = unsafe { Args::new() };
+  let args = Args::new();
   if args.len() != 2 {
     print_to("expected argument: <model>", 2);
     unsafe { wasi::proc_exit(1) };
@@ -64,7 +64,7 @@ pub fn _start() {
   let model_path = get_model_path(args.get(1).wasi_unwrap());
   let mut model_recipe_path = model_path.parent().wasi_unwrap().to_path_buf();
   model_recipe_path.push(".dropin");
-  let model_content = unsafe { read_file(&model_recipe_path) };
+  let model_content = read_file(&model_recipe_path);
   let model_recipe = Recipe::new(syntax_models_content, &model_content);
 
   let module = model_recipe.expression.iter().next().wasi_unwrap();

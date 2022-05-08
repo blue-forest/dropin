@@ -1,0 +1,29 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[config]
+default_to_workspace = false
+
+[tasks.buildCore]
+command = "cargo"
+args = [
+  "build",
+  "-p", "dropin-core",
+  "--target", "wasm32-unknown-unknown",
+  "--release"
+]
+
+[tasks.buildBootstrap]
+command = "cargo"
+args = [
+  "build",
+  "-p", "dropin-bootstrap",
+  "--target", "wasm32-unknown-unknown",
+  "--release"
+]
+
+[tasks.build]
+dependencies = [
+  "buildCore",
+  "buildBootstrap",
+]

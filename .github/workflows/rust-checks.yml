@@ -23,12 +23,8 @@ jobs:
       with:
         toolchain: stable
         target: wasm32-unknown-unknown
-    - name: Build core
-      run: cargo build --verbose -p dropin-core --target wasm32-unknown-unknown --release
-    - name: Build bootstrap
-      run: cargo build --verbose -p dropin-bootstrap --target wasm32-unknown-unknown --release
-    - name: Build CLI
-      run: cargo build --verbose
+    - name: Build
+      run: cargo make build
     - uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}

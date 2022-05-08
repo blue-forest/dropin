@@ -18,49 +18,52 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::Input;
 use dialoguer::theme::ColorfulTheme;
+use dialoguer::Input;
 use edit::edit_file;
 
-use std::fs::create_dir_all;
 use std::fmt::{Display, Error, Formatter};
+use std::fs::create_dir_all;
 
 use crate::interactive::{Cli, Command};
 
 pub struct Add;
 
 impl Add {
-  pub fn new() -> Self {
-    Self{}
-  }
+    pub fn new() -> Self {
+        Self {}
+    }
 }
 
 impl Display for Add {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-    "add".fmt(f)
-  }
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        "add".fmt(f)
+    }
 }
 
 impl Command for Add {
-  fn run(&self, cli: &mut Cli) -> u32 {
-    let id: String = Input::with_theme(&ColorfulTheme::default())
-      .with_prompt("{} ID ? (split namespaces with '/', leave empty to cancel)")
-      .allow_empty(true)
-      .interact_text().unwrap();
-    if id.is_empty() { return 0; }
+    fn run(&self, cli: &mut Cli) -> u32 {
+        let id: String = Input::with_theme(&ColorfulTheme::default())
+            .with_prompt("{} ID ? (split namespaces with '/', leave empty to cancel)")
+            .allow_empty(true)
+            .interact_text()
+            .unwrap();
+        if id.is_empty() {
+            return 0;
+        }
 
-    let mut id_split: Vec<&str> = id.split('/').collect();
-    let n_splits = id_split.len();
-    let id = id_split.split_off(id_split.len()-1)[0];
-    for ns in id_split {
-      cli.cwd.push(ns);
+        let mut id_split: Vec<&str> = id.split('/').collect();
+        let n_splits = id_split.len();
+        let id = id_split.split_off(id_split.len() - 1)[0];
+        for ns in id_split {
+            cli.cwd.push(ns);
+        }
+        if !cli.cwd.exists() {
+            create_dir_all(&cli.cwd).unwrap();
+        }
+        cli.cwd.push(&format!("{}.dropin", id));
+        edit_file(&cli.cwd).unwrap();
+        cli.cwd = cli.cwd.ancestors().nth(n_splits).unwrap().to_path_buf();
+        0
     }
-    if !cli.cwd.exists() {
-      create_dir_all(&cli.cwd).unwrap();
-    }
-    cli.cwd.push(&format!("{}.dropin", id));
-    edit_file(&cli.cwd).unwrap();
-    cli.cwd = cli.cwd.ancestors().nth(n_splits).unwrap().to_path_buf();
-    0
-  }
 }

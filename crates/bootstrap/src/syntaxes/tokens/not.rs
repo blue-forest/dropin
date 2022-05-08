@@ -22,44 +22,44 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::syntaxes::{Expression, ParseError};
 use super::{parse_token, Patterns, Token};
+use crate::syntaxes::{Expression, ParseError};
 
 #[derive(Debug)]
 pub struct Not<'a> {
-  token: Box<dyn Token<'a> + 'a>
+    token: Box<dyn Token<'a> + 'a>,
 }
 
 impl<'a> Not<'a> {
-  pub fn parse(
-    syntax: &'a str,
-    iter: &mut Peekable<CharIndices<'a>>,
-  ) -> Box<dyn Token<'a> + 'a> {
-    while let Some((_, c)) = iter.next() {
-      if !c.is_whitespace() {
-        return Box::new(Self{
-          token: parse_token(syntax, iter, c),
-        });
-      }
+    pub fn parse(syntax: &'a str, iter: &mut Peekable<CharIndices<'a>>) -> Box<dyn Token<'a> + 'a> {
+        while let Some((_, c)) = iter.next() {
+            if !c.is_whitespace() {
+                return Box::new(Self {
+                    token: parse_token(syntax, iter, c),
+                });
+            }
+        }
+        panic!("unexpected end of file");
     }
-    panic!("unexpected end of file");
-  }
 }
 
 impl<'a> Token<'a> for Not<'a> {
-  fn parse<'b, 'c>(
-    &self,
-    patterns: &'c Patterns<'a>,
-    module:   &'b str,
-    iter:     &mut Peekable<CharIndices<'b>>,
-    expr:     &mut Expression<'a, 'b>,
-  ) -> Result<(), ParseError> {
-    let mut iter_clone = iter.clone();
-    if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
-      Err(ParseError::new(format!("expected not {}", self.token.expected())))
-    } else {
-      iter.next();
-      Ok(())
+    fn parse<'b, 'c>(
+        &self,
+        patterns: &'c Patterns<'a>,
+        module: &'b str,
+        iter: &mut Peekable<CharIndices<'b>>,
+        expr: &mut Expression<'a, 'b>,
+    ) -> Result<(), ParseError> {
+        let mut iter_clone = iter.clone();
+        if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
+            Err(ParseError::new(format!(
+                "expected not {}",
+                self.token.expected()
+            )))
+        } else {
+            iter.next();
+            Ok(())
+        }
     }
-  }
 }

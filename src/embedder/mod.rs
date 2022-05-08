@@ -19,47 +19,64 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use wasmtime::*;
 use std::sync::Arc;
-use std::thread::{JoinHandle, spawn};
+use std::thread::{spawn, JoinHandle};
+use wasmtime::*;
 
 mod compile;
 mod run;
 
 // https://github.com/rust-lang/rust/issues/75075
 #[cfg(host_family = "windows")]
-macro_rules! PATH_SEPARATOR {() => ( r"\")}
+macro_rules! PATH_SEPARATOR {
+    () => {
+        r"\"
+    };
+}
 
 #[cfg(not(host_family = "windows"))]
-macro_rules! PATH_SEPARATOR {() => ( r"/")}
+macro_rules! PATH_SEPARATOR {
+    () => {
+        r"/"
+    };
+}
 
 static CORE_BINARY: &[u8] = include_bytes!(concat!(
-  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_core.wasm",
+    env!("OUT_DIR"),
+    PATH_SEPARATOR!(),
+    "dropin_core.wasm",
 ));
 
 static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
-  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_bootstrap.wasm",
+    env!("OUT_DIR"),
+    PATH_SEPARATOR!(),
+    "dropin_bootstrap.wasm",
 ));
 
 pub struct Embedder {
-  pub engine:                Arc<Engine>,
-  pub core:                  Module,
-  pub compile_module:        Option<Module>,
-  pub compile_module_handle: Option<JoinHandle<Module>>,
+    pub engine: Arc<Engine>,
+    pub core: Module,
+    pub compile_module: Option<Module>,
+    pub compile_module_handle: Option<JoinHandle<Module>>,
 }
 
 impl Default for Embedder {
-  fn default() -> Self {
-    let engine = Arc::new(Engine::default());
+    fn default() -> Self {
+        let engine = Arc::new(Engine::default());
 
-    let core = Module::new(&engine, CORE_BINARY).unwrap();
+        let core = Module::new(&engine, CORE_BINARY).unwrap();
 
-    let compile_module = None;
-    let engine_clone = engine.clone();
-    let compile_module_handle = Some(spawn(move ||
-      Module::new(&engine_clone, BOOTSTRAP_BINARY).unwrap()
-    ));
+        let compile_module = None;
+        let engine_clone = engine.clone();
+        let compile_module_handle = Some(spawn(move || {
+            Module::new(&engine_clone, BOOTSTRAP_BINARY).unwrap()
+        }));
 
-    Self{ engine, core, compile_module, compile_module_handle }
-  }
+        Self {
+            engine,
+            core,
+            compile_module,
+            compile_module_handle,
+        }
+    }
 }

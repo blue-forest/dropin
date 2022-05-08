@@ -24,8 +24,8 @@ use std::path::PathBuf;
 
 use dropin_utils::path::get_root;
 
-use crate::Embedder;
 use crate::utils::get_dirs;
+use crate::Embedder;
 
 mod cli_run;
 mod config;
@@ -34,69 +34,72 @@ mod error;
 use error::ConfigError;
 mod model;
 mod owner;
-mod recipe;
 mod path;
+mod recipe;
 use path::validate_path;
 
 pub struct Cli {
-  config:         Config,
-  cwd:            PathBuf,
-  embedder:       Embedder,
-  model_selected: Option<usize>,
-  models:         Vec<String>,
-  owner_selected: Option<usize>,
-  owners:         Vec<String>,
-  root:           PathBuf,
-  version:        String,
+    config: Config,
+    cwd: PathBuf,
+    embedder: Embedder,
+    model_selected: Option<usize>,
+    models: Vec<String>,
+    owner_selected: Option<usize>,
+    owners: Vec<String>,
+    root: PathBuf,
+    version: String,
 }
 
 impl Cli {
-  pub fn new() -> Self {
-    let root = get_root();
-    validate_path(&root).unwrap();
-    let owners = if !root.exists() {
-      println!("Created drop'in root");
-      create_dir(&root).unwrap();
-      vec![]
-    } else {
-      get_dirs(&root)
-    };
-    let mut cwd = root.clone();
-    let config = Config::new(&root);
-    let mut owner_selected = None;
-    let mut model_selected = None;
-    let mut models = vec![];
-    if let Some(owner) = config.owner() {
-      owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
-      cwd.push(owner);
-      cwd.push("models");
-      models = get_dirs(&cwd);
-      if let Some(model) = config.model() {
-        cwd.push(model);
-        cwd.push("v1"); // TODO: deal with versions
-        model_selected = Some(models.iter().position(|m| m == model).unwrap());
-      }
+    pub fn new() -> Self {
+        let root = get_root();
+        validate_path(&root).unwrap();
+        let owners = if !root.exists() {
+            println!("Created drop'in root");
+            create_dir(&root).unwrap();
+            vec![]
+        } else {
+            get_dirs(&root)
+        };
+        let mut cwd = root.clone();
+        let config = Config::new(&root);
+        let mut owner_selected = None;
+        let mut model_selected = None;
+        let mut models = vec![];
+        if let Some(owner) = config.owner() {
+            owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
+            cwd.push(owner);
+            cwd.push("models");
+            models = get_dirs(&cwd);
+            if let Some(model) = config.model() {
+                cwd.push(model);
+                cwd.push("v1"); // TODO: deal with versions
+                model_selected = Some(models.iter().position(|m| m == model).unwrap());
+            }
+        }
+        Self {
+            config,
+            cwd,
+            embedder: Embedder::default(),
+            model_selected,
+            models,
+            owner_selected,
+            owners,
+            root,
+            version: "v1".to_string(), // TODO: deal with versions
+        }
     }
-    Self{
-      config,
-      cwd,
-      embedder: Embedder::default(),
-      model_selected,
-      models,
-      owner_selected,
-      owners,
-      root,
-      version: "v1".to_string(), // TODO: deal with versions
-    }
-  }
 }
 
 impl Default for Cli {
-  fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 pub trait Command: Display {
-  fn run(&self, cli: &mut Cli) -> u32;
-  fn is_enabled(&self, _cli: &Cli) -> bool { true }
+    fn run(&self, cli: &mut Cli) -> u32;
+    fn is_enabled(&self, _cli: &Cli) -> bool {
+        true
+    }
 }
-

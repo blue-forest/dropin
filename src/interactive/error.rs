@@ -25,17 +25,21 @@ use std::fmt::{self, Display, Formatter};
 pub struct ConfigError(String);
 
 impl ConfigError {
-  pub fn new(message: String) -> Self { Self(message) }
+    pub fn new(message: String) -> Self {
+        Self(message)
+    }
 }
 
 impl From<&str> for ConfigError {
-  fn from(message: &str) -> Self { Self(message.to_string()) }
+    fn from(message: &str) -> Self {
+        Self(message.to_string())
+    }
 }
 
 impl Display for ConfigError {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
-    self.0.fmt(f)
-  }
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+        self.0.fmt(f)
+    }
 }
 
 impl Error for ConfigError {}

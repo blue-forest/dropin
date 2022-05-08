@@ -22,72 +22,75 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::sys::{WasiExpect, WasiUnwrap};
-use crate::syntaxes::{Expression, Patterns, ParseError};
-use crate::utils::escape_char;
 use super::Token;
+use crate::syntaxes::{Expression, ParseError, Patterns};
+use crate::sys::{WasiExpect, WasiUnwrap};
+use crate::utils::escape_char;
 
 #[derive(Debug)]
 pub struct Literal<'a> {
-  value: &'a str,
+    value: &'a str,
 }
 
 impl<'a> Literal<'a> {
-  pub fn parse(
-    syntax: &'a str,
-    iter: &mut Peekable<CharIndices<'a>>,
-  ) -> Box<dyn Token<'a> + 'a> {
-    let mut start: Option<usize> = None;
-    let mut value: Option<&str> = None;
-    let mut is_escaped = false;
-    for (i, c) in iter {
-      if start.is_none() {
-        start = Some(i);
-      }
-      if !is_escaped {
-        match c {
-          '"' => {
-            value = Some(syntax.get(start.wasi_unwrap()..i).wasi_unwrap());
-            break;
-          }
-          '\\' => {
-            is_escaped = true;
-            continue;
-          }
-          _ => {}
+    pub fn parse(syntax: &'a str, iter: &mut Peekable<CharIndices<'a>>) -> Box<dyn Token<'a> + 'a> {
+        let mut start: Option<usize> = None;
+        let mut value: Option<&str> = None;
+        let mut is_escaped = false;
+        for (i, c) in iter {
+            if start.is_none() {
+                start = Some(i);
+            }
+            if !is_escaped {
+                match c {
+                    '"' => {
+                        value = Some(syntax.get(start.wasi_unwrap()..i).wasi_unwrap());
+                        break;
+                    }
+                    '\\' => {
+                        is_escaped = true;
+                        continue;
+                    }
+                    _ => {}
+                }
+            }
+            is_escaped = false;
         }
-      }
-      is_escaped = false;
+        let value = value.wasi_expect("expected '\"'");
+        Box::new(Literal { value })
     }
-    let value = value.wasi_expect("expected '\"'");
-    Box::new(Literal{ value })
-  }
 }
 
 impl<'a> Token<'a> for Literal<'a> {
-  fn parse<'b, 'c>(
-    &self,
-    _patterns: &'c Patterns<'a>,
-    _module:   &'b str,
-    iter:      &mut Peekable<CharIndices<'b>>,
-    _expr:     &mut Expression,
-  ) -> Result<(), ParseError> {
-    let mut is_escaped = false;
-    for c in self.value.chars() {
-      if !is_escaped && c == '\\' {
-        is_escaped = true;
-        continue;
-      }
-      let chr_value = if is_escaped { escape_char(c) } else { c };
-      let ok = if let Some((_, chr_module)) = iter.peek() {
-        if *chr_module == chr_value { iter.next(); true } else { false }
-      } else { false };
-      if !ok {
-        return Err(ParseError::new(format!("expected {}", self.value)));
-      }
-      is_escaped = false;
+    fn parse<'b, 'c>(
+        &self,
+        _patterns: &'c Patterns<'a>,
+        _module: &'b str,
+        iter: &mut Peekable<CharIndices<'b>>,
+        _expr: &mut Expression,
+    ) -> Result<(), ParseError> {
+        let mut is_escaped = false;
+        for c in self.value.chars() {
+            if !is_escaped && c == '\\' {
+                is_escaped = true;
+                continue;
+            }
+            let chr_value = if is_escaped { escape_char(c) } else { c };
+            let ok = if let Some((_, chr_module)) = iter.peek() {
+                if *chr_module == chr_value {
+                    iter.next();
+                    true
+                } else {
+                    false
+                }
+            } else {
+                false
+            };
+            if !ok {
+                return Err(ParseError::new(format!("expected {}", self.value)));
+            }
+            is_escaped = false;
+        }
+        Ok(())
     }
-    Ok(())
-  }
 }
-

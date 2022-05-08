@@ -26,10 +26,6 @@ jobs:
       with:
         toolchain: stable
         target: wasm32-unknown-unknown
-    - name: Build core
-      run: cargo build --verbose -p dropin-core --target wasm32-unknown-unknown --release
-    - name: Build bootstrap
-      run: cargo build --verbose -p dropin-bootstrap --target wasm32-unknown-unknown --release
     - run: cargo publish --token ${CRATES_TOKEN} -p dropin-utils
       if: always()
       env:

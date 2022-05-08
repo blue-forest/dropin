@@ -22,46 +22,44 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use crate::syntaxes::{Expression, Patterns, ParseError};
 use super::{Concat, Token};
+use crate::syntaxes::{Expression, ParseError, Patterns};
 
 #[derive(Debug)]
 pub struct Or<'a> {
-  token1: Box<dyn Token<'a> + 'a>,
-  token2: Box<dyn Token<'a> + 'a>,
+    token1: Box<dyn Token<'a> + 'a>,
+    token2: Box<dyn Token<'a> + 'a>,
 }
 
 impl<'a> Or<'a> {
-  pub fn parse(
-    first_token: Box<dyn Token<'a> + 'a>,
-    syntax: &'a str,
-    iter: &mut Peekable<CharIndices<'a>>,
-  ) -> Box<dyn Token<'a> + 'a> {
-    Box::new(Self{
-      token1: first_token,
-      token2: Concat::parse(syntax, iter),
-    })
-  }
+    pub fn parse(
+        first_token: Box<dyn Token<'a> + 'a>,
+        syntax: &'a str,
+        iter: &mut Peekable<CharIndices<'a>>,
+    ) -> Box<dyn Token<'a> + 'a> {
+        Box::new(Self {
+            token1: first_token,
+            token2: Concat::parse(syntax, iter),
+        })
+    }
 }
 
 impl<'a> Token<'a> for Or<'a> {
-  fn parse<'b, 'c>(
-    &self,
-    patterns: &'c Patterns<'a>,
-    module:   &'b str,
-    iter:     &mut Peekable<CharIndices<'b>>,
-    expr:     &mut Expression<'a, 'b>,
-  ) -> Result<(), ParseError> {
-    let mut iter_clone = iter.clone();
-    if let Err(err1) = self.token1.parse(
-      patterns, module, &mut iter_clone, expr,
-    ) {
-      if let Err(err2) = self.token2.parse(patterns, module, iter, expr) {
-        return Err(ParseError::new(format!("{}\n{}", err1, err2)));
-      }
-    } else {
-      *iter = iter_clone;
+    fn parse<'b, 'c>(
+        &self,
+        patterns: &'c Patterns<'a>,
+        module: &'b str,
+        iter: &mut Peekable<CharIndices<'b>>,
+        expr: &mut Expression<'a, 'b>,
+    ) -> Result<(), ParseError> {
+        let mut iter_clone = iter.clone();
+        if let Err(err1) = self.token1.parse(patterns, module, &mut iter_clone, expr) {
+            if let Err(err2) = self.token2.parse(patterns, module, iter, expr) {
+                return Err(ParseError::new(format!("{}\n{}", err1, err2)));
+            }
+        } else {
+            *iter = iter_clone;
+        }
+        Ok(())
     }
-    Ok(())
-  }
 }

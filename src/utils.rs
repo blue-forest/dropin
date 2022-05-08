@@ -24,52 +24,44 @@ use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 use std::path::Path;
 
-pub fn validate_name(
-  root: &Path, name: &str,
-) -> Result<(), NameValidationError> {
-  let re = Regex::new(
-    r"^(\w|[.\-_àâæçéèêëïîôœùûüÿÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ])+$"
-  ).unwrap();
-  if !re.is_match(name) {
-    return Err(NameValidationError::Invalid);
-  }
-  let name_root = root.join(name);
-  if name_root.exists() {
-    return Err(NameValidationError::Exists(name_root.to_str().unwrap().to_string()))
-  }
-  Ok(())
+pub fn validate_name(root: &Path, name: &str) -> Result<(), NameValidationError> {
+    let re = Regex::new(r"^(\w|[.\-_àâæçéèêëïîôœùûüÿÀÂÆÇÉÈÊËÏÎÔŒÙÛÜŸ])+$").unwrap();
+    if !re.is_match(name) {
+        return Err(NameValidationError::Invalid);
+    }
+    let name_root = root.join(name);
+    if name_root.exists() {
+        return Err(NameValidationError::Exists(
+            name_root.to_str().unwrap().to_string(),
+        ));
+    }
+    Ok(())
 }
 
 #[derive(Debug)]
 pub enum NameValidationError {
-  Invalid,
-  Exists(String)
+    Invalid,
+    Exists(String),
 }
 
 impl Display for NameValidationError {
-  fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-    match self {
-      Self::Invalid => {
-        "Name may only be composed of alphanumerics, '.', '-' and '_'".fmt(f)
-      }
-      Self::Exists(dir) => {
-        format!("{} directory already exists", dir).fmt(f)
-      }
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Invalid => "Name may only be composed of alphanumerics, '.', '-' and '_'".fmt(f),
+            Self::Exists(dir) => format!("{} directory already exists", dir).fmt(f),
+        }
     }
-  }
 }
 
 impl Error for NameValidationError {}
 
 pub fn get_dirs(path: &Path) -> Vec<String> {
-  let mut result = Vec::new();
-  for owner_dir in path.read_dir().unwrap().flatten() {
-    let path = owner_dir.path();
-    if path.is_dir() {
-      result.push(
-        path.file_name().unwrap().to_str().unwrap().to_string(),
-      );
+    let mut result = Vec::new();
+    for owner_dir in path.read_dir().unwrap().flatten() {
+        let path = owner_dir.path();
+        if path.is_dir() {
+            result.push(path.file_name().unwrap().to_str().unwrap().to_string());
+        }
     }
-  }
-  result
+    result
 }

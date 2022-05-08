@@ -23,38 +23,34 @@ use std::path::Path;
 use super::ConfigError;
 
 pub fn validate_path(path: &Path) -> Result<(), ConfigError> {
-  if !path.exists() {
-    match path.parent() {
-      Some(parent) => { check_permissions(parent, true) }
-      None => {
-        Err(ConfigError::from("Can't find the parent directory"))
-      }
+    if !path.exists() {
+        match path.parent() {
+            Some(parent) => check_permissions(parent, true),
+            None => Err(ConfigError::from("Can't find the parent directory")),
+        }
+    } else {
+        check_permissions(path, true)
     }
-  } else {
-    check_permissions(path, true)
-  }
 }
 
 pub fn check_permissions(path: &Path, is_dir: bool) -> Result<(), ConfigError> {
-  match path.metadata() {
-    Ok(metadata) => {
-      if metadata.is_dir() != is_dir {
-        return Err(ConfigError::new(format!(
-          "\"{}\" is a {}",
-          path.to_str().unwrap_or("[non-utf8]"),
-          if is_dir { "file" } else { "directory" },
-        )));
-      }
-      if metadata.permissions().readonly() {
-        return Err(ConfigError::new(format!(
-          "You cannot write into \"{}\"",
-          path.to_str().unwrap_or("[non-utf8]"),
-        )));
-      }
-      Ok(())
+    match path.metadata() {
+        Ok(metadata) => {
+            if metadata.is_dir() != is_dir {
+                return Err(ConfigError::new(format!(
+                    "\"{}\" is a {}",
+                    path.to_str().unwrap_or("[non-utf8]"),
+                    if is_dir { "file" } else { "directory" },
+                )));
+            }
+            if metadata.permissions().readonly() {
+                return Err(ConfigError::new(format!(
+                    "You cannot write into \"{}\"",
+                    path.to_str().unwrap_or("[non-utf8]"),
+                )));
+            }
+            Ok(())
+        }
+        Err(err) => Err(ConfigError::new(format!("{}", err))),
     }
-    Err(err)     => {
-      Err(ConfigError::new(format!("{}", err)))
-    }
-  }
 }

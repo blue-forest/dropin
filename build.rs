@@ -24,38 +24,36 @@ use std::fs::copy;
 use std::path::Path;
 
 fn main() {
-  let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
-  let dropin_core_path = Path::new(&workspace_dir).join(Path::new(
-    "target/wasm32-unknown-unknown/release/dropin_core.wasm",
-  ));
-  for dir in Path::new(&workspace_dir).join(Path::new("target")).read_dir().unwrap().flatten() {
-    println!("{:?}", dir);
-  }
-  panic!("{:?}", workspace_dir);
-  if !dropin_core_path.exists() {
-    panic!(
-      "Please compile drop\'in core:\n\
+    let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
+    let dropin_core_path = Path::new(&workspace_dir).join(Path::new(
+        "target/wasm32-unknown-unknown/release/dropin_core.wasm",
+    ));
+    if !dropin_core_path.exists() {
+        panic!(
+            "Please compile drop\'in core:\n\
       cargo b -p dropin-core --target wasm32-unknown-unknown --release"
+        );
+    }
+    println!(
+        "cargo:rerun-if-changed={}",
+        dropin_core_path.to_str().unwrap(),
     );
-  }
-  println!(
-    "cargo:rerun-if-changed={}", dropin_core_path.to_str().unwrap(),
-  );
-  let dropin_bootstrap_path = Path::new(&workspace_dir).join(Path::new(
-    "target/wasm32-unknown-unknown/release/dropin_bootstrap.wasm",
-  ));
-  if !dropin_bootstrap_path.exists() {
-    panic!(
-      "Please compile drop\'in bootstrap:\n\
+    let dropin_bootstrap_path = Path::new(&workspace_dir).join(Path::new(
+        "target/wasm32-unknown-unknown/release/dropin_bootstrap.wasm",
+    ));
+    if !dropin_bootstrap_path.exists() {
+        panic!(
+            "Please compile drop\'in bootstrap:\n\
       cargo b -p dropin-bootstrap --target wasm32-unknown-unknown --release"
+        );
+    }
+    println!(
+        "cargo:rerun-if-changed={}",
+        dropin_bootstrap_path.to_str().unwrap(),
     );
-  }
-  println!(
-    "cargo:rerun-if-changed={}", dropin_bootstrap_path.to_str().unwrap(),
-  );
-  let out_dir = var("OUT_DIR").unwrap();
-  let out_path = Path::new(&out_dir).join("dropin_core.wasm");
-  copy(dropin_core_path, out_path).unwrap();
-  let out_path = Path::new(&out_dir).join("dropin_bootstrap.wasm");
-  copy(dropin_bootstrap_path, out_path).unwrap();
+    let out_dir = var("OUT_DIR").unwrap();
+    let out_path = Path::new(&out_dir).join("dropin_core.wasm");
+    copy(dropin_core_path, out_path).unwrap();
+    let out_path = Path::new(&out_dir).join("dropin_bootstrap.wasm");
+    copy(dropin_bootstrap_path, out_path).unwrap();
 }

@@ -472,7 +472,7 @@ dependencies = [
 
 [[package]]
 name = "dropin-bootstrap"
-version = "0.5.3-2"
+version = "0.5.3-4"
 dependencies = [
  "dropin-core",
  "wasi 0.11.0+wasi-snapshot-preview1",
@@ -481,7 +481,7 @@ dependencies = [
 
 [[package]]
 name = "dropin-core"
-version = "0.5.3-2"
+version = "0.5.3-4"
 dependencies = [
  "wasi 0.11.0+wasi-snapshot-preview1",
  "wee_alloc",
@@ -489,7 +489,7 @@ dependencies = [
 
 [[package]]
 name = "dropin-debugger"
-version = "0.5.3-1"
+version = "0.5.3-4"
 dependencies = [
  "pretty-hex",
  "structopt",
@@ -499,7 +499,7 @@ dependencies = [
 
 [[package]]
 name = "dropin-utils"
-version = "0.5.3-2"
+version = "0.5.3-4"
 dependencies = [
  "home",
  "path-clean",

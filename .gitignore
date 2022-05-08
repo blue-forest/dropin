@@ -4,5 +4,5 @@ target/
 *.swn
 *.wasm
 recipes/config.toml
-
+recipes/.builds
 node_modules/

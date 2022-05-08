@@ -29,6 +29,7 @@ fn main() {
     "target/wasm32-unknown-unknown/release/dropin_core.wasm",
   ));
   if !dropin_core_path.exists() {
+    panic!("{:?}", workspace_dir);
     panic!(
       "Please compile drop\'in core:\n\
       cargo b -p dropin-core --target wasm32-unknown-unknown --release"

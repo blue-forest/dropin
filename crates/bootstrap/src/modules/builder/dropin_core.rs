@@ -24,18 +24,18 @@ use wasm_encoder::ValType::{self, I32};
 use super::ModuleBuilder;
 use super::import::FunctionImport;
 
-pub struct Std<'a> {
-  pub print: Stdfunction<'a>,
-  pub alloc: Stdfunction<'a>,
+pub struct Core<'a> {
+  pub print: CoreFunction<'a>,
+  pub alloc: CoreFunction<'a>,
 }
 
-impl<'a> Default for Std<'a> {
+impl<'a> Default for Core<'a> {
   fn default() -> Self {
     Self{
-      print: Stdfunction::new(
+      print: CoreFunction::new(
         "print", vec![I32, I32], vec![],
       ),
-      alloc: Stdfunction::new(
+      alloc: CoreFunction::new(
         "alloc", vec![I32, I32], vec![I32],
       ),
     }
@@ -43,7 +43,7 @@ impl<'a> Default for Std<'a> {
 }
 
 impl<'module> ModuleBuilder<'module> {
-  pub fn get_std(&mut self, f: &Stdfunction<'module>) -> u32 {
+  pub fn get_core(&mut self, f: &CoreFunction<'module>) -> u32 {
     if let Some(id) = f.id {
       return id;
     }
@@ -51,20 +51,20 @@ impl<'module> ModuleBuilder<'module> {
     self.types.function(f.params.clone(), f.results.clone());
     let result = self.functions_imported.len() as u32;
     self.functions_imported.push(FunctionImport{
-      type_id, module: "blueforest:dropin-std:v1", name: f.name,
+      type_id, module: "blueforest:dropin-core:v1", name: f.name,
     });
     result
   }
 }
 
-pub struct Stdfunction<'a> {
+pub struct CoreFunction<'a> {
   pub id:      Option<u32>,
   pub name:    &'a str,
   pub params:  Vec<ValType>,
   pub results: Vec<ValType>,
 }
 
-impl<'a> Stdfunction<'a> {
+impl<'a> CoreFunction<'a> {
   fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
     Self{ id: None, name, params, results }
   }

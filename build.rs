@@ -25,17 +25,17 @@ use std::path::Path;
 
 fn main() {
   let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
-  let dropin_modules_path = Path::new(&workspace_dir).join(Path::new(
-    "target/wasm32-unknown-unknown/release/dropin_modules.wasm",
+  let dropin_core_path = Path::new(&workspace_dir).join(Path::new(
+    "target/wasm32-unknown-unknown/release/dropin_core.wasm",
   ));
-  if !dropin_modules_path.exists() {
+  if !dropin_core_path.exists() {
     panic!(
-      "Please compile drop\'in modules:\n\
-      cargo b -p dropin-modules --target wasm32-unknown-unknown --release"
+      "Please compile drop\'in core:\n\
+      cargo b -p dropin-core --target wasm32-unknown-unknown --release"
     );
   }
   println!(
-    "cargo:rerun-if-changed={}", dropin_modules_path.to_str().unwrap(),
+    "cargo:rerun-if-changed={}", dropin_core_path.to_str().unwrap(),
   );
   let dropin_bootstrap_path = Path::new(&workspace_dir).join(Path::new(
     "target/wasm32-unknown-unknown/release/dropin_bootstrap.wasm",
@@ -50,8 +50,8 @@ fn main() {
     "cargo:rerun-if-changed={}", dropin_bootstrap_path.to_str().unwrap(),
   );
   let out_dir = var("OUT_DIR").unwrap();
-  let out_path = Path::new(&out_dir).join("dropin_modules.wasm");
-  copy(dropin_modules_path, out_path).unwrap();
+  let out_path = Path::new(&out_dir).join("dropin_core.wasm");
+  copy(dropin_core_path, out_path).unwrap();
   let out_path = Path::new(&out_dir).join("dropin_bootstrap.wasm");
   copy(dropin_bootstrap_path, out_path).unwrap();
 }

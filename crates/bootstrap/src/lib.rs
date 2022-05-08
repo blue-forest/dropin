@@ -19,7 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_modules::print_to;
+use dropin_core::print_to;
 
 pub mod path;
 use path::{get_model_path, get_recipe, read_file};

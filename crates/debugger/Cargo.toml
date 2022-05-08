@@ -4,7 +4,7 @@ version = "0.5.3-1"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in debugger [WIP]"
-repository = "https://github.com/theblueforest/dropin/crates/dropin-debugger"
+repository = "https://github.com/theblueforest/dropin/crates/debugger"
 license = "AGPL-3.0-only"
 
 [dependencies]

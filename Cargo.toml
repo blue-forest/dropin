@@ -2,7 +2,7 @@
 members = [
   "crates/bootstrap",
   "crates/debugger",
-  "crates/modules",
+  "crates/core",
   "crates/utils",
 ]
 exclude = ["etc/sandbox"]

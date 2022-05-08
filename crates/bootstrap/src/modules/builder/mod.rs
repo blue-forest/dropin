@@ -35,8 +35,8 @@ use import::FunctionImport;
 mod memory;
 pub use memory::MemoryBuilder;
 
-mod dropin_std;
-pub use dropin_std::{Std, Stdfunction};
+mod dropin_core;
+pub use self::dropin_core::{Core, CoreFunction};
 
 pub struct ModuleBuilder<'module> {
   memory:             MemoryBuilder<'module>,
@@ -82,7 +82,7 @@ impl<'module> ModuleBuilder<'module> {
       section.import(f.module, f.name, EntityType::Function(f.type_id));
     }
     section.import(
-      "blueforest:dropin-std:v1",
+      "blueforest:dropin-core:v1",
       "memory",
       MemoryType {
         minimum: 1,

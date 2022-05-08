@@ -24,20 +24,20 @@ use wasm_encoder::ValType::I32;
 
 use std::path::Path;
 
-use dropin_modules::print_to;
+use dropin_core::print_to;
 
 use crate::{Recipe, WasiUnwrap};
 use crate::expressions::Expression;
 use crate::path::get_recipe;
 
 mod builder;
-use builder::{ModuleBuilder, Std};
+use builder::{ModuleBuilder, Core};
 
 mod error;
 pub use error::CompileError;
 
 struct State<'a> {
-  pub std_:      Std<'a>,
+  pub std_:      Core<'a>,
 }
 
 pub struct Compiler<'syntax, 'module> {
@@ -52,7 +52,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
   pub fn compile(&self, _path: &Path) -> Result<Module, CompileError> {
     let mut builder = ModuleBuilder::default();
     let mut state = State{
-      std_:      Std::default(),
+      std_:      Core::default(),
     };
 
     let mut iter = self.module.expression.iter();
@@ -97,8 +97,8 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
     match expression.pattern() {
       "print" => {
         let message = expression.iter().next().unwrap().as_str();
-        let alloc = builder.get_std(&state.std_.alloc);
-        let print = builder.get_std(&state.std_.print);
+        let alloc = builder.get_core(&state.std_.alloc);
+        let print = builder.get_core(&state.std_.print);
         let data = builder.memory().passive(message.as_bytes()) as u32;
         let start = builder.get_start();
         let ptr = start.add_local(I32);

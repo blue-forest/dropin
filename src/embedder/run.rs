@@ -44,9 +44,9 @@ impl Embedder {
     let mut linker = Linker::new(&self.engine);
     wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
     let mut store = Store::new(&self.engine, Self::run_ctx(root));
-    let std_instance = linker.instantiate(&mut store, &self.std).unwrap();
+    let core_instance = linker.instantiate(&mut store, &self.core).unwrap();
     linker.instance(
-      &mut store, "blueforest:dropin-std:v1", std_instance,
+      &mut store, "blueforest:dropin-core:v1", core_instance,
     ).unwrap();
     let main = Module::from_file(&self.engine, path).unwrap();
     let main_instance = linker.instantiate(&mut store, &main).unwrap();

@@ -474,9 +474,17 @@ dependencies = [
 name = "dropin-bootstrap"
 version = "0.5.3-2"
 dependencies = [
- "dropin-modules",
+ "dropin-core",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "wasm-encoder",
+]
+
+[[package]]
+name = "dropin-core"
+version = "0.5.3-2"
+dependencies = [
+ "wasi 0.11.0+wasi-snapshot-preview1",
+ "wee_alloc",
 ]
 
 [[package]]
@@ -487,14 +495,6 @@ dependencies = [
  "structopt",
  "wasmtime",
  "wasmtime-wasi",
-]
-
-[[package]]
-name = "dropin-modules"
-version = "0.5.3-2"
-dependencies = [
- "wasi 0.11.0+wasi-snapshot-preview1",
- "wee_alloc",
 ]
 
 [[package]]

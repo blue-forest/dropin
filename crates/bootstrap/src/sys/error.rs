@@ -21,7 +21,7 @@
 
 use std::error::Error;
 
-use dropin_modules::print_to;
+use dropin_core::print_to;
 
 
 pub trait WasiExpect<T> {

@@ -33,8 +33,8 @@ macro_rules! PATH_SEPARATOR {() => ( r"\")}
 #[cfg(not(host_family = "windows"))]
 macro_rules! PATH_SEPARATOR {() => ( r"/")}
 
-static STD_BINARY: &[u8] = include_bytes!(concat!(
-  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_modules.wasm",
+static CORE_BINARY: &[u8] = include_bytes!(concat!(
+  env!("OUT_DIR"), PATH_SEPARATOR!(), "dropin_core.wasm",
 ));
 
 static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
@@ -43,7 +43,7 @@ static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
 
 pub struct Embedder {
   pub engine:                Arc<Engine>,
-  pub std:                   Module,
+  pub core:                  Module,
   pub compile_module:        Option<Module>,
   pub compile_module_handle: Option<JoinHandle<Module>>,
 }
@@ -52,7 +52,7 @@ impl Default for Embedder {
   fn default() -> Self {
     let engine = Arc::new(Engine::default());
 
-    let std = Module::new(&engine, STD_BINARY).unwrap();
+    let core = Module::new(&engine, CORE_BINARY).unwrap();
 
     let compile_module = None;
     let engine_clone = engine.clone();
@@ -60,6 +60,6 @@ impl Default for Embedder {
       Module::new(&engine_clone, BOOTSTRAP_BINARY).unwrap()
     ));
 
-    Self{ engine, std, compile_module, compile_module_handle }
+    Self{ engine, core, compile_module, compile_module_handle }
   }
 }

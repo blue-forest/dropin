@@ -21,7 +21,7 @@
 
 use wasm_encoder::{Instruction, ValType};
 
-use dropin_modules::print_to;
+use dropin_core::print_to;
 
 use super::{FunctionBuilder, InstructionBuilder};
 

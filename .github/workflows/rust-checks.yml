@@ -29,8 +29,6 @@ jobs:
       run: cargo build --verbose -p dropin-bootstrap --target wasm32-unknown-unknown --release
     - name: Build CLI
       run: cargo build --verbose
-    - name: Build
-      run: cargo build --verbose
     - uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}

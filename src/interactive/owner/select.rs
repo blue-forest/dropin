@@ -38,6 +38,7 @@ impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
     cli.owner_selected = Some(self.index);
     cli.model_selected = None;
+    cli.cwd = cli.root.clone();
     cli.cwd.push(&cli.owners[self.index]);
     cli.cwd.push("models");
     cli.config.set_owner(self.name.clone());

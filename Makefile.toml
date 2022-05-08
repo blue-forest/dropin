@@ -22,6 +22,22 @@ args = [
   "--release"
 ]
 
+[tasks.prePublish]
+dependencies = [ "buildCore", "buildBootstrap" ]
+script = '''
+PACKAGE_ROOT="target/package/${CARGO_MAKE_CRATE_NAME}-${CARGO_MAKE_CRATE_VERSION}"
+PACKAGE_WASM_TARGET="${PACKAGE_ROOT}/target/wasm32-unknown-unknown/release"
+WASM_TARGET="target/wasm32-unknown-unknown/release"
+mkdir -p ${PACKAGE_WASM_TARGET}
+cp ${WASM_TARGET}/dropin_core.wasm ${PACKAGE_WASM_TARGET}
+cp ${WASM_TARGET}/dropin_bootstrap.wasm ${PACKAGE_WASM_TARGET}
+'''
+
+[tasks.publish]
+dependencies = [ "prePublish" ]
+command = "cargo"
+args = [ "publish", "${@}" ]
+
 [tasks.build]
 dependencies = [
   "buildCore",

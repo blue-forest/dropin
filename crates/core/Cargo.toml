@@ -1,6 +1,6 @@
 [package]
 name = "dropin-core"
-version = "0.5.3-2"
+version = "0.5.3-4"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in core [WIP]"

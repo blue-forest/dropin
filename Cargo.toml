@@ -9,7 +9,7 @@ exclude = ["etc/sandbox"]
 
 [package]
 name = "dropin"
-version = "0.5.3-3"
+version = "0.5.3-4"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in [WIP]"
@@ -21,8 +21,8 @@ keywords = ["WebAssembly"]
 strip = "symbols"
 
 [dependencies]
-dropin-utils = { path = "./crates/utils", version = "0.5.3-2" }
-dropin-bootstrap = { path = "./crates/bootstrap", version = "0.5.3-2" }
+dropin-utils = { path = "./crates/utils", version = "0.5.3-4" }
+dropin-bootstrap = { path = "./crates/bootstrap", version = "0.5.3-4" }
 cap-std = "0.24"
 dialoguer = "0.10.0"
 edit = "0.1.3"

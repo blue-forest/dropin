@@ -18,7 +18,8 @@ jobs:
     - uses: actions-rs/toolchain@v1
       with:
         components: clippy
-        override: true
+    - uses: actions-rs/toolchain@v1
+      with:
         target: wasm32-unknown-unknown
     - name: Build core
       run: cargo build --verbose -p dropin-core --target wasm32-unknown-unknown --release

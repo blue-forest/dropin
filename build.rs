@@ -28,7 +28,7 @@ fn main() {
   let dropin_core_path = Path::new(&workspace_dir).join(Path::new(
     "target/wasm32-unknown-unknown/release/dropin_core.wasm",
   ));
-  for dir in Path::new(&workspace_dir).read_dir().unwrap().flatten() {
+  for dir in Path::new(&workspace_dir).join(Path::new("target")).read_dir().unwrap().flatten() {
     println!("{:?}", dir);
   }
   panic!("{:?}", workspace_dir);

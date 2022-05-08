@@ -26,6 +26,7 @@ jobs:
       with:
         toolchain: stable
         target: wasm32-unknown-unknown
+    - uses: davidB/rust-cargo-make@v1
     - run: cargo publish --token ${CRATES_TOKEN} -p dropin-utils
       if: always()
       env:

@@ -22,6 +22,10 @@ jobs:
         profile: minimal
         toolchain: stable
         override: true
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: wasm32-unknown-unknown
     - run: cargo publish --token ${CRATES_TOKEN} -p dropin-utils
       if: always()
       env:
@@ -34,6 +38,10 @@ jobs:
       if: always()
       env:
         CRATES_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+    - name: Build core
+      run: cargo build --verbose -p dropin-core --target wasm32-unknown-unknown --release
+    - name: Build bootstrap
+      run: cargo build --verbose -p dropin-bootstrap --target wasm32-unknown-unknown --release
     - run: cargo publish --token ${CRATES_TOKEN}
       if: always()
       env:

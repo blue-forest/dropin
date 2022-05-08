@@ -21,31 +21,31 @@
 
 use wasm_encoder::{
   CodeSection, EntityType, Export, ExportSection, FunctionSection,
-  ImportSection, MemorySection, MemoryType, Module, TypeSection,
+  ImportSection, MemoryType, Module, TypeSection,
 };
 
 use std::collections::VecDeque;
 
 mod function;
-pub use function::FunctionBuilder;
+pub use function::{FunctionBuilder, Local};
 
 mod import;
 use import::FunctionImport;
 
 mod memory;
-pub use memory::{MemoryAddress, MemoryBuilder};
+pub use memory::MemoryBuilder;
 
-mod wasi;
-pub use wasi::{WASI, WASIFunction};
+mod dropin_core;
+pub use self::dropin_core::{Core, CoreFunction};
 
-pub struct ModuleBuilder<'module, 'memory> {
-  memory:             MemoryBuilder<'memory>,
+pub struct ModuleBuilder<'module> {
+  memory:             MemoryBuilder<'module>,
   types:              TypeSection,
-  functions_imported: Vec<FunctionImport<'memory>>,
-  functions_local:    VecDeque<FunctionBuilder<'module, 'memory>>,
+  functions_imported: Vec<FunctionImport<'module>>,
+  functions_local:    VecDeque<FunctionBuilder<'module>>,
 }
 
-impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
+impl<'module> Default for ModuleBuilder<'module> {
   fn default() -> Self {
     let mut result = Self{
       memory:             MemoryBuilder::default(),
@@ -58,33 +58,14 @@ impl<'module, 'memory> Default for ModuleBuilder<'module, 'memory> {
   }
 }
 
-impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
-  pub fn get_start(&mut self) -> &mut FunctionBuilder<'module, 'memory> {
-    self.functions_local.get_mut(0).unwrap()
-  }
-
-  pub fn memory(&mut self) -> &mut MemoryBuilder<'memory> { &mut self.memory }
-  
-  pub fn from_wasi(&mut self, f: &WASIFunction<'memory>) -> u32 {
-    if let Some(id) = f.id {
-      return id;
-    }
-    let type_id = self.types.len();
-    self.types.function(f.params.clone(), f.results.clone());
-    let result = self.functions_imported.len() as u32;
-    self.functions_imported.push(FunctionImport{
-      type_id, module: "wasi_unstable", name: f.name,
-    });
-    result
-  }
-
+impl<'module> ModuleBuilder<'module> {
   pub fn build(self) -> Module {
     let mut module = Module::new();
     self.build_type(&mut module)
       .build_import(&mut module)
       .build_function(&mut module)
-      .build_memory(&mut module)
       .build_export(&mut module)
+      .build_data_count(&mut module)
       .build_code(&mut module)
       .build_data(&mut module);
     module
@@ -100,6 +81,15 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
     for f in self.functions_imported.iter() {
       section.import(f.module, f.name, EntityType::Function(f.type_id));
     }
+    section.import(
+      "blueforest:dropin-core:v1",
+      "memory",
+      MemoryType {
+        minimum: 1,
+        maximum: None,
+        memory64: false,
+      }
+    );
     module.section(&section);
     self
   }
@@ -113,20 +103,8 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
     self
   }
 
-  fn build_memory(self, module: &mut Module) -> Self {
-    let mut section = MemorySection::new();
-    section.memory(MemoryType{
-      minimum:  1,
-      maximum:  None,
-      memory64: false,
-    });
-    module.section(&section);
-    self
-  }
-
   fn build_export(self, module: &mut Module) -> Self {
     let mut section = ExportSection::new();
-    section.export("memory", Export::Memory(0));
     section.export(
       "_start", Export::Function(self.functions_imported.len() as u32),
     );
@@ -137,9 +115,16 @@ impl<'module, 'memory> ModuleBuilder<'module, 'memory> {
   fn build_code(mut self, module: &mut Module) -> Self {
     let mut section = CodeSection::new();
     while let Some(f) = self.functions_local.pop_front() {
-      section.function(&f.build(&self.memory));
+      section.function(&f.build());
     }
     module.section(&section);
+    self
+  }
+
+  fn build_data_count(self, module: &mut Module) -> Self {
+    if let Some(section) = self.memory.build_data_count() {
+      module.section(&section);
+    }
     self
   }
 

@@ -18,9 +18,42 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use structopt::StructOpt;
+
+use std::path::PathBuf;
+
+mod embedder;
+pub use embedder::Embedder;
 mod interactive;
+mod utils;
+
+#[derive(StructOpt)]
+enum Command {
+  Run{
+    #[structopt(long, parse(from_os_str))]
+    root: Option<PathBuf>,
+    #[structopt(parse(from_os_str))]
+    file: PathBuf,
+  }
+}
+
+#[derive(StructOpt)]
+#[structopt(name = "drop'in", about = "a universe to shape your ideas")]
+struct Opt {
+  #[structopt(subcommand)]
+  cmd: Option<Command>
+}
 
 fn main() {
-  interactive::Cli::new().run();
+  let args = Opt::from_args();
+  if let Some(Command::Run{root, file}) = args.cmd {
+    let embedder = Embedder::default();
+    embedder.run(
+      if root.is_some() { Some(root.as_ref().unwrap()) } else { None },
+      &file,
+    );
+  } else {
+    interactive::Cli::new().run();
+  }
 }
 

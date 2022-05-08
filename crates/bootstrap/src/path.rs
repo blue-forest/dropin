@@ -19,32 +19,62 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::fs::read_to_string;
-use std::path::PathBuf;
-use dropin_utils::path::get_root;
+use std::path::{Path, PathBuf};
+use std::str;
 
-fn get_path(collection: &str, id: String) -> PathBuf {
+use crate::sys::{WasiExpect, WasiUnwrap};
+use crate::sys::rights;
+
+pub fn read_file(path: &Path) -> String {
+  unsafe {
+    let fd = wasi::path_open(
+      3, // preopened fd
+      wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
+      path.to_str().wasi_unwrap(),
+      0, rights::FD_READ, rights::FD_READ, 0,
+    ).wasi_unwrap();
+    let mut content = String::new();
+    loop {
+      let mut buf = [0; 3];
+      let size = wasi::fd_read(fd, &[
+        wasi::Iovec{
+          buf:     buf.as_mut_ptr(),
+          buf_len: buf.len(),
+        }
+      ]).wasi_unwrap();
+      content.push_str(
+        str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap()
+      );
+      if size < buf.len() || size == 0 {
+        break
+      }
+    }
+    content
+  }
+}
+
+pub fn get_model_path(id: &str) -> PathBuf {
+  model_path(&mut id.split(':'))
+}
+
+fn model_path(iter: &mut str::Split<char>) -> PathBuf {
+  let owner   = iter.next().wasi_expect("expected owner");
+  let model   = iter.next().wasi_expect("expected model");
+  let version = iter.next().wasi_expect("expected version");
+  let mut path = PathBuf::new();
+  path.push(owner);
+  path.push("models");
+  path.push(model);
+  path.push(version);
+  path
+}
+
+pub fn get_recipe(collection: &str, id: &str) -> String {
   let mut split = id.split(':');
-  let owner = split.next().expect("expected owner");
-  let model = split.next().expect("expected model");
-  let version = split.next().expect("expected version");
-  let mut recipe = split.next().expect("expected recipe").to_string();
+  let mut path = model_path(&mut split);
+  let mut recipe = split.next().wasi_expect("expected recipe").to_string();
   recipe.push_str(".dropin");
-  let mut result = get_root();
-  result.push(owner);
-  // result.push("models");
-  result.push(model);
-  result.push(version);
-  result.push(collection);
-  result.push(recipe);
-  result
+  path.push(collection);
+  path.push(recipe);
+  read_file(&path)
 }
-
-pub fn get_recipe(collection: &str, id: String) -> String {
-  let path = get_path(collection, id);
-  let content = read_to_string(path).unwrap();
-  let header_split = content.find("\n===").unwrap();
-  let start = content.get(header_split+4..).unwrap().find("\n").unwrap() + header_split + 5;
-  content.get(start..).unwrap().to_string()
-}
-

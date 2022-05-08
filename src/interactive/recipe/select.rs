@@ -24,8 +24,8 @@ use std::sync::Arc;
 
 use crate::interactive::{Command, Cli};
 use super::Recipe;
-use super::remove::Remove;
 use super::edit::Edit;
+use super::remove::Remove;
 
 pub struct Select(Arc<Selection>);
 
@@ -47,17 +47,22 @@ impl Display for Select {
 
 impl Command for Select {
   fn run(&self, cli: &mut Cli) -> u32 {
-    let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(Edit::new(self.0.clone())),
-      Box::new(Remove::new(self.0.clone())),
-    ];
+    let recipe = self.0.recipe();
+    cli.cwd.push(format!("{}.dropin", self.0.id()));
     let mut id = String::new();
     for namespace in self.0.namespaces.iter() {
       id.push_str(namespace);
       id.push('/');
     }
     id.push_str(&self.0.id);
-    cli.run_select(&id, &commands)
+    let result = cli.run_select(&id, |cli| {
+      let mut commands: Vec<Box<dyn Command>> = recipe.commands(&cli.cwd);
+      commands.push(Box::new(Edit::new()));
+      commands.push(Box::new(Remove::new(self.0.clone())));
+      commands
+    });
+    cli.cwd.pop();
+    result
   }
 }
 

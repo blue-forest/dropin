@@ -1,0 +1,7 @@
+syntaxes message
+================
+
+message ("\"" $patterns.content "\""){1..}
+
+content ("\\\"" | !"\""){..}
+

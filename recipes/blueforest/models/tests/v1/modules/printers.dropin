@@ -1,0 +1,9 @@
+modules printers
+================
+blueforest:tests:v1:message
+  message
+
+fn main()
+  enter
+  1..
+    > print $expression

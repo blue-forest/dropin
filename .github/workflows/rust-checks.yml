@@ -1,7 +1,7 @@
 name: Rust checks
 on:
   push:
-    paths: [ src/**/* ]
+    paths: [ src/**/*, crates/*/src/**/* ]
   workflow_dispatch:
 jobs:
   rust_checks:
@@ -17,10 +17,17 @@ jobs:
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
     - uses: actions-rs/toolchain@v1
       with:
-        toolchain: nightly
+        toolchain: stable
         components: clippy
-        override: true
-    - name: Build
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: wasm32-unknown-unknown
+    - name: Build core
+      run: cargo build --verbose -p dropin-core --target wasm32-unknown-unknown --release
+    - name: Build bootstrap
+      run: cargo build --verbose -p dropin-bootstrap --target wasm32-unknown-unknown --release
+    - name: Build CLI
       run: cargo build --verbose
     - uses: actions-rs/clippy-check@v1
       with:

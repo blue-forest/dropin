@@ -18,40 +18,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dialoguer::Select;
-use dialoguer::theme::ColorfulTheme;
-
 use std::fmt::Display;
 use std::fs::create_dir;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 use dropin_utils::path::get_root;
 
+use crate::Embedder;
+use crate::utils::get_dirs;
+
+mod cli_run;
 mod config;
 use self::config::Config;
 mod error;
 use error::ConfigError;
 mod model;
-use model::ModelCommand;
 mod owner;
-use owner::OwnerCommand;
 mod recipe;
-use recipe::{
-  Modules,
-  Functions,
-  Pipelines,
-  RecipeCommand,
-  Syntaxes,
-  Types,
-};
 mod path;
 use path::validate_path;
-mod utils;
-use utils::get_dirs;
 
 pub struct Cli {
   config:         Config,
+  cwd:            PathBuf,
+  embedder:       Embedder,
   model_selected: Option<usize>,
   models:         Vec<String>,
   owner_selected: Option<usize>,
@@ -71,21 +61,26 @@ impl Cli {
     } else {
       get_dirs(&root)
     };
+    let mut cwd = root.clone();
     let config = Config::new(&root);
     let mut owner_selected = None;
     let mut model_selected = None;
     let mut models = vec![];
     if let Some(owner) = config.owner() {
       owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
-      let mut owner_path = root.clone();
-      owner_path.push(owner);
-      models = get_dirs(&owner_path);
+      cwd.push(owner);
+      cwd.push("models");
+      models = get_dirs(&cwd);
       if let Some(model) = config.model() {
+        cwd.push(model);
+        cwd.push("v1"); // TODO: deal with versions
         model_selected = Some(models.iter().position(|m| m == model).unwrap());
       }
     }
     Self{
       config,
+      cwd,
+      embedder: Embedder::default(),
       model_selected,
       models,
       owner_selected,
@@ -94,63 +89,13 @@ impl Cli {
       version: "v1".to_string(), // TODO: deal with versions
     }
   }
-
-  #[inline(always)]
-  pub fn run(&mut self) {
-    let commands: Vec<Box<dyn Command>> = vec![
-      Box::new(RecipeCommand::new(Arc::new(Modules))),
-      Box::new(RecipeCommand::new(Arc::new(Functions))),
-      Box::new(RecipeCommand::new(Arc::new(Pipelines))),
-      Box::new(RecipeCommand::new(Arc::new(Syntaxes))),
-      Box::new(RecipeCommand::new(Arc::new(Types))),
-      Box::new(ModelCommand{}),
-      Box::new(OwnerCommand{}),
-    ];
-    self.run_select("Home", &commands);
-  }
-
-  fn run_select(&mut self, title: &str, commands: &[Box<dyn Command>]) -> u32 {
-    let theme = ColorfulTheme::default();
-    loop {
-      let enabled_commands: Vec<&Box<dyn Command>> = commands.iter()
-        .filter(|x| x.is_enabled(self))
-        .collect();
-      let mut select = Select::with_theme(&theme);
-      select.item("◀ back")
-        .items(&enabled_commands)
-        .default(1);
-      select.with_prompt(self.prompt(title));
-      let command = select.interact().unwrap();
-      if command == 0 { break 0; }
-      let back_n = enabled_commands[command-1].run(self);
-      if back_n > 0 { break back_n - 1; }
-    }
-  }
-
-  fn prompt(&self, title: &str) -> String {
-    let mut result = String::new();
-    if let Some(owner) = self.owner_selected {
-      result.push_str(&self.owners[owner]);
-      if let Some(model) = self.model_selected {
-        result.push(':');
-        result.push_str(&self.models[model]);
-        result.push(':');
-        result.push_str(&self.version);
-      }
-    } else {
-      result.push_str("<no owner selected>");
-    }
-    result.push_str(": ");
-    result.push_str(title);
-    result
-  }
 }
 
 impl Default for Cli {
   fn default() -> Self { Self::new() }
 }
 
-trait Command: Display {
+pub trait Command: Display {
   fn run(&self, cli: &mut Cli) -> u32;
   fn is_enabled(&self, _cli: &Cli) -> bool { true }
 }

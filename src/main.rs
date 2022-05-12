@@ -31,35 +31,28 @@ mod utils;
 
 #[derive(StructOpt)]
 enum Command {
-    Run {
-        #[structopt(long)]
-        share_root: bool,
-        #[structopt(parse(from_os_str))]
-        file: PathBuf,
-    },
+	Run {
+		#[structopt(long)]
+		share_root: bool,
+		#[structopt(parse(from_os_str))]
+		file: PathBuf,
+	},
 }
 
 #[derive(StructOpt)]
 #[structopt(name = "drop'in", about = "a universe to shape your ideas")]
 struct Opt {
-    #[structopt(subcommand)]
-    cmd: Option<Command>,
+	#[structopt(subcommand)]
+	cmd: Option<Command>,
 }
 
 fn main() {
-    let args = Opt::from_args();
-    if let Some(Command::Run { file, share_root }) = args.cmd {
-        let root = get_root();
-        let mut embedder = Embedder::new(&root);
-        embedder.run(
-            if share_root {
-                Some(&root)
-            } else {
-                None
-            },
-            &file,
-        );
-    } else {
-        interactive::Cli::new().run();
-    }
+	let args = Opt::from_args();
+	if let Some(Command::Run { file, share_root }) = args.cmd {
+		let root = get_root();
+		let mut embedder = Embedder::new(&root);
+		embedder.run(if share_root { Some(&root) } else { None }, &file);
+	} else {
+		interactive::Cli::new().run();
+	}
 }

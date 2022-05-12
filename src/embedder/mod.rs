@@ -30,60 +30,66 @@ mod compile;
 mod run;
 
 pub struct Embedder {
-    pub engine: Arc<Engine>,
-    pub core: Option<Module>,
-    pub core_handle: Option<JoinHandle<Module>>,
-    pub compile: Option<Module>,
-    pub compile_handle: Option<JoinHandle<Module>>,
+	pub engine: Arc<Engine>,
+	pub core: Option<Module>,
+	pub core_handle: Option<JoinHandle<Module>>,
+	pub compile: Option<Module>,
+	pub compile_handle: Option<JoinHandle<Module>>,
 }
 
 impl Embedder {
-  fn fetch<'a>(
-    root: &Path, engine: Arc<Engine>, module: &'a str,
-  ) -> impl FnMut() -> Module + 'a {
-    let mut path = root.to_path_buf();
-    move || {
-      path.push(".builds");
-      path.push("blueforest");
-      if !path.exists() {
-        create_dir_all(&path).unwrap();
-      }
-      path.push(format!("{}_v1.wasm", module));
-      let binary = if !path.exists() {
-        let mut url = String::from(env!("DROPIN_PM_HOST"));
-        url.push_str("/blueforest/");
-        url.push_str(module);
-        url.push_str("/v1");
-        let resp = reqwest::blocking::get(&url).unwrap();
-        if !resp.status().is_success() {
-          panic!("unexpected status from {} : {}", url, resp.status());
-        }
-        let binary = resp.bytes().unwrap();
-        write(&path, &binary).unwrap();
-        binary
-      } else {
-        read(&path).unwrap().into()
-      };
-      Module::new(&engine, binary).unwrap()
-    }
-  }
+	fn fetch<'a>(
+		root: &Path,
+		engine: Arc<Engine>,
+		module: &'a str,
+	) -> impl FnMut() -> Module + 'a {
+		let mut path = root.to_path_buf();
+		move || {
+			path.push(".builds");
+			path.push("blueforest");
+			if !path.exists() {
+				create_dir_all(&path).unwrap();
+			}
+			path.push(format!("{}_v1.wasm", module));
+			let binary = if !path.exists() {
+				let mut url = String::from(env!("DROPIN_PM_HOST"));
+				url.push_str("/blueforest/");
+				url.push_str(module);
+				url.push_str("/v1");
+				let resp = reqwest::blocking::get(&url).unwrap();
+				if !resp.status().is_success() {
+					panic!(
+						"unexpected status from {} : {}",
+						url,
+						resp.status()
+					);
+				}
+				let binary = resp.bytes().unwrap();
+				write(&path, &binary).unwrap();
+				binary
+			} else {
+				read(&path).unwrap().into()
+			};
+			Module::new(&engine, binary).unwrap()
+		}
+	}
 
-  pub fn new(root: &Path) -> Self {
-    let engine = Arc::new(Engine::default());
-    let core_handle = Some(spawn(
-      Embedder::fetch(root, engine.clone(), "dropin-core")
-    ));
-    let compile_handle = Some(spawn(
-      Embedder::fetch(root, engine.clone(), "dropin-bootstrap")
-    ));
+	pub fn new(root: &Path) -> Self {
+		let engine = Arc::new(Engine::default());
+		let core_handle =
+			Some(spawn(Embedder::fetch(root, engine.clone(), "dropin-core")));
+		let compile_handle = Some(spawn(Embedder::fetch(
+			root,
+			engine.clone(),
+			"dropin-bootstrap",
+		)));
 
-    Self {
-        engine,
-        core: None,
-        core_handle,
-        compile: None,
-        compile_handle,
-    }
-  }
+		Self {
+			engine,
+			core: None,
+			core_handle,
+			compile: None,
+			compile_handle,
+		}
+	}
 }
-

@@ -25,50 +25,50 @@ use super::import::FunctionImport;
 use super::ModuleBuilder;
 
 pub struct Core<'a> {
-    pub print: CoreFunction<'a>,
-    pub alloc: CoreFunction<'a>,
+	pub print: CoreFunction<'a>,
+	pub alloc: CoreFunction<'a>,
 }
 
 impl<'a> Default for Core<'a> {
-    fn default() -> Self {
-        Self {
-            print: CoreFunction::new("print", vec![I32, I32], vec![]),
-            alloc: CoreFunction::new("alloc", vec![I32, I32], vec![I32]),
-        }
-    }
+	fn default() -> Self {
+		Self {
+			print: CoreFunction::new("print", vec![I32, I32], vec![]),
+			alloc: CoreFunction::new("alloc", vec![I32, I32], vec![I32]),
+		}
+	}
 }
 
 impl<'module> ModuleBuilder<'module> {
-    pub fn get_core(&mut self, f: &CoreFunction<'module>) -> u32 {
-        if let Some(id) = f.id {
-            return id;
-        }
-        let type_id = self.types.len();
-        self.types.function(f.params.clone(), f.results.clone());
-        let result = self.functions_imported.len() as u32;
-        self.functions_imported.push(FunctionImport {
-            type_id,
-            module: "blueforest:dropin-core:v1",
-            name: f.name,
-        });
-        result
-    }
+	pub fn get_core(&mut self, f: &CoreFunction<'module>) -> u32 {
+		if let Some(id) = f.id {
+			return id;
+		}
+		let type_id = self.types.len();
+		self.types.function(f.params.clone(), f.results.clone());
+		let result = self.functions_imported.len() as u32;
+		self.functions_imported.push(FunctionImport {
+			type_id,
+			module: "blueforest:dropin-core:v1",
+			name: f.name,
+		});
+		result
+	}
 }
 
 pub struct CoreFunction<'a> {
-    pub id: Option<u32>,
-    pub name: &'a str,
-    pub params: Vec<ValType>,
-    pub results: Vec<ValType>,
+	pub id: Option<u32>,
+	pub name: &'a str,
+	pub params: Vec<ValType>,
+	pub results: Vec<ValType>,
 }
 
 impl<'a> CoreFunction<'a> {
-    fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
-        Self {
-            id: None,
-            name,
-            params,
-            results,
-        }
-    }
+	fn new(name: &'a str, params: Vec<ValType>, results: Vec<ValType>) -> Self {
+		Self {
+			id: None,
+			name,
+			params,
+			results,
+		}
+	}
 }

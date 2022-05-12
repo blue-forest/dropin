@@ -483,7 +483,6 @@ version = "0.5.3-5"
 dependencies = [
  "cap-std",
  "dialoguer",
- "dropin-bootstrap",
  "dropin-utils",
  "edit",
  "home",

@@ -24,26 +24,26 @@ use std::path::PathBuf;
 use crate::interactive::Cli;
 
 fn push_owner(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
-    if let Some(owner) = cli.owner_selected {
-        buf.push(&cli.owners[owner]);
-        Some(buf)
-    } else {
-        None
-    }
+	if let Some(owner) = cli.owner_selected {
+		buf.push(&cli.owners[owner]);
+		Some(buf)
+	} else {
+		None
+	}
 }
 
 pub fn get_owner(cli: &Cli) -> Option<PathBuf> {
-    push_owner(cli, cli.root.clone())
+	push_owner(cli, cli.root.clone())
 }
 
 fn push_model(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
-    if let Some(model) = cli.model_selected {
-        buf.push("models");
-        buf.push(&cli.models[model]);
-        Some(buf)
-    } else {
-        None
-    }
+	if let Some(model) = cli.model_selected {
+		buf.push("models");
+		buf.push(&cli.models[model]);
+		Some(buf)
+	} else {
+		None
+	}
 }
 
 /*
@@ -55,32 +55,41 @@ pub fn get_model(cli: &Cli) -> Option<PathBuf> {
 */
 
 fn push_version(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
-    if !cli.version.is_empty() {
-        buf.push(&cli.version);
-        Some(buf)
-    } else {
-        None
-    }
+	if !cli.version.is_empty() {
+		buf.push(&cli.version);
+		Some(buf)
+	} else {
+		None
+	}
 }
 
 pub fn get_version(cli: &Cli) -> Option<PathBuf> {
-    let mut buf = cli.root.clone();
-    buf = push_owner(cli, buf).unwrap();
-    buf = push_model(cli, buf).unwrap();
-    push_version(cli, buf)
+	let mut buf = cli.root.clone();
+	buf = push_owner(cli, buf).unwrap();
+	buf = push_model(cli, buf).unwrap();
+	push_version(cli, buf)
 }
 
-pub fn get_namespace(cli: &Cli, recipe_name: &str, namespaces: Vec<&str>) -> PathBuf {
-    let mut path = get_version(cli).unwrap();
-    path.push(recipe_name);
-    for namespace in namespaces.iter() {
-        path.push(namespace);
-    }
-    path
+pub fn get_namespace(
+	cli: &Cli,
+	recipe_name: &str,
+	namespaces: Vec<&str>,
+) -> PathBuf {
+	let mut path = get_version(cli).unwrap();
+	path.push(recipe_name);
+	for namespace in namespaces.iter() {
+		path.push(namespace);
+	}
+	path
 }
 
-pub fn get_recipe(cli: &Cli, recipe_name: &str, namespaces: Vec<&str>, id: &str) -> PathBuf {
-    let mut result = get_namespace(cli, recipe_name, namespaces);
-    result.push(&format!("{}.dropin", id));
-    result
+pub fn get_recipe(
+	cli: &Cli,
+	recipe_name: &str,
+	namespaces: Vec<&str>,
+	id: &str,
+) -> PathBuf {
+	let mut result = get_namespace(cli, recipe_name, namespaces);
+	result.push(&format!("{}.dropin", id));
+	result
 }

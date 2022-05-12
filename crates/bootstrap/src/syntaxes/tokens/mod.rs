@@ -44,31 +44,31 @@ mod quantifier;
 pub use quantifier::Quantifier;
 
 pub trait Token<'a>: Debug {
-    fn parse<'b, 'c>(
-        &self,
-        patterns: &'c Patterns<'a>,
-        module: &'b str,
-        iter: &mut Peekable<CharIndices<'b>>,
-        expr: &mut Expression<'a, 'b>,
-    ) -> Result<(), ParseError>;
+	fn parse<'b, 'c>(
+		&self,
+		patterns: &'c Patterns<'a>,
+		module: &'b str,
+		iter: &mut Peekable<CharIndices<'b>>,
+		expr: &mut Expression<'a, 'b>,
+	) -> Result<(), ParseError>;
 
-    fn expected(&self) -> String {
-        "unknown".to_string()
-    }
+	fn expected(&self) -> String {
+		"unknown".to_string()
+	}
 }
 
 fn parse_token<'a>(
-    syntax: &'a str,
-    iter: &mut Peekable<CharIndices<'a>>,
-    c: char,
+	syntax: &'a str,
+	iter: &mut Peekable<CharIndices<'a>>,
+	c: char,
 ) -> Box<dyn Token<'a> + 'a> {
-    match c {
-        '"' => Literal::parse(syntax, iter),
-        '$' => Getter::parse(syntax, iter),
-        '!' => Not::parse(syntax, iter),
-        '(' => Concat::parse(syntax, iter),
-        _ => {
-            panic!("unknown token {}", c);
-        }
-    }
+	match c {
+		'"' => Literal::parse(syntax, iter),
+		'$' => Getter::parse(syntax, iter),
+		'!' => Not::parse(syntax, iter),
+		'(' => Concat::parse(syntax, iter),
+		_ => {
+			panic!("unknown token {}", c);
+		}
+	}
 }

@@ -26,40 +26,46 @@ use super::{get_entries, Recipe};
 use crate::interactive::{Cli, Command};
 
 pub struct Namespace {
-    recipe: Arc<dyn Recipe>,
-    id: String,
-    namespaces: Arc<Vec<String>>,
+	recipe: Arc<dyn Recipe>,
+	id: String,
+	namespaces: Arc<Vec<String>>,
 }
 
 impl Namespace {
-    pub fn new(recipe: Arc<dyn Recipe>, id: &str, namespaces: Arc<Vec<String>>) -> Self {
-        Self {
-            recipe,
-            id: id.to_string(),
-            namespaces,
-        }
-    }
+	pub fn new(
+		recipe: Arc<dyn Recipe>,
+		id: &str,
+		namespaces: Arc<Vec<String>>,
+	) -> Self {
+		Self {
+			recipe,
+			id: id.to_string(),
+			namespaces,
+		}
+	}
 }
 
 impl Display for Namespace {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        format!("namespace {}", self.id).fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		format!("namespace {}", self.id).fmt(f)
+	}
 }
 
 impl Command for Namespace {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        let namespaces = {
-            let mut namespaces = (*self.namespaces).clone();
-            namespaces.push(self.id.clone());
-            Arc::new(namespaces)
-        };
-        cli.cwd.push(&self.id);
-        let result = cli.run_select(
-            &format!("{} Namespace {}", self.recipe, namespaces.join("/")),
-            |cli| get_entries(&cli.cwd, self.recipe.clone(), namespaces.clone()),
-        );
-        cli.cwd.pop();
-        result
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		let namespaces = {
+			let mut namespaces = (*self.namespaces).clone();
+			namespaces.push(self.id.clone());
+			Arc::new(namespaces)
+		};
+		cli.cwd.push(&self.id);
+		let result = cli.run_select(
+			&format!("{} Namespace {}", self.recipe, namespaces.join("/")),
+			|cli| {
+				get_entries(&cli.cwd, self.recipe.clone(), namespaces.clone())
+			},
+		);
+		cli.cwd.pop();
+		result
+	}
 }

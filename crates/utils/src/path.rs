@@ -27,29 +27,29 @@ use std::fs::create_dir_all;
 use std::path::{Path, PathBuf};
 
 pub fn get_root() -> PathBuf {
-    if let Ok(root) = var("DROPIN_ROOT") {
-        println!("Using $DROPIN_ROOT ({})", root);
-        return PathBuf::from(root);
-    }
-    let mut path = match home_dir() {
-        Some(path) => path.join(".dropin.recipes"),
-        None => current_dir().unwrap().join(".dropin.recipes"),
-    };
-    if path.is_relative() {
-        path = current_dir().unwrap().join(path).clean();
-    } else {
-        path = path.clean();
-    }
-    path
+	if let Ok(root) = var("DROPIN_ROOT") {
+		println!("Using $DROPIN_ROOT ({})", root);
+		return PathBuf::from(root);
+	}
+	let mut path = match home_dir() {
+		Some(path) => path.join(".dropin.recipes"),
+		None => current_dir().unwrap().join(".dropin.recipes"),
+	};
+	if path.is_relative() {
+		path = current_dir().unwrap().join(path).clean();
+	} else {
+		path = path.clean();
+	}
+	path
 }
 
 pub fn get_build(root: &Path, owner: &str, model: &str) -> PathBuf {
-    let mut result = root.to_path_buf();
-    result.push(".builds");
-    result.push(owner);
-    if !result.exists() {
-        create_dir_all(&result).unwrap();
-    }
-    result.push(&format!("{}_v1.wasm", model));
-    result
+	let mut result = root.to_path_buf();
+	result.push(".builds");
+	result.push(owner);
+	if !result.exists() {
+		create_dir_all(&result).unwrap();
+	}
+	result.push(&format!("{}_v1.wasm", model));
+	result
 }

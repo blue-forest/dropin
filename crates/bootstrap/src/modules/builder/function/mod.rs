@@ -34,41 +34,41 @@ mod locals;
 pub use locals::{Local, Locals};
 
 impl<'module> ModuleBuilder<'module> {
-    pub fn get_start(&mut self) -> &mut FunctionBuilder<'module> {
-        self.functions_local.get_mut(0).wasi_unwrap()
-    }
+	pub fn get_start(&mut self) -> &mut FunctionBuilder<'module> {
+		self.functions_local.get_mut(0).wasi_unwrap()
+	}
 }
 
 pub struct FunctionBuilder<'a> {
-    type_id: u32,
-    instructions: VecDeque<InstructionBuilder<'a>>,
-    locals: Locals,
+	type_id: u32,
+	instructions: VecDeque<InstructionBuilder<'a>>,
+	locals: Locals,
 }
 
 impl<'a> FunctionBuilder<'a> {
-    pub fn new(type_id: u32) -> Self {
-        Self {
-            type_id,
-            instructions: VecDeque::new(),
-            locals: Locals::default(),
-        }
-    }
+	pub fn new(type_id: u32) -> Self {
+		Self {
+			type_id,
+			instructions: VecDeque::new(),
+			locals: Locals::default(),
+		}
+	}
 
-    pub fn type_id(&self) -> u32 {
-        self.type_id
-    }
+	pub fn type_id(&self) -> u32 {
+		self.type_id
+	}
 
-    pub fn basic(&mut self, instruction: Instruction<'a>) {
-        self.instructions
-            .push_back(InstructionBuilder::Basic(instruction));
-    }
+	pub fn basic(&mut self, instruction: Instruction<'a>) {
+		self.instructions
+			.push_back(InstructionBuilder::Basic(instruction));
+	}
 
-    pub fn build(mut self) -> Function {
-        let mut result = Function::new(self.locals.build());
-        while let Some(i) = self.instructions.pop_front() {
-            result.instruction(&i.build());
-        }
-        result.instruction(&Instruction::End);
-        result
-    }
+	pub fn build(mut self) -> Function {
+		let mut result = Function::new(self.locals.build());
+		while let Some(i) = self.instructions.pop_front() {
+			result.instruction(&i.build());
+		}
+		result.instruction(&Instruction::End);
+		result
+	}
 }

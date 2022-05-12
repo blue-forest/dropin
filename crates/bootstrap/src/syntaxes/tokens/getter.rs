@@ -29,74 +29,80 @@ use super::{Quantifier, Token};
 
 #[derive(Debug)]
 pub struct Getter<'a> {
-    query: &'a str,
+	query: &'a str,
 }
 
 impl<'a> Getter<'a> {
-    pub fn parse(syntax: &'a str, iter: &mut Peekable<CharIndices<'a>>) -> Box<dyn Token<'a> + 'a> {
-        let mut start: Option<usize> = None;
-        loop {
-            let next = iter.next();
-            if next.is_none() {
-                break Box::new(Getter {
-                    query: syntax
-                        .get(start.wasi_expect("expected query")..)
-                        .wasi_unwrap(),
-                });
-            }
-            let (i, c) = next.wasi_unwrap();
-            if start.is_none() {
-                if !c.is_alphanumeric() {
-                    // $ alone ?
-                    panic!("unexpected query {}", c);
-                }
-                start = Some(i);
-                continue;
-            }
-            if let Some((pi, pc)) = iter.peek() {
-                if pc.is_whitespace() || *pc == ')' || Quantifier::detect(*pc) {
-                    break Box::new(Getter {
-                        query: syntax
-                            .get(start.wasi_expect("expected query")..*pi)
-                            .wasi_unwrap(),
-                    });
-                }
-            }
-        }
-    }
+	pub fn parse(
+		syntax: &'a str,
+		iter: &mut Peekable<CharIndices<'a>>,
+	) -> Box<dyn Token<'a> + 'a> {
+		let mut start: Option<usize> = None;
+		loop {
+			let next = iter.next();
+			if next.is_none() {
+				break Box::new(Getter {
+					query: syntax
+						.get(start.wasi_expect("expected query")..)
+						.wasi_unwrap(),
+				});
+			}
+			let (i, c) = next.wasi_unwrap();
+			if start.is_none() {
+				if !c.is_alphanumeric() {
+					// $ alone ?
+					panic!("unexpected query {}", c);
+				}
+				start = Some(i);
+				continue;
+			}
+			if let Some((pi, pc)) = iter.peek() {
+				if pc.is_whitespace() || *pc == ')' || Quantifier::detect(*pc) {
+					break Box::new(Getter {
+						query: syntax
+							.get(start.wasi_expect("expected query")..*pi)
+							.wasi_unwrap(),
+					});
+				}
+			}
+		}
+	}
 }
 
 impl<'a> Token<'a> for Getter<'a> {
-    fn parse<'b, 'c>(
-        &self,
-        patterns: &'c Patterns<'a>,
-        module: &'b str,
-        iter: &mut Peekable<CharIndices<'b>>,
-        expr: &mut Expression<'a, 'b>,
-    ) -> Result<(), ParseError> {
-        if self.query.starts_with("patterns.") {
-            let key = self.query.get(9..).wasi_unwrap();
-            let pattern = patterns.get(key).wasi_unwrap();
-            expr.add_inner(pattern.parse(patterns, module, iter)?);
-            Ok(())
-        } else if self.query.starts_with("std.") {
-            if let Some((_, c)) = iter.peek() {
-                if c.is_alphanumeric() {
-                    iter.next();
-                    Ok(())
-                } else {
-                    Err(ParseError::new(format!(
-                        "unexpected token {}, expected alphanum",
-                        c
-                    )))
-                }
-            } else {
-                Err(ParseError::from(
-                    "unexpected end of file, expected alphanum",
-                ))
-            }
-        } else {
-            return Err(ParseError::new(format!("unknown ref: {}", self.query)));
-        }
-    }
+	fn parse<'b, 'c>(
+		&self,
+		patterns: &'c Patterns<'a>,
+		module: &'b str,
+		iter: &mut Peekable<CharIndices<'b>>,
+		expr: &mut Expression<'a, 'b>,
+	) -> Result<(), ParseError> {
+		if self.query.starts_with("patterns.") {
+			let key = self.query.get(9..).wasi_unwrap();
+			let pattern = patterns.get(key).wasi_unwrap();
+			expr.add_inner(pattern.parse(patterns, module, iter)?);
+			Ok(())
+		} else if self.query.starts_with("std.") {
+			if let Some((_, c)) = iter.peek() {
+				if c.is_alphanumeric() {
+					iter.next();
+					Ok(())
+				} else {
+					Err(ParseError::new(format!(
+						"unexpected token {}, expected alphanum",
+						c
+					)))
+				}
+			} else {
+				Err(ParseError::from(
+					"unexpected end of file, expected alphanum",
+				))
+			}
+		} else {
+			return Err(ParseError::new(format!(
+				"unknown ref: {}",
+				self.query
+			)));
+		}
+	}
 }

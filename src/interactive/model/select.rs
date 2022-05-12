@@ -24,25 +24,25 @@ use std::fmt::{Display, Error, Formatter};
 use crate::interactive::{Cli, Command};
 
 pub struct Select {
-    pub name: String,
-    pub index: usize,
+	pub name: String,
+	pub index: usize,
 }
 
 impl Display for Select {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "select".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"select".fmt(f)
+	}
 }
 
 impl Command for Select {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        cli.model_selected = Some(self.index);
-        cli.cwd = cli.root.clone();
-        cli.cwd.push(&cli.owners[cli.owner_selected.unwrap()]);
-        cli.cwd.push("models");
-        cli.cwd.push(&cli.models[self.index]);
-        cli.cwd.push("v1");
-        cli.config.set_model(self.name.clone());
-        2
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		cli.model_selected = Some(self.index);
+		cli.cwd = cli.root.clone();
+		cli.cwd.push(&cli.owners[cli.owner_selected.unwrap()]);
+		cli.cwd.push("models");
+		cli.cwd.push(&cli.models[self.index]);
+		cli.cwd.push("v1");
+		cli.config.set_model(self.name.clone());
+		2
+	}
 }

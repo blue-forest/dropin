@@ -30,23 +30,23 @@ use select::Select;
 pub struct OwnerCommand;
 
 impl Display for OwnerCommand {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "owners".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"owners".fmt(f)
+	}
 }
 
 impl Command for OwnerCommand {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        cli.run_select("Owner", |cli| {
-            let mut commands: Vec<Box<dyn Command>> = Vec::new();
-            for (i, owner) in cli.owners.iter().enumerate() {
-                commands.push(Box::new(Select {
-                    name: owner.to_string(),
-                    index: i,
-                }));
-            }
-            commands.push(Box::new(Add {}));
-            commands
-        })
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		cli.run_select("Owner", |cli| {
+			let mut commands: Vec<Box<dyn Command>> = Vec::new();
+			for (i, owner) in cli.owners.iter().enumerate() {
+				commands.push(Box::new(Select {
+					name: owner.to_string(),
+					index: i,
+				}));
+			}
+			commands.push(Box::new(Add {}));
+			commands
+		})
+	}
 }

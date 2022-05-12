@@ -38,63 +38,63 @@ use select::Select;
 pub struct Models;
 
 impl Display for Models {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "models".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"models".fmt(f)
+	}
 }
 
 impl Command for Models {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        let mut path = get_owner(cli).unwrap();
-        path.push("models");
-        cli.run_select("Models", |cli| {
-            cli.models = get_dirs(&path);
-            let mut commands: Vec<Box<dyn Command>> = Vec::new();
-            for (i, model) in cli.models.iter().enumerate() {
-                commands.push(Box::new(Model {
-                    name: model.to_string(),
-                    index: i,
-                }));
-            }
-            commands.push(Box::new(Add {}));
-            commands
-        })
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		let mut path = get_owner(cli).unwrap();
+		path.push("models");
+		cli.run_select("Models", |cli| {
+			cli.models = get_dirs(&path);
+			let mut commands: Vec<Box<dyn Command>> = Vec::new();
+			for (i, model) in cli.models.iter().enumerate() {
+				commands.push(Box::new(Model {
+					name: model.to_string(),
+					index: i,
+				}));
+			}
+			commands.push(Box::new(Add {}));
+			commands
+		})
+	}
 
-    fn is_enabled(&self, cli: &Cli) -> bool {
-        cli.owner_selected.is_some()
-    }
+	fn is_enabled(&self, cli: &Cli) -> bool {
+		cli.owner_selected.is_some()
+	}
 }
 
 struct Model {
-    name: String,
-    index: usize,
+	name: String,
+	index: usize,
 }
 
 impl Display for Model {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        self.name.fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		self.name.fmt(f)
+	}
 }
 
 impl Command for Model {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        cli.run_select(&format!("Model {}", self.name), |cli| {
-            let mut result: Vec<Box<dyn Command>> = vec![
-                Box::new(Select {
-                    name: self.name.clone(),
-                    index: self.index,
-                }),
-                Box::new(Edit {}),
-                Box::new(Compile {}),
-            ];
-            let owner = &cli.owners[cli.owner_selected.unwrap()];
-            let model = &cli.models[cli.model_selected.unwrap()];
-            let build_path = get_build(&cli.root, owner, model);
-            if build_path.exists() {
-                result.push(Box::new(Run {}));
-            }
-            result
-        })
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		cli.run_select(&format!("Model {}", self.name), |cli| {
+			let mut result: Vec<Box<dyn Command>> = vec![
+				Box::new(Select {
+					name: self.name.clone(),
+					index: self.index,
+				}),
+				Box::new(Edit {}),
+				Box::new(Compile {}),
+			];
+			let owner = &cli.owners[cli.owner_selected.unwrap()];
+			let model = &cli.models[cli.model_selected.unwrap()];
+			let build_path = get_build(&cli.root, owner, model);
+			if build_path.exists() {
+				result.push(Box::new(Run {}));
+			}
+			result
+		})
+	}
 }

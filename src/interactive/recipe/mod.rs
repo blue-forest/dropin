@@ -38,67 +38,67 @@ mod select;
 use select::Select;
 
 pub struct RecipeCommand {
-    recipe: Arc<dyn Recipe>,
+	recipe: Arc<dyn Recipe>,
 }
 
 impl RecipeCommand {
-    pub fn new(recipe: Arc<dyn Recipe>) -> Self {
-        Self { recipe }
-    }
+	pub fn new(recipe: Arc<dyn Recipe>) -> Self {
+		Self { recipe }
+	}
 }
 
 impl Display for RecipeCommand {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        self.recipe.fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		self.recipe.fmt(f)
+	}
 }
 
 impl Command for RecipeCommand {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        cli.cwd.push(self.recipe.dir_name());
-        let result = cli.run_select(&self.recipe.title(), |cli| {
-            get_entries(&cli.cwd, self.recipe.clone(), Arc::new(Vec::new()))
-        });
-        cli.cwd.pop();
-        result
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		cli.cwd.push(self.recipe.dir_name());
+		let result = cli.run_select(&self.recipe.title(), |cli| {
+			get_entries(&cli.cwd, self.recipe.clone(), Arc::new(Vec::new()))
+		});
+		cli.cwd.pop();
+		result
+	}
 
-    fn is_enabled(&self, cli: &Cli) -> bool {
-        cli.model_selected.is_some()
-    }
+	fn is_enabled(&self, cli: &Cli) -> bool {
+		cli.model_selected.is_some()
+	}
 }
 
 fn get_entries(
-    path: &Path,
-    recipe: Arc<dyn Recipe>,
-    namespaces: Arc<Vec<String>>,
+	path: &Path,
+	recipe: Arc<dyn Recipe>,
+	namespaces: Arc<Vec<String>>,
 ) -> Vec<Box<dyn Command>> {
-    let mut commands: Vec<Box<dyn Command>> = Vec::new();
-    if let Ok(dir) = read_dir(path) {
-        for entry in dir.flatten() {
-            if entry.path().is_dir() {
-                commands.push(Box::new(Namespace::new(
-                    recipe.clone(),
-                    entry.path().file_name().unwrap().to_str().unwrap(),
-                    namespaces.clone(),
-                )));
-            } else {
-                commands.push(Box::new(Select::new(
-                    recipe.clone(),
-                    entry.path().file_stem().unwrap().to_str().unwrap(),
-                    namespaces.clone(),
-                )));
-            }
-        }
-    }
-    commands.push(Box::new(Add::new()));
-    commands
+	let mut commands: Vec<Box<dyn Command>> = Vec::new();
+	if let Ok(dir) = read_dir(path) {
+		for entry in dir.flatten() {
+			if entry.path().is_dir() {
+				commands.push(Box::new(Namespace::new(
+					recipe.clone(),
+					entry.path().file_name().unwrap().to_str().unwrap(),
+					namespaces.clone(),
+				)));
+			} else {
+				commands.push(Box::new(Select::new(
+					recipe.clone(),
+					entry.path().file_stem().unwrap().to_str().unwrap(),
+					namespaces.clone(),
+				)));
+			}
+		}
+	}
+	commands.push(Box::new(Add::new()));
+	commands
 }
 
 pub trait Recipe: Display {
-    fn title(&self) -> String;
-    fn dir_name(&self) -> String;
-    fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> {
-        vec![]
-    }
+	fn title(&self) -> String;
+	fn dir_name(&self) -> String;
+	fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> {
+		vec![]
+	}
 }

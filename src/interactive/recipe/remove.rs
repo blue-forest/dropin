@@ -31,37 +31,42 @@ use super::select::Selection;
 pub struct Remove(Arc<Selection>);
 
 impl Remove {
-    pub fn new(selection: Arc<Selection>) -> Self {
-        Self(selection)
-    }
+	pub fn new(selection: Arc<Selection>) -> Self {
+		Self(selection)
+	}
 }
 
 impl Display for Remove {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "remove".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"remove".fmt(f)
+	}
 }
 
 impl Command for Remove {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        let self_namespaces = self.0.namespaces();
-        let namespaces = self_namespaces.iter().map(|s| s.as_str()).collect();
-        let path = get_recipe(cli, &self.0.recipe().dir_name(), namespaces, self.0.id());
-        remove_file(&path).unwrap();
-        let mut namespaces = (*self_namespaces).clone();
-        let mut break_n = 0;
-        for p in path.parent().unwrap().ancestors() {
-            break_n += 1;
-            if namespaces.is_empty() || p.read_dir().unwrap().next().is_some() {
-                break;
-            }
-            namespaces.pop();
-            println!(
-                "Remove empty namespace {}",
-                p.file_name().unwrap().to_str().unwrap(),
-            );
-            remove_dir(p).unwrap();
-        }
-        break_n
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		let self_namespaces = self.0.namespaces();
+		let namespaces = self_namespaces.iter().map(|s| s.as_str()).collect();
+		let path = get_recipe(
+			cli,
+			&self.0.recipe().dir_name(),
+			namespaces,
+			self.0.id(),
+		);
+		remove_file(&path).unwrap();
+		let mut namespaces = (*self_namespaces).clone();
+		let mut break_n = 0;
+		for p in path.parent().unwrap().ancestors() {
+			break_n += 1;
+			if namespaces.is_empty() || p.read_dir().unwrap().next().is_some() {
+				break;
+			}
+			namespaces.pop();
+			println!(
+				"Remove empty namespace {}",
+				p.file_name().unwrap().to_str().unwrap(),
+			);
+			remove_dir(p).unwrap();
+		}
+		break_n
+	}
 }

@@ -27,36 +27,36 @@ use super::{Command, Recipe};
 pub struct Modules;
 
 impl Display for Modules {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "modules".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"modules".fmt(f)
+	}
 }
 
 impl Recipe for Modules {
-    fn title(&self) -> String {
-        "Modules".to_string()
-    }
-    fn dir_name(&self) -> String {
-        "modules".to_string()
-    }
-    fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> {
-        vec![]
-    }
+	fn title(&self) -> String {
+		"Modules".to_string()
+	}
+	fn dir_name(&self) -> String {
+		"modules".to_string()
+	}
+	fn commands(&self, _path: &Path) -> Vec<Box<dyn Command>> {
+		vec![]
+	}
 }
 
 pub struct Syntaxes;
 
 impl Display for Syntaxes {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "syntaxes".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"syntaxes".fmt(f)
+	}
 }
 
 impl Recipe for Syntaxes {
-    fn title(&self) -> String {
-        "Syntaxes".to_string()
-    }
-    fn dir_name(&self) -> String {
-        "syntaxes".to_string()
-    }
+	fn title(&self) -> String {
+		"Syntaxes".to_string()
+	}
+	fn dir_name(&self) -> String {
+		"syntaxes".to_string()
+	}
 }

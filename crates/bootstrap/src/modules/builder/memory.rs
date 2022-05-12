@@ -24,41 +24,41 @@ use wasm_encoder::{DataCountSection, DataSection};
 
 #[derive(Default)]
 pub struct MemoryBuilder<'a> {
-    data: Vec<&'a [u8]>,
-    data_len: usize,
+	data: Vec<&'a [u8]>,
+	data_len: usize,
 }
 
 impl<'module> ModuleBuilder<'module> {
-    pub fn memory(&mut self) -> &mut MemoryBuilder<'module> {
-        &mut self.memory
-    }
+	pub fn memory(&mut self) -> &mut MemoryBuilder<'module> {
+		&mut self.memory
+	}
 }
 
 impl<'a> MemoryBuilder<'a> {
-    pub fn passive(&mut self, data: &'a [u8]) -> usize {
-        let result = self.data.len();
-        self.data_len += data.len();
-        self.data.push(data);
-        result
-    }
+	pub fn passive(&mut self, data: &'a [u8]) -> usize {
+		let result = self.data.len();
+		self.data_len += data.len();
+		self.data.push(data);
+		result
+	}
 
-    pub fn build_data_count(&self) -> Option<DataCountSection> {
-        if self.data.is_empty() {
-            return None;
-        }
-        Some(DataCountSection {
-            count: self.data.len() as u32,
-        })
-    }
+	pub fn build_data_count(&self) -> Option<DataCountSection> {
+		if self.data.is_empty() {
+			return None;
+		}
+		Some(DataCountSection {
+			count: self.data.len() as u32,
+		})
+	}
 
-    pub fn build_data(&self) -> Option<DataSection> {
-        if self.data.is_empty() {
-            return None;
-        }
-        let mut result = DataSection::new();
-        for d in self.data.iter() {
-            result.passive(d.iter().copied());
-        }
-        Some(result)
-    }
+	pub fn build_data(&self) -> Option<DataSection> {
+		if self.data.is_empty() {
+			return None;
+		}
+		let mut result = DataSection::new();
+		for d in self.data.iter() {
+			result.passive(d.iter().copied());
+		}
+		Some(result)
+	}
 }

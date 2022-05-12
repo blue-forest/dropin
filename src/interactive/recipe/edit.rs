@@ -28,20 +28,20 @@ use crate::interactive::{Cli, Command};
 pub struct Edit;
 
 impl Edit {
-    pub fn new() -> Self {
-        Self {}
-    }
+	pub fn new() -> Self {
+		Self {}
+	}
 }
 
 impl Display for Edit {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        "edit".fmt(f)
-    }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+		"edit".fmt(f)
+	}
 }
 
 impl Command for Edit {
-    fn run(&self, cli: &mut Cli) -> u32 {
-        edit_file(&cli.cwd).unwrap();
-        0
-    }
+	fn run(&self, cli: &mut Cli) -> u32 {
+		edit_file(&cli.cwd).unwrap();
+		0
+	}
 }

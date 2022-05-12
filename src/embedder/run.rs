@@ -42,11 +42,16 @@ impl Embedder {
         builder.build()
     }
 
-    pub fn run(&self, root: Option<&Path>, path: &Path) {
+    pub fn run(&mut self, root: Option<&Path>, path: &Path) {
+        if self.core.is_none() {
+            let handle = self.core_handle.take().unwrap();
+            self.core = Some(handle.join().unwrap());
+        }
+        let module = self.core.as_ref().unwrap();
         let mut linker = Linker::new(&self.engine);
         wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
         let mut store = Store::new(&self.engine, Self::run_ctx(root));
-        let core_instance = linker.instantiate(&mut store, &self.core).unwrap();
+        let core_instance = linker.instantiate(&mut store, module).unwrap();
         linker
             .instance(&mut store, "blueforest:dropin-core:v1", core_instance)
             .unwrap();

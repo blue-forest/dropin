@@ -80,7 +80,7 @@ impl Cli {
         Self {
             config,
             cwd,
-            embedder: Embedder::default(),
+            embedder: Embedder::new(&root),
             model_selected,
             models,
             owner_selected,

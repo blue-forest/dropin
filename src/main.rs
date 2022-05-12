@@ -22,6 +22,8 @@ use structopt::StructOpt;
 
 use std::path::PathBuf;
 
+use dropin_utils::path::get_root;
+
 mod embedder;
 pub use embedder::Embedder;
 mod interactive;
@@ -30,8 +32,8 @@ mod utils;
 #[derive(StructOpt)]
 enum Command {
     Run {
-        #[structopt(long, parse(from_os_str))]
-        root: Option<PathBuf>,
+        #[structopt(long)]
+        share_root: bool,
         #[structopt(parse(from_os_str))]
         file: PathBuf,
     },
@@ -46,11 +48,12 @@ struct Opt {
 
 fn main() {
     let args = Opt::from_args();
-    if let Some(Command::Run { root, file }) = args.cmd {
-        let embedder = Embedder::default();
+    if let Some(Command::Run { file, share_root }) = args.cmd {
+        let root = get_root();
+        let mut embedder = Embedder::new(&root);
         embedder.run(
-            if root.is_some() {
-                Some(root.as_ref().unwrap())
+            if share_root {
+                Some(&root)
             } else {
                 None
             },

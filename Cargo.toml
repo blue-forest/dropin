@@ -30,15 +30,13 @@ home = "0.5.3"
 humantime = "2.1"
 path-clean = "0.1.0"
 regex = "1.5.5"
+reqwest = { version = "0.11", features = [ "blocking" ] }
 serde = "1.0.136"
 serde_derive = "1.0.136"
 structopt = "0.3"
 toml = "0.5.8"
 wasmtime = "0.36"
 wasmtime-wasi = "0.36"
-
-[build-dependencies]
-reqwest = { version = "0.11", features = [ "blocking" ] }
 
 [[bin]]
 name = "dropin"

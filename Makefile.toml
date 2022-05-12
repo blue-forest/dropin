@@ -56,7 +56,6 @@ args = [
 dependencies = [ "publishPMCore", "publishPMBootstrap" ]
 
 [tasks.publish]
-dependencies = [ "publishPM" ]
 command = "cargo"
 args = [ "publish", "${@}" ]
 

@@ -52,11 +52,11 @@ impl Embedder {
     }
 
     pub fn compile(&mut self, root: &Path, owner: &str, model: &str) {
-        if self.compile_module.is_none() {
-            let handle = self.compile_module_handle.take().unwrap();
-            self.compile_module = Some(handle.join().unwrap());
+        if self.compile.is_none() {
+            let handle = self.compile_handle.take().unwrap();
+            self.compile = Some(handle.join().unwrap());
         }
-        let module = self.compile_module.as_ref().unwrap();
+        let module = self.compile.as_ref().unwrap();
         let mut linker = Linker::new(&self.engine);
         wasmtime_wasi::add_to_linker(&mut linker, |cx| cx).unwrap();
         let mut store = Store::new(&self.engine, Self::compile_ctx(root, owner, model));

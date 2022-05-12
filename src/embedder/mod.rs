@@ -19,64 +19,71 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use wasmtime::*;
+
+use std::fs::{create_dir_all, read, write};
+use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
-use wasmtime::*;
 
 mod compile;
 mod run;
 
-// https://github.com/rust-lang/rust/issues/75075
-#[cfg(host_family = "windows")]
-macro_rules! PATH_SEPARATOR {
-    () => {
-        r"\"
-    };
-}
-
-#[cfg(not(host_family = "windows"))]
-macro_rules! PATH_SEPARATOR {
-    () => {
-        r"/"
-    };
-}
-
-static CORE_BINARY: &[u8] = include_bytes!(concat!(
-    env!("OUT_DIR"),
-    PATH_SEPARATOR!(),
-    "dropin-core_v1.wasm",
-));
-
-static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
-    env!("OUT_DIR"),
-    PATH_SEPARATOR!(),
-    "dropin-bootstrap_v1.wasm",
-));
-
 pub struct Embedder {
     pub engine: Arc<Engine>,
-    pub core: Module,
-    pub compile_module: Option<Module>,
-    pub compile_module_handle: Option<JoinHandle<Module>>,
+    pub core: Option<Module>,
+    pub core_handle: Option<JoinHandle<Module>>,
+    pub compile: Option<Module>,
+    pub compile_handle: Option<JoinHandle<Module>>,
 }
 
-impl Default for Embedder {
-    fn default() -> Self {
-        let engine = Arc::new(Engine::default());
-
-        let core = Module::new(&engine, CORE_BINARY).unwrap();
-
-        let compile_module = None;
-        let engine_clone = engine.clone();
-        let compile_module_handle = Some(spawn(move || {
-            Module::new(&engine_clone, BOOTSTRAP_BINARY).unwrap()
-        }));
-
-        Self {
-            engine,
-            core,
-            compile_module,
-            compile_module_handle,
+impl Embedder {
+  fn fetch<'a>(
+    root: &Path, engine: Arc<Engine>, module: &'a str,
+  ) -> impl FnMut() -> Module + 'a {
+    let mut path = root.to_path_buf();
+    move || {
+      path.push(".builds");
+      path.push("blueforest");
+      if !path.exists() {
+        create_dir_all(&path).unwrap();
+      }
+      path.push(format!("{}_v1.wasm", module));
+      let binary = if !path.exists() {
+        let mut url = String::from(env!("DROPIN_PM_HOST"));
+        url.push_str("/blueforest/");
+        url.push_str(module);
+        url.push_str("/v1");
+        let resp = reqwest::blocking::get(&url).unwrap();
+        if !resp.status().is_success() {
+          panic!("unexpected status from {} : {}", url, resp.status());
         }
+        let binary = resp.bytes().unwrap();
+        write(&path, &binary).unwrap();
+        binary
+      } else {
+        read(&path).unwrap().into()
+      };
+      Module::new(&engine, binary).unwrap()
     }
+  }
+
+  pub fn new(root: &Path) -> Self {
+    let engine = Arc::new(Engine::default());
+    let core_handle = Some(spawn(
+      Embedder::fetch(root, engine.clone(), "dropin-core")
+    ));
+    let compile_handle = Some(spawn(
+      Embedder::fetch(root, engine.clone(), "dropin-bootstrap")
+    ));
+
+    Self {
+        engine,
+        core: None,
+        core_handle,
+        compile: None,
+        compile_handle,
+    }
+  }
 }
+

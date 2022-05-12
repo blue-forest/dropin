@@ -1,6 +1,6 @@
 [env]
 CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
-DROPIN_PM_HOST = "http://localhost:8080"
+DROPIN_PM_HOST = "https://pm.dropin.dev.blueforest.cc"
 
 [config]
 default_to_workspace = false

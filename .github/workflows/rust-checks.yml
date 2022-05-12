@@ -24,7 +24,7 @@ jobs:
         toolchain: stable
         target: wasm32-unknown-unknown
     - name: Build
-      run: cargo make build
+      run: cargo build
     - uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}

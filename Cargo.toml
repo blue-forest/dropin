@@ -9,7 +9,7 @@ exclude = ["etc/sandbox"]
 
 [package]
 name = "dropin"
-version = "0.5.3-4"
+version = "0.5.3-5"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in [WIP]"

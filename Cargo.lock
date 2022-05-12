@@ -479,7 +479,7 @@ dependencies = [
 
 [[package]]
 name = "dropin"
-version = "0.5.3-5"
+version = "0.5.3-6"
 dependencies = [
  "cap-std",
  "dialoguer",

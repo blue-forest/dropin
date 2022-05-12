@@ -39,7 +39,7 @@ impl Embedder {
                 cap_std::fs::File::from_std(File::create(get_build(root, owner, model)).unwrap()),
             )))
             .args(&[
-                "dropin_bootstrap.wasm".to_string(),
+                "dropin-bootstrap_v1.wasm".to_string(),
                 format!("{}:{}:v1", owner, model),
             ])
             .unwrap()

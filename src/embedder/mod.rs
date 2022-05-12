@@ -44,13 +44,13 @@ macro_rules! PATH_SEPARATOR {
 static CORE_BINARY: &[u8] = include_bytes!(concat!(
     env!("OUT_DIR"),
     PATH_SEPARATOR!(),
-    "dropin_core.wasm",
+    "dropin-core_v1.wasm",
 ));
 
 static BOOTSTRAP_BINARY: &[u8] = include_bytes!(concat!(
     env!("OUT_DIR"),
     PATH_SEPARATOR!(),
-    "dropin_bootstrap.wasm",
+    "dropin-bootstrap_v1.wasm",
 ));
 
 pub struct Embedder {

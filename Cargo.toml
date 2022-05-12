@@ -37,6 +37,9 @@ toml = "0.5.8"
 wasmtime = "0.36"
 wasmtime-wasi = "0.36"
 
+[build-dependencies]
+reqwest = { version = "0.11", features = [ "blocking" ] }
+
 [[bin]]
 name = "dropin"
 path = "src/main.rs"

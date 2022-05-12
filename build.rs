@@ -20,38 +20,30 @@
  */
 
 use std::env::var;
-use std::fs::copy;
+use std::error::Error;
+use std::fs::write;
 use std::path::Path;
 
-fn main() {
-  let workspace_dir = var("CARGO_MANIFEST_DIR").unwrap();
-  let dropin_core_path = Path::new(&workspace_dir).join(Path::new(
-    "recipes/.builds/blueforest/dropin_core.wasm",
-  ));
-  if !dropin_core_path.exists() {
-    panic!(
-      "Please compile drop\'in core:\n\
-      cargo b -p dropin-core --target wasm32-unknown-unknown --release"
-    );
+fn main() -> Result<(), Box<dyn Error>> {
+  let out_dir = var("OUT_DIR")?;
+  let host = var("DROPIN_PM_HOST")?;
+
+  let mut dropin_core_url = host.clone();
+  dropin_core_url.push_str("/blueforest/dropin-core/v1");
+  let resp = reqwest::blocking::get(&dropin_core_url)?;
+  if !resp.status().is_success() {
+    panic!("unexpected status from {} : {}", dropin_core_url, resp.status());
   }
-  println!(
-    "cargo:rerun-if-changed={}", dropin_core_path.to_str().unwrap(),
-  );
-  let dropin_bootstrap_path = Path::new(&workspace_dir).join(Path::new(
-    "recipes/.builds/blueforest/dropin_bootstrap.wasm",
-  ));
-  if !dropin_bootstrap_path.exists() {
-    panic!(
-      "Please compile drop\'in bootstrap:\n\
-      cargo b -p dropin-bootstrap --target wasm32-unknown-unknown --release"
-    );
+  let out_path = Path::new(&out_dir).join("dropin-core_v1.wasm");
+  write(out_path, resp.bytes()?)?;
+
+  let mut dropin_bootstrap_url = host.clone();
+  dropin_bootstrap_url.push_str("/blueforest/dropin-bootstrap/v1");
+  let resp = reqwest::blocking::get(&dropin_bootstrap_url)?;
+  if !resp.status().is_success() {
+    panic!("unexpected status from {} : {}", dropin_bootstrap_url, resp.status());
   }
-  println!(
-    "cargo:rerun-if-changed={}", dropin_bootstrap_path.to_str().unwrap(),
-  );
-  let out_dir = var("OUT_DIR").unwrap();
-  let out_path = Path::new(&out_dir).join("dropin_core.wasm");
-  copy(dropin_core_path, out_path).unwrap();
-  let out_path = Path::new(&out_dir).join("dropin_bootstrap.wasm");
-  copy(dropin_bootstrap_path, out_path).unwrap();
+  let out_path = Path::new(&out_dir).join("dropin-bootstrap_v1.wasm");
+  write(out_path, resp.bytes()?)?;
+  Ok(())
 }

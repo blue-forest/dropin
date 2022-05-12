@@ -1,5 +1,6 @@
 [env]
 CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+DROPIN_PM_HOST = "http://localhost:8080"
 
 [config]
 default_to_workspace = false
@@ -22,24 +23,46 @@ args = [
   "--release"
 ]
 
-[tasks.prePublish]
-dependencies = [ "buildCore", "buildBootstrap" ]
+[tasks.requirePMToken]
 script = '''
-PACKAGE_WASM_TARGET="recipes/.builds/blueforest"
-WASM_TARGET="target/wasm32-unknown-unknown/release"
-mkdir -p ${PACKAGE_WASM_TARGET}
-cp ${WASM_TARGET}/dropin_core.wasm ${PACKAGE_WASM_TARGET}
-cp ${WASM_TARGET}/dropin_bootstrap.wasm ${PACKAGE_WASM_TARGET}
+[[ -v DROPIN_PM_TOKEN ]] || \
+(
+  echo "Please provide a token in the environment variable DROPIN_PM_TOKEN" && \
+  false \
+)
 '''
 
+[tasks.publishPMCore]
+dependencies = [ "requirePMToken", "buildCore" ]
+command = "curl"
+args = [
+  "-f",
+  "-X", "POST",
+  "--data-binary", "@target/wasm32-unknown-unknown/release/dropin_core.wasm",
+  "${DROPIN_PM_HOST}/blueforest/dropin-core/v1/${DROPIN_PM_TOKEN}",
+]
+
+[tasks.publishPMBootstrap]
+dependencies = [ "requirePMToken", "buildBootstrap" ]
+command = "curl"
+args = [
+  "-f",
+  "-X", "POST",
+  "--data-binary", "@target/wasm32-unknown-unknown/release/dropin_bootstrap.wasm",
+  "${DROPIN_PM_HOST}/blueforest/dropin-bootstrap/v1/${DROPIN_PM_TOKEN}",
+]
+
+[tasks.publishPM]
+dependencies = [ "publishPMCore", "publishPMBootstrap" ]
+
 [tasks.publish]
-dependencies = [ "prePublish" ]
+dependencies = [ "publishPM" ]
 command = "cargo"
 args = [ "publish", "${@}" ]
 
 [tasks.build]
-dependencies = [
-  "buildCore",
-  "buildBootstrap",
-]
 args = [ "build", "${@}" ]
+
+[tasks.run]
+command = "cargo"
+args = [ "run", "${@}" ]

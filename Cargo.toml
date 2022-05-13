@@ -1,15 +1,16 @@
 [workspace]
 members = [
   "crates/bootstrap",
-  "crates/debugger",
   "crates/core",
+  "crates/debugger",
+  "crates/pm",
   "crates/utils",
 ]
 exclude = ["etc/sandbox"]
 
 [package]
 name = "dropin"
-version = "0.5.3-6"
+version = "0.5.3-7"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in [WIP]"
@@ -21,6 +22,7 @@ keywords = ["WebAssembly"]
 strip = "symbols"
 
 [dependencies]
+dropin-pm = { path = "./crates/pm", version = "0.5.3-7" }
 dropin-utils = { path = "./crates/utils", version = "0.5.3-4" }
 cap-std = "0.24"
 dialoguer = "0.10.0"

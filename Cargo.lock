@@ -479,10 +479,11 @@ dependencies = [
 
 [[package]]
 name = "dropin"
-version = "0.5.3-6"
+version = "0.5.3-7"
 dependencies = [
  "cap-std",
  "dialoguer",
+ "dropin-pm",
  "dropin-utils",
  "edit",
  "home",
@@ -523,6 +524,16 @@ dependencies = [
  "structopt",
  "wasmtime",
  "wasmtime-wasi",
+]
+
+[[package]]
+name = "dropin-pm"
+version = "0.5.3-7"
+dependencies = [
+ "bytes",
+ "dropin-utils",
+ "reqwest",
+ "structopt",
 ]
 
 [[package]]

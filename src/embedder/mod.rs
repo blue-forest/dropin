@@ -26,6 +26,8 @@ use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
+use dropin_pm::fetch;
+
 mod compile;
 mod run;
 
@@ -41,7 +43,7 @@ impl Embedder {
 	fn fetch<'a>(
 		root: &Path,
 		engine: Arc<Engine>,
-		module: &'a str,
+		model: &'a str,
 	) -> impl FnMut() -> Module + 'a {
 		let mut path = root.to_path_buf();
 		move || {
@@ -50,21 +52,9 @@ impl Embedder {
 			if !path.exists() {
 				create_dir_all(&path).unwrap();
 			}
-			path.push(format!("{}_v1.wasm", module));
+			path.push(format!("{}_v1.wasm", model));
 			let binary = if !path.exists() {
-				let mut url = String::from(env!("DROPIN_PM_HOST"));
-				url.push_str("/blueforest/");
-				url.push_str(module);
-				url.push_str("/v1");
-				let resp = reqwest::blocking::get(&url).unwrap();
-				if !resp.status().is_success() {
-					panic!(
-						"unexpected status from {} : {}",
-						url,
-						resp.status()
-					);
-				}
-				let binary = resp.bytes().unwrap();
+				let binary = fetch("blueforest", model, "v1").unwrap();
 				write(&path, &binary).unwrap();
 				binary
 			} else {
@@ -79,9 +69,7 @@ impl Embedder {
 		let core_handle =
 			Some(spawn(Embedder::fetch(root, engine.clone(), "dropin-core")));
 		let compile_handle = Some(spawn(Embedder::fetch(
-			root,
-			engine.clone(),
-			"dropin-bootstrap",
+			root, engine.clone(), "dropin-bootstrap",
 		)));
 
 		Self {

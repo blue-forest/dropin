@@ -69,9 +69,8 @@ pub fn get_dirs(path: &Path, exclude: HashSet<&str>) -> Vec<String> {
 	let mut result = Vec::new();
 	for owner_dir in path.read_dir().unwrap().flatten() {
 		let path = owner_dir.path();
-    let file_name = path.file_name().unwrap().to_str().unwrap();
-		if path.is_dir()
-      && !exclude.contains(file_name) {
+		let file_name = path.file_name().unwrap().to_str().unwrap();
+		if path.is_dir() && !exclude.contains(file_name) {
 			result
 				.push(path.file_name().unwrap().to_str().unwrap().to_string());
 		}

@@ -60,8 +60,8 @@ impl Cli {
 			create_dir(&root).unwrap();
 			vec![]
 		} else {
-      let mut exclude = HashSet::new();
-      exclude.insert(".builds");
+			let mut exclude = HashSet::new();
+			exclude.insert(".builds");
 			get_dirs(&root, exclude)
 		};
 		let mut cwd = root.clone();

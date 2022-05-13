@@ -69,7 +69,9 @@ impl Embedder {
 		let core_handle =
 			Some(spawn(Embedder::fetch(root, engine.clone(), "dropin-core")));
 		let compile_handle = Some(spawn(Embedder::fetch(
-			root, engine.clone(), "dropin-bootstrap",
+			root,
+			engine.clone(),
+			"dropin-bootstrap",
 		)));
 
 		Self {

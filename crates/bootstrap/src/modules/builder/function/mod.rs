@@ -37,6 +37,10 @@ impl<'module> ModuleBuilder<'module> {
 	pub fn get_start(&mut self) -> &mut FunctionBuilder<'module> {
 		self.functions_local.get_mut(0).wasi_unwrap()
 	}
+
+	pub fn add_function(&mut self, func: FunctionBuilder<'module>) {
+		self.functions_local.push_back(func);
+	}
 }
 
 pub struct FunctionBuilder<'a> {

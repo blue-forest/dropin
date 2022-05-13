@@ -22,7 +22,7 @@
 use humantime::format_duration;
 
 use std::fmt::{Display, Error, Formatter};
-use std::time::{Duration, SystemTime};
+use std::time::SystemTime;
 
 use crate::interactive::{Cli, Command};
 
@@ -41,13 +41,7 @@ impl Command for Compile {
 		let start = SystemTime::now();
 		cli.embedder.compile(&cli.root, owner, model);
 		let elapsed = SystemTime::now().duration_since(start).unwrap();
-		println!(
-			"Compiled in {}",
-			format_duration(Duration::new(
-				elapsed.as_secs(),
-				elapsed.as_millis() as u32 * 1_000_000
-			))
-		);
+		println!("Compiled in {}", format_duration(elapsed));
 		0
 	}
 }

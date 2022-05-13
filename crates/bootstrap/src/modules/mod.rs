@@ -58,10 +58,36 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		let mut iter = self.module.expression.iter();
 		iter.next(); // skip syntax
 		let mut function = iter.next().wasi_unwrap().iter();
-		let _function_name = function.next().wasi_unwrap().as_str();
-		let commands = function.next().wasi_unwrap();
+		let mut function_name = function.next().wasi_unwrap().as_str();
+		if function_name == "main" {
+			function_name = "_start";
+		}
+		let mut expression = function.next().wasi_unwrap();
+		if expression.pattern() == "arguments" {
+			self.arguments(&mut builder, &mut state, &expression);
+			expression = function.next().wasi_unwrap();
+		}
+		self.meta_commands(&mut builder, &mut state, &expression);
 
-		for command in commands.iter() {
+		Ok(builder.build())
+	}
+
+	fn arguments(
+		&self,
+		_builder: &mut ModuleBuilder<'module>,
+		_state: &mut State<'module>,
+		_expression: &Expression<'_, 'module>,
+	) {
+		todo!()
+	}
+
+	fn meta_commands(
+		&self,
+		builder: &mut ModuleBuilder<'module>,
+		state: &mut State<'module>,
+		expression: &Expression<'_, 'module>,
+	) {
+		for command in expression.iter() {
 			let command_child = command.iter().next().wasi_unwrap();
 			match command.pattern() {
 				"metaCommand" => {
@@ -69,8 +95,8 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				}
 				"localCommand" => {
 					self.local_command(
-						&mut builder,
-						&mut state,
+						builder,
+						state,
 						command_child.iter().next().wasi_unwrap(),
 					);
 				}
@@ -79,12 +105,13 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				}
 			}
 		}
-		Ok(builder.build())
 	}
 
 	fn meta_command(&self, expression: &Expression) {
 		match expression.pattern() {
-			"print" => print_to(expression.iter().next().unwrap().as_str(), 2),
+			"print" => {
+				print_to(expression.iter().next().wasi_unwrap().as_str(), 2)
+			}
 			pattern => {
 				print_to(&format!("unknown command: {}", pattern), 2);
 				unsafe { wasi::proc_exit(1) };
@@ -100,7 +127,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	) {
 		match expression.pattern() {
 			"print" => {
-				let message = expression.iter().next().unwrap().as_str();
+				let message = expression.iter().next().wasi_unwrap().as_str();
 				let alloc = builder.get_core(&state.std_.alloc);
 				let print = builder.get_core(&state.std_.print);
 				let data = builder.memory().passive(message.as_bytes()) as u32;

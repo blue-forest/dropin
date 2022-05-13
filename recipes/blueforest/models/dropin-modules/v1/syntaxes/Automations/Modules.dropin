@@ -10,7 +10,7 @@ id
 
 key ("-" | "_" | "." | $std.alphanum){1..}
 
-function "fn " $patterns.key "(" $patterns.arguments ")" $patterns.commands
+function "fn " $patterns.key "(" $patterns.arguments{..1} ")" $patterns.commands
 
 arguments $patterns.argument ("," $patterns.argument){..}
 

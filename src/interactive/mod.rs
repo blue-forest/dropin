@@ -18,6 +18,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashSet;
 use std::fmt::Display;
 use std::fs::create_dir;
 use std::path::PathBuf;
@@ -59,7 +60,9 @@ impl Cli {
 			create_dir(&root).unwrap();
 			vec![]
 		} else {
-			get_dirs(&root)
+      let mut exclude = HashSet::new();
+      exclude.insert(".builds");
+			get_dirs(&root, exclude)
 		};
 		let mut cwd = root.clone();
 		let config = Config::new(&root);
@@ -71,7 +74,7 @@ impl Cli {
 				Some(owners.iter().position(|o| o == owner).unwrap());
 			cwd.push(owner);
 			cwd.push("models");
-			models = get_dirs(&cwd);
+			models = get_dirs(&cwd, HashSet::new());
 			if let Some(model) = config.model() {
 				cwd.push(model);
 				cwd.push("v1"); // TODO: deal with versions

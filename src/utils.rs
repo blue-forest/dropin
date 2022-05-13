@@ -20,6 +20,7 @@
 
 use regex::Regex;
 
+use std::collections::HashSet;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 use std::path::Path;
@@ -64,11 +65,13 @@ impl Display for NameValidationError {
 
 impl Error for NameValidationError {}
 
-pub fn get_dirs(path: &Path) -> Vec<String> {
+pub fn get_dirs(path: &Path, exclude: HashSet<&str>) -> Vec<String> {
 	let mut result = Vec::new();
 	for owner_dir in path.read_dir().unwrap().flatten() {
 		let path = owner_dir.path();
-		if path.is_dir() {
+    let file_name = path.file_name().unwrap().to_str().unwrap();
+		if path.is_dir()
+      && !exclude.contains(file_name) {
 			result
 				.push(path.file_name().unwrap().to_str().unwrap().to_string());
 		}

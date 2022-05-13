@@ -18,6 +18,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashSet;
 use std::fmt::{Display, Error, Formatter};
 
 use super::path::get_owner;
@@ -48,7 +49,7 @@ impl Command for Models {
 		let mut path = get_owner(cli).unwrap();
 		path.push("models");
 		cli.run_select("Models", |cli| {
-			cli.models = get_dirs(&path);
+			cli.models = get_dirs(&path, HashSet::new());
 			let mut commands: Vec<Box<dyn Command>> = Vec::new();
 			for (i, model) in cli.models.iter().enumerate() {
 				commands.push(Box::new(Model {

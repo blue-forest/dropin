@@ -89,7 +89,7 @@ impl Command for Model {
 				Box::new(Compile {}),
 			];
 			let owner = &cli.owners[cli.owner_selected.unwrap()];
-			let model = &cli.models[cli.model_selected.unwrap()];
+			let model = &self.name;
 			let build_path = get_build(&cli.root, owner, model);
 			if build_path.exists() {
 				result.push(Box::new(Run {}));

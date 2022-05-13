@@ -10,7 +10,13 @@ id
 
 key ("-" | "_" | "." | $std.alphanum){1..}
 
-function "fn " $patterns.key "()" $patterns.commands
+function "fn " $patterns.key "(" $patterns.arguments ")" $patterns.commands
+
+arguments $patterns.argument ("," $patterns.argument){..}
+
+argument $patterns.key " "{1..} $patterns.type
+
+type "bytes"
 
 commands ("\n  " ($patterns.localCommand | $patterns.metaCommand)){..}
 
@@ -18,7 +24,15 @@ localCommand ">" $patterns.metaCommand
 
 metaCommand $patterns.print
 
-print "print \"" $patterns.message "\""
+print "print " $patterns.value
+
+value $patterns.text | $patterns.getter
+
+getter "$" $patterns.query
+
+query $patterns.key ("." $patterns.key){..}
+
+text "\"" $patterns.message "\""
 
 message $patterns.message_char{1..}
 

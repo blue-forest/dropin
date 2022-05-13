@@ -65,7 +65,11 @@ impl Embedder {
 	}
 
 	pub fn new(root: &Path) -> Self {
-		let engine = Arc::new(Engine::default());
+		let engine = Arc::new(Engine::new(
+      Config::new()
+        .debug_info(true)
+        .wasm_backtrace_details(WasmBacktraceDetails::Enable)
+    ).unwrap());
 		let core_handle =
 			Some(spawn(Embedder::fetch(root, engine.clone(), "dropin-core")));
 		let compile_handle = Some(spawn(Embedder::fetch(

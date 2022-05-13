@@ -67,6 +67,8 @@ impl Embedder {
 		let start = instance
 			.get_typed_func::<(), (), _>(&mut store, "_start")
 			.unwrap();
-		start.call(&mut store, ()).unwrap();
+		if let Err(err) = start.call(&mut store, ()) {
+      println!("{}", err);
+    }
 	}
 }

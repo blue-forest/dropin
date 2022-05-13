@@ -46,7 +46,7 @@ impl Command for Compile {
 			format_duration(Duration::new(
 				elapsed.as_secs(),
 				elapsed.as_millis() as u32 * 1_000_000
-			),)
+			))
 		);
 		0
 	}

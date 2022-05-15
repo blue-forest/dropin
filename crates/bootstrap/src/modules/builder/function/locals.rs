@@ -84,7 +84,7 @@ impl Locals {
 	}
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Local {
 	I32(u32),
 }

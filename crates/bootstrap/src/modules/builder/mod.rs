@@ -70,9 +70,11 @@ impl<'module> ModuleBuilder<'module> {
 	pub fn build(mut self) -> Module {
 		let mut module = Module::new();
 		let mut function_id = self.functions_imported.len() as u32;
+		let mut types: Vec<u32> = vec![];
 		let mut functions: Vec<Function> = vec![];
 		let mut exports: Vec<(&str, u32)> = vec![];
 		while let Some(f) = self.functions_local.pop_front() {
+			types.push(f.type_id());
 			let (function, export) = f.build();
 			functions.push(function);
 			if let Some(name) = export {
@@ -82,7 +84,7 @@ impl<'module> ModuleBuilder<'module> {
 		}
 		self.build_type(&mut module)
 			.build_import(&mut module)
-			.build_function(&mut module)
+			.build_function(&mut module, types)
 			.build_export(&mut module, exports)
 			.build_data_count(&mut module)
 			.build_code(&mut module, functions)
@@ -113,10 +115,10 @@ impl<'module> ModuleBuilder<'module> {
 		self
 	}
 
-	fn build_function(self, module: &mut Module) -> Self {
+	fn build_function(self, module: &mut Module, types: Vec<u32>) -> Self {
 		let mut section = FunctionSection::new();
-		for f in self.functions_local.iter() {
-			section.function(f.type_id());
+		for t in types {
+			section.function(t);
 		}
 		module.section(&section);
 		self

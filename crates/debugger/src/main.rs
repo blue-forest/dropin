@@ -36,6 +36,12 @@ enum Commands {
 		#[structopt(long, short, default_value = "128")]
 		len: usize,
 	},
+	Invoke {
+		#[structopt(parse(from_os_str))]
+		file: PathBuf,
+		#[structopt()]
+		args: Vec<String>,
+	}
 }
 
 #[derive(StructOpt, Debug)]

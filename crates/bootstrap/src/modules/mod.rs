@@ -92,7 +92,12 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 			if is_public { Some(function_name) } else { None },
 			params.locals,
 		);
-		self.meta_commands(&mut builder, &mut state, &mut function, &expression);
+		self.meta_commands(
+			&mut builder,
+			&mut state,
+			&mut function,
+			&expression,
+		);
 		builder.function(function);
 
 		Ok(builder.build())
@@ -112,9 +117,9 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				"bytes" => {
 					let base_id = params.push(ValType::I32);
 					let len_id = params.push(ValType::I32);
-					function_state.heap.insert(
-						key, (Local::I32(base_id), Local::I32(len_id)),
-					);
+					function_state
+						.heap
+						.insert(key, (Local::I32(base_id), Local::I32(len_id)));
 				}
 				_ => {
 					print_to(&format!("unknown type: {}", type_), 2);
@@ -140,7 +145,10 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				}
 				"localCommand" => {
 					self.local_command(
-						builder, state, function, command_child.iter().next().wasi_unwrap(),
+						builder,
+						state,
+						function,
+						command_child.iter().next().wasi_unwrap(),
 					);
 				}
 				_ => {
@@ -152,14 +160,20 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 
 	fn meta_command(&self, expression: &Expression) {
 		match expression.pattern() {
-			"print" => {
-				print_to(
-					expression.iter().next().wasi_unwrap()
-						.iter().next().wasi_unwrap()
-						.iter().next().wasi_unwrap()
-						.as_str(), 2
-				)
-			}
+			"print" => print_to(
+				expression
+					.iter()
+					.next()
+					.wasi_unwrap()
+					.iter()
+					.next()
+					.wasi_unwrap()
+					.iter()
+					.next()
+					.wasi_unwrap()
+					.as_str(),
+				2,
+			),
 			pattern => {
 				print_to(&format!("unknown command: {}", pattern), 2);
 				unsafe { wasi::proc_exit(1) };
@@ -176,9 +190,16 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	) {
 		match expression.pattern() {
 			"print" => {
-				let message = expression.iter().next().wasi_unwrap()
-					.iter().next().wasi_unwrap()
-					.iter().next().wasi_unwrap()
+				let message = expression
+					.iter()
+					.next()
+					.wasi_unwrap()
+					.iter()
+					.next()
+					.wasi_unwrap()
+					.iter()
+					.next()
+					.wasi_unwrap()
 					.as_str();
 				let alloc = builder.get_core(&state.std_.alloc);
 				let print = builder.get_core(&state.std_.print);

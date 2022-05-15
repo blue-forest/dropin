@@ -57,7 +57,11 @@ impl<'module> Default for ModuleBuilder<'module> {
 }
 
 impl<'module> ModuleBuilder<'module> {
-	pub fn type_(&mut self, params: Vec<ValType>, results: Vec<ValType>) -> u32 {
+	pub fn type_(
+		&mut self,
+		params: Vec<ValType>,
+		results: Vec<ValType>,
+	) -> u32 {
 		let result = self.types.len() as u32;
 		self.types.function(params, results);
 		result
@@ -119,7 +123,9 @@ impl<'module> ModuleBuilder<'module> {
 	}
 
 	fn build_export(
-		self, module: &mut Module, exports: Vec<(&str, u32)>,
+		self,
+		module: &mut Module,
+		exports: Vec<(&str, u32)>,
 	) -> Self {
 		let mut section = ExportSection::new();
 		for (name, id) in exports {
@@ -129,9 +135,7 @@ impl<'module> ModuleBuilder<'module> {
 		self
 	}
 
-	fn build_code(
-		self, module: &mut Module, functions: Vec<Function>,
-	) -> Self {
+	fn build_code(self, module: &mut Module, functions: Vec<Function>) -> Self {
 		let mut section = CodeSection::new();
 		for f in functions {
 			section.function(&f);

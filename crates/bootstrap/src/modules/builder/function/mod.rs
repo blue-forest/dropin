@@ -46,7 +46,9 @@ pub struct FunctionBuilder<'a> {
 
 impl<'a> FunctionBuilder<'a> {
 	pub fn new(
-		type_id: u32, export_name: Option<&'a str>, locals: Locals,
+		type_id: u32,
+		export_name: Option<&'a str>,
+		locals: Locals,
 	) -> Self {
 		Self {
 			type_id,

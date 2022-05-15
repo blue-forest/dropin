@@ -32,18 +32,7 @@ impl<'a> FunctionBuilder<'a> {
 	}
 
 	pub fn add_local(&mut self, type_: ValType) -> Local {
-		match type_ {
-			ValType::I32 => {
-				let result = Local::I32(self.locals.i32_);
-				self.locals.i32_ += 1;
-				result
-			}
-			_ => {
-				print_to(&format!("unknown type: {}", type_ as u32), 2);
-				unsafe { wasi::proc_exit(1) };
-				unreachable!();
-			}
-		}
+		self.locals.add_local(type_)
 	}
 }
 
@@ -59,6 +48,21 @@ pub struct Locals {
 }
 
 impl Locals {
+	pub fn add_local(&mut self, type_: ValType) -> Local {
+		match type_ {
+			ValType::I32 => {
+				let result = Local::I32(self.i32_);
+				self.i32_ += 1;
+				result
+			}
+			_ => {
+				print_to(&format!("unknown type: {}", type_ as u32), 2);
+				unsafe { wasi::proc_exit(1) };
+				unreachable!();
+			}
+		}
+	}
+
 	pub fn resolve(local: &Local) -> u32 {
 		/*
 		if let &Local::I32(idx) = local {

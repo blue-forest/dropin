@@ -20,8 +20,9 @@
  */
 
 use wasm_encoder::ValType::I32;
-use wasm_encoder::{Instruction, Module};
+use wasm_encoder::{Instruction, Module, ValType};
 
+use std::collections::HashMap;
 use std::path::Path;
 
 use dropin_core::print_to;
@@ -31,13 +32,19 @@ use crate::path::get_recipe;
 use crate::{Recipe, WasiUnwrap};
 
 mod builder;
-use builder::{Core, ModuleBuilder};
+use builder::{Core, FunctionBuilder, Local, Locals, ModuleBuilder};
 
 mod error;
 pub use error::CompileError;
 
 struct State<'a> {
 	pub std_: Core<'a>,
+}
+
+#[derive(Default)]
+struct FunctionState<'a> {
+	_stack: HashMap<&'a str, Local>,
+	heap: HashMap<&'a str, (Local, Local)>,
 }
 
 pub struct Compiler<'syntax, 'module> {
@@ -56,35 +63,73 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		};
 
 		let mut iter = self.module.expression.iter();
-		iter.next(); // skip syntax
+		iter.next(); // skip recipes
 		let mut function = iter.next().wasi_unwrap().iter();
-		let mut function_name = function.next().wasi_unwrap().as_str();
+		let mut function_state = FunctionState::default();
+
+		let mut expression = function.next().wasi_unwrap();
+		let mut is_public = false;
+		if expression.pattern() == "public" {
+			is_public = true;
+			expression = function.next().wasi_unwrap();
+		}
+
+		let mut function_name = expression.as_str();
 		if function_name == "main" {
 			function_name = "_start";
 		}
-		let mut expression = function.next().wasi_unwrap();
-		if expression.pattern() == "arguments" {
-			self.arguments(&mut builder, &mut state, &expression);
+
+		expression = function.next().wasi_unwrap();
+		let mut params = Params::default();
+		if expression.pattern() == "params" {
+			self.params(&mut function_state, &mut params, &expression);
 			expression = function.next().wasi_unwrap();
 		}
-		self.meta_commands(&mut builder, &mut state, &expression);
+
+		let type_id = builder.type_(params.types, vec![]);
+		let mut function = FunctionBuilder::new(
+			type_id,
+			if is_public { Some(function_name) } else { None },
+			params.locals,
+		);
+		self.meta_commands(&mut builder, &mut state, &mut function, &expression);
+		builder.function(function);
 
 		Ok(builder.build())
 	}
 
-	fn arguments(
+	fn params(
 		&self,
-		_builder: &mut ModuleBuilder<'module>,
-		_state: &mut State<'module>,
-		_expression: &Expression<'_, 'module>,
+		function_state: &mut FunctionState<'module>,
+		params: &mut Params,
+		expression: &Expression<'_, 'module>,
 	) {
-		todo!()
+		for param in expression.iter() {
+			let mut iter = param.iter();
+			let key = iter.next().wasi_unwrap().as_str();
+			let type_ = iter.next().wasi_unwrap().as_str();
+			match type_ {
+				"bytes" => {
+					let base_id = params.push(ValType::I32);
+					let len_id = params.push(ValType::I32);
+					function_state.heap.insert(
+						key, (Local::I32(base_id), Local::I32(len_id)),
+					);
+				}
+				_ => {
+					print_to(&format!("unknown type: {}", type_), 2);
+					unsafe { wasi::proc_exit(1) };
+					unreachable!();
+				}
+			}
+		}
 	}
 
 	fn meta_commands(
 		&self,
 		builder: &mut ModuleBuilder<'module>,
 		state: &mut State<'module>,
+		function: &mut FunctionBuilder<'module>,
 		expression: &Expression<'_, 'module>,
 	) {
 		for command in expression.iter() {
@@ -95,9 +140,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				}
 				"localCommand" => {
 					self.local_command(
-						builder,
-						state,
-						command_child.iter().next().wasi_unwrap(),
+						builder, state, function, command_child.iter().next().wasi_unwrap(),
 					);
 				}
 				_ => {
@@ -110,7 +153,12 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	fn meta_command(&self, expression: &Expression) {
 		match expression.pattern() {
 			"print" => {
-				print_to(expression.iter().next().wasi_unwrap().as_str(), 2)
+				print_to(
+					expression.iter().next().wasi_unwrap()
+						.iter().next().wasi_unwrap()
+						.iter().next().wasi_unwrap()
+						.as_str(), 2
+				)
 			}
 			pattern => {
 				print_to(&format!("unknown command: {}", pattern), 2);
@@ -123,27 +171,30 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		&self,
 		builder: &mut ModuleBuilder<'module>,
 		state: &mut State<'module>,
+		function: &mut FunctionBuilder<'module>,
 		expression: &Expression<'_, 'module>,
 	) {
 		match expression.pattern() {
 			"print" => {
-				let message = expression.iter().next().wasi_unwrap().as_str();
+				let message = expression.iter().next().wasi_unwrap()
+					.iter().next().wasi_unwrap()
+					.iter().next().wasi_unwrap()
+					.as_str();
 				let alloc = builder.get_core(&state.std_.alloc);
 				let print = builder.get_core(&state.std_.print);
 				let data = builder.memory().passive(message.as_bytes()) as u32;
-				let start = builder.get_start();
-				let ptr = start.add_local(I32);
-				start.basic(Instruction::I32Const(message.len() as i32)); // size
-				start.basic(Instruction::I32Const(1)); // align
-				start.basic(Instruction::Call(alloc)); // -> ptr
-				start.local(ptr.clone(), Instruction::LocalSet);
-				start.local(ptr.clone(), Instruction::LocalGet);
-				start.basic(Instruction::I32Const(0)); // offset
-				start.basic(Instruction::I32Const(message.len() as i32)); // size
-				start.basic(Instruction::MemoryInit { mem: 0, data });
-				start.local(ptr, Instruction::LocalGet);
-				start.basic(Instruction::I32Const(message.len() as i32)); // len
-				start.basic(Instruction::Call(print));
+				let ptr = function.add_local(I32);
+				function.basic(Instruction::I32Const(message.len() as i32)); // size
+				function.basic(Instruction::I32Const(1)); // align
+				function.basic(Instruction::Call(alloc)); // -> ptr
+				function.local(ptr.clone(), Instruction::LocalSet);
+				function.local(ptr.clone(), Instruction::LocalGet);
+				function.basic(Instruction::I32Const(0)); // offset
+				function.basic(Instruction::I32Const(message.len() as i32)); // size
+				function.basic(Instruction::MemoryInit { mem: 0, data });
+				function.local(ptr, Instruction::LocalGet);
+				function.basic(Instruction::I32Const(message.len() as i32)); // len
+				function.basic(Instruction::Call(print));
 			}
 			pattern => {
 				print_to(&format!("unknown command: {}", pattern), 2);
@@ -155,5 +206,20 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	pub fn get_syntax(&self) -> String {
 		let id = self.module.expression.iter().next().wasi_unwrap().as_str();
 		get_recipe("syntaxes", id)
+	}
+}
+
+#[derive(Default)]
+struct Params {
+	locals: Locals,
+	types: Vec<ValType>,
+}
+
+impl Params {
+	pub fn push(&mut self, type_: ValType) -> u32 {
+		let result = self.types.len() as u32;
+		self.types.push(type_);
+		self.locals.add_local(type_);
+		result
 	}
 }

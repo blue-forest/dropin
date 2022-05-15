@@ -21,13 +21,13 @@
 
 use wasm_encoder::{
 	CodeSection, EntityType, Export, ExportSection, FunctionSection,
-	ImportSection, MemoryType, Module, TypeSection,
+	ImportSection, MemoryType, Module, TypeSection, ValType,
 };
 
 use std::collections::VecDeque;
 
 mod function;
-pub use function::{FunctionBuilder, Local};
+pub use function::{FunctionBuilder, Local, Locals};
 
 mod import;
 use import::FunctionImport;
@@ -47,18 +47,22 @@ pub struct ModuleBuilder<'module> {
 
 impl<'module> Default for ModuleBuilder<'module> {
 	fn default() -> Self {
-		let mut result = Self {
+		Self {
 			memory: MemoryBuilder::default(),
 			types: TypeSection::new(),
 			functions_imported: vec![],
-			functions_local: VecDeque::from([FunctionBuilder::new(0)]),
-		};
-		result.types.function(vec![], vec![]); // _start
-		result
+			functions_local: VecDeque::default(),
+		}
 	}
 }
 
 impl<'module> ModuleBuilder<'module> {
+	pub fn type_(&mut self, params: Vec<ValType>, results: Vec<ValType>) -> u32 {
+		let result = self.types.len() as u32;
+		self.types.function(params, results);
+		result
+	}
+
 	pub fn build(self) -> Module {
 		let mut module = Module::new();
 		self.build_type(&mut module)

@@ -23,8 +23,6 @@ use wasm_encoder::{Function, Instruction};
 
 use std::collections::VecDeque;
 
-use crate::sys::WasiUnwrap;
-
 use super::ModuleBuilder;
 
 mod instructions;
@@ -34,11 +32,7 @@ mod locals;
 pub use locals::{Local, Locals};
 
 impl<'module> ModuleBuilder<'module> {
-	pub fn get_start(&mut self) -> &mut FunctionBuilder<'module> {
-		self.functions_local.get_mut(0).wasi_unwrap()
-	}
-
-	pub fn add_function(&mut self, func: FunctionBuilder<'module>) {
+	pub fn function(&mut self, func: FunctionBuilder<'module>) {
 		self.functions_local.push_back(func);
 	}
 }
@@ -47,14 +41,18 @@ pub struct FunctionBuilder<'a> {
 	type_id: u32,
 	instructions: VecDeque<InstructionBuilder<'a>>,
 	locals: Locals,
+	export_name: Option<&'a str>,
 }
 
 impl<'a> FunctionBuilder<'a> {
-	pub fn new(type_id: u32) -> Self {
+	pub fn new(
+		type_id: u32, export_name: Option<&'a str>, locals: Locals,
+	) -> Self {
 		Self {
 			type_id,
+			export_name,
 			instructions: VecDeque::new(),
-			locals: Locals::default(),
+			locals,
 		}
 	}
 

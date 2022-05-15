@@ -198,7 +198,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 					function_state, expression.iter().next().wasi_unwrap(),
 				);
 				let print = builder.get_core(&state.std_.print);
-				value.print(builder, function);
+				value.print(builder, state, function);
 				function.basic(Instruction::Call(print));
 				/*
 				let alloc = builder.get_core(&state.std_.alloc);
@@ -260,7 +260,7 @@ impl<'a> Value<'a> {
 	) -> Self {
 		let value = expression.iter().next().wasi_unwrap();
 		match value.pattern() {
-			"text" => { todo!() }
+			"text" => Self::Text(value.iter().next().wasi_unwrap().as_str()),
 			"getter" => {
 				let query = value.iter().next().wasi_unwrap();
 				let mut query_iter = query.iter();
@@ -295,11 +295,26 @@ impl<'a> Value<'a> {
 
 	pub fn print(
 		&self,
-		_builder: &mut ModuleBuilder<'a>, 
+		builder: &mut ModuleBuilder<'a>, 
+		state: &mut State<'a>,
 		function: &mut FunctionBuilder<'a>,
 	) {
 		match self {
-			Self::Text(_) => { todo!() }
+			Self::Text(message) => {
+				let alloc = builder.get_core(&state.std_.alloc);
+				let data = builder.memory().passive(message.as_bytes()) as u32;
+				let ptr = function.add_local(I32);
+				function.basic(Instruction::I32Const(message.len() as i32)); // size
+				function.basic(Instruction::I32Const(1)); // align
+				function.basic(Instruction::Call(alloc)); // -> ptr
+				function.local(ptr.clone(), Instruction::LocalSet);
+				function.local(ptr.clone(), Instruction::LocalGet);
+				function.basic(Instruction::I32Const(0)); // offset
+				function.basic(Instruction::I32Const(message.len() as i32)); // size
+				function.basic(Instruction::MemoryInit { mem: 0, data });
+				function.local(ptr, Instruction::LocalGet);
+				function.basic(Instruction::I32Const(message.len() as i32)); // len
+			}
 			Self::StackLocal(_) => { todo!() }
 			Self::HeapLocal(base, len) => {
 				function.local((*base).clone(), Instruction::LocalGet);

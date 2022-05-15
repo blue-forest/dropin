@@ -140,10 +140,7 @@ fn main() {
 			memory_opt.start .. memory_opt.start + memory_opt.len
 		).unwrap();
 
-		let cfg = HexConfig {
-			title: false,
-			..HexConfig::default()
-		};
+		let cfg = HexConfig { title: false, ..HexConfig::default() };
 		println!("         0  1  2  3   4  5  6  7   8  9  a  b   c  d  e  f");
 		println!("{}", config_hex(&data, cfg));
 	}

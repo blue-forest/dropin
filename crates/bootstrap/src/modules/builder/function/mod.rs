@@ -65,12 +65,12 @@ impl<'a> FunctionBuilder<'a> {
 			.push_back(InstructionBuilder::Basic(instruction));
 	}
 
-	pub fn build(mut self) -> Function {
+	pub fn build(mut self) -> (Function, Option<&'a str>) {
 		let mut result = Function::new(self.locals.build());
 		while let Some(i) = self.instructions.pop_front() {
 			result.instruction(&i.build());
 		}
 		result.instruction(&Instruction::End);
-		result
+		(result, self.export_name)
 	}
 }

@@ -20,7 +20,7 @@
  */
 
 use wasm_encoder::{
-	CodeSection, EntityType, Export, ExportSection, FunctionSection,
+	CodeSection, EntityType, Export, ExportSection, Function, FunctionSection,
 	ImportSection, MemoryType, Module, TypeSection, ValType,
 };
 
@@ -63,14 +63,25 @@ impl<'module> ModuleBuilder<'module> {
 		result
 	}
 
-	pub fn build(self) -> Module {
+	pub fn build(mut self) -> Module {
 		let mut module = Module::new();
+		let mut function_id = self.functions_imported.len() as u32;
+		let mut functions: Vec<Function> = vec![];
+		let mut exports: Vec<(&str, u32)> = vec![];
+		while let Some(f) = self.functions_local.pop_front() {
+			let (function, export) = f.build();
+			functions.push(function);
+			if let Some(name) = export {
+				exports.push((name, function_id));
+			}
+			function_id += 1;
+		}
 		self.build_type(&mut module)
 			.build_import(&mut module)
 			.build_function(&mut module)
-			.build_export(&mut module)
+			.build_export(&mut module, exports)
 			.build_data_count(&mut module)
-			.build_code(&mut module)
+			.build_code(&mut module, functions)
 			.build_data(&mut module);
 		module
 	}
@@ -107,20 +118,23 @@ impl<'module> ModuleBuilder<'module> {
 		self
 	}
 
-	fn build_export(self, module: &mut Module) -> Self {
+	fn build_export(
+		self, module: &mut Module, exports: Vec<(&str, u32)>,
+	) -> Self {
 		let mut section = ExportSection::new();
-		section.export(
-			"_start",
-			Export::Function(self.functions_imported.len() as u32),
-		);
+		for (name, id) in exports {
+			section.export(name, Export::Function(id));
+		}
 		module.section(&section);
 		self
 	}
 
-	fn build_code(mut self, module: &mut Module) -> Self {
+	fn build_code(
+		self, module: &mut Module, functions: Vec<Function>,
+	) -> Self {
 		let mut section = CodeSection::new();
-		while let Some(f) = self.functions_local.pop_front() {
-			section.function(&f.build());
+		for f in functions {
+			section.function(&f);
 		}
 		module.section(&section);
 		self

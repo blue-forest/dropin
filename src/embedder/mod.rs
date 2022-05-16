@@ -21,12 +21,13 @@
 
 use wasmtime::*;
 
-use std::fs::{create_dir_all, read, write};
+use std::fs::{read, write};
 use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
 use dropin_pm::fetch;
+use dropin_utils::path::get_build;
 
 mod compile;
 mod run;
@@ -45,14 +46,8 @@ impl Embedder {
 		engine: Arc<Engine>,
 		model: &'a str,
 	) -> impl FnMut() -> Module + 'a {
-		let mut path = root.to_path_buf();
+		let path = get_build(root, "blueforest", model);
 		move || {
-			path.push(".builds");
-			path.push("blueforest");
-			if !path.exists() {
-				create_dir_all(&path).unwrap();
-			}
-			path.push(format!("{}_v1.wasm", model));
 			let binary = if !path.exists() {
 				let binary = fetch("blueforest", model, "v1").unwrap();
 				write(&path, &binary).unwrap();

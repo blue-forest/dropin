@@ -40,13 +40,12 @@ pub struct Cli {
 	memory: Option<MemoryOpt>,
 	#[structopt(long, short)]
 	call: Vec<String>,
-	
 	// #[structopt(subcommand)]
 	// cmd: Commands,
 }
 
 #[derive(Debug)]
-struct MemoryOpt{
+struct MemoryOpt {
 	pub start: usize,
 	pub len: usize,
 }
@@ -56,13 +55,17 @@ impl MemoryOpt {
 		split: &mut Split<char>,
 	) -> Result<Option<usize>, MemoryParseError> {
 		let opt = split.next();
-		if opt.is_none() { return Err(MemoryParseError{}); }
+		if opt.is_none() {
+			return Err(MemoryParseError {});
+		}
 		let str_value = opt.unwrap();
 		if str_value.is_empty() {
 			Ok(None)
 		} else {
 			let res = str_value.parse::<usize>();
-			if res.is_err() { return Err(MemoryParseError{}); }
+			if res.is_err() {
+				return Err(MemoryParseError {});
+			}
 			Ok(Some(res.unwrap()))
 		}
 	}
@@ -75,7 +78,7 @@ impl FromStr for MemoryOpt {
 		let start = Self::take_usize(&mut split)?.unwrap_or(0);
 		let len = Self::take_usize(&mut split)?.unwrap_or(128);
 
-		Ok(Self{ start, len })
+		Ok(Self { start, len })
 	}
 }
 
@@ -83,9 +86,9 @@ impl FromStr for MemoryOpt {
 struct MemoryParseError;
 
 impl Display for MemoryParseError {
-  fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
-  	"invalid memory format".fmt(f)
-  }
+	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
+		"invalid memory format".fmt(f)
+	}
 }
 
 fn main() {
@@ -115,19 +118,23 @@ fn main() {
 	let instance = linker.instantiate(&mut store, &module).unwrap();
 
 	if !cli.call.is_empty() {
-
 		let fn_name = &cli.call[0];
 		let arg = &cli.call[1];
 
 		let alloc = core_instance
-			.get_typed_func::<(u32, u32), (u32,), _>(&mut store, "alloc").unwrap();
+			.get_typed_func::<(u32, u32), (u32,), _>(&mut store, "alloc")
+			.unwrap();
 		let (addr,) = alloc.call(&mut store, (arg.len() as u32, 1)).unwrap();
-		memory.write(&mut store, addr as usize, arg.as_bytes()).unwrap();
+		memory
+			.write(&mut store, addr as usize, arg.as_bytes())
+			.unwrap();
 
 		let fn_instance = instance
-			.get_typed_func::<(u32, u32), (), _>(&mut store, fn_name).unwrap();
-		fn_instance.call(&mut store, (addr, arg.len() as u32)).unwrap();
-
+			.get_typed_func::<(u32, u32), (), _>(&mut store, fn_name)
+			.unwrap();
+		fn_instance
+			.call(&mut store, (addr, arg.len() as u32))
+			.unwrap();
 	} else {
 		let fn_instance = instance
 			.get_typed_func::<(), (), _>(&mut store, "_start")
@@ -136,11 +143,15 @@ fn main() {
 	}
 
 	if let Some(memory_opt) = cli.memory {
-		let data = memory.data(&store).get(
-			memory_opt.start .. memory_opt.start + memory_opt.len
-		).unwrap();
+		let data = memory
+			.data(&store)
+			.get(memory_opt.start..memory_opt.start + memory_opt.len)
+			.unwrap();
 
-		let cfg = HexConfig { title: false, ..HexConfig::default() };
+		let cfg = HexConfig {
+			title: false,
+			..HexConfig::default()
+		};
 		println!("         0  1  2  3   4  5  6  7   8  9  a  b   c  d  e  f");
 		println!("{}", config_hex(&data, cfg));
 	}

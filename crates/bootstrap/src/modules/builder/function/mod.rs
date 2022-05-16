@@ -26,7 +26,7 @@ use std::collections::VecDeque;
 use super::ModuleBuilder;
 
 mod instructions;
-pub use instructions::InstructionBuilder;
+pub(self) use instructions::InstructionBuilder;
 
 mod locals;
 pub use locals::{Local, Locals};
@@ -67,7 +67,7 @@ impl<'a> FunctionBuilder<'a> {
 			.push_back(InstructionBuilder::Basic(instruction));
 	}
 
-	pub fn build(mut self) -> (Function, Option<&'a str>) {
+	pub(super) fn build(mut self) -> (Function, Option<&'a str>) {
 		let mut result = Function::new(self.locals.build());
 		while let Some(i) = self.instructions.pop_front() {
 			result.instruction(&i.build());

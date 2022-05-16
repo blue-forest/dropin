@@ -23,15 +23,15 @@ use dropin_core::print_to;
 
 pub mod path;
 use path::{get_model_path, get_recipe, read_file};
-pub mod expressions;
-use expressions::Expression;
+mod expressions;
+pub use expressions::Expression;
 pub mod modules;
-use modules::Compiler;
+pub use modules::Compiler;
 pub mod syntaxes;
 use syntaxes::Patterns;
 pub mod sys;
-pub mod utils;
 use sys::{Args, WasiUnwrap};
+pub mod utils;
 
 pub struct Recipe<'syntax, 'recipe> {
 	pub syntax: &'syntax str,

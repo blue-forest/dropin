@@ -3,18 +3,26 @@ module $patterns.syntax "\n"{1..} $patterns.function
 syntax $patterns.id
 
 id
-  $patterns.key ":"
-  $patterns.key ":"
-  $patterns.key ":"
-  $patterns.key ("/" $patterns.key){..}
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ("/" $patterns.keyWithPoint){..}
 
-key ("-" | "_" | "." | $std.alphanum){1..}
+keyWithPoint ("-" | "_" | "." | $std.alphanum){1..}
 
-function "fn " $patterns.key "(" $patterns.arguments{..1} ")" $patterns.commands
+key ("-" | "_" | $std.alphanum){1..}
 
-arguments $patterns.argument ("," $patterns.argument){..}
+function
+  $patterns.public{..1}
+  "fn " $patterns.key
+  "(" $patterns.params{..1} ")"
+  $patterns.commands
 
-argument $patterns.key " "{1..} $patterns.type
+public "pub "
+
+params $patterns.param ("," $patterns.param){..}
+
+param $patterns.key " "{1..} $patterns.type
 
 type "bytes"
 

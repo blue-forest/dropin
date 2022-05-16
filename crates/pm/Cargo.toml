@@ -1,6 +1,6 @@
 [package]
 name = "dropin-pm"
-version = "0.5.3-7"
+version = "0.5.3-8"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in pm"
@@ -8,7 +8,7 @@ repository = "https://github.com/blue-forest/dropin/crates/pm"
 license = "AGPL-3.0-only"
 
 [dependencies]
-dropin-utils = { path="../utils", version = "0.5.3-4" }
+dropin-utils = { path="../utils", version = "0.5.3-8" }
 bytes = "1.1"
 reqwest = { version = "0.11", features = [ "blocking" ] }
 structopt = "0.3"

@@ -1,6 +1,6 @@
 [package]
 name = "dropin-debugger"
-version = "0.5.3-4"
+version = "0.5.3-8"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
 description = "drop'in debugger [WIP]"
@@ -8,7 +8,7 @@ repository = "https://github.com/theblueforest/dropin/crates/debugger"
 license = "AGPL-3.0-only"
 
 [dependencies]
-dropin-utils = { path="../utils", version = "0.5.3-4" }
+dropin-utils = { path="../utils", version = "0.5.3-8" }
 pretty-hex = "0.2.1"
 structopt = "0.3"
 wasmtime = "0.36.0"

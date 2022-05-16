@@ -520,6 +520,7 @@ dependencies = [
 name = "dropin-debugger"
 version = "0.5.3-4"
 dependencies = [
+ "dropin-utils",
  "pretty-hex",
  "structopt",
  "wasmtime",

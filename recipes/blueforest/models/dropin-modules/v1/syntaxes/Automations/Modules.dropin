@@ -3,14 +3,28 @@ module $patterns.syntax "\n"{1..} $patterns.function
 syntax $patterns.id
 
 id
-  $patterns.key ":"
-  $patterns.key ":"
-  $patterns.key ":"
-  $patterns.key ("/" $patterns.key){..}
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ("/" $patterns.keyWithPoint){..}
 
-key ("-" | "_" | "." | $std.alphanum){1..}
+keyWithPoint ("-" | "_" | "." | $std.alphanum){1..}
 
-function "fn " $patterns.key "()" $patterns.commands
+key ("-" | "_" | $std.alphanum){1..}
+
+function
+  $patterns.public{..1}
+  "fn " $patterns.key
+  "(" $patterns.params{..1} ")"
+  $patterns.commands
+
+public "pub "
+
+params $patterns.param ("," $patterns.param){..}
+
+param $patterns.key " "{1..} $patterns.type
+
+type "bytes"
 
 commands ("\n  " ($patterns.localCommand | $patterns.metaCommand)){..}
 
@@ -18,7 +32,15 @@ localCommand ">" $patterns.metaCommand
 
 metaCommand $patterns.print
 
-print "print \"" $patterns.message "\""
+print "print " $patterns.value
+
+value $patterns.text | $patterns.getter
+
+getter "$" $patterns.query
+
+query $patterns.key ("." $patterns.key){..}
+
+text "\"" $patterns.message "\""
 
 message $patterns.message_char{1..}
 

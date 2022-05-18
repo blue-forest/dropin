@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 #[cfg(target_family = "wasm")]
 pub fn root() -> PathBuf {
-	PathBuf::from("/")
+	PathBuf::new()
 }
 
 #[cfg(not(target_family = "wasm"))]

@@ -21,6 +21,7 @@
 
 #[macro_use]
 pub mod io;
+
 pub mod error;
 use error::PortableExpect;
 pub mod fs;

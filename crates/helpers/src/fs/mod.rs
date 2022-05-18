@@ -27,19 +27,15 @@ mod path;
 pub use path::*;
 
 #[cfg(target_family = "wasm")]
-pub mod rights;
-
-#[cfg(target_family = "wasm")]
 pub fn read(path: &Path) -> String {
-	println!("{:?}", path);
 	unsafe {
 		let fd = wasi::path_open(
 			3, // preopened fd
 			wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
 			path.to_str().punwrap(),
 			0,
-			rights::FD_READ,
-			rights::FD_READ,
+			wasi::RIGHTS_FD_READ,
+			wasi::RIGHTS_FD_READ,
 			0,
 		)
 		.punwrap();
@@ -77,9 +73,13 @@ pub fn write(path: &Path, content: &[u8]) {
 			3, // preopened fd
 			wasi::LOOKUPFLAGS_SYMLINK_FOLLOW,
 			path.to_str().punwrap(),
-			9, // TODO: oflags constants
-			rights::FD_WRITE | rights::PATH_CREATE_DIRECTORY | rights::PATH_CREATE_FILE,
-			rights::FD_WRITE | rights::PATH_CREATE_DIRECTORY | rights::PATH_CREATE_FILE,
+			wasi::OFLAGS_CREAT | wasi::OFLAGS_TRUNC,
+			wasi::RIGHTS_FD_WRITE
+				| wasi::RIGHTS_PATH_CREATE_DIRECTORY
+				| wasi::RIGHTS_PATH_CREATE_FILE,
+			wasi::RIGHTS_FD_WRITE
+				| wasi::RIGHTS_PATH_CREATE_DIRECTORY
+				| wasi::RIGHTS_PATH_CREATE_FILE,
 			0,
 		)
 		.punwrap();

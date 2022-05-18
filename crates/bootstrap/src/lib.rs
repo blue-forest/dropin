@@ -58,7 +58,7 @@ impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
 const OWNER: &str = "blueforest";
 const DROPIN_MODULES: &str = "dropin-modules";
 const MODELS: &str = "Models";
-const MODULES: &str = "Modules";
+const MODULES: &str = "Automations/Modules";
 
 #[no_mangle]
 pub fn _start() {

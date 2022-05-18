@@ -22,7 +22,7 @@ use structopt::StructOpt;
 
 use std::path::PathBuf;
 
-use dropin_utils::path::get_root;
+use dropin_helpers::fs;
 
 mod embedder;
 pub use embedder::Embedder;
@@ -49,9 +49,9 @@ struct Opt {
 fn main() {
 	let args = Opt::from_args();
 	if let Some(Command::Run { file, share_root }) = args.cmd {
-		let root = get_root();
+		let root = fs::root();
 		let mut embedder = Embedder::new(&root);
-		embedder.run(if share_root { Some(&root) } else { None }, &file);
+		embedder.run(if share_root { Some(&root) } else { None }, &file, "_start");
 	} else {
 		interactive::Cli::new().run();
 	}

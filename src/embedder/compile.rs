@@ -27,7 +27,7 @@ use wasmtime_wasi::{WasiCtx, WasiCtxBuilder};
 use std::fs::File;
 use std::path::Path;
 
-use dropin_utils::path::get_build;
+use dropin_helpers::fs::wasm;
 
 use super::Embedder;
 
@@ -37,7 +37,7 @@ impl Embedder {
 			.stderr(Box::new(stdout()))
 			.stdout(Box::new(wasmtime_wasi::sync::file::File::from_cap_std(
 				cap_std::fs::File::from_std(
-					File::create(get_build(root, owner, model)).unwrap(),
+					File::create(wasm(root, owner, model, "v1")).unwrap(),
 				),
 			)))
 			.args(&[

@@ -42,7 +42,7 @@ impl Embedder {
 		builder.build()
 	}
 
-	pub fn run(&mut self, root: Option<&Path>, path: &Path) {
+	pub fn run(&mut self, root: Option<&Path>, path: &Path, f_name: &str) {
 		if self.core.is_none() {
 			let handle = self.core_handle.take().unwrap();
 			self.core = Some(handle.join().unwrap());
@@ -58,7 +58,7 @@ impl Embedder {
 		let main = Module::from_file(&self.engine, path).unwrap();
 		let main_instance = linker.instantiate(&mut store, &main).unwrap();
 		let start = main_instance
-			.get_typed_func::<(), (), _>(&mut store, "_start")
+			.get_typed_func::<(), (), _>(&mut store, f_name)
 			.unwrap();
 		start.call(&mut store, ()).unwrap();
 	}

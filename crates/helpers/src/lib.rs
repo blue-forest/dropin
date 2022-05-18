@@ -19,10 +19,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod error;
-use error::PortableExpect;
 #[macro_use]
 pub mod io;
+pub mod error;
+use error::PortableExpect;
 pub mod fs;
 pub mod header;
 pub use header::Header;

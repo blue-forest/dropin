@@ -20,26 +20,18 @@
  */
 
 use wasmtime::{Linker, Store};
-use wasmtime_wasi::sync::stdio::stdout;
 use wasmtime_wasi::sync::Dir;
 use wasmtime_wasi::{WasiCtx, WasiCtxBuilder};
 
 use std::fs::File;
 use std::path::Path;
 
-use dropin_helpers::fs::wasm;
-
 use super::Embedder;
 
 impl Embedder {
 	fn compile_ctx(root: &Path, owner: &str, model: &str) -> WasiCtx {
 		WasiCtxBuilder::new()
-			.stderr(Box::new(stdout()))
-			.stdout(Box::new(wasmtime_wasi::sync::file::File::from_cap_std(
-				cap_std::fs::File::from_std(
-					File::create(wasm(root, owner, model, "v1")).unwrap(),
-				),
-			)))
+			.inherit_stdio()
 			.args(&[
 				"dropin-bootstrap_v1.wasm".to_string(),
 				format!("{}:{}:v1", owner, model),

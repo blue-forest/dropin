@@ -31,6 +31,7 @@ pub mod rights;
 
 #[cfg(target_family = "wasm")]
 pub fn read(path: &Path) -> String {
+	println!("{:?}", path);
 	unsafe {
 		let fd = wasi::path_open(
 			3, // preopened fd

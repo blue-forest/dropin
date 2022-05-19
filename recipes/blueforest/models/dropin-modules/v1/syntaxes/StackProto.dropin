@@ -3,7 +3,7 @@
     indentations
 
 tree
-  "branch\n"
   $stacks.indentations
+  "branch\n"
   $stacks.indentations:+(" "{1..})
   ("leaf" $stacks.indentations:-() | $patterns.tree){1..}

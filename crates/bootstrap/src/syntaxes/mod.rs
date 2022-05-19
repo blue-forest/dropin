@@ -27,9 +27,10 @@ use dropin_helpers::{PortableExpect, PortableUnwrap};
 
 use crate::expressions::Expression;
 
+mod config;
+pub use config::Config;
 mod error;
 pub use error::ParseError;
-
 pub mod tokens;
 use tokens::Concat;
 pub use tokens::Token;
@@ -115,27 +116,6 @@ impl<'a> Patterns<'a> {
 		Ok(result)
 	}
 }
-
-/*
-fn get_config<'a>(
-	syntax: &'a str,
-	iter: &mut Peekable<CharIndices<'a>>,
-) -> Option<&'a str> {
-	let mut start: Option<usize> = None;
-	let mut result: Option<&str> = None;
-	#[allow(clippy::while_let_on_iterator)] // if `for` is used, iter is moved
-	while let Some((i, c)) = iter.next() {
-		if !c.is_whitespace() {
-			start = Some(i);
-			break;
-		}
-	}
-	let start = start?;
-	if syntax.get(start..).punwrap().starts_with("@config\n") {
-	}
-	result
-}
-*/
 
 fn get_key<'a>(
 	syntax: &'a str,

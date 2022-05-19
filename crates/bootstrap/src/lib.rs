@@ -74,8 +74,7 @@ pub fn _start() {
 		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES);
 
 	let model_full_id = args.get(1).punwrap();
-	let (model_owner, model_id, model_version) =
-		decompose_version(model_full_id);
+	let (model_owner, model_id, model_version) = decompose_version(model_full_id);
 	let model_path = model_path(&root, model_owner, model_id, model_version);
 	let mut model_recipe_path = model_path.parent().punwrap().to_path_buf();
 	model_recipe_path.push(".dropin");

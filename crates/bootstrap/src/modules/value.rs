@@ -32,24 +32,16 @@ impl<'a> Value<'a> {
 						let name = query_iter.next().punwrap().as_str();
 						if let Some(local) = function_state.stack.get(name) {
 							Self::StackLocal(local)
-						} else if let Some((base, len)) =
-							function_state.heap.get(name)
-						{
+						} else if let Some((base, len)) = function_state.heap.get(name) {
 							Self::HeapLocal(base, len)
 						} else {
-							print_to(
-								&format!("local not found: {}", query.as_str()),
-								2,
-							);
+							print_to(&format!("local not found: {}", query.as_str()), 2);
 							unsafe { wasi::proc_exit(1) };
 							unreachable!();
 						}
 					}
 					_ => {
-						print_to(
-							&format!("ref not found: {}", query.as_str()),
-							2,
-						);
+						print_to(&format!("ref not found: {}", query.as_str()), 2);
 						unsafe { wasi::proc_exit(1) };
 						unreachable!();
 					}

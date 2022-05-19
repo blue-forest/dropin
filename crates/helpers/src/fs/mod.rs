@@ -50,9 +50,8 @@ pub fn read(path: &Path) -> String {
 				}],
 			)
 			.punwrap();
-			content.push_str(
-				std::str::from_utf8(buf.get(..size).punwrap()).punwrap(),
-			);
+			content
+				.push_str(std::str::from_utf8(buf.get(..size).punwrap()).punwrap());
 			if size < buf.len() || size == 0 {
 				break;
 			}

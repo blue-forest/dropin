@@ -4,8 +4,7 @@ use std::str::CharIndices;
 
 use dropin_helpers::PortableUnwrap;
 
-fn stack() {
-}
+fn stack() {}
 
 #[derive(Default)]
 pub struct Config<'syntax, 'module> {
@@ -25,13 +24,13 @@ impl<'syntax, 'module> Config<'syntax, 'module> {
 		let (i, _) = peeked.punwrap();
 		let mut offset = *i;
 		if !syntax.get(offset..).punwrap().starts_with("@config\n") {
+			for _ in 0..8 {
+				// skip "@config\n"
+				iter.next().punwrap();
+			}
 
-	  	for _ in 0..8 { // skip "@config\n"
-	  		iter.next().punwrap();
-	  	}
-
-	  	let mut stack_indent = vec![];
-	  	offset += 8;
+			let mut stack_indent = vec![];
+			offset += 8;
 			let indent_end = loop {
 				let peeked = iter.peek();
 				if peeked.is_none() {
@@ -80,4 +79,3 @@ impl<'syntax, 'module> Config<'syntax, 'module> {
 		self.stacks.get_mut(key)
 	}
 }
-

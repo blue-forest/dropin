@@ -55,9 +55,7 @@ impl<'a> Token<'a> for Not<'a> {
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError> {
 		let mut iter_clone = iter.clone();
-		if let Ok(()) =
-			self.token.parse(patterns, module, &mut iter_clone, expr)
-		{
+		if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
 			Err(ParseError::new(format!(
 				"expected not {}",
 				self.token.expected()

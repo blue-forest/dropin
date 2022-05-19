@@ -43,9 +43,7 @@ impl<'a> Getter<'a> {
 			let next = iter.next();
 			if next.is_none() {
 				break Box::new(Getter {
-					query: syntax
-						.get(start.pexpect("expected query")..)
-						.punwrap(),
+					query: syntax.get(start.pexpect("expected query")..).punwrap(),
 				});
 			}
 			let (i, c) = next.punwrap();
@@ -60,9 +58,7 @@ impl<'a> Getter<'a> {
 			if let Some((pi, pc)) = iter.peek() {
 				if pc.is_whitespace() || *pc == ')' || Quantifier::detect(*pc) {
 					break Box::new(Getter {
-						query: syntax
-							.get(start.pexpect("expected query")..*pi)
-							.punwrap(),
+						query: syntax.get(start.pexpect("expected query")..*pi).punwrap(),
 					});
 				}
 			}
@@ -100,10 +96,7 @@ impl<'a> Token<'a> for Getter<'a> {
 				))
 			}
 		} else {
-			return Err(ParseError::new(format!(
-				"unknown ref: {}",
-				self.query
-			)));
+			return Err(ParseError::new(format!("unknown ref: {}", self.query)));
 		}
 	}
 }

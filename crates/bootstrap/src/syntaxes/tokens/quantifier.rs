@@ -90,8 +90,7 @@ impl Parser {
 					}
 					self.is_parsing_min = false;
 					if let Some(start) = self.quantity_start {
-						self.current_min =
-							Some(Self::get_quantity(syntax, start, i));
+						self.current_min = Some(Self::get_quantity(syntax, start, i));
 						self.quantity_start = None;
 					}
 					let (_, next) = iter.next().punwrap();

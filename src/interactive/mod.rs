@@ -70,16 +70,14 @@ impl Cli {
 		let mut model_selected = None;
 		let mut models = vec![];
 		if let Some(owner) = config.owner() {
-			owner_selected =
-				Some(owners.iter().position(|o| o == owner).unwrap());
+			owner_selected = Some(owners.iter().position(|o| o == owner).unwrap());
 			cwd.push(owner);
 			cwd.push("models");
 			models = get_dirs(&cwd, HashSet::new());
 			if let Some(model) = config.model() {
 				cwd.push(model);
 				cwd.push("v1"); // TODO: deal with versions
-				model_selected =
-					Some(models.iter().position(|m| m == model).unwrap());
+				model_selected = Some(models.iter().position(|m| m == model).unwrap());
 			}
 		}
 		Self {

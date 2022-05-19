@@ -44,12 +44,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		let mut params = Params::default();
 		expression = function.next().punwrap();
 		if expression.pattern() == "params" {
-			self.params(
-				&mut item_function,
-				function_state,
-				&mut params,
-				&expression,
-			);
+			self.params(&mut item_function, function_state, &mut params, &expression);
 		} else {
 			print_to(expression.pattern(), 2);
 		}

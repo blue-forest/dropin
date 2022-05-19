@@ -57,11 +57,7 @@ impl<'module> Default for ModuleBuilder<'module> {
 }
 
 impl<'module> ModuleBuilder<'module> {
-	pub fn type_(
-		&mut self,
-		params: Vec<ValType>,
-		results: Vec<ValType>,
-	) -> u32 {
+	pub fn type_(&mut self, params: Vec<ValType>, results: Vec<ValType>) -> u32 {
 		let result = self.types.len() as u32;
 		self.types.function(params, results);
 		result
@@ -82,7 +78,8 @@ impl<'module> ModuleBuilder<'module> {
 			}
 			function_id += 1;
 		}
-		self.build_type(&mut module)
+		self
+			.build_type(&mut module)
 			.build_import(&mut module)
 			.build_function(&mut module, types)
 			.build_export(&mut module, exports)

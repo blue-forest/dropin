@@ -39,14 +39,11 @@ impl Display for Add {
 impl Command for Add {
 	fn run(&self, cli: &mut Cli) -> u32 {
 		let (owner_name, owner_path) = loop {
-			let owner_name: String =
-				Input::with_theme(&ColorfulTheme::default())
-					.with_prompt(
-						"Owner name for your recipes ? (leave empty to cancel)",
-					)
-					.allow_empty(true)
-					.interact_text()
-					.unwrap();
+			let owner_name: String = Input::with_theme(&ColorfulTheme::default())
+				.with_prompt("Owner name for your recipes ? (leave empty to cancel)")
+				.allow_empty(true)
+				.interact_text()
+				.unwrap();
 			if owner_name.is_empty() {
 				return 0;
 			}

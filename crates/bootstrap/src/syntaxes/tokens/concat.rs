@@ -41,11 +41,7 @@ impl<'a> Concat<'a> {
 		while let Some((_, c)) = iter.next() {
 			if !c.is_whitespace() {
 				if c == '|' {
-					return Or::parse(
-						Box::new(Concat { tokens }),
-						syntax,
-						iter,
-					);
+					return Or::parse(Box::new(Concat { tokens }), syntax, iter);
 				}
 				if c == ')' {
 					break;
@@ -55,9 +51,7 @@ impl<'a> Concat<'a> {
 					if *peeked != ')' && !peeked.is_whitespace() {
 						if Quantifier::detect(*peeked) {
 							let token = tokens.pop().punwrap();
-							tokens.push(Box::new(Quantifier::new(
-								syntax, iter, token,
-							)));
+							tokens.push(Box::new(Quantifier::new(syntax, iter, token)));
 						} else {
 							panic!("unexpected '{}'", c);
 						}

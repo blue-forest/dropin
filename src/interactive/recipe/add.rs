@@ -44,9 +44,7 @@ impl Display for Add {
 impl Command for Add {
 	fn run(&self, cli: &mut Cli) -> u32 {
 		let id: String = Input::with_theme(&ColorfulTheme::default())
-			.with_prompt(
-				"{} ID ? (split namespaces with '/', leave empty to cancel)",
-			)
+			.with_prompt("{} ID ? (split namespaces with '/', leave empty to cancel)")
 			.allow_empty(true)
 			.interact_text()
 			.unwrap();

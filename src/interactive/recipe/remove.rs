@@ -46,12 +46,8 @@ impl Command for Remove {
 	fn run(&self, cli: &mut Cli) -> u32 {
 		let self_namespaces = self.0.namespaces();
 		let namespaces = self_namespaces.iter().map(|s| s.as_str()).collect();
-		let path = get_recipe(
-			cli,
-			&self.0.recipe().dir_name(),
-			namespaces,
-			self.0.id(),
-		);
+		let path =
+			get_recipe(cli, &self.0.recipe().dir_name(), namespaces, self.0.id());
 		remove_file(&path).unwrap();
 		let mut namespaces = (*self_namespaces).clone();
 		let mut break_n = 0;

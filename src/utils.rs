@@ -53,12 +53,9 @@ impl Display for NameValidationError {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		match self {
 			Self::Invalid => {
-				"Name may only be composed of alphanumerics, '.', '-' and '_'"
-					.fmt(f)
+				"Name may only be composed of alphanumerics, '.', '-' and '_'".fmt(f)
 			}
-			Self::Exists(dir) => {
-				format!("{} directory already exists", dir).fmt(f)
-			}
+			Self::Exists(dir) => format!("{} directory already exists", dir).fmt(f),
 		}
 	}
 }
@@ -71,8 +68,7 @@ pub fn get_dirs(path: &Path, exclude: HashSet<&str>) -> Vec<String> {
 		let path = owner_dir.path();
 		let file_name = path.file_name().unwrap().to_str().unwrap();
 		if path.is_dir() && !exclude.contains(file_name) {
-			result
-				.push(path.file_name().unwrap().to_str().unwrap().to_string());
+			result.push(path.file_name().unwrap().to_str().unwrap().to_string());
 		}
 	}
 	result

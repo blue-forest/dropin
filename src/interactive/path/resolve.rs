@@ -48,9 +48,9 @@ fn push_model(cli: &Cli, mut buf: PathBuf) -> Option<PathBuf> {
 
 /*
 pub fn get_model(cli: &Cli) -> Option<PathBuf> {
-  let mut buf = cli.root.clone();
-  buf = push_owner(cli, buf).unwrap();
-  push_model(cli, buf)
+	let mut buf = cli.root.clone();
+	buf = push_owner(cli, buf).unwrap();
+	push_model(cli, buf)
 }
 */
 

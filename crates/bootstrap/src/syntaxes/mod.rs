@@ -50,8 +50,7 @@ impl<'a> Pattern<'a> {
 	) -> Result<Expression<'a, 'b>, ParseError> {
 		if let Some((start, _)) = iter.peek() {
 			let start = *start;
-			let mut result =
-				Expression::new(module.get(start..).punwrap(), self.key);
+			let mut result = Expression::new(module.get(start..).punwrap(), self.key);
 			self.token.parse(patterns, module, iter, &mut result)?;
 			if let Some((end, _)) = iter.peek() {
 				result.truncate(*end - start);
@@ -101,8 +100,7 @@ impl<'a> Patterns<'a> {
 		module: &'b str,
 	) -> Result<Expression<'a, 'b>, ParseError> {
 		let mut iter = module.char_indices().peekable();
-		let result =
-			self.patterns[self.entry].parse(self, module, &mut iter)?;
+		let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
 		if let Some((i, _)) = iter.peek() {
 			let remaining = module.get(*i..).punwrap();
 			// ignore new line

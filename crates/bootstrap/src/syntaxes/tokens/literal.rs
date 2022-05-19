@@ -91,10 +91,7 @@ impl<'a> Token<'a> for Literal<'a> {
 				false
 			};
 			if !ok {
-				return Err(ParseError::new(format!(
-					"expected {}",
-					self.value
-				)));
+				return Err(ParseError::new(format!("expected {}", self.value)));
 			}
 			is_escaped = false;
 		}

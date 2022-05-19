@@ -90,12 +90,9 @@ impl<'a> Command for RunFunction<'a> {
 				HeaderType::Bytes => Param::Bytes(input.into_bytes()),
 			});
 		}
-		cli.embedder.run(
-			Some(&cli.root),
-			&self.path,
-			self.function.name(),
-			params,
-		);
+		cli
+			.embedder
+			.run(Some(&cli.root), &self.path, self.function.name(), params);
 		1
 	}
 }

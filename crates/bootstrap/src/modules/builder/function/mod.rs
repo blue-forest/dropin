@@ -63,7 +63,8 @@ impl<'a> FunctionBuilder<'a> {
 	}
 
 	pub fn basic(&mut self, instruction: Instruction<'a>) {
-		self.instructions
+		self
+			.instructions
 			.push_back(InstructionBuilder::Basic(instruction));
 	}
 

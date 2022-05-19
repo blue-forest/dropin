@@ -24,9 +24,10 @@ use wasm_encoder::Module;
 use std::path::Path;
 
 use dropin_helpers::fs::read_recipe;
+use dropin_helpers::PortableUnwrap;
 use dropin_helpers::{decompose_recipe, Header};
 
-use crate::{Recipe, WasiUnwrap};
+use crate::Recipe;
 
 mod builder;
 use builder::{Core, ModuleBuilder};
@@ -65,7 +66,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 
 		let mut iter = self.module.expression.iter();
 		iter.next(); // skip recipes
-		let mut function_iter = iter.next().wasi_unwrap().iter();
+		let mut function_iter = iter.next().punwrap().iter();
 		let mut function_state = FunctionState::default();
 		let mut function = self.fn_profile(
 			&mut item,
@@ -78,7 +79,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 			&mut state,
 			&function_state,
 			&mut function,
-			&function_iter.next().wasi_unwrap(),
+			&function_iter.next().punwrap(),
 		);
 		builder.function(function);
 
@@ -86,7 +87,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	}
 
 	pub fn get_syntax(&self) -> String {
-		let id = self.module.expression.iter().next().wasi_unwrap().as_str();
+		let id = self.module.expression.iter().next().punwrap().as_str();
 		let (owner, model, version, recipe) = decompose_recipe(id);
 		read_recipe(&Path::new("/"), owner, model, version, "syntaxes", recipe)
 	}

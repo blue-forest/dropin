@@ -22,9 +22,10 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use dropin_helpers::PortableUnwrap;
+
 use super::{parse_token, Or, Quantifier, Token};
 use crate::syntaxes::{Expression, ParseError, Patterns};
-use crate::WasiUnwrap;
 
 #[derive(Debug)]
 pub struct Concat<'a> {
@@ -53,7 +54,7 @@ impl<'a> Concat<'a> {
 				if let Some((_, peeked)) = iter.peek() {
 					if *peeked != ')' && !peeked.is_whitespace() {
 						if Quantifier::detect(*peeked) {
-							let token = tokens.pop().wasi_unwrap();
+							let token = tokens.pop().punwrap();
 							tokens.push(Box::new(Quantifier::new(
 								syntax, iter, token,
 							)));

@@ -1,10 +1,10 @@
 use wasm_encoder::ValType;
 
 use dropin_helpers::header::{HeaderFunction, HeaderParam, HeaderType};
+use dropin_helpers::PortableUnwrap;
 
 use crate::modules::builder::{Local, Locals};
 use crate::modules::Compiler;
-use crate::sys::WasiUnwrap;
 use crate::{print_to, Expression};
 
 use super::FunctionState;
@@ -19,8 +19,8 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	) {
 		for param in expression.iter() {
 			let mut iter = param.iter();
-			let key = iter.next().wasi_unwrap().as_str();
-			let type_ = iter.next().wasi_unwrap().as_str();
+			let key = iter.next().punwrap().as_str();
+			let type_ = iter.next().punwrap().as_str();
 			let header_type = match type_ {
 				"bytes" => {
 					let base_id = params.push(ValType::I32);

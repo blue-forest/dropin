@@ -23,7 +23,7 @@ use dropin_core::print_to;
 use dropin_helpers::fs::{
 	self, header, model_path, read, read_recipe, wasm, write,
 };
-use dropin_helpers::{decompose_recipe, decompose_version};
+use dropin_helpers::{decompose_recipe, decompose_version, PortableUnwrap};
 
 mod expressions;
 pub use expressions::Expression;
@@ -32,7 +32,7 @@ pub use modules::Compiler;
 pub mod syntaxes;
 use syntaxes::Patterns;
 pub mod sys;
-use sys::{Args, WasiUnwrap};
+use sys::Args;
 pub mod utils;
 
 pub struct Recipe<'syntax, 'recipe> {
@@ -45,7 +45,7 @@ pub struct Recipe<'syntax, 'recipe> {
 impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
 	pub fn new(syntax: &'syntax str, recipe: &'recipe str) -> Self {
 		let patterns = Patterns::new(syntax);
-		let expression = patterns.parse(recipe).wasi_unwrap();
+		let expression = patterns.parse(recipe).punwrap();
 		Self {
 			syntax,
 			patterns,
@@ -73,16 +73,16 @@ pub fn _start() {
 	let syntax_modules_content =
 		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES);
 
-	let model_full_id = args.get(1).wasi_unwrap();
+	let model_full_id = args.get(1).punwrap();
 	let (model_owner, model_id, model_version) =
 		decompose_version(model_full_id);
 	let model_path = model_path(&root, model_owner, model_id, model_version);
-	let mut model_recipe_path = model_path.parent().wasi_unwrap().to_path_buf();
+	let mut model_recipe_path = model_path.parent().punwrap().to_path_buf();
 	model_recipe_path.push(".dropin");
 	let model_content = read(&model_recipe_path);
 	let model_recipe = Recipe::new(syntax_models_content, &model_content);
 
-	let module = model_recipe.expression.iter().next().wasi_unwrap();
+	let module = model_recipe.expression.iter().next().punwrap();
 	let module_id = module.iter().next().unwrap();
 
 	let (module_owner, module_model, module_version, module_recipe) =

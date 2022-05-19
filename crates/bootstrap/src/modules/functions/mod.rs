@@ -2,8 +2,9 @@ use std::collections::HashMap;
 use std::slice::Iter;
 
 use dropin_helpers::header::{Header, HeaderFunction};
+use dropin_helpers::PortableUnwrap;
 
-use crate::{print_to, Expression, WasiUnwrap};
+use crate::{print_to, Expression};
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::Compiler;
@@ -27,11 +28,11 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		function_state: &mut FunctionState<'module>,
 		function: &mut Iter<Expression<'_, 'internal>>,
 	) -> FunctionBuilder<'module> {
-		let mut expression = function.next().wasi_unwrap();
+		let mut expression = function.next().punwrap();
 		let mut is_public = false;
 		if expression.pattern() == "public" {
 			is_public = true;
-			expression = function.next().wasi_unwrap();
+			expression = function.next().punwrap();
 		}
 
 		let mut function_name = expression.as_str();
@@ -41,7 +42,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		let mut item_function = HeaderFunction::new(function_name);
 
 		let mut params = Params::default();
-		expression = function.next().wasi_unwrap();
+		expression = function.next().punwrap();
 		if expression.pattern() == "params" {
 			self.params(
 				&mut item_function,

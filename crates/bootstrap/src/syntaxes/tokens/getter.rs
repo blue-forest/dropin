@@ -22,8 +22,9 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use dropin_helpers::{PortableExpect, PortableUnwrap};
+
 use crate::syntaxes::{Expression, ParseError, Patterns};
-use crate::sys::{WasiExpect, WasiUnwrap};
 
 use super::{Quantifier, Token};
 
@@ -43,11 +44,11 @@ impl<'a> Getter<'a> {
 			if next.is_none() {
 				break Box::new(Getter {
 					query: syntax
-						.get(start.wasi_expect("expected query")..)
-						.wasi_unwrap(),
+						.get(start.pexpect("expected query")..)
+						.punwrap(),
 				});
 			}
-			let (i, c) = next.wasi_unwrap();
+			let (i, c) = next.punwrap();
 			if start.is_none() {
 				if !c.is_alphanumeric() {
 					// $ alone ?
@@ -60,8 +61,8 @@ impl<'a> Getter<'a> {
 				if pc.is_whitespace() || *pc == ')' || Quantifier::detect(*pc) {
 					break Box::new(Getter {
 						query: syntax
-							.get(start.wasi_expect("expected query")..*pi)
-							.wasi_unwrap(),
+							.get(start.pexpect("expected query")..*pi)
+							.punwrap(),
 					});
 				}
 			}
@@ -78,8 +79,8 @@ impl<'a> Token<'a> for Getter<'a> {
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError> {
 		if self.query.starts_with("patterns.") {
-			let key = self.query.get(9..).wasi_unwrap();
-			let pattern = patterns.get(key).wasi_unwrap();
+			let key = self.query.get(9..).punwrap();
+			let pattern = patterns.get(key).punwrap();
 			expr.add_inner(pattern.parse(patterns, module, iter)?);
 			Ok(())
 		} else if self.query.starts_with("std.") {

@@ -23,8 +23,9 @@ use std::collections::HashMap;
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use dropin_helpers::{PortableExpect, PortableUnwrap};
+
 use crate::expressions::Expression;
-use crate::sys::{WasiExpect, WasiUnwrap};
 
 mod error;
 pub use error::ParseError;
@@ -49,7 +50,7 @@ impl<'a> Pattern<'a> {
 		if let Some((start, _)) = iter.peek() {
 			let start = *start;
 			let mut result =
-				Expression::new(module.get(start..).wasi_unwrap(), self.key);
+				Expression::new(module.get(start..).punwrap(), self.key);
 			self.token.parse(patterns, module, iter, &mut result)?;
 			if let Some((end, _)) = iter.peek() {
 				result.truncate(*end - start);
@@ -74,8 +75,7 @@ impl<'a> Patterns<'a> {
 	pub(crate) fn new(syntax: &'a str) -> Self {
 		let mut patterns = HashMap::new();
 		let mut iter = syntax.char_indices().peekable();
-		let mut key =
-			get_key(syntax, &mut iter).wasi_expect("no pattern found");
+		let mut key = get_key(syntax, &mut iter).pexpect("no pattern found");
 		let entry = key;
 		loop {
 			let token = Concat::parse(syntax, &mut iter);
@@ -86,7 +86,7 @@ impl<'a> Patterns<'a> {
 			if key_opt.is_none() {
 				break;
 			}
-			key = key_opt.wasi_unwrap();
+			key = key_opt.punwrap();
 		}
 		Self { entry, patterns }
 	}
@@ -103,7 +103,7 @@ impl<'a> Patterns<'a> {
 		let result =
 			self.patterns[self.entry].parse(self, module, &mut iter)?;
 		if let Some((i, _)) = iter.peek() {
-			let remaining = module.get(*i..).wasi_unwrap();
+			let remaining = module.get(*i..).punwrap();
 			// ignore new line
 			if remaining != "\n" {
 				return Err(ParseError::new(format!(
@@ -115,6 +115,27 @@ impl<'a> Patterns<'a> {
 		Ok(result)
 	}
 }
+
+/*
+fn get_config<'a>(
+	syntax: &'a str,
+	iter: &mut Peekable<CharIndices<'a>>,
+) -> Option<&'a str> {
+	let mut start: Option<usize> = None;
+	let mut result: Option<&str> = None;
+	#[allow(clippy::while_let_on_iterator)] // if `for` is used, iter is moved
+	while let Some((i, c)) = iter.next() {
+		if !c.is_whitespace() {
+			start = Some(i);
+			break;
+		}
+	}
+	let start = start?;
+	if syntax.get(start..).punwrap().starts_with("@config\n") {
+	}
+	result
+}
+*/
 
 fn get_key<'a>(
 	syntax: &'a str,
@@ -129,11 +150,10 @@ fn get_key<'a>(
 			break;
 		}
 	}
-	pattern_start?;
+	let start = pattern_start?;
 	for (i, c) in iter {
 		if c.is_whitespace() {
-			result =
-				Some(syntax.get(pattern_start.wasi_unwrap()..i).wasi_unwrap());
+			result = Some(syntax.get(start..i).punwrap());
 			break;
 		}
 	}

@@ -22,9 +22,10 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use dropin_helpers::PortableUnwrap;
+
 use super::Token;
 use crate::syntaxes::{Expression, ParseError, Patterns};
-use crate::WasiUnwrap;
 
 #[derive(Debug)]
 pub struct Quantifier<'a> {
@@ -72,7 +73,7 @@ impl Parser {
 	) -> Vec<(Option<u32>, Option<u32>)> {
 		let mut result = Vec::new();
 		loop {
-			let (i, c) = iter.next().wasi_unwrap();
+			let (i, c) = iter.next().punwrap();
 			match c {
 				'}' => {
 					result.push(self.create_range(syntax, i));
@@ -93,7 +94,7 @@ impl Parser {
 							Some(Self::get_quantity(syntax, start, i));
 						self.quantity_start = None;
 					}
-					let (_, next) = iter.next().wasi_unwrap();
+					let (_, next) = iter.next().punwrap();
 					if next != '.' {
 						panic!("unexpected token: {}", next);
 					}
@@ -133,11 +134,7 @@ impl Parser {
 
 	#[inline(always)]
 	fn get_quantity(syntax: &str, start: usize, end: usize) -> u32 {
-		syntax
-			.get(start..end)
-			.wasi_unwrap()
-			.parse::<u32>()
-			.wasi_unwrap()
+		syntax.get(start..end).punwrap().parse::<u32>().punwrap()
 	}
 }
 

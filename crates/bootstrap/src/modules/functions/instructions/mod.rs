@@ -1,8 +1,10 @@
 use wasm_encoder::Instruction;
 
+use dropin_helpers::PortableUnwrap;
+
 use crate::modules::builder::{FunctionBuilder, ModuleBuilder};
 use crate::modules::{Compiler, State, Value};
-use crate::{print_to, Expression, WasiUnwrap};
+use crate::{print_to, Expression};
 
 use super::FunctionState;
 
@@ -16,7 +18,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		expression: &Expression<'_, 'module>,
 	) {
 		for instruction in expression.iter() {
-			let instruction_child = instruction.iter().next().wasi_unwrap();
+			let instruction_child = instruction.iter().next().punwrap();
 			match instruction.pattern() {
 				"metaCommand" => {
 					self.meta_instruction(instruction_child);
@@ -27,7 +29,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 						state,
 						&function_state,
 						function,
-						instruction_child.iter().next().wasi_unwrap(),
+						instruction_child.iter().next().punwrap(),
 					);
 				}
 				_ => {
@@ -43,13 +45,13 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				expression
 					.iter()
 					.next()
-					.wasi_unwrap()
+					.punwrap()
 					.iter()
 					.next()
-					.wasi_unwrap()
+					.punwrap()
 					.iter()
 					.next()
-					.wasi_unwrap()
+					.punwrap()
 					.as_str(),
 				2,
 			),
@@ -72,7 +74,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 			"print" => {
 				let value = Value::from_expression(
 					function_state,
-					expression.iter().next().wasi_unwrap(),
+					expression.iter().next().punwrap(),
 				);
 				let print = builder.get_core(&state.std.print);
 				value.print(builder, state, function);

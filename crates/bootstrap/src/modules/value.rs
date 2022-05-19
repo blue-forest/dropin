@@ -1,6 +1,8 @@
 use wasm_encoder::{Instruction, ValType::I32};
 
-use crate::{print_to, Expression, WasiUnwrap};
+use dropin_helpers::PortableUnwrap;
+
+use crate::{print_to, Expression};
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::functions::FunctionState;
@@ -18,16 +20,16 @@ impl<'a> Value<'a> {
 		function_state: &'a FunctionState<'a>,
 		expression: &Expression<'_, 'a>,
 	) -> Self {
-		let value = expression.iter().next().wasi_unwrap();
+		let value = expression.iter().next().punwrap();
 		match value.pattern() {
-			"text" => Self::Text(value.iter().next().wasi_unwrap().as_str()),
+			"text" => Self::Text(value.iter().next().punwrap().as_str()),
 			"getter" => {
-				let query = value.iter().next().wasi_unwrap();
+				let query = value.iter().next().punwrap();
 				let mut query_iter = query.iter();
-				let top = query_iter.next().wasi_unwrap();
+				let top = query_iter.next().punwrap();
 				match top.as_str() {
 					"locals" => {
-						let name = query_iter.next().wasi_unwrap().as_str();
+						let name = query_iter.next().punwrap().as_str();
 						if let Some(local) = function_state.stack.get(name) {
 							Self::StackLocal(local)
 						} else if let Some((base, len)) =

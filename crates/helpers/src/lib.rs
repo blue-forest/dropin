@@ -23,7 +23,7 @@
 pub mod io;
 
 pub mod error;
-use error::PortableExpect;
+pub use error::{PortableExpect, PortableUnwrap};
 pub mod fs;
 pub mod header;
 pub use header::Header;

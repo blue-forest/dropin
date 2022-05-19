@@ -22,9 +22,10 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
+use dropin_helpers::{PortableExpect, PortableUnwrap};
+
 use super::Token;
 use crate::syntaxes::{Expression, ParseError, Patterns};
-use crate::sys::{WasiExpect, WasiUnwrap};
 use crate::utils::escape_char;
 
 #[derive(Debug)]
@@ -47,9 +48,7 @@ impl<'a> Literal<'a> {
 			if !is_escaped {
 				match c {
 					'"' => {
-						value = Some(
-							syntax.get(start.wasi_unwrap()..i).wasi_unwrap(),
-						);
+						value = Some(syntax.get(start.punwrap()..i).punwrap());
 						break;
 					}
 					'\\' => {
@@ -61,7 +60,7 @@ impl<'a> Literal<'a> {
 			}
 			is_escaped = false;
 		}
-		let value = value.wasi_expect("expected '\"'");
+		let value = value.pexpect("expected '\"'");
 		Box::new(Literal { value })
 	}
 }

@@ -1,0 +1,9 @@
+@config
+  stacks
+    indentations
+
+tree
+  "branch\n"
+  $stacks.indentations
+  $stacks.indentations:+(" "{1..})
+  ("leaf" $stacks.indentations:-() | $patterns.tree){1..}

@@ -80,7 +80,7 @@ impl<'a> HeaderFunction<'a> {
 	pub fn from_bytes(bytes: &'a [u8]) -> Result<(Self, usize), InvalidHeader> {
 		let name_len = Header::read_u32(bytes);
 		let mut offset = (name_len as usize) + 4;
-		let name = try_!(str::from_utf8(&opt!(bytes.get(4..offset))));
+		let name = try_!(str::from_utf8(opt!(bytes.get(4..offset))));
 		let mut result = HeaderFunction::new(name);
 		let n_params = Header::read_u32(opt!(bytes.get(offset..)));
 		offset += 4;
@@ -133,7 +133,7 @@ impl<'a> HeaderParam<'a> {
 	pub fn from_bytes(bytes: &'a [u8]) -> Result<(Self, usize), InvalidHeader> {
 		let key_len = Header::read_u32(bytes);
 		let offset = (key_len as usize) + 4;
-		let key = try_!(str::from_utf8(&opt!(bytes.get(4..offset))));
+		let key = try_!(str::from_utf8(opt!(bytes.get(4..offset))));
 		let type_ = try_!(HeaderType::from_byte(*opt!(bytes.get(offset))));
 		let result = Self::new(key, type_);
 		Ok((result, offset + 1))

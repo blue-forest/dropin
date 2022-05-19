@@ -96,6 +96,6 @@ impl<'a> Command for RunFunction<'a> {
 			self.function.name(),
 			params,
 		);
-		0
+		1
 	}
 }

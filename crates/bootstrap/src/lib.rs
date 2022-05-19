@@ -106,7 +106,6 @@ pub fn _start() {
 	);
 
 	let item_binary = item.to_le_bytes();
-	print_to(&format!("{:?}", item_binary), 2);
 	write(
 		&header(&root, module_owner, module_model, module_version),
 		item_binary.as_slice(),

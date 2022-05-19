@@ -19,18 +19,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use parity_wasm::elements::Internal;
-use parity_wasm::deserialize_file;
+use dialoguer::Input;
 
 use std::fmt::{Display, Error, Formatter};
+use std::fs::read;
 use std::path::PathBuf;
 
-use dropin_helpers::fs::header;
-use dropin_helpers::Header;
+use dropin_helpers::fs::{header, wasm};
+use dropin_helpers::header::{Header, HeaderFunction, HeaderType};
 
+use crate::embedder::Param;
 use crate::interactive::{Cli, Command};
 
-pub struct Run;
+pub struct Run {
+	pub(super) model: String,
+}
 
 impl Display for Run {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
@@ -40,24 +43,18 @@ impl Display for Run {
 
 impl Command for Run {
 	fn run(&self, cli: &mut Cli) -> u32 {
-		cli.run_select("run", |cli| {
-			let root = &cli.root;
-			let owner = &cli.owners[cli.owner_selected.unwrap()];
-			let model = &cli.models[cli.model_selected.unwrap()];
-			let path = header(root, owner, model, "v1");
-			let header = Header::from_file(&path);
-			println!("{:?}", header);
-			std::process::exit(1);
-			let module = deserialize_file(&path).unwrap();
+		let root = &cli.root;
+		let owner = &cli.owners[cli.owner_selected.unwrap()];
+		let header_path = header(root, owner, &self.model, "v1");
+		let wasm_path = wasm(root, owner, &self.model, "v1");
+		let bytes = read(&header_path).unwrap();
+		let header = Header::from_bytes(&bytes).unwrap();
+		cli.run_select("run", |_| {
 			let mut commands: Vec<Box<dyn Command>> = vec![];
-			if let Some(export) = module.export_section() {
-				for entry in export.entries() {
-					if let Internal::Function(id) = entry.internal() {
-						commands.push(Box::new(RunFunction{
-							name: entry.field().to_string(), path: path.clone(), id: *id,
-						}));
-					}
-				}
+			for function in header.functions() {
+				commands.push(Box::new(RunFunction{
+					function, path: wasm_path.clone(),
+				}));
 			}
 			commands
 		});
@@ -65,26 +62,36 @@ impl Command for Run {
 	}
 }
 
-struct RunFunction {
-	name: String,
+struct RunFunction<'a> {
+	function: &'a HeaderFunction<'a>,
 	path: PathBuf,
-	id: u32,
 }
 
-impl Display for RunFunction {
+impl<'a> Display for RunFunction<'a> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-		if self.name == "_start" {
+		if self.function.name() == "_start" {
 			"main".fmt(f)
 		} else {
-			self.name.fmt(f)
+			self.function.name().fmt(f)
 		}
 	}
 }
 
-impl Command for RunFunction {
+impl<'a> Command for RunFunction<'a> {
 	fn run(&self, cli: &mut Cli) -> u32 {
-		let module = deserialize_file(&self.path).unwrap();
-		cli.embedder.run(Some(&cli.root), &self.path, &self.name);
+		let mut params = vec![];
+		for param in self.function.params() {
+			let input: String = Input::new()
+				.with_prompt(format!("{} ({})", param.key(), param.type_()))
+				.interact_text()
+				.unwrap();
+			params.push(
+				match param.type_() {
+					HeaderType::Bytes => Param::Bytes(input.into_bytes()),
+				}
+			);
+		}
+		cli.embedder.run(Some(&cli.root), &self.path, self.function.name(), params);
 		0
 	}
 }

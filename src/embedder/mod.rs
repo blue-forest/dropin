@@ -31,6 +31,7 @@ use dropin_helpers::fs::wasm;
 
 mod compile;
 mod run;
+pub use run::Param;
 
 pub struct Embedder {
 	pub engine: Arc<Engine>,

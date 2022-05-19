@@ -42,7 +42,7 @@ impl Cli {
 		});
 	}
 
-	pub fn run_select<F: Fn(&mut Self) -> Vec<Box<dyn Command>>>(
+	pub fn run_select<'a, F: Fn(&mut Self) -> Vec<Box<dyn Command + 'a>>>(
 		&mut self,
 		title: &str,
 		commands: F,

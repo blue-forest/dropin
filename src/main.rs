@@ -51,7 +51,12 @@ fn main() {
 	if let Some(Command::Run { file, share_root }) = args.cmd {
 		let root = fs::root();
 		let mut embedder = Embedder::new(&root);
-		embedder.run(if share_root { Some(&root) } else { None }, &file, "_start");
+		embedder.run(
+			if share_root { Some(&root) } else { None },
+			&file,
+			"_start",
+			vec![],
+		);
 	} else {
 		interactive::Cli::new().run();
 	}

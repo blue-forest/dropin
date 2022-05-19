@@ -26,11 +26,12 @@ use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
+use dropin_helpers::fs::wasm;
 use dropin_pm::fetch;
-use dropin_utils::path::get_build;
 
 mod compile;
 mod run;
+pub use run::Param;
 
 pub struct Embedder {
 	pub engine: Arc<Engine>,
@@ -46,7 +47,7 @@ impl Embedder {
 		engine: Arc<Engine>,
 		model: &'a str,
 	) -> impl FnMut() -> Module + 'a {
-		let path = get_build(root, "blueforest", model);
+		let path = wasm(root, "blueforest", model, "v1");
 		move || {
 			let binary = if !path.exists() {
 				let binary = fetch("blueforest", model, "v1").unwrap();

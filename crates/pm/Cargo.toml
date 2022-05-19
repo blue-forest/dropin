@@ -8,7 +8,7 @@ repository = "https://github.com/blue-forest/dropin/crates/pm"
 license = "AGPL-3.0-only"
 
 [dependencies]
-dropin-utils = { path="../utils", version = "0.5.3-8" }
+dropin-helpers = { path="../helpers", version = "0.5.3-8" }
 bytes = "1.1"
 reqwest = { version = "0.11", features = [ "blocking" ] }
 structopt = "0.3"

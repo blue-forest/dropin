@@ -479,15 +479,16 @@ dependencies = [
 
 [[package]]
 name = "dropin"
-version = "0.5.3-7"
+version = "0.5.3-8"
 dependencies = [
  "cap-std",
  "dialoguer",
+ "dropin-helpers",
  "dropin-pm",
- "dropin-utils",
  "edit",
  "home",
  "humantime",
+ "parity-wasm",
  "path-clean",
  "regex",
  "reqwest",
@@ -501,16 +502,17 @@ dependencies = [
 
 [[package]]
 name = "dropin-bootstrap"
-version = "0.5.3-4"
+version = "0.5.3-8"
 dependencies = [
  "dropin-core",
+ "dropin-helpers",
  "wasi 0.11.0+wasi-snapshot-preview1",
  "wasm-encoder",
 ]
 
 [[package]]
 name = "dropin-core"
-version = "0.5.3-4"
+version = "0.5.3-8"
 dependencies = [
  "wasi 0.11.0+wasi-snapshot-preview1",
  "wee_alloc",
@@ -518,9 +520,9 @@ dependencies = [
 
 [[package]]
 name = "dropin-debugger"
-version = "0.5.3-4"
+version = "0.5.3-8"
 dependencies = [
- "dropin-utils",
+ "dropin-helpers",
  "pretty-hex",
  "structopt",
  "wasmtime",
@@ -528,21 +530,22 @@ dependencies = [
 ]
 
 [[package]]
-name = "dropin-pm"
-version = "0.5.3-7"
-dependencies = [
- "bytes",
- "dropin-utils",
- "reqwest",
- "structopt",
-]
-
-[[package]]
-name = "dropin-utils"
-version = "0.5.3-4"
+name = "dropin-helpers"
+version = "0.5.3-8"
 dependencies = [
  "home",
  "path-clean",
+ "wasi 0.11.0+wasi-snapshot-preview1",
+]
+
+[[package]]
+name = "dropin-pm"
+version = "0.5.3-8"
+dependencies = [
+ "bytes",
+ "dropin-helpers",
+ "reqwest",
+ "structopt",
 ]
 
 [[package]]
@@ -1219,6 +1222,12 @@ dependencies = [
  "pkg-config",
  "vcpkg",
 ]
+
+[[package]]
+name = "parity-wasm"
+version = "0.42.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "be5e13c266502aadf83426d87d81a0f5d1ef45b8027f5a471c360abfe4bfae92"
 
 [[package]]
 name = "paste"

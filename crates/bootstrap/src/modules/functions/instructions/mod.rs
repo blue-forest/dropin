@@ -2,7 +2,7 @@ use wasm_encoder::Instruction;
 
 use crate::modules::builder::{FunctionBuilder, ModuleBuilder};
 use crate::modules::{Compiler, State, Value};
-use crate::{Expression, print_to, WasiUnwrap};
+use crate::{print_to, Expression, WasiUnwrap};
 
 use super::FunctionState;
 

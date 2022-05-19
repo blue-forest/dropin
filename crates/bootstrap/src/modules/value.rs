@@ -1,6 +1,6 @@
 use wasm_encoder::{Instruction, ValType::I32};
 
-use crate::{Expression, print_to, WasiUnwrap};
+use crate::{print_to, Expression, WasiUnwrap};
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::functions::FunctionState;

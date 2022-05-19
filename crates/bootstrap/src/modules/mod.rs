@@ -23,7 +23,9 @@ use wasm_encoder::Module;
 
 use std::path::Path;
 
-use crate::path::get_recipe;
+use dropin_helpers::fs::read_recipe;
+use dropin_helpers::{decompose_recipe, Header};
+
 use crate::{Recipe, WasiUnwrap};
 
 mod builder;
@@ -51,17 +53,22 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		Self { module }
 	}
 
-	pub fn compile(&self, _path: &Path) -> Result<Module, CompileError> {
+	pub fn compile(
+		&self,
+		_path: &Path,
+	) -> Result<(Module, Header<'module>), CompileError> {
 		let mut builder = ModuleBuilder::default();
 		let mut state = State {
 			std: Core::default(),
 		};
+		let mut item = Header::default();
 
 		let mut iter = self.module.expression.iter();
 		iter.next(); // skip recipes
 		let mut function_iter = iter.next().wasi_unwrap().iter();
 		let mut function_state = FunctionState::default();
 		let mut function = self.fn_profile(
+			&mut item,
 			&mut builder,
 			&mut function_state,
 			&mut function_iter,
@@ -75,11 +82,12 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		);
 		builder.function(function);
 
-		Ok(builder.build())
+		Ok((builder.build(), item))
 	}
 
 	pub fn get_syntax(&self) -> String {
 		let id = self.module.expression.iter().next().wasi_unwrap().as_str();
-		get_recipe("syntaxes", id)
+		let (owner, model, version, recipe) = decompose_recipe(id);
+		read_recipe(&Path::new("/"), owner, model, version, "syntaxes", recipe)
 	}
 }

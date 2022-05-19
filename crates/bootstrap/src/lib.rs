@@ -20,9 +20,11 @@
  */
 
 use dropin_core::print_to;
+use dropin_helpers::fs::{
+	self, header, model_path, read, read_recipe, wasm, write,
+};
+use dropin_helpers::{decompose_recipe, decompose_version};
 
-pub mod path;
-use path::{get_model_path, get_recipe, read_file};
 mod expressions;
 pub use expressions::Expression;
 pub mod modules;
@@ -53,8 +55,10 @@ impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
 	}
 }
 
-const SYNTAX_MODELS: &str = "blueforest:dropin-modules:v1:Models";
-const SYNTAX_MODULES: &str = "blueforest:dropin-modules:v1:Automations/Modules";
+const OWNER: &str = "blueforest";
+const DROPIN_MODULES: &str = "dropin-modules";
+const MODELS: &str = "Models";
+const MODULES: &str = "Automations/Modules";
 
 #[no_mangle]
 pub fn _start() {
@@ -63,25 +67,47 @@ pub fn _start() {
 		print_to("expected argument: <model>", 2);
 		unsafe { wasi::proc_exit(1) };
 	}
-	let syntax_models_content = &get_recipe("syntaxes", SYNTAX_MODELS);
-	let syntax_modules_content = &get_recipe("syntaxes", SYNTAX_MODULES);
+	let root = fs::root();
+	let syntax_models_content =
+		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODELS);
+	let syntax_modules_content =
+		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES);
 
-	let model_path = get_model_path(args.get(1).wasi_unwrap());
+	let model_full_id = args.get(1).wasi_unwrap();
+	let (model_owner, model_id, model_version) =
+		decompose_version(model_full_id);
+	let model_path = model_path(&root, model_owner, model_id, model_version);
 	let mut model_recipe_path = model_path.parent().wasi_unwrap().to_path_buf();
 	model_recipe_path.push(".dropin");
-	let model_content = read_file(&model_recipe_path);
+	let model_content = read(&model_recipe_path);
 	let model_recipe = Recipe::new(syntax_models_content, &model_content);
 
 	let module = model_recipe.expression.iter().next().wasi_unwrap();
 	let module_id = module.iter().next().unwrap();
 
-	let module_content = &get_recipe("modules", module_id.as_str());
-	let module_recipe = Recipe::new(syntax_modules_content, module_content);
+	let (module_owner, module_model, module_version, module_recipe) =
+		decompose_recipe(module_id.as_str());
+	let module_content = read_recipe(
+		&root,
+		module_owner,
+		module_model,
+		module_version,
+		"modules",
+		module_recipe,
+	);
+	let module_recipe = Recipe::new(syntax_modules_content, &module_content);
 	let compiler = Compiler::new(module_recipe);
-	let binary = compiler.compile(&model_path).unwrap().finish();
-	let data = [wasi::Ciovec {
-		buf: binary.as_ptr(),
-		buf_len: binary.len(),
-	}];
-	unsafe { wasi::fd_write(1, &data).unwrap() };
+	let (module, item) = compiler.compile(&model_path).unwrap();
+
+	let wasm_binary = module.finish();
+	write(
+		&wasm(&root, module_owner, module_model, module_version),
+		wasm_binary.as_slice(),
+	);
+
+	let item_binary = item.to_le_bytes();
+	write(
+		&header(&root, module_owner, module_model, module_version),
+		item_binary.as_slice(),
+	);
 }

@@ -23,7 +23,7 @@ use std::fmt::{Display, Error, Formatter};
 
 use super::path::get_owner;
 use super::{get_dirs, Cli, Command};
-use dropin_utils::path::get_build;
+use dropin_helpers::fs::wasm;
 
 mod add;
 use add::Add;
@@ -91,9 +91,11 @@ impl Command for Model {
 			];
 			let owner = &cli.owners[cli.owner_selected.unwrap()];
 			let model = &self.name;
-			let build_path = get_build(&cli.root, owner, model);
+			let build_path = wasm(&cli.root, owner, model, "v1");
 			if build_path.exists() {
-				result.push(Box::new(Run {}));
+				result.push(Box::new(Run {
+					model: model.to_string(),
+				}));
 			}
 			result
 		})

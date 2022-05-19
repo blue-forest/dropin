@@ -23,7 +23,7 @@ use std::fmt::Display;
 use std::fs::create_dir;
 use std::path::PathBuf;
 
-use dropin_utils::path::get_root;
+use dropin_helpers::fs;
 
 use crate::utils::get_dirs;
 use crate::Embedder;
@@ -53,7 +53,7 @@ pub struct Cli {
 
 impl Cli {
 	pub fn new() -> Self {
-		let root = get_root();
+		let root = fs::root();
 		validate_path(&root).unwrap();
 		let owners = if !root.exists() {
 			println!("Created drop'in root");

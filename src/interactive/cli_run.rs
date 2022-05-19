@@ -60,7 +60,10 @@ impl Cli {
 				select.item("🏠 home");
 				default += 1;
 			}
-			select.item("◀ back").items(&enabled_commands).default(default);
+			select
+				.item("◀ back")
+				.items(&enabled_commands)
+				.default(default);
 			select.with_prompt(self.prompt(title));
 			let command = select.interact().unwrap();
 			if command == default - 1 {

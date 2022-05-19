@@ -41,10 +41,13 @@ impl Param {
 	) -> Vec<Val> {
 		match self {
 			Self::Bytes(value) => {
-				let alloc = core.get_typed_func::<(u32, u32), (i32,), _>(
-					&mut store, "alloc",
-				).unwrap();
-				let (addr,) = alloc.call(&mut store, (value.len() as u32, 1)).unwrap();
+				let alloc = core
+					.get_typed_func::<(u32, u32), (i32,), _>(
+						&mut store, "alloc",
+					)
+					.unwrap();
+				let (addr,) =
+					alloc.call(&mut store, (value.len() as u32, 1)).unwrap();
 				mem.write(store, addr as usize, value.as_slice()).unwrap();
 				vec![Val::I32(addr), Val::I32(value.len() as i32)]
 			}
@@ -102,6 +105,8 @@ impl Embedder {
 			vals.extend(p.to_vals(&mut store, core_instance, &mut memory));
 		}
 		let mut results = []; // TODO
-		start.call(&mut store, vals.as_slice(), &mut results).unwrap();
+		start
+			.call(&mut store, vals.as_slice(), &mut results)
+			.unwrap();
 	}
 }

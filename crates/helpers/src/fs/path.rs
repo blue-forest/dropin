@@ -7,10 +7,10 @@ pub fn root() -> PathBuf {
 
 #[cfg(not(target_family = "wasm"))]
 pub fn root() -> PathBuf {
+	use crate::error::PortableUnwrap;
 	use home::home_dir;
 	use path_clean::PathClean;
 	use std::env::{current_dir, var};
-	use crate::error::PortableUnwrap;
 
 	if let Ok(root) = var("DROPIN_ROOT") {
 		println!("Using $DROPIN_ROOT ({})", root);
@@ -68,4 +68,3 @@ pub fn wasm(root: &Path, owner: &str, model: &str, version: &str) -> PathBuf {
 pub fn header(root: &Path, owner: &str, model: &str, version: &str) -> PathBuf {
 	build(root, owner, model, version, "dh")
 }
-

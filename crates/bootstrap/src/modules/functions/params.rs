@@ -5,7 +5,7 @@ use dropin_helpers::header::{HeaderFunction, HeaderParam, HeaderType};
 use crate::modules::builder::{Local, Locals};
 use crate::modules::Compiler;
 use crate::sys::WasiUnwrap;
-use crate::{Expression, print_to};
+use crate::{print_to, Expression};
 
 use super::FunctionState;
 

@@ -21,7 +21,7 @@
 
 use dropin_core::print_to;
 use dropin_helpers::fs::{
-	self, model_path, read_recipe, header, read, wasm, write,
+	self, header, model_path, read, read_recipe, wasm, write,
 };
 use dropin_helpers::{decompose_recipe, decompose_version};
 
@@ -68,15 +68,14 @@ pub fn _start() {
 		unsafe { wasi::proc_exit(1) };
 	}
 	let root = fs::root();
-	let syntax_models_content = &read_recipe(
-		&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODELS,
-	);
-	let syntax_modules_content = &read_recipe(
-		&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES,
-	);
+	let syntax_models_content =
+		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODELS);
+	let syntax_modules_content =
+		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES);
 
 	let model_full_id = args.get(1).wasi_unwrap();
-	let (model_owner, model_id, model_version) = decompose_version(model_full_id);
+	let (model_owner, model_id, model_version) =
+		decompose_version(model_full_id);
 	let model_path = model_path(&root, model_owner, model_id, model_version);
 	let mut model_recipe_path = model_path.parent().wasi_unwrap().to_path_buf();
 	model_recipe_path.push(".dropin");
@@ -86,14 +85,15 @@ pub fn _start() {
 	let module = model_recipe.expression.iter().next().wasi_unwrap();
 	let module_id = module.iter().next().unwrap();
 
-	let (
+	let (module_owner, module_model, module_version, module_recipe) =
+		decompose_recipe(module_id.as_str());
+	let module_content = read_recipe(
+		&root,
 		module_owner,
 		module_model,
 		module_version,
+		"modules",
 		module_recipe,
-	) = decompose_recipe(module_id.as_str());
-	let module_content = read_recipe(
-		&root, module_owner, module_model, module_version, "modules", module_recipe,
 	);
 	let module_recipe = Recipe::new(syntax_modules_content, &module_content);
 	let compiler = Compiler::new(module_recipe);

@@ -26,8 +26,8 @@ use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
-use dropin_pm::fetch;
 use dropin_helpers::fs::wasm;
+use dropin_pm::fetch;
 
 mod compile;
 mod run;

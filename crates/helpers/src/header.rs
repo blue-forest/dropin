@@ -4,16 +4,18 @@ use std::slice::Iter;
 use std::str;
 
 macro_rules! try_ {
-  ($expr:expr $(,)?) => { $expr.map_err(|_| InvalidHeader{})? }
+	($expr:expr $(,)?) => {
+		$expr.map_err(|_| InvalidHeader {})?
+	};
 }
 
 macro_rules! opt {
-  ($expr:expr $(,)?) => {
-  	match $expr {
-  		Some(content) => content,
-  		None => return Err(InvalidHeader{}),
-  	}
-  }
+	($expr:expr $(,)?) => {
+		match $expr {
+			Some(content) => content,
+			None => return Err(InvalidHeader {}),
+		}
+	};
 }
 
 #[derive(Debug)]
@@ -37,9 +39,8 @@ impl<'a> Header<'a> {
 		let mut result = Self::default();
 		let mut offset = 0;
 		while offset < bytes.len() {
-			let (function, size) = try_!(HeaderFunction::from_bytes(
-				opt!(bytes.get(offset..)),
-			));
+			let (function, size) =
+				try_!(HeaderFunction::from_bytes(opt!(bytes.get(offset..)),));
 			result.push(function);
 			offset += size;
 		}
@@ -56,7 +57,9 @@ impl<'a> Header<'a> {
 		self.functions.push(function);
 	}
 
-	pub fn functions(&self) -> Iter<HeaderFunction<'a>> { self.functions.iter() }
+	pub fn functions(&self) -> Iter<HeaderFunction<'a>> {
+		self.functions.iter()
+	}
 
 	pub fn to_le_bytes(&self) -> Vec<u8> {
 		let mut result = vec![];
@@ -82,27 +85,33 @@ impl<'a> HeaderFunction<'a> {
 		let n_params = Header::read_u32(opt!(bytes.get(offset..)));
 		offset += 4;
 		for _ in 0..n_params {
-			let (param, size) = try_!(HeaderParam::from_bytes(
-				opt!(bytes.get(offset..)),
-			));
+			let (param, size) =
+				try_!(HeaderParam::from_bytes(opt!(bytes.get(offset..)),));
 			result.push(param);
 			offset += size;
 		}
-		
+
 		Ok((result, offset))
 	}
 
 	pub fn new(name: &'a str) -> Self {
-		Self { name, params: vec![] }
+		Self {
+			name,
+			params: vec![],
+		}
 	}
 
 	pub fn push(&mut self, param: HeaderParam<'a>) {
 		self.params.push(param);
 	}
 
-	pub fn name(&self) -> &str { self.name }
+	pub fn name(&self) -> &str {
+		self.name
+	}
 
-	pub fn params(&self) -> Iter<HeaderParam<'a>> { self.params.iter() }
+	pub fn params(&self) -> Iter<HeaderParam<'a>> {
+		self.params.iter()
+	}
 
 	fn to_le_bytes(&self, buf: &mut Vec<u8>) {
 		buf.extend((self.name.len() as u32).to_le_bytes());
@@ -127,16 +136,20 @@ impl<'a> HeaderParam<'a> {
 		let key = try_!(str::from_utf8(&opt!(bytes.get(4..offset))));
 		let type_ = try_!(HeaderType::from_byte(*opt!(bytes.get(offset))));
 		let result = Self::new(key, type_);
-		Ok((result, offset+1))
+		Ok((result, offset + 1))
 	}
 
 	pub fn new(key: &'a str, type_: HeaderType) -> Self {
 		Self { key, type_ }
 	}
 
-	pub fn key(&self) -> &str { self.key }
+	pub fn key(&self) -> &str {
+		self.key
+	}
 
-	pub fn type_(&self) -> &HeaderType { &self.type_ }
+	pub fn type_(&self) -> &HeaderType {
+		&self.type_
+	}
 
 	fn to_le_bytes(&self, buf: &mut Vec<u8>) {
 		buf.extend((self.key.len() as u32).to_le_bytes());
@@ -154,15 +167,15 @@ pub enum HeaderType {
 impl HeaderType {
 	fn to_byte(&self) -> u8 {
 		match self {
-			Self::Bytes            => 0xfe,
+			Self::Bytes => 0xfe,
 			// Self::Native(val_type) => *val_type as u8,
 		}
 	}
 
 	fn from_byte(byte: u8) -> Result<Self, InvalidHeader> {
 		match byte {
-			0xfe            => Ok(Self::Bytes),
-			_ => Err(InvalidHeader{})
+			0xfe => Ok(Self::Bytes),
+			_ => Err(InvalidHeader {}),
 		}
 	}
 }
@@ -170,8 +183,9 @@ impl HeaderType {
 impl Display for HeaderType {
 	fn fmt(&self, f: &mut Formatter) -> Result<(), fmt::Error> {
 		match self {
-			Self::Bytes            => "bytes",
+			Self::Bytes => "bytes",
 			// Self::Native(val_type) => *val_type as u8,
-		}.fmt(f)
+		}
+		.fmt(f)
 	}
 }

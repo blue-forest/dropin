@@ -52,8 +52,9 @@ impl Command for Run {
 		cli.run_select("run", |_| {
 			let mut commands: Vec<Box<dyn Command>> = vec![];
 			for function in header.functions() {
-				commands.push(Box::new(RunFunction{
-					function, path: wasm_path.clone(),
+				commands.push(Box::new(RunFunction {
+					function,
+					path: wasm_path.clone(),
 				}));
 			}
 			commands
@@ -85,13 +86,16 @@ impl<'a> Command for RunFunction<'a> {
 				.with_prompt(format!("{} ({})", param.key(), param.type_()))
 				.interact_text()
 				.unwrap();
-			params.push(
-				match param.type_() {
-					HeaderType::Bytes => Param::Bytes(input.into_bytes()),
-				}
-			);
+			params.push(match param.type_() {
+				HeaderType::Bytes => Param::Bytes(input.into_bytes()),
+			});
 		}
-		cli.embedder.run(Some(&cli.root), &self.path, self.function.name(), params);
+		cli.embedder.run(
+			Some(&cli.root),
+			&self.path,
+			self.function.name(),
+			params,
+		);
 		0
 	}
 }

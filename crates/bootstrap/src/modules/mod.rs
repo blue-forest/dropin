@@ -54,7 +54,8 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 	}
 
 	pub fn compile(
-		&self, _path: &Path,
+		&self,
+		_path: &Path,
 	) -> Result<(Module, Header<'module>), CompileError> {
 		let mut builder = ModuleBuilder::default();
 		let mut state = State {

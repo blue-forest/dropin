@@ -93,7 +93,9 @@ impl Command for Model {
 			let model = &self.name;
 			let build_path = wasm(&cli.root, owner, model, "v1");
 			if build_path.exists() {
-				result.push(Box::new(Run { model: model.to_string() }));
+				result.push(Box::new(Run {
+					model: model.to_string(),
+				}));
 			}
 			result
 		})

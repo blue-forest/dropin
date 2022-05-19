@@ -3,7 +3,7 @@ use std::slice::Iter;
 
 use dropin_helpers::header::{Header, HeaderFunction};
 
-use crate::{Expression, print_to, WasiUnwrap};
+use crate::{print_to, Expression, WasiUnwrap};
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::Compiler;
@@ -43,7 +43,12 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		let mut params = Params::default();
 		expression = function.next().wasi_unwrap();
 		if expression.pattern() == "params" {
-			self.params(&mut item_function, function_state, &mut params, &expression);
+			self.params(
+				&mut item_function,
+				function_state,
+				&mut params,
+				&expression,
+			);
 		} else {
 			print_to(expression.pattern(), 2);
 		}

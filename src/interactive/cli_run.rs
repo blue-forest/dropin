@@ -70,7 +70,6 @@ impl Cli {
 				break 0;
 			} else if default >= 2 && command == default - 2 {
 				self.run();
-				println!("test");
 				break u32::MAX;
 			}
 			let back_n = enabled_commands[command - default].run(self);

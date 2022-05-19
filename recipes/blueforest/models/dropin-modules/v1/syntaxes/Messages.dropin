@@ -1,0 +1,5 @@
+text "\"" $patterns.message "\""
+
+message $patterns.message_char{1..}
+
+message_char "\\\"" | !"\""

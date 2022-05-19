@@ -18,11 +18,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashSet;
 use std::fmt::Display;
 use std::fs::create_dir;
 use std::path::PathBuf;
 
-use dropin_utils::path::get_root;
+use dropin_helpers::fs;
 
 use crate::utils::get_dirs;
 use crate::Embedder;
@@ -52,14 +53,16 @@ pub struct Cli {
 
 impl Cli {
 	pub fn new() -> Self {
-		let root = get_root();
+		let root = fs::root();
 		validate_path(&root).unwrap();
 		let owners = if !root.exists() {
 			println!("Created drop'in root");
 			create_dir(&root).unwrap();
 			vec![]
 		} else {
-			get_dirs(&root)
+			let mut exclude = HashSet::new();
+			exclude.insert(".builds");
+			get_dirs(&root, exclude)
 		};
 		let mut cwd = root.clone();
 		let config = Config::new(&root);
@@ -71,7 +74,7 @@ impl Cli {
 				Some(owners.iter().position(|o| o == owner).unwrap());
 			cwd.push(owner);
 			cwd.push("models");
-			models = get_dirs(&cwd);
+			models = get_dirs(&cwd, HashSet::new());
 			if let Some(model) = config.model() {
 				cwd.push(model);
 				cwd.push("v1"); // TODO: deal with versions

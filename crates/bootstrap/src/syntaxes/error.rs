@@ -26,7 +26,7 @@ use std::fmt::{self, Display, Formatter};
 pub struct ParseError(String);
 
 impl ParseError {
-	pub fn new(message: String) -> Self {
+	pub(super) fn new(message: String) -> Self {
 		Self(message)
 	}
 }

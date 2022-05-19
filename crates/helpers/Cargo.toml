@@ -1,0 +1,15 @@
+[package]
+name = "dropin-helpers"
+version = "0.5.3-8"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"
+description = "drop'in helpers"
+repository = "https://github.com/blue-forest/dropin/crates/helpers"
+license = "AGPL-3.0-only"
+
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+home = "0.5.3"
+path-clean = "0.1.0"
+
+[target.'cfg(target_family = "wasm")'.dependencies]
+wasi = "0.11.0"

@@ -32,10 +32,27 @@ impl<'a> FunctionBuilder<'a> {
 	}
 
 	pub fn add_local(&mut self, type_: ValType) -> Local {
+		self.locals.add_local(type_)
+	}
+}
+
+#[derive(Default)]
+pub struct Locals {
+	i32_: u32,
+	// i64_:       u32,
+	// f32_:       u32,
+	// f64_:       u32,
+	// v128:       u32,
+	// func_ref:   u32,
+	// extern_ref: u32,
+}
+
+impl Locals {
+	pub fn add_local(&mut self, type_: ValType) -> Local {
 		match type_ {
 			ValType::I32 => {
-				let result = Local::I32(self.locals.i32_);
-				self.locals.i32_ += 1;
+				let result = Local::I32(self.i32_);
+				self.i32_ += 1;
 				result
 			}
 			_ => {
@@ -45,21 +62,8 @@ impl<'a> FunctionBuilder<'a> {
 			}
 		}
 	}
-}
 
-#[derive(Default)]
-pub struct Locals {
-	pub i32_: u32,
-	// pub i64_:       u32,
-	// pub f32_:       u32,
-	// pub f64_:       u32,
-	// pub v128:       u32,
-	// pub func_ref:   u32,
-	// pub extern_ref: u32,
-}
-
-impl Locals {
-	pub fn resolve(local: &Local) -> u32 {
+	pub(super) fn resolve(local: &Local) -> u32 {
 		/*
 		if let &Local::I32(idx) = local {
 		 idx
@@ -71,7 +75,7 @@ impl Locals {
 		idx
 	}
 
-	pub fn build(&self) -> Vec<(u32, ValType)> {
+	pub(super) fn build(&self) -> Vec<(u32, ValType)> {
 		let mut result = vec![];
 		if self.i32_ != 0 {
 			result.push((self.i32_, ValType::I32));
@@ -80,7 +84,7 @@ impl Locals {
 	}
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Local {
 	I32(u32),
 }

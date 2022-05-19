@@ -167,7 +167,7 @@ impl<'a> Token<'a> for Quantifier<'a> {
 				}
 			}
 			if let Some(max) = max {
-				if *max > n {
+				if *max >= n {
 					ok = true;
 					break;
 				}
@@ -177,10 +177,10 @@ impl<'a> Token<'a> for Quantifier<'a> {
 			}
 		}
 		if !ok {
-			panic!(
+			Err(ParseError::new(format!(
 				"expected {:?} {:?}, recognized {} times",
 				self.ranges, self.token, n,
-			);
+			)))
 		} else {
 			Ok(())
 		}

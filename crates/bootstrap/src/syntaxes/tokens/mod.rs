@@ -25,6 +25,8 @@ use std::str::CharIndices;
 
 use super::{Expression, ParseError, Patterns};
 
+use crate::print_to;
+
 mod concat;
 pub use concat::Concat;
 
@@ -68,7 +70,9 @@ fn parse_token<'a>(
 		'!' => Not::parse(syntax, iter),
 		'(' => Concat::parse(syntax, iter),
 		_ => {
-			panic!("unknown token {}", c);
+			print_to(&format!("unknown token {}", c), 2);
+			unsafe { wasi::proc_exit(1) };
+			unreachable!();
 		}
 	}
 }

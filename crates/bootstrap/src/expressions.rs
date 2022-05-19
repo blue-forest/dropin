@@ -31,7 +31,7 @@ pub struct Expression<'syntax, 'module> {
 }
 
 impl<'syntax, 'module> Expression<'syntax, 'module> {
-	pub fn new(value: &'module str, pattern: &'syntax str) -> Self {
+	pub(crate) fn new(value: &'module str, pattern: &'syntax str) -> Self {
 		Self {
 			value,
 			pattern,
@@ -51,11 +51,11 @@ impl<'syntax, 'module> Expression<'syntax, 'module> {
 		self.children.iter()
 	}
 
-	pub fn add_inner(&mut self, expr: Expression<'syntax, 'module>) {
+	pub(crate) fn add_inner(&mut self, expr: Expression<'syntax, 'module>) {
 		self.children.push(expr);
 	}
 
-	pub fn truncate(&mut self, i: usize) {
+	pub(crate) fn truncate(&mut self, i: usize) {
 		self.value = self.value.get(..i).wasi_unwrap()
 	}
 }

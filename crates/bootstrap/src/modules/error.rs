@@ -26,7 +26,7 @@ use std::fmt::{self, Display, Formatter};
 pub struct CompileError(String);
 
 impl CompileError {
-	pub fn new(message: String) -> Self {
+	pub(super) fn new(message: String) -> Self {
 		Self(message)
 	}
 }

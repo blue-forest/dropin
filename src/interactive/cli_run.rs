@@ -42,7 +42,7 @@ impl Cli {
 		});
 	}
 
-	pub fn run_select<F: Fn(&mut Self) -> Vec<Box<dyn Command>>>(
+	pub fn run_select<'a, F: Fn(&mut Self) -> Vec<Box<dyn Command + 'a>>>(
 		&mut self,
 		title: &str,
 		commands: F,
@@ -55,13 +55,25 @@ impl Cli {
 				.filter(|x| x.is_enabled(self))
 				.collect();
 			let mut select = Select::with_theme(&theme);
-			select.item("◀ back").items(&enabled_commands).default(1);
+			let mut default = 1;
+			if title != "Home" {
+				select.item("🏠 home");
+				default += 1;
+			}
+			select
+				.item("◀ back")
+				.items(&enabled_commands)
+				.default(default);
 			select.with_prompt(self.prompt(title));
 			let command = select.interact().unwrap();
-			if command == 0 {
+			if command == default - 1 {
 				break 0;
+			} else if default >= 2 && command == default - 2 {
+				self.run();
+				println!("test");
+				break u32::MAX;
 			}
-			let back_n = enabled_commands[command - 1].run(self);
+			let back_n = enabled_commands[command - default].run(self);
 			if back_n > 0 {
 				break back_n - 1;
 			}

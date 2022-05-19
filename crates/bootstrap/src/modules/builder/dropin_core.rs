@@ -56,10 +56,10 @@ impl<'module> ModuleBuilder<'module> {
 }
 
 pub struct CoreFunction<'a> {
-	pub id: Option<u32>,
-	pub name: &'a str,
-	pub params: Vec<ValType>,
-	pub results: Vec<ValType>,
+	id: Option<u32>,
+	name: &'a str,
+	params: Vec<ValType>,
+	results: Vec<ValType>,
 }
 
 impl<'a> CoreFunction<'a> {

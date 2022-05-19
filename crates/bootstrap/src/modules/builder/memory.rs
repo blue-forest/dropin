@@ -42,7 +42,7 @@ impl<'a> MemoryBuilder<'a> {
 		result
 	}
 
-	pub fn build_data_count(&self) -> Option<DataCountSection> {
+	pub(super) fn build_data_count(&self) -> Option<DataCountSection> {
 		if self.data.is_empty() {
 			return None;
 		}
@@ -51,7 +51,7 @@ impl<'a> MemoryBuilder<'a> {
 		})
 	}
 
-	pub fn build_data(&self) -> Option<DataSection> {
+	pub(super) fn build_data(&self) -> Option<DataSection> {
 		if self.data.is_empty() {
 			return None;
 		}

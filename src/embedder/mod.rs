@@ -21,15 +21,17 @@
 
 use wasmtime::*;
 
-use std::fs::{create_dir_all, read, write};
+use std::fs::{read, write};
 use std::path::Path;
 use std::sync::Arc;
 use std::thread::{spawn, JoinHandle};
 
+use dropin_helpers::fs::wasm;
 use dropin_pm::fetch;
 
 mod compile;
 mod run;
+pub use run::Param;
 
 pub struct Embedder {
 	pub engine: Arc<Engine>,
@@ -45,14 +47,8 @@ impl Embedder {
 		engine: Arc<Engine>,
 		model: &'a str,
 	) -> impl FnMut() -> Module + 'a {
-		let mut path = root.to_path_buf();
+		let path = wasm(root, "blueforest", model, "v1");
 		move || {
-			path.push(".builds");
-			path.push("blueforest");
-			if !path.exists() {
-				create_dir_all(&path).unwrap();
-			}
-			path.push(format!("{}_v1.wasm", model));
 			let binary = if !path.exists() {
 				let binary = fetch("blueforest", model, "v1").unwrap();
 				write(&path, &binary).unwrap();
@@ -65,11 +61,20 @@ impl Embedder {
 	}
 
 	pub fn new(root: &Path) -> Self {
-		let engine = Arc::new(Engine::default());
+		let engine = Arc::new(
+			Engine::new(
+				Config::new()
+					.debug_info(true)
+					.wasm_backtrace_details(WasmBacktraceDetails::Enable),
+			)
+			.unwrap(),
+		);
 		let core_handle =
 			Some(spawn(Embedder::fetch(root, engine.clone(), "dropin-core")));
 		let compile_handle = Some(spawn(Embedder::fetch(
-			root, engine.clone(), "dropin-bootstrap",
+			root,
+			engine.clone(),
+			"dropin-bootstrap",
 		)));
 
 		Self {

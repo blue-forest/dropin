@@ -19,8 +19,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub struct FunctionImport<'a> {
-	pub type_id: u32,
-	pub module: &'a str,
-	pub name: &'a str,
+pub(super) struct FunctionImport<'a> {
+	pub(super) type_id: u32,
+	pub(super) module: &'a str,
+	pub(super) name: &'a str,
 }

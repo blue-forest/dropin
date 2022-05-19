@@ -71,7 +71,7 @@ pub struct Patterns<'a> {
 }
 
 impl<'a> Patterns<'a> {
-	pub fn new(syntax: &'a str) -> Self {
+	pub(crate) fn new(syntax: &'a str) -> Self {
 		let mut patterns = HashMap::new();
 		let mut iter = syntax.char_indices().peekable();
 		let mut key =

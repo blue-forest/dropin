@@ -18,11 +18,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::collections::HashSet;
 use std::fmt::{Display, Error, Formatter};
 
 use super::path::get_owner;
 use super::{get_dirs, Cli, Command};
-use dropin_utils::path::get_build;
+use dropin_helpers::fs::wasm;
 
 mod add;
 use add::Add;
@@ -48,7 +49,7 @@ impl Command for Models {
 		let mut path = get_owner(cli).unwrap();
 		path.push("models");
 		cli.run_select("Models", |cli| {
-			cli.models = get_dirs(&path);
+			cli.models = get_dirs(&path, HashSet::new());
 			let mut commands: Vec<Box<dyn Command>> = Vec::new();
 			for (i, model) in cli.models.iter().enumerate() {
 				commands.push(Box::new(Model {
@@ -89,10 +90,12 @@ impl Command for Model {
 				Box::new(Compile {}),
 			];
 			let owner = &cli.owners[cli.owner_selected.unwrap()];
-			let model = &cli.models[cli.model_selected.unwrap()];
-			let build_path = get_build(&cli.root, owner, model);
+			let model = &self.name;
+			let build_path = wasm(&cli.root, owner, model, "v1");
 			if build_path.exists() {
-				result.push(Box::new(Run {}));
+				result.push(Box::new(Run {
+					model: model.to_string(),
+				}));
 			}
 			result
 		})

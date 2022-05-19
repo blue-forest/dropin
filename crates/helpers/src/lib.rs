@@ -19,4 +19,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod path;
+#[macro_use]
+pub mod io;
+
+pub mod error;
+use error::PortableExpect;
+pub mod fs;
+pub mod header;
+pub use header::Header;
+
+pub fn decompose_version(id: &str) -> (&str, &str, &str) {
+	let mut split = id.split(':');
+	let owner = split.next().pexpect("expected owner");
+	let model = split.next().pexpect("expected owner");
+	let version = split.next().pexpect("expected owner");
+	(owner, model, version)
+}
+
+pub fn decompose_recipe(id: &str) -> (&str, &str, &str, &str) {
+	let mut split = id.split(':');
+	let owner = split.next().pexpect("expected owner");
+	let model = split.next().pexpect("expected owner");
+	let version = split.next().pexpect("expected owner");
+	let recipe = split.next().pexpect("expected owner");
+	(owner, model, version, recipe)
+}

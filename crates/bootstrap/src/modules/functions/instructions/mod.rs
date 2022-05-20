@@ -4,7 +4,7 @@ use dropin_helpers::PortableUnwrap;
 
 use crate::modules::builder::{FunctionBuilder, ModuleBuilder};
 use crate::modules::{Compiler, State, Value};
-use crate::{print_to, Expression};
+use crate::Expression;
 
 use super::FunctionState;
 
@@ -41,7 +41,8 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 
 	pub(in crate::modules) fn meta_instruction(&self, expression: &Expression) {
 		match expression.pattern() {
-			"print" => print_to(
+			"print" => println!(
+				"{}",
 				expression
 					.iter()
 					.next()
@@ -53,11 +54,9 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 					.next()
 					.punwrap()
 					.as_str(),
-				2,
 			),
 			pattern => {
-				print_to(&format!("unknown instruction: {}", pattern), 2);
-				unsafe { wasi::proc_exit(1) };
+				panic!("unknown instruction: {}", pattern);
 			}
 		}
 	}
@@ -81,9 +80,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 				function.basic(Instruction::Call(print));
 			}
 			pattern => {
-				print_to(&format!("unknown instruction: {}", pattern), 2);
-				unsafe { wasi::proc_exit(1) };
-				unreachable!();
+				panic!("unknown instruction: {}", pattern);
 			}
 		}
 	}

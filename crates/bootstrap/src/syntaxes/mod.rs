@@ -44,7 +44,7 @@ pub struct Pattern<'a> {
 impl<'a> Pattern<'a> {
 	pub fn parse<'b, 'c>(
 		&'c self,
-		patterns: &'c Patterns<'a>,
+		patterns: &'c Patterns<'a, 'b>,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 	) -> Result<Expression<'a, 'b>, ParseError> {
@@ -66,15 +66,17 @@ impl<'a> Pattern<'a> {
 }
 
 #[derive(Debug)]
-pub struct Patterns<'a> {
+pub struct Patterns<'a, 'b> {
 	entry: &'a str,
 	patterns: HashMap<&'a str, Pattern<'a>>,
+	pub config: Config<'a, 'b>,
 }
 
-impl<'a> Patterns<'a> {
+impl<'a, 'b> Patterns<'a, 'b> {
 	pub(crate) fn new(syntax: &'a str) -> Self {
 		let mut patterns = HashMap::new();
 		let mut iter = syntax.char_indices().peekable();
+		let config = Config::new(syntax, &mut iter);
 		let mut key = get_key(syntax, &mut iter).pexpect("no pattern found");
 		let entry = key;
 		loop {
@@ -88,14 +90,18 @@ impl<'a> Patterns<'a> {
 			}
 			key = key_opt.punwrap();
 		}
-		Self { entry, patterns }
+		Self {
+			entry,
+			patterns,
+			config,
+		}
 	}
 
 	pub fn get(&self, key: &str) -> Option<&Pattern<'a>> {
 		self.patterns.get(key)
 	}
 
-	pub fn parse<'b, 'c>(
+	pub fn parse<'c>(
 		&'c self,
 		module: &'b str,
 	) -> Result<Expression<'a, 'b>, ParseError> {
@@ -115,20 +121,21 @@ impl<'a> Patterns<'a> {
 	}
 }
 
+fn skip_whitespaces<'a>(iter: &mut Peekable<CharIndices<'a>>) -> Option<usize> {
+	for (i, c) in iter {
+		if !c.is_whitespace() {
+			return Some(i);
+		}
+	}
+	return None;
+}
+
 fn get_key<'a>(
 	syntax: &'a str,
 	iter: &mut Peekable<CharIndices<'a>>,
 ) -> Option<&'a str> {
-	let mut pattern_start: Option<usize> = None;
 	let mut result: Option<&str> = None;
-	#[allow(clippy::while_let_on_iterator)] // if `for` is used, iter is moved
-	while let Some((i, c)) = iter.next() {
-		if !c.is_whitespace() {
-			pattern_start = Some(i);
-			break;
-		}
-	}
-	let start = pattern_start?;
+	let start: usize = skip_whitespaces(iter)?;
 	for (i, c) in iter {
 		if c.is_whitespace() {
 			result = Some(syntax.get(start..i).punwrap());

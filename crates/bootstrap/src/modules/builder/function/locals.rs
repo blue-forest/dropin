@@ -21,8 +21,6 @@
 
 use wasm_encoder::{Instruction, ValType};
 
-use dropin_core::print_to;
-
 use super::{FunctionBuilder, InstructionBuilder};
 
 impl<'a> FunctionBuilder<'a> {
@@ -57,9 +55,7 @@ impl Locals {
 				result
 			}
 			_ => {
-				print_to(&format!("unknown type: {}", type_ as u32), 2);
-				unsafe { wasi::proc_exit(1) };
-				unreachable!();
+				panic!("unknown type: {}", type_ as u32)
 			}
 		}
 	}

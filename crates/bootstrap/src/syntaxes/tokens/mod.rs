@@ -25,8 +25,6 @@ use std::str::CharIndices;
 
 use super::{Expression, ParseError, Patterns};
 
-use crate::print_to;
-
 mod concat;
 pub use concat::Concat;
 
@@ -48,7 +46,7 @@ pub use quantifier::Quantifier;
 pub trait Token<'a>: Debug {
 	fn parse<'b, 'c>(
 		&self,
-		patterns: &'c Patterns<'a>,
+		patterns: &'c Patterns<'a, 'b>,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
@@ -70,9 +68,7 @@ fn parse_token<'a>(
 		'!' => Not::parse(syntax, iter),
 		'(' => Concat::parse(syntax, iter),
 		_ => {
-			print_to(&format!("unknown token {}", c), 2);
-			unsafe { wasi::proc_exit(1) };
-			unreachable!();
+			panic!("unknown token {}", c);
 		}
 	}
 }

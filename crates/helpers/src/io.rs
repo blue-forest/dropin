@@ -11,8 +11,8 @@ macro_rules! println {
 				buf_len: message.len(),
 			},
 			wasi::Ciovec {
-				buf: crate::io::NEW_LINE.as_ptr(),
-				buf_len: crate::io::NEW_LINE.len(),
+				buf: $crate::io::NEW_LINE.as_ptr(),
+				buf_len: $crate::io::NEW_LINE.len(),
 			},
 		];
 		unsafe { wasi::fd_write(1, &data).unwrap() };
@@ -30,12 +30,12 @@ macro_rules! panic {
 				buf_len: message.len(),
 			},
 			wasi::Ciovec {
-				buf: crate::io::NEW_LINE.as_ptr(),
-				buf_len: crate::io::NEW_LINE.len(),
+				buf: $crate::io::NEW_LINE.as_ptr(),
+				buf_len: $crate::io::NEW_LINE.len(),
 			},
 		];
 		unsafe { wasi::fd_write(2, &data).unwrap() };
-		unsafe { wasi::proc_exit(1) };
 		unreachable!();
+		unsafe { wasi::proc_exit(1) };
   })
 }

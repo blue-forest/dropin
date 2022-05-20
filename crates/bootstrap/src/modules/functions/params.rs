@@ -5,7 +5,7 @@ use dropin_helpers::PortableUnwrap;
 
 use crate::modules::builder::{Local, Locals};
 use crate::modules::Compiler;
-use crate::{print_to, Expression};
+use crate::Expression;
 
 use super::FunctionState;
 
@@ -31,9 +31,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 					HeaderType::Bytes
 				}
 				_ => {
-					print_to(&format!("unknown type: {}", type_), 2);
-					unsafe { wasi::proc_exit(1) };
-					unreachable!();
+					panic!("unknown type: {}", type_);
 				}
 			};
 			header.push(HeaderParam::new(key, header_type));

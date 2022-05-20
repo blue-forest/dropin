@@ -2,7 +2,7 @@ use wasm_encoder::{Instruction, ValType::I32};
 
 use dropin_helpers::PortableUnwrap;
 
-use crate::{print_to, Expression};
+use crate::Expression;
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::functions::FunctionState;
@@ -35,22 +35,16 @@ impl<'a> Value<'a> {
 						} else if let Some((base, len)) = function_state.heap.get(name) {
 							Self::HeapLocal(base, len)
 						} else {
-							print_to(&format!("local not found: {}", query.as_str()), 2);
-							unsafe { wasi::proc_exit(1) };
-							unreachable!();
+							panic!("local not found: {}", query.as_str());
 						}
 					}
 					_ => {
-						print_to(&format!("ref not found: {}", query.as_str()), 2);
-						unsafe { wasi::proc_exit(1) };
-						unreachable!();
+						panic!("ref not found: {}", query.as_str());
 					}
 				}
 			}
 			_ => {
-				print_to(&format!("unknown value: {}", value.pattern()), 2);
-				unsafe { wasi::proc_exit(1) };
-				unreachable!();
+				panic!("unknown value: {}", value.pattern());
 			}
 		}
 	}

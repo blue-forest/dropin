@@ -68,7 +68,7 @@ impl<'a> Literal<'a> {
 impl<'a> Token<'a> for Literal<'a> {
 	fn parse<'b, 'c>(
 		&self,
-		_patterns: &'c Patterns<'a>,
+		_patterns: &'c Patterns<'a, 'b>,
 		_module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		_expr: &mut Expression,

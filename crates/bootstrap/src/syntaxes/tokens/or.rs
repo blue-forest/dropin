@@ -47,7 +47,7 @@ impl<'a> Or<'a> {
 impl<'a> Token<'a> for Or<'a> {
 	fn parse<'b, 'c>(
 		&self,
-		patterns: &'c Patterns<'a>,
+		patterns: &'c Patterns<'a, 'b>,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,

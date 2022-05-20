@@ -4,7 +4,7 @@ use std::slice::Iter;
 use dropin_helpers::header::{Header, HeaderFunction};
 use dropin_helpers::PortableUnwrap;
 
-use crate::{print_to, Expression};
+use crate::Expression;
 
 use super::builder::{FunctionBuilder, Local, ModuleBuilder};
 use super::Compiler;
@@ -46,7 +46,7 @@ impl<'syntax, 'module> Compiler<'syntax, 'module> {
 		if expression.pattern() == "params" {
 			self.params(&mut item_function, function_state, &mut params, &expression);
 		} else {
-			print_to(expression.pattern(), 2);
+			println!("{}", expression.pattern());
 		}
 
 		item.push(item_function);

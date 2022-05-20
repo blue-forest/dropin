@@ -19,11 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_core::print_to;
 use dropin_helpers::fs::{
 	self, header, model_path, read, read_recipe, wasm, write,
 };
 use dropin_helpers::{decompose_recipe, decompose_version, PortableUnwrap};
+
+#[macro_use]
+extern crate dropin_helpers;
 
 mod expressions;
 pub use expressions::Expression;
@@ -37,7 +39,7 @@ pub mod utils;
 
 pub struct Recipe<'syntax, 'recipe> {
 	pub syntax: &'syntax str,
-	pub patterns: Patterns<'syntax>,
+	pub patterns: Patterns<'syntax, 'recipe>,
 	pub recipe: &'recipe str,
 	pub expression: Expression<'syntax, 'recipe>,
 }
@@ -64,8 +66,7 @@ const MODULES: &str = "Automations/Modules";
 pub fn _start() {
 	let args = Args::new();
 	if args.len() != 2 {
-		print_to("expected argument: <model>", 2);
-		unsafe { wasi::proc_exit(1) };
+		panic!("expected argument: <model>");
 	}
 	let root = fs::root();
 	let syntax_models_content =
@@ -95,6 +96,8 @@ pub fn _start() {
 		module_recipe,
 	);
 	let module_recipe = Recipe::new(syntax_modules_content, &module_content);
+	println!("{:?}", module_recipe.patterns.config);
+	unreachable!();
 	let compiler = Compiler::new(module_recipe);
 	let (module, item) = compiler.compile(&model_path).unwrap();
 

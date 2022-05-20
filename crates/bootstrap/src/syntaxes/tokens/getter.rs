@@ -73,30 +73,27 @@ impl<'a> Token<'a> for Getter<'a> {
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
-	) -> Result<(), ParseError> {
+	) -> Result<(), ParseError<'b>> {
 		if self.query.starts_with("patterns.") {
 			let key = self.query.get(9..).punwrap();
 			let pattern = patterns.get(key).punwrap();
 			expr.add_inner(pattern.parse(patterns, module, iter)?);
 			Ok(())
 		} else if self.query.starts_with("std.") {
-			if let Some((_, c)) = iter.peek() {
+			if let Some(&(i, c)) = iter.peek() {
 				if c.is_alphanumeric() {
 					iter.next();
 					Ok(())
 				} else {
-					Err(ParseError::new(format!(
-						"unexpected token {}, expected alphanum",
-						c
-					)))
+					err!(module, i, "unexpected token {}, expected alphanum", c)
 				}
 			} else {
-				Err(ParseError::from(
-					"unexpected end of file, expected alphanum",
-				))
+				err!(module, module.len(), "unexpected end of file, expected alphanum")
 			}
 		} else {
-			return Err(ParseError::new(format!("unknown ref: {}", self.query)));
+			err!(module, pos!(module, iter),
+				"unknown ref: {}", self.query.to_string()
+			)
 		}
 	}
 }

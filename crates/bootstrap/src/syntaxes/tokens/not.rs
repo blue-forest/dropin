@@ -53,13 +53,12 @@ impl<'a> Token<'a> for Not<'a> {
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
-	) -> Result<(), ParseError> {
+	) -> Result<(), ParseError<'b>> {
 		let mut iter_clone = iter.clone();
 		if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
-			Err(ParseError::new(format!(
-				"expected not {}",
-				self.token.expected()
-			)))
+			err!(module, pos!(module, iter),
+				"expected not {}", self.token.expected()
+			)
 		} else {
 			iter.next();
 			Ok(())

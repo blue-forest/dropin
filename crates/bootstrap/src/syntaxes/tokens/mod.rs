@@ -50,7 +50,7 @@ pub trait Token<'a>: Debug {
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
-	) -> Result<(), ParseError>;
+	) -> Result<(), ParseError<'b>>;
 
 	fn expected(&self) -> String {
 		"unknown".to_string()

@@ -76,7 +76,7 @@ impl<'a> Token<'a> for Concat<'a> {
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
-	) -> Result<(), ParseError> {
+	) -> Result<(), ParseError<'b>> {
 		for token in self.tokens.iter() {
 			token.parse(patterns, module, iter, expr)?;
 		}

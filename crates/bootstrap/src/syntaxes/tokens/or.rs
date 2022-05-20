@@ -51,13 +51,15 @@ impl<'a> Token<'a> for Or<'a> {
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
-	) -> Result<(), ParseError> {
+	) -> Result<(), ParseError<'b>> {
 		let mut iter_clone = iter.clone();
 		if let Err(err1) =
 			self.token1.parse(patterns, module, &mut iter_clone, expr)
 		{
 			if let Err(err2) = self.token2.parse(patterns, module, iter, expr) {
-				return Err(ParseError::new(format!("{}\n{}", err1, err2)));
+				return err!(module, pos!(module, iter),
+					"{}\n{}", err1, err2
+				);
 			}
 		} else {
 			*iter = iter_clone;

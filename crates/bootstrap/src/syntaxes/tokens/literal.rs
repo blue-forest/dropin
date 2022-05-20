@@ -69,10 +69,10 @@ impl<'a> Token<'a> for Literal<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		_patterns: &'c Patterns<'a, 'b>,
-		_module: &'b str,
+		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		_expr: &mut Expression,
-	) -> Result<(), ParseError> {
+	) -> Result<(), ParseError<'b>> {
 		let mut is_escaped = false;
 		for c in self.value.chars() {
 			if !is_escaped && c == '\\' {
@@ -91,7 +91,9 @@ impl<'a> Token<'a> for Literal<'a> {
 				false
 			};
 			if !ok {
-				return Err(ParseError::new(format!("expected {}", self.value)));
+				return err!(
+					module, pos!(module, iter), "expected {}", self.value.to_string()
+				)
 			}
 			is_escaped = false;
 		}

@@ -13,5 +13,6 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 dropin-core = { path="../core", version = "0.5.3-8" }
 dropin-helpers = { path="../helpers", version = "0.5.3-8" }
-wasi = "0.11.0"
-wasm-encoder = "0.11.0"
+annotate-snippets = "0.9"
+wasi = "0.11"
+wasm-encoder = "0.11"

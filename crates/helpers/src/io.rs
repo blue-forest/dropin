@@ -35,7 +35,7 @@ macro_rules! panic {
 			},
 		];
 		unsafe { wasi::fd_write(2, &data).unwrap() };
-		unreachable!();
 		unsafe { wasi::proc_exit(1) };
+		unreachable!();
   })
 }

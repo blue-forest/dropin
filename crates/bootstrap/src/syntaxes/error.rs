@@ -19,28 +19,114 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use annotate_snippets::display_list::{DisplayList, FormatOptions};
+use annotate_snippets::snippet::{
+	Annotation, AnnotationType, Slice, Snippet, SourceAnnotation,
+};
+
+use dropin_helpers::PortableUnwrap;
+
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
+macro_rules! pos {
+	($module: ident, $iter: ident) => {
+		*$iter.peek().map(|(i, _)| i).unwrap_or(&$module.len())
+	}
+}
+
+macro_rules! err {
+	($module: ident, $pos: expr, $($args:expr),*) => {
+		Err(ParseError::new(
+			$module, $pos, format!($($args),*),
+		))
+	}
+}
+
 #[derive(Debug)]
-pub struct ParseError(String);
+pub struct ParseError<'a>{
+	module: &'a str,
+	pos: usize,
+	message: String,
+}
 
-impl ParseError {
-	pub(super) fn new(message: String) -> Self {
-		Self(message)
+impl<'a> ParseError<'a> {
+	pub(super) fn new(
+		module: &'a str, 
+		pos: usize,
+		message: String,
+	) -> Self {
+		Self { module, pos, message }
+	}
+
+	fn line_start(&self) -> (usize, usize) {
+		let mut n_lines = 1;
+		let mut line_start = 0;
+		for (i, c) in self.module.get(..self.pos).punwrap().char_indices() {
+			if c == '\n' {
+				n_lines += 1;
+				line_start = i;
+			}
+		}
+		(n_lines, line_start)
 	}
 }
 
-impl From<&str> for ParseError {
-	fn from(message: &str) -> Self {
-		Self(message.to_string())
-	}
-}
-
-impl Display for ParseError {
+impl<'a> Display for ParseError<'a> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), fmt::Error> {
-		Display::fmt(&self.0, f)
+		let (n_lines, line_start) = self.line_start();
+		let mut lines_end = 0;
+		let mut lines_to_display = 3;
+		for (i, c) in self.module.get(line_start..).punwrap().char_indices() {
+			if c == '\n' {
+				lines_end = i;
+				if lines_to_display == 0 {
+					break;
+				}
+				lines_to_display -= 1;
+			}
+		}
+		let mut source = self.module.get(line_start..lines_end).punwrap();
+		let pos = self.pos - line_start;
+		let mut source_copy = String::new();
+		let range = if pos == source.len() {
+			source_copy.push_str(source);
+			source_copy.push_str("<EOF>");
+			source = &source_copy;
+			(pos, pos+5)
+		} else {
+			(pos, pos+1)
+		};
+
+		let snippet = Snippet {
+  		title: Some(Annotation {
+    		label: Some(&self.message),
+    		id: None,
+    		annotation_type: AnnotationType::Error,
+  		}),
+  		footer: vec![],
+  		slices: vec![
+    		Slice {
+      		source,
+      		line_start: n_lines,
+      		origin: Some("src/format.rs"),
+      		fold: false,
+      		annotations: vec![
+      			SourceAnnotation {
+      				label: "",
+      				annotation_type: AnnotationType::Error,
+      				range,
+      			}
+      		],
+    		},
+  		],
+      opt: FormatOptions {
+        color: true,
+        ..Default::default()
+      },
+		};
+		format!("{}", DisplayList::from(snippet)).fmt(f)
 	}
 }
 
-impl Error for ParseError {}
+impl<'a> Error for ParseError<'a> {}

@@ -27,10 +27,12 @@ use dropin_helpers::{PortableExpect, PortableUnwrap};
 
 use crate::expressions::Expression;
 
-mod config;
-pub use config::Config;
+#[macro_use]
 mod error;
 pub use error::ParseError;
+
+mod config;
+pub use config::Config;
 pub mod tokens;
 use tokens::Concat;
 pub use tokens::Token;
@@ -47,7 +49,7 @@ impl<'a> Pattern<'a> {
 		patterns: &'c Patterns<'a, 'b>,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
-	) -> Result<Expression<'a, 'b>, ParseError> {
+	) -> Result<Expression<'a, 'b>, ParseError<'b>> {
 		if let Some((start, _)) = iter.peek() {
 			let start = *start;
 			let mut result = Expression::new(module.get(start..).punwrap(), self.key);
@@ -57,10 +59,10 @@ impl<'a> Pattern<'a> {
 			}
 			Ok(result)
 		} else {
-			Err(ParseError::new(format!(
+			err!(module, module.len(),
 				"unexpected end of file, expected {}",
-				self.key
-			)))
+				self.key.to_string()
+			)
 		}
 	}
 }
@@ -104,17 +106,16 @@ impl<'a, 'b> Patterns<'a, 'b> {
 	pub fn parse<'c>(
 		&'c self,
 		module: &'b str,
-	) -> Result<Expression<'a, 'b>, ParseError> {
+	) -> Result<Expression<'a, 'b>, ParseError<'b>> {
 		let mut iter = module.char_indices().peekable();
 		let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
 		if let Some((i, _)) = iter.peek() {
 			let remaining = module.get(*i..).punwrap();
 			// ignore new line
 			if remaining != "\n" {
-				return Err(ParseError::new(format!(
-					"remaining tokens: \"{}\"",
-					remaining,
-				)));
+			  return err!(module, *i,
+				  "remaining tokens: \"{}\"", remaining
+				);
 			}
 		}
 		Ok(result)

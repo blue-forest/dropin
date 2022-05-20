@@ -141,13 +141,14 @@ impl<'a> Token<'a> for Quantifier<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError<'b>> {
 		let mut n = 0;
 		let _err = loop {
-			if let Err(err) = self.token.parse(patterns, module, iter, expr) {
+			if let Err(err) = self.token.parse(patterns, id, module, iter, expr) {
 				break Err(err);
 			}
 			n += 1;
@@ -173,7 +174,7 @@ impl<'a> Token<'a> for Quantifier<'a> {
 			}
 		}
 		if !ok {
-			err!(module, pos!(module, iter),
+			err!(id, module, pos!(module, iter),
 				"expected {:?} {}, recognized {} times",
 				self.ranges.clone(), format!("{:?}", self.token), n
 			)

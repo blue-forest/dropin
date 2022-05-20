@@ -73,12 +73,13 @@ impl<'a> Token<'a> for Concat<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError<'b>> {
 		for token in self.tokens.iter() {
-			token.parse(patterns, module, iter, expr)?;
+			token.parse(patterns, id, module, iter, expr)?;
 		}
 		Ok(())
 	}

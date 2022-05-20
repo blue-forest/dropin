@@ -36,15 +36,16 @@ macro_rules! pos {
 }
 
 macro_rules! err {
-	($module: ident, $pos: expr, $($args:expr),*) => {
+	($id: ident, $module: ident, $pos: expr, $($args:expr),*) => {
 		Err(ParseError::new(
-			$module, $pos, format!($($args),*),
+			$id, $module, $pos, format!($($args),*),
 		))
 	}
 }
 
 #[derive(Debug)]
 pub struct ParseError<'a>{
+	id: &'a str,
 	module: &'a str,
 	pos: usize,
 	message: String,
@@ -52,11 +53,12 @@ pub struct ParseError<'a>{
 
 impl<'a> ParseError<'a> {
 	pub(super) fn new(
+		id: &'a str, 
 		module: &'a str, 
 		pos: usize,
 		message: String,
 	) -> Self {
-		Self { module, pos, message }
+		Self { id, module, pos, message }
 	}
 
 	fn line_start(&self) -> (usize, usize) {
@@ -109,7 +111,7 @@ impl<'a> Display for ParseError<'a> {
     		Slice {
       		source,
       		line_start: n_lines,
-      		origin: Some("src/format.rs"),
+      		origin: Some(self.id),
       		fold: false,
       		annotations: vec![
       			SourceAnnotation {

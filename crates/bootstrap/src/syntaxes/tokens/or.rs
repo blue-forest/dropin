@@ -48,16 +48,17 @@ impl<'a> Token<'a> for Or<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError<'b>> {
 		let mut iter_clone = iter.clone();
 		if let Err(err1) =
-			self.token1.parse(patterns, module, &mut iter_clone, expr)
+			self.token1.parse(patterns, id, module, &mut iter_clone, expr)
 		{
-			if let Err(err2) = self.token2.parse(patterns, module, iter, expr) {
-				return err!(module, pos!(module, iter),
+			if let Err(err2) = self.token2.parse(patterns, id, module, iter, expr) {
+				return err!(id, module, pos!(module, iter),
 					"{}\n{}", err1, err2
 				);
 			}

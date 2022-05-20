@@ -47,6 +47,7 @@ pub trait Token<'a>: Debug {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,

@@ -47,19 +47,20 @@ impl<'a> Pattern<'a> {
 	pub fn parse<'b, 'c>(
 		&'c self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 	) -> Result<Expression<'a, 'b>, ParseError<'b>> {
 		if let Some((start, _)) = iter.peek() {
 			let start = *start;
 			let mut result = Expression::new(module.get(start..).punwrap(), self.key);
-			self.token.parse(patterns, module, iter, &mut result)?;
+			self.token.parse(patterns, id, module, iter, &mut result)?;
 			if let Some((end, _)) = iter.peek() {
 				result.truncate(*end - start);
 			}
 			Ok(result)
 		} else {
-			err!(module, module.len(),
+			err!(id, module, module.len(),
 				"unexpected end of file, expected {}",
 				self.key.to_string()
 			)
@@ -75,7 +76,8 @@ pub struct Patterns<'a, 'b> {
 }
 
 impl<'a, 'b> Patterns<'a, 'b> {
-	pub(crate) fn new(syntax: &'a str) -> Self {
+  // TODO: return result<Self, ParseError>
+	pub(crate) fn new(_id: &'a str, syntax: &'a str) -> Self {
 		let mut patterns = HashMap::new();
 		let mut iter = syntax.char_indices().peekable();
 		let config = Config::new(syntax, &mut iter);
@@ -105,15 +107,16 @@ impl<'a, 'b> Patterns<'a, 'b> {
 
 	pub fn parse<'c>(
 		&'c self,
+		id: &'b str,
 		module: &'b str,
 	) -> Result<Expression<'a, 'b>, ParseError<'b>> {
 		let mut iter = module.char_indices().peekable();
-		let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
-		if let Some((i, _)) = iter.peek() {
-			let remaining = module.get(*i..).punwrap();
+		let result = self.patterns[self.entry].parse(self, id, module, &mut iter)?;
+		if let Some(&(i, _)) = iter.peek() {
+			let remaining = module.get(i..).punwrap();
 			// ignore new line
 			if remaining != "\n" {
-			  return err!(module, *i,
+			  return err!(id, module, i,
 				  "remaining tokens: \"{}\"", remaining
 				);
 			}

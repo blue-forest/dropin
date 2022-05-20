@@ -70,6 +70,7 @@ impl<'a> Token<'a> for Getter<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
@@ -77,7 +78,7 @@ impl<'a> Token<'a> for Getter<'a> {
 		if self.query.starts_with("patterns.") {
 			let key = self.query.get(9..).punwrap();
 			let pattern = patterns.get(key).punwrap();
-			expr.add_inner(pattern.parse(patterns, module, iter)?);
+			expr.add_inner(pattern.parse(patterns, id, module, iter)?);
 			Ok(())
 		} else if self.query.starts_with("std.") {
 			if let Some(&(i, c)) = iter.peek() {
@@ -85,13 +86,15 @@ impl<'a> Token<'a> for Getter<'a> {
 					iter.next();
 					Ok(())
 				} else {
-					err!(module, i, "unexpected token {}, expected alphanum", c)
+					err!(id, module, i, "unexpected token {}, expected alphanum", c)
 				}
 			} else {
-				err!(module, module.len(), "unexpected end of file, expected alphanum")
+				err!(id, module, module.len(),
+					"unexpected end of file, expected alphanum"
+				)
 			}
 		} else {
-			err!(module, pos!(module, iter),
+			err!(id, module, pos!(module, iter),
 				"unknown ref: {}", self.query.to_string()
 			)
 		}

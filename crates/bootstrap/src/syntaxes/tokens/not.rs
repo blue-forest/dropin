@@ -50,13 +50,14 @@ impl<'a> Token<'a> for Not<'a> {
 	fn parse<'b, 'c>(
 		&self,
 		patterns: &'c Patterns<'a, 'b>,
+		id: &'b str,
 		module: &'b str,
 		iter: &mut Peekable<CharIndices<'b>>,
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError<'b>> {
 		let mut iter_clone = iter.clone();
-		if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
-			err!(module, pos!(module, iter),
+		if let Ok(()) = self.token.parse(patterns, id, module, &mut iter_clone, expr) {
+			err!(id, module, pos!(module, iter),
 				"expected not {}", self.token.expected()
 			)
 		} else {

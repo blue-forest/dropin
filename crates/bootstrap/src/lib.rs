@@ -45,9 +45,14 @@ pub struct Recipe<'syntax, 'recipe> {
 }
 
 impl<'syntax, 'recipe> Recipe<'syntax, 'recipe> {
-	pub fn new(syntax: &'syntax str, recipe: &'recipe str) -> Self {
-		let patterns = Patterns::new(syntax);
-		let expression = patterns.parse(recipe).punwrap();
+	pub fn new(
+	  syntax_id: &'syntax str,
+	  syntax: &'syntax str,
+	  recipe_id: &'recipe str,
+	  recipe: &'recipe str,
+	) -> Self {
+		let patterns = Patterns::new(syntax_id, syntax);
+		let expression = patterns.parse(recipe_id, recipe).punwrap();
 		Self {
 			syntax,
 			patterns,
@@ -71,8 +76,14 @@ pub fn _start() {
 	let root = fs::root();
 	let syntax_models_content =
 		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODELS);
+	let syntax_models_id = format!(
+		"{}:{}:{}:{}", OWNER, DROPIN_MODULES, "v1", MODELS,
+	);
 	let syntax_modules_content =
 		&read_recipe(&root, OWNER, DROPIN_MODULES, "v1", "syntaxes", MODULES);
+	let syntax_modules_id = format!(
+		"{}:{}:{}:{}", OWNER, DROPIN_MODULES, "v1", MODULES,
+	);
 
 	let model_full_id = args.get(1).punwrap();
 	let (model_owner, model_id, model_version) = decompose_version(model_full_id);
@@ -80,7 +91,9 @@ pub fn _start() {
 	let mut model_recipe_path = model_path.parent().punwrap().to_path_buf();
 	model_recipe_path.push(".dropin");
 	let model_content = read(&model_recipe_path);
-	let model_recipe = Recipe::new(syntax_models_content, &model_content);
+	let model_recipe = Recipe::new(
+		&syntax_models_id, syntax_models_content, &model_full_id, &model_content,
+	);
 
 	let module = model_recipe.expression.iter().next().punwrap();
 	let module_id = module.iter().next().unwrap();
@@ -95,7 +108,12 @@ pub fn _start() {
 		"modules",
 		module_recipe,
 	);
-	let module_recipe = Recipe::new(syntax_modules_content, &module_content);
+	let module_recipe = Recipe::new(
+		&syntax_modules_id,
+		syntax_modules_content,
+		module_id.as_str(),
+		&module_content,
+	);
 	println!("{:?}", module_recipe.patterns.config);
 	unreachable!();
 	let compiler = Compiler::new(module_recipe);

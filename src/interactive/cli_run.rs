@@ -69,6 +69,11 @@ impl Cli {
 			if command == default - 1 {
 				break 0;
 			} else if default >= 2 && command == default - 2 {
+				self.cwd = self.root.clone();
+				self.cwd.push(&self.owners[self.owner_selected.unwrap()]);
+				self.cwd.push("models");
+				self.cwd.push(&self.models[self.model_selected.unwrap()]);
+				self.cwd.push("v1");
 				self.run();
 				break u32::MAX;
 			}

@@ -1,0 +1,13 @@
+*getter "$" $patterns.query
+
+*query $patterns.key ("." $patterns.key){..}
+
+*text "\"" $patterns.message "\""
+
+*value $patterns.text | $patterns.getter
+
+
+
+message $patterns.message_char{1..}
+
+message_char "\\\"" | !"\""

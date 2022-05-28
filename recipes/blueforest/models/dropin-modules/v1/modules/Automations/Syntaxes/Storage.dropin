@@ -1,0 +1,6 @@
+recipes
+  *public 1.. blueforest:dropin-syntaxes:v1:Automations/Syntaxes
+  private ..  blueforest:dropin-syntaxes:v1:Automations/Syntaxes
+
+*get(ref bytes)
+  todo

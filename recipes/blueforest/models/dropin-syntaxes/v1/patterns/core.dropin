@@ -1,0 +1,11 @@
+*id
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ":"
+  $patterns.keyWithPoint ("/" $patterns.keyWithPoint){..}
+
+
+
+key ("-" | "_" | $std.alphanum){1..}
+
+keyWithPoint ("-" | "_" | "." | $std.alphanum){1..}

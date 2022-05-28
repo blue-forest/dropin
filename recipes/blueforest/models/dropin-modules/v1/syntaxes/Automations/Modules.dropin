@@ -1,6 +1,17 @@
-module $patterns.syntax "\n"{1..} $patterns.function
+module $patterns.recipes "\n"{1..} $patterns.function
 
-syntax $patterns.id
+recipes
+  "recipes\n  "
+  $patterns.public{..1}
+  $patterns.key " "{1..}
+  $patterns.quantifier " "{1..}
+  $patterns.id
+
+quantifier $patterns.quantifierRange ("|" $patterns.quantifierRange){..}
+
+quantifierRange $patterns.int{..1} ".." $patterns.int{..1}
+
+int $std.numeric{1..}
 
 id
   $patterns.keyWithPoint ":"
@@ -18,7 +29,7 @@ function
   "(" $patterns.params{..1} ")"
   $patterns.commands
 
-public "pub "
+public "*"
 
 params $patterns.param ("," $patterns.param){..}
 
@@ -26,7 +37,12 @@ param $patterns.key " "{1..} $patterns.type
 
 type "bytes"
 
-commands ("\n  " ($patterns.localCommand | $patterns.metaCommand)){..}
+commands "\n" $stacks.indentations:+(" "{1..})
+  $patterns.command
+  ("\n" $stacks.indentations $patterns.command){..}
+  $stacks.indentations:-()
+
+command $patterns.localCommand | $patterns.metaCommand
 
 localCommand ">" $patterns.metaCommand
 

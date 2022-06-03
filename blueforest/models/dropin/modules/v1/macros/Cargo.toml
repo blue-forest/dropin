@@ -1,0 +1,17 @@
+[package]
+name = "dropin-macros"
+version = "0.5.3-8"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"
+description = "drop'in macros [WIP]"
+repository = "https://github.com/theblueforest/dropin/crates/core"
+license = "AGPL-3.0-only"
+
+[lib]
+proc_macro = true
+
+[dependencies]
+proc-macro2 = "1.0"
+# quote = "1.0"
+syn = { version = "1.0", features = ["full", "extra-traits"] }
+wasi = "0.11"

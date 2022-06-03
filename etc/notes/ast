@@ -1,0 +1,133 @@
+Abi / ItemTrait                           Interfaces ?
+AngleBracketedGenericArguments / ExprType Format
+Arm                                       Case
+BareFnArg                                 Option ?
+Block                                     Block
+ExprArray                                 ValueList
+ExprAssign                                HandlerSet
+ExprBinary                                SetterBinary
+ExprBreak                                 HandlerBreak
+ExprCall                                  HandlerCall
+ExprContinue                              HandlerContinue
+ExprField / ExprIndex                     RefChildren
+ExprForLoop                               HandlerIterate / HandlerRange
+ExprIf                                    HandlerIf
+ExprLit                                   Value
+ExprMatch                                 HandlerSwitch
+ExprParen                                 SetterNested
+ExprPath / Path                           RecipeId
+ExprStruct                                ValueObject
+ExprUnary                                 SetterUnary
+ExprWhile                                 HandlerWhile
+Field                                     FormatNamed
+FieldPat / FieldValue                     ValueObjectKeyValue
+File                                      File
+Generics                                  FormatSingle
+Ident / Index                             Key
+ItemEnum                                  TypeChoices
+ItemFn                                    Function
+ItemType                                  Type
+LitBool                                   ValueBoolean
+LitByte                                   ValueByte
+LitByteStr                                ValueBytes
+LitFloat / LitInt                         ValueQuantity
+LitStr                                    ValueText
+PathSegment                               RecipeIdKey
+Signature                                 FunctionProfile
+TypeImplTrait                             InterfaceOr
+
+
+
+Binding
+Constraint
+ExprAssignOp
+ExprBlock
+ExprCast
+ExprClosure
+ExprLet (guard)
+ExprLoop
+ExprMethodCall
+ExprRange
+ExprRepeat
+ExprReturn
+ExprTuple
+ItemConst
+ItemUse
+Label
+LitChar
+Local
+Receiver
+Variadic
+VisPublic
+Variant
+
+
+
+Attribute
+BoundLifetimes
+ConstParam
+ExprAsync
+ExprAwait
+ExprBox
+ExprGroup
+ExprMacro
+ExprReference
+ExprTry
+ExprTryBlock
+ExprUnsafe
+ExprYield
+FieldsUnnamed
+FieldsNamed
+ForeignItemFn
+ForeignItemMacro
+ForeignItemStatic
+ForeignItemType
+ImplGenerics
+ImplItemConst
+ImplItemMacro
+ImplItemMethod
+ImplItemType
+ItemExternCrate
+ItemForeignMod
+ItemImpl
+ItemMacro
+ItemMacro2
+ItemMod
+ItemStatic
+ItemStruct
+ItemTraitAlias
+ItemUnion
+Lifetime
+LifetimeDef
+Macro
+MetaList
+MetaNameValue
+MethodTurbofish
+ParenthesizedGenericArguments
+PredicateEq
+PredicateLifetime
+PredicateType
+QSelf
+TraitBound
+TraitItemConst
+TraitItemMacro
+TraitItemMethod
+TraitItemType
+Turbofish
+TypeArray
+TypeGroup
+TypeBareFn
+TypeInfer
+TypeMacro
+TypeNever
+TypeParam
+TypeParen
+TypePath
+TypePtr
+TypeReference
+TypeSlice
+TypeTraitObject
+TypeTuple
+VisCrate
+VisRestricted
+WhereClause

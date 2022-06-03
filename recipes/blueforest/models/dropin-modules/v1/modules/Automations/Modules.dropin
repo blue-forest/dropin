@@ -1,5 +1,0 @@
-blueforest:dropin-module:v1:Message
-
-pub fn print(arg bytes)
-  print "Hello"
-  >print $locals.arg

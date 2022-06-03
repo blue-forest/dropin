@@ -1,15 +1,21 @@
 [package]
-name = "dropin-core"
+name = "dropin"
 version = "0.5.3-8"
 authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
 edition = "2021"
-description = "drop'in core [WIP]"
+description = "drop'in [WIP]"
 repository = "https://github.com/theblueforest/dropin/crates/core"
 license = "AGPL-3.0-only"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[profile.release]
+strip = "symbols"
+
 [dependencies]
+dropin-macro = { path = "./macros" }
+proc-macro2 = "1.0"
+# quote = "1.0"
+syn = { version = "1.0", features = ["full", "extra-traits"] }
 wasi = "0.11"
-wee_alloc = "0.4"

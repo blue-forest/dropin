@@ -4,5 +4,5 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
-wasmtime = "0.34.1"
+wasmtime = "0.34.2"
 wasmtime-wasi = "0.34.1"

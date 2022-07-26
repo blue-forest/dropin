@@ -23,11 +23,11 @@ If you want to join the development and contribute to the project, please reach 
 ## Documentation
 You can find the documentation of the drop'in language on [dropin.recipes](https://dropin.recipes).
 
-You can find more documentation in [`docs`](./docs) about:
- - [the CLI](etc/docs/CLI.md)
- - [the File Structure](etc/docs/Structure.md)
- - [the Development](etc/docs/Development.md)
- - [the Memory management](etc/docs/memory.md)
+You can find more informations in [`./etc/notes`](./etc/notes) about :
+ - [the CLI](./etc/notes/CLI.md)
+ - [the File Structure](./etc/notes/Structure.md)
+ - [the Development](./etc/notes/Development.md)
+ - [the Memory management](./etc/notes/memory.md)
 
 
 ## Contributors

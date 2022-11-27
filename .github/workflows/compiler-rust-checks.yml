@@ -1,7 +1,8 @@
-name: Rust checks
+name: Compiler Rust checks
 on:
   push:
-    paths: [ src/**/*, crates/*/src/**/* ]
+    branches: [ main ]
+    paths: [ compiler/src/**/*, compiler/crates/*/src/**/* ]
   workflow_dispatch:
 jobs:
   rust_checks:
@@ -15,6 +16,8 @@ jobs:
           ~/.cargo/git
           target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+    - name: goto compiler
+      run: cd compiler
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable

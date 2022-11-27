@@ -1,4 +1,4 @@
-name: Security audit
+name: Compiler Security audit
 on:
   schedule:
   - cron: '0 0 * * *'
@@ -16,6 +16,8 @@ jobs:
       with:
         path: ~/.cargo/git
         key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+    - name: goto compiler
+      run: cd compiler
     - uses: actions/cache@v1
       with:
         path: target

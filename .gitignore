@@ -1,8 +1,6 @@
-target/
 *.swp
 *.swo
 *.swn
-*.wasm
-recipes/config.toml
-recipes/.builds
+
+target/
 node_modules/

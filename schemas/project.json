@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/Project",
+  "definitions": {
+    "Project": {
+      "title": "drop'in Project",
+      "type": "object",
+      "properties": {
+        "organization": { "type": "string" },
+        "name": { "type": "string" },
+        "app": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" },
+            "theme": { "type": "string" },
+            "platforms": {
+              "type": "object",
+              "properties": {
+                "android": {
+                  "type": "object",
+                  "properties": {
+                    "package": { "type": "string" },
+                    "build": { "type": "integer" }
+                  },
+                  "required": [ "package", "build" ],
+                  "additionalProperties": false
+                },
+                "ios": {
+                  "type": "object",
+                  "properties": {
+                    "bundle": { "type": "string" },
+                    "build": { "type": "integer" }
+                  },
+                  "required": [ "bundle", "build" ],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+
+            },
+            "pages": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z0-9_]+$": {
+                  "type": "object",
+                  "properties": {
+                    "component": { "type": "string" },
+                    "path": { "type": "string" },
+                    "title": { "type": "string" }
+                  },
+                  "required": [ "component", "path" ],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [ "name", "version", "pages" ],
+          "additionalProperties": false
+        }
+      },
+      "required": [ "organization", "name" ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,4 @@
+
+.md-footer__inner:not([hidden]) {
+  display: none
+}

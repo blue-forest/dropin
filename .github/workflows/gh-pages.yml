@@ -6,6 +6,10 @@ on:
     branches: [ main ]
     paths: [ recipes/**/* ]
 
+defaults:
+  run:
+    working-directory: ./recipes
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -13,8 +17,6 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
     - uses: actions/checkout@v2
-    - name: Change directory
-      run: cd recipes
     - uses: actions/setup-python@v4
       with: { python-version: 3.x }
     - name: Install dependencies

@@ -1,25 +1,26 @@
-name: GitHub Pages
+name: GitHub Pages (MkDocs)
 
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
     paths: [ recipes/**/* ]
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
-    defaults:
-      run:
-        working-directory: ./recipes
     steps:
     - uses: actions/checkout@v2
-
-    - name: MkDocs build
-      uses: Tiryoh/actions-mkdocs@v0
-
+    - name: Change directory
+      run: cd recipes
+    - uses: actions/setup-python@v4
+      with: { python-version: 3.x }
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Build MkDocs
+      run: mkdocs build
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}

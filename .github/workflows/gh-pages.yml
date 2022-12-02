@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
-    env:
-      working-directory: ./recipes
+    defaults:
+      run:
+        working-directory: ./recipes
     steps:
     - uses: actions/checkout@v2
 

@@ -13,16 +13,16 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
     - uses: actions/checkout@v2
-    - name: goto recipes
-      run: cd recipes
 
     - name: MkDocs build
       uses: Tiryoh/actions-mkdocs@v0
+      working-directory: recipes
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}
+      working-directory: recipes
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./site
+        publish_dir: site
         cname: dropin.recipes

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+         <loc>https://dropin.recipes/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/"/>
+         
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/roadmap/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/roadmap/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/concepts/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/concepts/auth/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/concepts/auth/tokens/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/tokens/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/tokens/"/>
+         
+    </url>
+</urlset>

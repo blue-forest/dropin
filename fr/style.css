@@ -1,0 +1,4 @@
+
+.md-footer__inner:not([hidden]), .md-nav__title {
+  display: none
+}

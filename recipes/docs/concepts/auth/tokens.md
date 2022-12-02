@@ -1,5 +1,4 @@
 ---
-tags:
-  - alpha
+tags: [ alpha ]
 ---
 # Tokens

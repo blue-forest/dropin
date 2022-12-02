@@ -15,13 +15,8 @@
       {% set class = class ~ " md-nav__item--section" %}
     {% endif %}
     <li class="{{ class }} md-nav__item--nested">
-      {% set checked = "checked" if nav_item.active %}
-      {% if "navigation.expand" in features and not checked %}
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}" checked>
-      {% else %}
-        <input class="md-nav__toggle md-toggle" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}" {{ checked }}>
-      {% endif %}
       {% set indexes = [] %}
+
       {% if "navigation.indexes" in features %}
         {% for nav_item in nav_item.children %}
           {% if nav_item.is_index and not index is defined %}
@@ -29,13 +24,21 @@
           {% endif %}
         {% endfor %}
       {% endif %}
+
+      {% set index = indexes | first %}
+      {% set checked = "checked" if nav_item.active %}
+      {% if (index and "expand" in index.meta and index.meta.expand) and not checked %}
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}" checked>
+      {% else %}
+        <input class="md-nav__toggle md-toggle" data-md-toggle="{{ path }}" type="checkbox" id="{{ path }}" {{ checked }}>
+      {% endif %}
+
       {% if not indexes %}
         <label class="md-nav__link" for="{{ path }}">
           {{ nav_item.title }}{{tag}}
           <span class="md-nav__icon md-icon"></span>
         </label>
       {% else %}
-        {% set index = indexes | first %}
         {% set class = "md-nav__link--active" if index == page %}
         <div class="md-nav__link md-nav__link--index {{ class }}">
           <a href="{{ index.url | url }}">{{ nav_item.title }}{{tag}}</a>

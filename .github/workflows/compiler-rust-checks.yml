@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   rust_checks:
+    if: ${{ false }} # TEMPORARY DISABLED
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

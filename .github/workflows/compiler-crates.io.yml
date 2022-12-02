@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   publish:
+    if: ${{ false }} # TEMPORARY DISABLED
     environment: crates.io
     runs-on: ubuntu-latest
     steps:

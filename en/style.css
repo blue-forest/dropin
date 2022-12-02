@@ -2,3 +2,19 @@
 .md-footer__inner:not([hidden]), .md-nav__title {
   display: none
 }
+
+.item-tag {
+  display: inline-block;
+  border-radius: 2.4rem;
+  font-weight: 700;
+  font-size: .5rem;
+  letter-spacing: normal;
+  line-height: 1.6;
+  padding: 0.1em 0.6em;
+  vertical-align: middle;
+  color: white;
+}
+
+.item-tag-beta, .item-tag-alpha {
+  background: var(--md-default-fg-color--lightest);
+}

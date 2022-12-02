@@ -1,7 +1,7 @@
 # drop'in Compiler
 
 [![License](https://img.shields.io/github/license/blue-forest/dropin)](../COPYING)
-[![Maintenance](https://img.shields.io/badge/maintained-yes-red.svg)](#)
+[![Maintenance](https://img.shields.io/badge/maintained-no-red.svg)](#)
 [![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
 [![Twitter](https://img.shields.io/twitter/follow/dropin_cloud?label=%40dropin_cloud)](https://twitter.com/dropin_cloud)
 [![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)

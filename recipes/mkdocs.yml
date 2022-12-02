@@ -7,8 +7,20 @@ nav:
 - roadmap.md
 - Concepts:
   - concepts/index.md
+  - Catalog:
+    - concepts/catalog/index.md
+    - concepts/catalog/models.md
+    - concepts/catalog/projects.md
+  - Automations:
+    - concepts/automations/index.md
+    - concepts/automations/functions.md
+    - concepts/automations/triggers.md
+    - concepts/automations/migrations.md
+    - concepts/automations/deployments.md
   - Auth:
     - concepts/auth/index.md
+    - concepts/auth/realms.md
+    - concepts/auth/permissions.md
     - concepts/auth/tokens.md
 
 theme:
@@ -35,7 +47,7 @@ plugins:
     default_language: en
     nav_translations:
       fr:
-        Auth: Authentification (Auth)
+        Auth: Authentification
 
 markdown_extensions:
 - attr_list

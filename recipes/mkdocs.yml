@@ -21,15 +21,13 @@ theme:
     primary: blue
     accent: blue
   features:
-  #- navigation.instant
   - navigation.expand
   - navigation.indexes
   - toc.follow
 
-extra_css: [ style.css ]
-
 plugins:
 - search: { lang: [ en, fr ] }
+- tags
 - i18n:
     languages:
       en: { name: English }
@@ -38,6 +36,11 @@ plugins:
     nav_translations:
       fr:
         Auth: Authentification (Auth)
+
+markdown_extensions:
+- attr_list
+
+extra_css: [ style.css ]
 
 extra:
   social:

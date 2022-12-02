@@ -15,6 +15,6 @@
   color: white;
 }
 
-.item-tag-beta, .item-tag-alpha {
-  background: var(--md-default-fg-color--lightest);
-}
+.item-tag-alpha { background: #10632d; }
+.item-tag-beta { background: #b66e02; }
+.item-tag-stable { background: #9e251d; }

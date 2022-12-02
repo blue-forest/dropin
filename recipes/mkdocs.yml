@@ -1,7 +1,6 @@
 site_name: drop'in Recipes
 site_url: https://dropin.recipes/
 site_author: Blue Forest
-site_title: drop'in
 
 nav:
 - index.md

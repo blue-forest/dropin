@@ -1,4 +1,1 @@
----
-expand: true
----
 # Concepts

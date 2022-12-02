@@ -80,8 +80,11 @@ theme:
     accent: blue
   features:
   - navigation.indexes
-  - toc.follow
   - navigation.sections
+  - navigation.tracking
+  - navigation.prune
+  - navigation.top
+  - toc.follow
 
 plugins:
 - search: { lang: [ en, fr ] }

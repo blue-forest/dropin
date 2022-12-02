@@ -9,16 +9,35 @@ nav:
   - concepts/index.md
   - Recipes:
     - concepts/recipes/index.md
+    - concepts/recipes/formats.md
+    - concepts/recipes/options.md
+    - concepts/recipes/getters.md
+    - concepts/recipes/setters.md
+    - concepts/recipes/handlers.md
   - Catalog:
     - concepts/catalog/index.md
     - concepts/catalog/models.md
     - concepts/catalog/projects.md
   - Owners:
     - concepts/owners/index.md
+    - concepts/owners/users.md
+    - concepts/owners/organizations.md
   - Interfaces:
     - concepts/interfaces/index.md
+    - concepts/interfaces/themes.md
+    - concepts/interfaces/components.md
+    - concepts/interfaces/styles.md
+    - concepts/interfaces/pages.md
+    - concepts/interfaces/sessions.md
   - Storage:
     - concepts/storage/index.md
+    - concepts/storage/collections.md
+    - concepts/storage/volumes.md
+    - concepts/storage/values.md
+    - concepts/storage/metrics.md
+    - concepts/storage/repositories.md
+    - concepts/storage/containers.md
+    - concepts/storage/logs.md
   - Automations:
     - concepts/automations/index.md
     - concepts/automations/functions.md
@@ -27,15 +46,28 @@ nav:
     - concepts/automations/deployments.md
   - Validations:
     - concepts/validations/index.md
+    - concepts/validations/types.md
+    - concepts/validations/syntaxes.md
+    - concepts/validations/issues.md
   - Endpoints:
     - concepts/endpoints/index.md
+    - concepts/endpoints/domains.md
+    - concepts/endpoints/connectors.md
+    - concepts/endpoints/addresses.md
+    - concepts/endpoints/providers.md
+    - concepts/endpoints/databases.md
   - Auth:
     - concepts/auth/index.md
     - concepts/auth/realms.md
-    - concepts/auth/permissions.md
     - concepts/auth/tokens.md
+    - concepts/auth/permissions.md
+    - concepts/auth/groups.md
   - Editor:
     - concepts/editor/index.md
+    - concepts/editor/sections.md
+    - concepts/editor/vizualizations.md
+    - concepts/editor/forms.md
+    - concepts/editor/maps.md
 
 theme:
   name: material

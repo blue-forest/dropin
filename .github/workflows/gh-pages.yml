@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+    env:
+      working-directory: ./recipes
     steps:
     - uses: actions/checkout@v2
 
     - name: MkDocs build
       uses: Tiryoh/actions-mkdocs@v0
-      working-directory: recipes
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}
-      working-directory: recipes
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: site

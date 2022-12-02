@@ -5,7 +5,7 @@
   {% endif %}
 
   {% if "tags" in nav_item.meta %}
-    {% set tag = '<span class="item-tag item-tag-'+nav_item.meta.tags[0]+'">'+nav_item.meta.tags[0]+'</span>' %}
+    {% set tag = '<span class="menu-item-tag menu-item-tag-'+nav_item.meta.tags[0]+'">'+nav_item.meta.tags[0]+'</span>' %}
   {% endif %}
 
   {% if nav_item.children %}
@@ -41,7 +41,13 @@
       {% else %}
         {% set class = "md-nav__link--active" if index == page %}
         <div class="md-nav__link md-nav__link--index {{ class }}">
-          <a href="{{ index.url | url }}">{{ nav_item.title }}{{tag}}</a>
+          <a href="{{ index.url | url }}">
+            {% if "icon" in index.meta %}
+              <img src="/assets/icons/{{index.meta.icon}}.svg" class="menu-item-icon"/>
+            {% endif %}
+            {{ nav_item.title }}
+            {{tag}}
+          </a>
           {% if nav_item.children | length > 1 %}
             <label for="{{ path }}">
               <span class="md-nav__icon md-icon"></span>

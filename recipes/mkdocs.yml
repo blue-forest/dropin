@@ -7,33 +7,46 @@ nav:
 - roadmap.md
 - Concepts:
   - concepts/index.md
+  - Recipes:
+    - concepts/recipes/index.md
   - Catalog:
     - concepts/catalog/index.md
     - concepts/catalog/models.md
     - concepts/catalog/projects.md
+  - Owners:
+    - concepts/owners/index.md
+  - Interfaces:
+    - concepts/interfaces/index.md
+  - Storage:
+    - concepts/storage/index.md
   - Automations:
     - concepts/automations/index.md
     - concepts/automations/functions.md
     - concepts/automations/triggers.md
     - concepts/automations/migrations.md
     - concepts/automations/deployments.md
+  - Validations:
+    - concepts/validations/index.md
+  - Endpoints:
+    - concepts/endpoints/index.md
   - Auth:
     - concepts/auth/index.md
     - concepts/auth/realms.md
     - concepts/auth/permissions.md
     - concepts/auth/tokens.md
+  - Editor:
+    - concepts/editor/index.md
 
 theme:
   name: material
   custom_dir: overrides
-  logo: logo.png
-  favicon: logo.png
+  logo: assets/logo.png
+  favicon: assets/logo.png
   palette:
     scheme: slate
     primary: blue
     accent: blue
   features:
-  - navigation.expand
   - navigation.indexes
   - toc.follow
 
@@ -47,12 +60,18 @@ plugins:
     default_language: en
     nav_translations:
       fr:
+        Recipes: Recettes
+        Catalog: Catalogue
+        Owners: Propriétaires
+        Storage: Stockage
+        Automations: Automatisations
+        Endpoints: Points de terminaison
         Auth: Authentification
+        Editor: Éditeur
 
-markdown_extensions:
-- attr_list
+markdown_extensions: [ attr_list ]
 
-extra_css: [ style.css ]
+extra_css: [ assets/style.css ]
 
 extra:
   social:

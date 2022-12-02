@@ -233,6 +233,14 @@
          
     </url>
     <url>
+         <loc>https://dropin.recipes/concepts/interfaces/pages/</loc>
+         <lastmod>2022-12-02</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/pages/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/pages/"/>
+         
+    </url>
+    <url>
          <loc>https://dropin.recipes/concepts/interfaces/sessions/</loc>
          <lastmod>2022-12-02</lastmod>
          <changefreq>daily</changefreq>

@@ -313,14 +313,6 @@
          
     </url>
     <url>
-         <loc>https://dropin.recipes/concepts/recipes/handlers/</loc>
-         <lastmod>2022-12-02</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/handlers/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/handlers/"/>
-         
-    </url>
-    <url>
          <loc>https://dropin.recipes/concepts/recipes/options/</loc>
          <lastmod>2022-12-02</lastmod>
          <changefreq>daily</changefreq>

@@ -1,6 +1,6 @@
 <div class="md-copyright" style="display:flex">
   <div style="margin-top:6px">
-    <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">
+    <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/{% if i18n_page_locale == 'fr' %}deed.fr{% endif %}" target="_blank" rel="noopener">
       <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" alt="CC BY-NC-SA 4.0">
     </a>
   </div>
@@ -11,7 +11,11 @@
       </a>
       <script>document.getElementById("year").innerHTML=new Date().getFullYear()</script>
     </div>
-    Made with
+    {% if i18n_page_locale == "fr" %}
+      Conçu avec
+    {% else %}
+      Made with
+    {% endif %}
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
     </a>

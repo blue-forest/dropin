@@ -1,49 +1,46 @@
 site_name: drop'in Recipes
 site_url: https://dropin.recipes/
 site_author: Blue Forest
+site_title: drop'in
 
 nav:
 - index.md
-- index.fr.md
 - roadmap.md
-- roadmap.fr.md
-- concepts:
+- Concepts:
   - concepts/index.md
-  - auth:
+  - Auth:
     - concepts/auth/index.md
     - concepts/auth/tokens.md
-    - concepts/auth/tokens.fr.md
 
 theme:
   name: material
   custom_dir: overrides
+  logo: logo.png
+  favicon: logo.png
   palette:
     scheme: slate
     primary: blue
     accent: blue
   features:
-  - navigation.instant
+  #- navigation.instant
   - navigation.expand
   - navigation.indexes
   - toc.follow
 
-extra_css: [ extra.css ]
+extra_css: [ style.css ]
 
 plugins:
 - search: { lang: [ en, fr ] }
 - i18n:
     languages:
-      en: English
-      fr: Français
+      en: { name: English }
+      fr: { name: Français }
     default_language: en
-    no_translation:
-      en: This page is not available in English.
-      fr: Cette page n'est pas disponible en français.
+    nav_translations:
+      fr:
+        Auth: Authentification (Auth)
 
 extra:
-  alternate:
-  - { name: English, link: "", lang: en }
-  - { name: Français, link: index.fr/, lang: fr }
   social:
   - icon: fontawesome/brands/github
     link: https://github.com/blue-forest

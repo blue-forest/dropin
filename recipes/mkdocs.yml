@@ -33,11 +33,11 @@ nav:
     - concepts/storage/index.md
     - concepts/storage/collections.md
     - concepts/storage/volumes.md
-    - concepts/storage/values.md
     - concepts/storage/metrics.md
+    - concepts/storage/logs.md
+    - concepts/storage/values.md
     - concepts/storage/repositories.md
     - concepts/storage/containers.md
-    - concepts/storage/logs.md
   - Automations:
     - concepts/automations/index.md
     - concepts/automations/functions.md
@@ -47,8 +47,14 @@ nav:
   - Validations:
     - concepts/validations/index.md
     - concepts/validations/types.md
-    - concepts/validations/syntaxes.md
     - concepts/validations/issues.md
+    - concepts/validations/syntaxes.md
+  - Auth:
+    - concepts/auth/index.md
+    - concepts/auth/realms.md
+    - concepts/auth/tokens.md
+    - concepts/auth/permissions.md
+    - concepts/auth/groups.md
   - Endpoints:
     - concepts/endpoints/index.md
     - concepts/endpoints/domains.md
@@ -56,16 +62,10 @@ nav:
     - concepts/endpoints/addresses.md
     - concepts/endpoints/providers.md
     - concepts/endpoints/databases.md
-  - Auth:
-    - concepts/auth/index.md
-    - concepts/auth/realms.md
-    - concepts/auth/tokens.md
-    - concepts/auth/permissions.md
-    - concepts/auth/groups.md
   - Editor:
     - concepts/editor/index.md
     - concepts/editor/sections.md
-    - concepts/editor/vizualizations.md
+    - concepts/editor/visualizations.md
     - concepts/editor/forms.md
     - concepts/editor/maps.md
 
@@ -81,6 +81,7 @@ theme:
   features:
   - navigation.indexes
   - toc.follow
+  - navigation.sections
 
 plugins:
 - search: { lang: [ en, fr ] }

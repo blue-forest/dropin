@@ -1,3 +1,6 @@
+---
+hide: [ "toc" ]
+---
 # Introduction
 
 drop'in est une technologie permettant de créer des applications multi-plateformes (web, Android et iOS) basées sur un code unique écrit dans des fichiers appelés *recettes*. Tous les aspects de votre projet sont définis dans des recettes, qu'il s'agisse de l'interface graphique, de la logique métier ou de la gestion des données, vous n'avez donc pas besoin de connaître de langage de programmation pour créer votre application.
@@ -6,7 +9,7 @@ Blue Forest, une entreprise française basée à Marseille, développe actuellem
 
 A l'heure actuelle nous travaillons sur une version de drop'in gratuite à accès restreint qui sera bientôt disponible sous l'appellation `alpha`. Nous vous invitons à nous contacter si vous souhaitez participer à cette phase de test. Nous publierons également des informations sur cette documentation au fur et à mesure de l'avancement de notre travail. Lorsque la période d'alpha sera terminée, nous publierons une version `beta` qui sera accessible à tous, puis enfin une version `stable` qui sera la version finale de drop'in.
 
-drop'in est une technologie open-source dont le compilateur sera publié sous licence AGPL, et nous mettrons également à disposition des outils payants pour faciliter la création collaborative de vos applications ainsi que leur publication avec l'automatisation des tâches de déploiement et de mise à jour. Toutes ses fonctionnalités sont décrites dans la section `dropin.cloud` de cette documentation, vous pourrez donc facilement identifier les fonctionnalités qui seront gratuites et celles qui seront payantes.
+drop'in est une technologie open-source dont le compilateur sera publié sous licence AGPL, et nous mettrons également à disposition des outils payants pour faciliter la création collaborative de vos applications ainsi que leur publication avec l'automatisation des tâches de déploiement et de mise à jour. Toutes ses fonctionnalités sont décrites [dans la section `dropin.cloud` de cette documentation](/fr/cloud), vous pourrez donc facilement identifier les fonctionnalités qui seront gratuites et celles qui seront payantes.
 
 Si vous avez la moindre question, n'hésitez pas à nous contacter par e-mail à l'adresse `dropin@blueforest.cc` ou sur [GitHub dans la section `Discussions` de notre dépôt](https://github.com/blue-forest/dropin/discussions).
 

@@ -1,3 +1,6 @@
+---
+hide: [ "toc" ]
+---
 # Roadmap
 
 The development of drop'in was divided into seasons and episodes : we have been going from version to version since 2016 and we are currently at episode 3 of season 5.

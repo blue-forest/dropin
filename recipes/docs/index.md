@@ -1,3 +1,6 @@
+---
+hide: [ "toc" ]
+---
 # Introduction
 
 drop'in is a technology for creating cross-platform applications (web, Android and iOS) based on a single code written in files called *recipes*. All aspects of your project are defined in recipes, from the graphical interface to the business logic and data management, so you don't need to know any programming language to create your application.
@@ -6,7 +9,7 @@ Blue Forest, a French company based at Marseille, is currently developing this t
 
 At the moment we are working on a free restricted version of drop'in that will soon be available under the name `alpha`. We invite you to contact us if you want to participate in this test phase. We will also publish more informations on this documentation as our work progresses. When the alpha period will end, we will release a `beta` version that will be accessible to everyone, and then a `stable` version that will be the final version of drop'in.
 
-drop'in is an open-source technology whose compiler will be released under the AGPL license, and we will also provide paid tools to facilitate the collaborative creation of your applications and their publication with the automation of deployment and update tasks. All its features are described in the `dropin.cloud` section of this documentation, so you will be able to easily identify which features will be free and which will be paid.
+drop'in is an open-source technology whose compiler will be released under the AGPL license, and we will also provide paid tools to facilitate the collaborative creation of your applications and their publication with the automation of deployment and update tasks. All its features are described [in the `dropin.cloud` section of this documentation](/cloud), so you will be able to easily identify which features will be free and which will be paid.
 
 If you have any questions, feel free to contact us by email at `dropin@blueforest.cc` or on [GitHub in the `Discussions` section of our repository](https://github.com/blue-forest/dropin/discussions).
 

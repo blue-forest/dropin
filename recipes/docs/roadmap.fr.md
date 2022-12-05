@@ -1,3 +1,6 @@
+---
+hide: [ "toc" ]
+---
 # Feuille de route
 
 Le développement de drop'in a été divisé en saisons et épisodes : nous sommes passés de version en version depuis 2016 et nous sommes actuellement à l'épisode 2 de la saison 6.

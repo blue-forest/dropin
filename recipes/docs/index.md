@@ -8,6 +8,8 @@ At the moment we are working on a free restricted version of drop'in that will s
 
 drop'in is an open-source technology whose compiler will be released under the AGPL license, and we will also provide paid tools to facilitate the collaborative creation of your applications and their publication with the automation of deployment and update tasks. All its features are described in the `dropin.cloud` section of this documentation, so you will be able to easily identify which features will be free and which will be paid.
 
+If you have any questions, feel free to contact us by email at `dropin@blueforest.cc` or on [GitHub in the `Discussions` section of our repository](https://github.com/blue-forest/dropin/discussions).
+
 
 ## License
 

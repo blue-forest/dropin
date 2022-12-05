@@ -112,6 +112,6 @@ extra_css: [ assets/style.css ]
 extra:
   social:
   - icon: fontawesome/brands/github
-    link: https://github.com/blue-forest
+    link: https://github.com/blue-forest/dropin
   - icon: fontawesome/brands/twitter
     link: https://twitter.com/blueforest_cc

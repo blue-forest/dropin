@@ -1,8 +1,7 @@
 
 
 @media screen and (min-width: 1220px) {
-  /*.md-footer__inner:not([hidden])*/
-  .md-nav__title { display: none; }
+  .md-nav__title, .md-footer__inner:not([hidden]) { display: none; }
 }
 
 .md-nav__item .md-nav__link--index [href] {

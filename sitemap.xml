@@ -9,6 +9,14 @@
          
     </url>
     <url>
+         <loc>https://dropin.recipes/cloud/</loc>
+         <lastmod>2022-12-05</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/"/>
+         
+    </url>
+    <url>
          <loc>https://dropin.recipes/roadmap/</loc>
          <lastmod>2022-12-05</lastmod>
          <changefreq>daily</changefreq>

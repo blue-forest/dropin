@@ -1,0 +1,8 @@
+version: "3"
+services:
+  mkdocs:
+    build: { context: . }
+    network_mode: host
+    volumes:
+    - .:/docs
+

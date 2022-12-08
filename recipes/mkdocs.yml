@@ -4,8 +4,13 @@ site_author: Blue Forest
 
 nav:
 - index.md
-- cloud.md
 - roadmap.md
+- dropin.cloud:
+  - cloud/index.md
+  - cloud/editor.md
+  - cloud/studio.md
+  - cloud/catalog.md
+  - cloud/community.md
 - Concepts:
   - concepts/index.md
   - Recipes:

@@ -3,7 +3,7 @@ hide: [ "toc" ]
 ---
 # Roadmap
 
-The development of drop'in was divided into seasons and episodes : we have been going from version to version since 2016 and we are currently at episode 3 of season 5.
+The development of drop'in was divided into seasons and episodes : we have been going from version to version since 2016 and we are currently at episode 2 of season 6.
 
 During our journey we went through several technical stacks with a multitude of sandboxes which allowed us to progressively establish a set of features and define core concepts.
 

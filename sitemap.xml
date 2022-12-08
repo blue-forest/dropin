@@ -2,31 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
          <loc>https://dropin.recipes/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/"/>
          
          
     </url>
     <url>
-         <loc>https://dropin.recipes/cloud/</loc>
-         <lastmod>2022-12-05</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/"/>
-         
-    </url>
-    <url>
          <loc>https://dropin.recipes/roadmap/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/roadmap/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
          
     </url>
     <url>
+         <loc>https://dropin.recipes/cloud/</loc>
+         <lastmod>2022-12-08</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/cloud/catalog/</loc>
+         <lastmod>2022-12-08</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/catalog/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/catalog/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/cloud/community/</loc>
+         <lastmod>2022-12-08</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/community/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/community/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/cloud/editor/</loc>
+         <lastmod>2022-12-08</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/editor/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/editor/"/>
+         
+    </url>
+    <url>
+         <loc>https://dropin.recipes/cloud/studio/</loc>
+         <lastmod>2022-12-08</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/studio/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/studio/"/>
+         
+    </url>
+    <url>
          <loc>https://dropin.recipes/concepts/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/"/>
@@ -34,7 +66,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/auth/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/"/>
@@ -42,7 +74,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/auth/groups/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/groups/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/groups/"/>
@@ -50,7 +82,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/auth/permissions/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/permissions/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/permissions/"/>
@@ -58,7 +90,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/auth/realms/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/realms/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/realms/"/>
@@ -66,7 +98,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/auth/tokens/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/auth/tokens/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/tokens/"/>
@@ -74,7 +106,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/automations/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/automations/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/"/>
@@ -82,7 +114,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/automations/deployments/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/automations/deployments/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/deployments/"/>
@@ -90,7 +122,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/automations/functions/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/automations/functions/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/functions/"/>
@@ -98,7 +130,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/automations/migrations/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/automations/migrations/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/migrations/"/>
@@ -106,7 +138,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/automations/triggers/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/automations/triggers/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/triggers/"/>
@@ -114,7 +146,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/catalog/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/catalog/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/"/>
@@ -122,7 +154,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/catalog/models/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/catalog/models/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/models/"/>
@@ -130,7 +162,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/catalog/projects/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/catalog/projects/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/projects/"/>
@@ -138,7 +170,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/editor/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/editor/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/"/>
@@ -146,7 +178,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/editor/forms/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/editor/forms/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/forms/"/>
@@ -154,7 +186,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/editor/maps/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/editor/maps/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/maps/"/>
@@ -162,7 +194,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/editor/sections/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/editor/sections/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/sections/"/>
@@ -170,7 +202,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/editor/visualizations/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/editor/visualizations/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/visualizations/"/>
@@ -178,7 +210,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/"/>
@@ -186,7 +218,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/addresses/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/addresses/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/addresses/"/>
@@ -194,7 +226,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/connectors/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/connectors/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/connectors/"/>
@@ -202,7 +234,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/databases/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/databases/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/databases/"/>
@@ -210,7 +242,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/domains/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/domains/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/domains/"/>
@@ -218,7 +250,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/endpoints/providers/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/endpoints/providers/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/providers/"/>
@@ -226,7 +258,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/"/>
@@ -234,7 +266,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/components/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/components/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/components/"/>
@@ -242,7 +274,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/pages/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/pages/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/pages/"/>
@@ -250,7 +282,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/sessions/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/sessions/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/sessions/"/>
@@ -258,7 +290,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/styles/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/styles/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/styles/"/>
@@ -266,7 +298,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/interfaces/themes/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/interfaces/themes/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/themes/"/>
@@ -274,7 +306,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/owners/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/owners/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/"/>
@@ -282,7 +314,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/owners/organizations/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/owners/organizations/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/organizations/"/>
@@ -290,7 +322,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/owners/users/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/owners/users/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/users/"/>
@@ -298,7 +330,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/recipes/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/"/>
@@ -306,7 +338,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/recipes/formats/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/formats/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/formats/"/>
@@ -314,7 +346,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/recipes/getters/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/getters/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/getters/"/>
@@ -322,7 +354,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/recipes/options/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/options/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/options/"/>
@@ -330,7 +362,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/recipes/setters/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/recipes/setters/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/setters/"/>
@@ -338,7 +370,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/"/>
@@ -346,7 +378,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/collections/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/collections/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/collections/"/>
@@ -354,7 +386,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/containers/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/containers/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/containers/"/>
@@ -362,7 +394,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/logs/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/logs/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/logs/"/>
@@ -370,7 +402,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/metrics/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/metrics/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/metrics/"/>
@@ -378,7 +410,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/repositories/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/repositories/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/repositories/"/>
@@ -386,7 +418,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/values/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/values/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/values/"/>
@@ -394,7 +426,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/storage/volumes/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/storage/volumes/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/volumes/"/>
@@ -402,7 +434,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/validations/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/validations/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/"/>
@@ -410,7 +442,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/validations/issues/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/validations/issues/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/issues/"/>
@@ -418,7 +450,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/validations/syntaxes/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/validations/syntaxes/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/syntaxes/"/>
@@ -426,7 +458,7 @@
     </url>
     <url>
          <loc>https://dropin.recipes/concepts/validations/types/</loc>
-         <lastmod>2022-12-05</lastmod>
+         <lastmod>2022-12-08</lastmod>
          <changefreq>daily</changefreq>
          <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/concepts/validations/types/"/>
          <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/types/"/>

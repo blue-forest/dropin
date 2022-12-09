@@ -7,23 +7,23 @@ Formats are data structure definitions and can be composed of:
 
 Formats are for example used:
 
-- in [Options](/concepts/recipes/options) of Recipes
-- in Variations of [Types](/concepts/validations/types){.cico .cico-types}
-- in Fields of [Collections](/concepts/storage/collections){.cico .cico-collections}
-- in [Setter](/concepts/recipes/setters) "Format comparison"
+- in [Options](/concepts/recipes/options/) of Recipes
+- in Variations of [Types](/concepts/validations/types/){.cico .cico-types}
+- in Fields of [Collections](/concepts/storage/collections/){.cico .cico-collections}
+- in [Setter](/concepts/recipes/setters/) "Format comparison"
 
 A Format of native object type can contain the information of all required fields as well as default values to be used.
 
-When using a Format, it is possible to place Constraints on the manipulated data by giving a validity condition and an [Issue](/concepts/validations/issues){.cico .cico-issues}. If the condition is not met, the Issue is triggered and returns custom errors.
+When using a Format, it is possible to place Constraints on the manipulated data by giving a validity condition and an [Issue](/concepts/validations/issues/){.cico .cico-issues}. If the condition is not met, the Issue is triggered and returns custom errors.
 
-Formats can also contain Labels to apply dynamic selections with for example the "search" step in a [Function](/concepts/automations/functions){.cico .cico-functions}.
+Formats can also contain Labels to apply dynamic selections with for example the "search" step in a [Function](/concepts/automations/functions/){.cico .cico-functions}.
 
 ## Native types
 
 ### Unique
 
 #### Audio
-- Options: [Volume](/concepts/storage/volumes){.cico .cico-volumes} to use, list of accepted extension, min and max size, min and max duration
+- Options: [Volume](/concepts/storage/volumes/){.cico .cico-volumes} to use, list of accepted extension, min and max size, min and max duration
 - Format: File Item
 
 #### Binary
@@ -61,15 +61,15 @@ Formats can also contain Labels to apply dynamic selections with for example the
 - Format: text
 
 #### File
-- Options: [Volume](/concepts/storage/volumes){.cico .cico-volumes} to use, accepted extension tables, min and max size
+- Options: [Volume](/concepts/storage/volumes/){.cico .cico-volumes} to use, accepted extension tables, min and max size
 - Format: File Item
 
 #### Image
-- Options: [Volume](/concepts/storage/volumes){.cico .cico-volumes} to use, supported extension tables, min and max size, min and max dimensions
+- Options: [Volume](/concepts/storage/volumes/){.cico .cico-volumes} to use, supported extension tables, min and max size, min and max dimensions
 - Format: File Item
 
 #### Item
-- Options : [Collection](/concepts/storage/collections){.cico .cico-collections} with its [Options](/concepts/recipes/options)
+- Options: [Collection](/concepts/storage/collections/){.cico .cico-collections} with its [Options](/concepts/recipes/options/)
 - Format: Item of Item
 
 #### Location
@@ -108,13 +108,13 @@ Formats can also contain Labels to apply dynamic selections with for example the
 - Variations:
     - text
     - by number: name for one, name for many, article if applicable
-    - by language : for each language, a text or by number
+    - by language: for each language, a text or by number
 
 #### URL
 - Format: text
 
 #### Video
-- Options: [Volume](/concepts/storage/volumes){.cico .cico-volumes} to use, accepted extension tables, min and max size, min and max dimensions
+- Options: [Volume](/concepts/storage/volumes/){.cico .cico-volumes} to use, accepted extension tables, min and max size, min and max dimensions
 - Format: File Item
 
 

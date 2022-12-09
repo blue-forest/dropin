@@ -7,23 +7,23 @@ Les Formats sont des définitions de structure de données et peuvent être comp
 
 Les Formats sont par exemple utilisés :
 
-- dans les [Options](/fr/concepts/recipes/options) des Recettes
-- dans les Variations des [Types](/fr/concepts/validations/types){.cico .cico-types}
-- dans les Champs des [Collections](/fr/concepts/storage/collections){.cico .cico-collections}
-- dans le [Définisseur](/fr/concepts/recipes/setters) "comparaison des Formats"
+- dans les [Options](/fr/concepts/recipes/options/) des Recettes
+- dans les Variations des [Types](/fr/concepts/validations/types/){.cico .cico-types}
+- dans les Champs des [Collections](/fr/concepts/storage/collections/){.cico .cico-collections}
+- dans le [Définisseur](/fr/concepts/recipes/setters/) "comparaison des Formats"
 
 Un Format de type natif objet peut contenir l'information de tous les champs obligatoires ainsi que les valeurs par défaut à utiliser.
 
-En utilisant un Format, il est possible de poser des Contraintes sur les données manipulées en donnant une condition de validité et une [Anomalie](/fr/concepts/validations/issues){.cico .cico-issues}. Si la condition n'est pas remplie, l'Anomalie est déclenchée et renvoie des erreurs personnalisées.
+En utilisant un Format, il est possible de poser des Contraintes sur les données manipulées en donnant une condition de validité et une [Anomalie](/fr/concepts/validations/issues/){.cico .cico-issues}. Si la condition n'est pas remplie, l'Anomalie est déclenchée et renvoie des erreurs personnalisées.
 
-Les Formats peuvent aussi contenir des Marqueurs afin d'appliquer des sélections dynamiques avec par exemple la Étape "recherche" dans une [Fonction](/fr/concepts/automations/functions){.cico .cico-functions}.
+Les Formats peuvent aussi contenir des Marqueurs afin d'appliquer des sélections dynamiques avec par exemple la Étape "recherche" dans une [Fonction](/fr/concepts/automations/functions/){.cico .cico-functions}.
 
 ## Types natifs
 
 ### Uniques
 
 #### Audio
-- Options : [Volume](/fr/concepts/storage/volumes){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, durée min et max
+- Options : [Volume](/fr/concepts/storage/volumes/){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, durée min et max
 - Format : Item de Fichier
 
 #### Binaire
@@ -61,15 +61,15 @@ Les Formats peuvent aussi contenir des Marqueurs afin d'appliquer des sélection
 - Format : texte
 
 #### Fichier
-- Options : [Volume](/fr/concepts/storage/volumes){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max
+- Options : [Volume](/fr/concepts/storage/volumes/){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max
 - Format : Item de Fichier
 
 #### Image
-- Options : [Volume](/fr/concepts/storage/volumes){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, dimensions min et max
+- Options : [Volume](/fr/concepts/storage/volumes/){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, dimensions min et max
 - Format : Item de Fichier
 
 #### Item
-- Options : [Collection](/fr/concepts/storage/collections){.cico .cico-collections} avec ses [Options](/fr/concepts/recipes/options)
+- Options : [Collection](/fr/concepts/storage/collections/){.cico .cico-collections} avec ses [Options](/fr/concepts/recipes/options/)
 - Format : Item d'Item
 
 #### Localisation
@@ -114,7 +114,7 @@ Les Formats peuvent aussi contenir des Marqueurs afin d'appliquer des sélection
 - Format : texte
 
 #### Vidéo
-- Options : [Volume](/fr/concepts/storage/volumes){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, dimensions min et max
+- Options : [Volume](/fr/concepts/storage/volumes/){.cico .cico-volumes} à utiliser, tableaux d'extensions acceptées, taille min et max, dimensions min et max
 - Format : Item de Fichier
 
 

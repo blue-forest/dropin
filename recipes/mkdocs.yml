@@ -7,8 +7,8 @@ nav:
 - roadmap.md
 - dropin.cloud:
   - cloud/index.md
-  - cloud/editor.md
   - cloud/studio.md
+  - cloud/editor.md
   - cloud/catalog.md
   - cloud/community.md
 - Concepts:
@@ -19,7 +19,6 @@ nav:
     - concepts/recipes/options.md
     - concepts/recipes/getters.md
     - concepts/recipes/setters.md
-    - concepts/recipes/handlers.md
   - Catalog:
     - concepts/catalog/index.md
     - concepts/catalog/models.md
@@ -113,6 +112,7 @@ plugins:
 
 markdown_extensions:
 - attr_list
+- def_list
 
 extra_css: [ assets/style.css ]
 

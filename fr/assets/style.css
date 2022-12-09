@@ -52,3 +52,61 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Other */
 }
+
+.cico::before {
+  background-repeat: no-repeat;
+  background-size: 1em;
+  content: "";
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  margin-right: 3px;
+  vertical-align: text-top;
+}
+
+.cico-addresses::before { background-image: url("/assets/icons/addresses.svg"); }
+.cico-auth::before { background-image: url("/assets/icons/auth.svg"); }
+.cico-automations::before { background-image: url("/assets/icons/automations.svg"); }
+.cico-catalog::before { background-image: url("/assets/icons/catalog.svg"); }
+.cico-collections::before { background-image: url("/assets/icons/collections.svg"); }
+.cico-components::before { background-image: url("/assets/icons/components.svg"); }
+.cico-connectors::before { background-image: url("/assets/icons/connectors.svg"); }
+.cico-containers::before { background-image: url("/assets/icons/containers.svg"); }
+.cico-databases::before { background-image: url("/assets/icons/databases.svg"); }
+.cico-deployments::before { background-image: url("/assets/icons/deployments.svg"); }
+.cico-domains::before { background-image: url("/assets/icons/domains.svg"); }
+.cico-editor::before { background-image: url("/assets/icons/editor.svg"); }
+.cico-endpoints::before { background-image: url("/assets/icons/endpoints.svg"); }
+.cico-forms::before { background-image: url("/assets/icons/forms.svg"); }
+.cico-functions::before { background-image: url("/assets/icons/functions.svg"); }
+.cico-groups::before { background-image: url("/assets/icons/groups.svg"); }
+.cico-interfaces::before { background-image: url("/assets/icons/interfaces.svg"); }
+.cico-issues::before { background-image: url("/assets/icons/issues.svg"); }
+.cico-logs::before { background-image: url("/assets/icons/logs.svg"); }
+.cico-maps::before { background-image: url("/assets/icons/maps.svg"); }
+.cico-metrics::before { background-image: url("/assets/icons/metrics.svg"); }
+.cico-migrations::before { background-image: url("/assets/icons/migrations.svg"); }
+.cico-models::before { background-image: url("/assets/icons/models.svg"); }
+.cico-organizations::before { background-image: url("/assets/icons/organizations.svg"); }
+.cico-owners::before { background-image: url("/assets/icons/owners.svg"); }
+.cico-pages::before { background-image: url("/assets/icons/pages.svg"); }
+.cico-permissions::before { background-image: url("/assets/icons/permissions.svg"); }
+.cico-projects::before { background-image: url("/assets/icons/projects.svg"); }
+.cico-providers::before { background-image: url("/assets/icons/providers.svg"); }
+.cico-realms::before { background-image: url("/assets/icons/realms.svg"); }
+.cico-recipes::before { background-image: url("/assets/icons/recipes.svg"); }
+.cico-repositories::before { background-image: url("/assets/icons/repositories.svg"); }
+.cico-sections::before { background-image: url("/assets/icons/sections.svg"); }
+.cico-sessions::before { background-image: url("/assets/icons/sessions.svg"); }
+.cico-storage::before { background-image: url("/assets/icons/storage.svg"); }
+.cico-styles::before { background-image: url("/assets/icons/styles.svg"); }
+.cico-syntaxes::before { background-image: url("/assets/icons/syntaxes.svg"); }
+.cico-themes::before { background-image: url("/assets/icons/themes.svg"); }
+.cico-tokens::before { background-image: url("/assets/icons/tokens.svg"); }
+.cico-triggers::before { background-image: url("/assets/icons/triggers.svg"); }
+.cico-types::before { background-image: url("/assets/icons/types.svg"); }
+.cico-users::before { background-image: url("/assets/icons/users.svg"); }
+.cico-validations::before { background-image: url("/assets/icons/validations.svg"); }
+.cico-values::before { background-image: url("/assets/icons/values.svg"); }
+.cico-visualizations::before { background-image: url("/assets/icons/visualizations.svg"); }
+.cico-volumes::before { background-image: url("/assets/icons/volumes.svg"); }

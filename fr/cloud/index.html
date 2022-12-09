@@ -264,144 +264,22 @@
   
 
   
-    
+    <li class="md-nav__item md-nav__item--active">
       
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
-
       
         
-          
-            
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-
       
       
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
-      
-
-      
-        
-        <div class="md-nav__link md-nav__link--index md-nav__link--active">
-          <a href="./">
-            
-            dropin.cloud
-            
-          </a>
+      <a href="./" class="md-nav__link md-nav__link--active">
+        <div>
           
-            <label for="__nav_3">
-              <span class="md-nav__icon md-icon"></span>
-            </label>
-          
-        </div>
-      
-      <nav class="md-nav" aria-label="dropin.cloud" data-md-level="1">
-        <label class="md-nav__title" for="__nav_3">
-          <span class="md-nav__icon md-icon"></span>
           dropin.cloud
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="studio/" class="md-nav__link">
-        <div>
-          
-          Studio
         </div>
         
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="editor/" class="md-nav__link">
-        <div>
-          
-          Éditeur
-        </div>
-        
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="catalog/" class="md-nav__link">
-        <div>
-          
-          Catalogue
-        </div>
-        
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="community/" class="md-nav__link">
-        <div>
-          
-          Communauté
-        </div>
-        
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
+      
     </li>
   
 
@@ -2182,10 +2060,24 @@
 <p>dropin.cloud est un service cloud proposé par <a href="https://blueforest.cc" rel="noopener" target="_blank">Blue Forest</a> afin de vous aider à créer et gérer vos applications basées sur la technologie drop'in. Actuellement en phase alpha, il n'est pas encore accessible à tous. Si vous souhaitez participer à cette phase de test, vous pouvez <a href="https://docs.google.com/forms/d/e/1FAIpQLSejGbv2SCbZ7xZwpdGSDTqEi3e7eg2FQNmsoZeJWaNxv27Nkw/viewform" rel="noopener" target="_blank">remplir ce formulaire</a> mais gardez à l'esprit que les accès ne seront pas lancés tant que nous n'aurons pas finalisé toutes les préparations nécessaires.</p>
 <p>L'écosystème de dropin.cloud sera composé de quatre principaux services :</p>
 <ul>
-<li><a href="/fr/cloud/studio/">Studio</a> : créez vos applications basées sur des <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèles</a></li>
-<li><a href="/fr/cloud/editor/">Éditeur</a> : gérez votre structure de données définie par des <a class="cico cico-editor" href="/fr/concepts/editor/">recettes de l'Éditeur</a></li>
-<li><a href="/fr/cloud/catalog/">Catalogue</a> : une marketplace de <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèles</a> et de <a class="cico cico-projects" href="/fr/concepts/catalog/projects/">Projets</a> drop'in</li>
-<li><a href="/fr/cloud/community/">Communauté</a> : un lieu pour partager vos créations et trouver de l'inspiration</li>
+<li><a href="#studio">Studio</a> : créez vos applications basées sur des <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèles</a></li>
+<li><a href="/fr/concepts/editor/">Éditeur</a> : gérez votre structure de données définie par des <a class="cico cico-editor" href="/fr/concepts/editor/">recettes de l'Éditeur</a></li>
+<li><a href="/fr/concepts/catalog/">Catalogue</a> : une marketplace de <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèles</a> et de <a class="cico cico-projects" href="/fr/concepts/catalog/projects/">Projets</a> drop'in</li>
+<li><a href="#communauté">Communauté</a> : un lieu pour partager vos créations et trouver de l'inspiration</li>
+</ul>
+<h1 id="studio">Studio</h1>
+<p>Studio permet de décrire un fonctionnement logique et visuel sous la forme de <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèles</a>.</p>
+<p>Pour tous les concepts des <a class="cico cico-interfaces" href="/fr/concepts/interfaces/">Interfaces</a>, Studio vous permettra de visualiser en temps réel les changements que vous apportez à votre application. Via un éditeur interactif, vous pourrez très facilement gérer par exemple vos <a class="cico cico-components" href="/fr/concepts/interfaces/components/">Composants</a> et vos <a class="cico cico-styles" href="/fr/concepts/interfaces/styles/">Styles</a>.</p>
+<p>Pour des concepts plus algorithmiques, Studio vous permettra de décrire votre application sous la forme de blocs interactifs et de les assembler pour définir par exemple vos <a class="cico cico-functions" href="/fr/concepts/automations/functions/">Fonctions</a>.</p>
+<p>Pour chaque concept d'un <a class="cico cico-models" href="/fr/concepts/catalog/models/">Modèle</a>, Studio vous permettra de décrire votre application sans avoir à écrire une seule ligne de code. Si cependant vous souhaitez aller plus loin, vous pourrez toujours éditer le code source de votre application directement depuis Studio.</p>
+<h1 id="communaute">Communauté</h1>
+<p>Voici quelques fonctionnalités que nous avons prévus pour ce service :</p>
+<ul>
+<li>Publications : fil d'activité connecté au Fediverse avec <a href="https://www.w3.org/TR/activitypub/" rel="noopener" target="_blank">ActivityPub</a></li>
+<li>Messages : messages privés entre utilisateurs chiffrés de bout en bout</li>
+<li>Manuels : rédigez et partagez vos documentations en privé ou en public</li>
+<li>Traductions : outil pour traduire facilement vos contenus</li>
+<li>Tâches : gérez vos projets avec des tâches et des sous-tâches</li>
 </ul>
 
 
@@ -2232,13 +2124,13 @@
       
       
         
-        <a href="studio/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Studio" rel="next">
+        <a href="../concepts/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Concepts" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Suivant
               </span>
-              Studio
+              Concepts
             </div>
           </div>
           <div class="md-footer__button md-icon">

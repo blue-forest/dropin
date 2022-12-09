@@ -9,14 +9,6 @@
          
     </url>
     <url>
-         <loc>https://dropin.recipes/roadmap/</loc>
-         <lastmod>2022-12-09</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/roadmap/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
-         
-    </url>
-    <url>
          <loc>https://dropin.recipes/cloud/</loc>
          <lastmod>2022-12-09</lastmod>
          <changefreq>daily</changefreq>
@@ -25,35 +17,11 @@
          
     </url>
     <url>
-         <loc>https://dropin.recipes/cloud/catalog/</loc>
+         <loc>https://dropin.recipes/roadmap/</loc>
          <lastmod>2022-12-09</lastmod>
          <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/catalog/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/catalog/"/>
-         
-    </url>
-    <url>
-         <loc>https://dropin.recipes/cloud/community/</loc>
-         <lastmod>2022-12-09</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/community/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/community/"/>
-         
-    </url>
-    <url>
-         <loc>https://dropin.recipes/cloud/editor/</loc>
-         <lastmod>2022-12-09</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/editor/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/editor/"/>
-         
-    </url>
-    <url>
-         <loc>https://dropin.recipes/cloud/studio/</loc>
-         <lastmod>2022-12-09</lastmod>
-         <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/cloud/studio/"/>
-         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/studio/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/roadmap/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
          
     </url>
     <url>

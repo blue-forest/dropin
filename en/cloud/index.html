@@ -264,144 +264,60 @@
   
 
   
-    
+    <li class="md-nav__item md-nav__item--active">
       
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
-
       
         
-          
-            
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-      
-
       
       
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
-      
-
-      
-        
-        <div class="md-nav__link md-nav__link--index md-nav__link--active">
-          <a href="./">
-            
-            dropin.cloud
-            
-          </a>
-          
-            <label for="__nav_3">
-              <span class="md-nav__icon md-icon"></span>
-            </label>
-          
-        </div>
-      
-      <nav class="md-nav" aria-label="dropin.cloud" data-md-level="1">
-        <label class="md-nav__title" for="__nav_3">
-          <span class="md-nav__icon md-icon"></span>
+        <label class="md-nav__link md-nav__link--active" for="__toc">
           dropin.cloud
+          <span class="md-nav__icon md-icon"></span>
         </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="studio/" class="md-nav__link">
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
-          Studio
+          dropin.cloud
         </div>
         
       </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-
-  
-
-  
-    <li class="md-nav__item">
-      <a href="editor/" class="md-nav__link">
-        <div>
-          
-          Editor
-        </div>
+      
         
-      </a>
-    </li>
-  
 
-            
-          
-            
-              
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
-
   
-
-  
-    <li class="md-nav__item">
-      <a href="catalog/" class="md-nav__link">
-        <div>
-          
-          Catalog
-        </div>
-        
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
+    
   
   
-
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#studio" class="md-nav__link">
+    Studio
+  </a>
   
-
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community" class="md-nav__link">
+    Community
+  </a>
   
-    <li class="md-nav__item">
-      <a href="community/" class="md-nav__link">
-        <div>
-          
-          Community
-        </div>
-        
-      </a>
-    </li>
+</li>
+      
+    </ul>
   
-
-            
-          
-        </ul>
-      </nav>
+</nav>
+      
     </li>
   
 
@@ -2162,6 +2078,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#studio" class="md-nav__link">
+    Studio
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community" class="md-nav__link">
+    Community
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2182,10 +2120,24 @@
 <p>dropin.cloud is a cloud service provided by <a href="https://blueforest.cc" rel="noopener" target="_blank">Blue Forest</a> to help you create and manage your applications based on the drop'in technology. It is currently in an alpha phase and is not yet accessible to everyone. If you want to participate in this test phase, you can <a href="https://docs.google.com/forms/d/e/1FAIpQLSejGbv2SCbZ7xZwpdGSDTqEi3e7eg2FQNmsoZeJWaNxv27Nkw/viewform" rel="noopener" target="_blank">fill out this form</a> but be aware that the accesses will not be launched until we have finalized all the necessary preparations.</p>
 <p>dropin.cloud ecosystem will be composed of four main services:</p>
 <ul>
-<li><a href="/cloud/studio/">Studio</a> : create your applications based on <a class="cico cico-models" href="/concepts/catalog/models/">Models</a></li>
-<li><a href="/cloud/editor/">Editor</a> : manage your data structure refined by <a class="cico cico-editor" href="/concepts/editor/">Editor recipes</a></li>
-<li><a href="/cloud/catalog/">Catalog</a> : a marketplace of drop'in <a class="cico cico-models" href="/concepts/catalog/models/">Models</a> and <a class="cico cico-projects" href="/concepts/catalog/projects/">Projects</a></li>
-<li><a href="/cloud/community/">Community</a> : a place to share your creations and find inspiration</li>
+<li><a href="#studio">Studio</a> : create your applications based on <a class="cico cico-models" href="/concepts/catalog/models/">Models</a></li>
+<li><a href="/concepts/editor/">Editor</a> : manage your data structure refined by <a class="cico cico-editor" href="/concepts/editor/">Editor recipes</a></li>
+<li><a href="/concepts/catalog/">Catalog</a> : a marketplace of drop'in <a class="cico cico-models" href="/concepts/catalog/models/">Models</a> and <a class="cico cico-projects" href="/concepts/catalog/projects/">Projects</a></li>
+<li><a href="#community">Community</a> : a place to share your creations and find inspiration</li>
+</ul>
+<h2 id="studio">Studio</h2>
+<p>Studio allows you to describe a logical and visual behavior in the form of <a class="cico cico-models" href="/concepts/catalog/models/">Models</a>.</p>
+<p>For all <a class="cico cico-interfaces" href="/concepts/interfaces/">Interfaces</a> concepts, Studio will allow you to visualize in real time the changes you make to your application. Via an interactive editor, you can easily manage for example your <a class="cico cico-components" href="/concepts/interfaces/components/">Components</a> and your <a class="cico cico-styles" href="/concepts/interfaces/styles/">Styles</a>.</p>
+<p>For more algorithmic concepts, Studio will allow you to describe your application in the form of interactive blocks and assemble them to define for example your <a class="cico cico-functions" href="/concepts/automations/functions/">Functions</a>.</p>
+<p>For each concept of a <a class="cico cico-models" href="/concepts/catalog/models/">Model</a>, Studio will allow you to describe your application without having to write a single line of code. However, if you want to go further, you can still edit the source code of your application directly from Studio.</p>
+<h2 id="community">Community</h2>
+<p>Here are some features that we have planned for this service:</p>
+<ul>
+<li>Publications: activity feed linked to the Fediverse with <a href="https://www.w3.org/TR/activitypub/" rel="noopener" target="_blank">ActivityPub</a></li>
+<li>Messages: private messages between users encrypted end-to-end</li>
+<li>Manuals: write and share your documentations privately or publicly</li>
+<li>Translations: tool to easily translate your content</li>
+<li>Tasks: manage your projects with tasks and subtasks</li>
 </ul>
 
 
@@ -2232,13 +2184,13 @@
       
       
         
-        <a href="studio/" class="md-footer__link md-footer__link--next" aria-label="Next: Studio" rel="next">
+        <a href="../concepts/" class="md-footer__link md-footer__link--next" aria-label="Next: Concepts" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Studio
+              Concepts
             </div>
           </div>
           <div class="md-footer__button md-icon">

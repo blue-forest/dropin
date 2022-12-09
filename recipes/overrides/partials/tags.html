@@ -1,4 +1,10 @@
 
+{% if i18n_page_locale == "en" %}
+<p class="i18n_top_link" onclick="document.location=`/fr${document.location.pathname}`">[This page is also available in French]</p>
+{% else %}
+<p class="i18n_top_link" onclick="document.location=document.location.pathname.slice(3)">[Cette page est également disponible en anglais]</p>
+{% endif %}
+
 {% if "icon" in page.meta %}
 <img src="/assets/icons/{{page.meta.icon}}.svg" class="page-title-icon"/>
 {% endif %}

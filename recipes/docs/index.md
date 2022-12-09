@@ -14,6 +14,9 @@ drop'in is an open-source technology whose compiler will be released under the A
 If you have any questions, feel free to contact us by email at `dropin@blueforest.cc` or on [GitHub in the `Discussions` section of our repository](https://github.com/blue-forest/dropin/discussions){:target="_blank" rel="noopener"}.
 
 
-## License
+## Internationalization
+This documentation is also [available in French](/fr/). You can change the language of the documentation by using the language selector at the top right of the page, aside the search bar. If you want to contribute to the translation of this documentation, you can do it [on GitHub by creating a Pull Request](https://github.com/blue-forest/dropin/pulls){:target="_blank" rel="noopener"}.
 
+
+## License
 The content of this repository is licensed under a [CC BY-NC-SA 4.0](https://github.com/blue-forest/dropin/blob/main/recipes/LICENSE){:target="_blank" rel="noopener"} license, you may redistribute it and/or modify it under the terms of the license. Concerning the source code, it is licensed under the [MIT](https://github.com/blue-forest/dropin/blob/main/recipes/LICENSE-CODE){:target="_blank" rel="noopener"} license.

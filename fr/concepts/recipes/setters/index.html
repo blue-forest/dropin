@@ -491,6 +491,11 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Définisseurs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
@@ -498,6 +503,114 @@
         </div>
         
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    Opérations
+  </a>
+  
+    <nav class="md-nav" aria-label="Opérations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetique" class="md-nav__link">
+    Arithmétique
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logique" class="md-nav__link">
+    Logique
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparaisons" class="md-nav__link">
+    Comparaisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    Formats
+  </a>
+  
+    <nav class="md-nav" aria-label="Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commun" class="md-nav__link">
+    Commun
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textes" class="md-nav__link">
+    Textes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantites" class="md-nav__link">
+    Quantités
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dates" class="md-nav__link">
+    Dates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listes" class="md-nav__link">
+    Listes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valeurs" class="md-nav__link">
+    Valeurs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2040,6 +2153,103 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    Opérations
+  </a>
+  
+    <nav class="md-nav" aria-label="Opérations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#arithmetique" class="md-nav__link">
+    Arithmétique
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logique" class="md-nav__link">
+    Logique
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparaisons" class="md-nav__link">
+    Comparaisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formats" class="md-nav__link">
+    Formats
+  </a>
+  
+    <nav class="md-nav" aria-label="Formats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commun" class="md-nav__link">
+    Commun
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textes" class="md-nav__link">
+    Textes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quantites" class="md-nav__link">
+    Quantités
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dates" class="md-nav__link">
+    Dates
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#listes" class="md-nav__link">
+    Listes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#valeurs" class="md-nav__link">
+    Valeurs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2061,6 +2271,92 @@
 
 
 <h1 id="definisseurs">Définisseurs</h1>
+<p>Les Définisseurs permettent de déterminer et transformer des données.</p>
+<p>Dans les différents Définisseurs ci-dessous, les valeurs utilisées sont :</p>
+<ul>
+<li>soit des données brutes</li>
+<li>soit issues d’un <a href="/fr/concepts/recipes/getters">Récupérateur</a></li>
+</ul>
+<p>Dans un texte, il est possible d’utiliser un Définisseur pour rendre un texte dynamique.</p>
+<h2 id="operations">Opérations</h2>
+<h3 id="arithmetique">Arithmétique</h3>
+<ul>
+<li>addition : liste de quantités</li>
+<li>soustraction : liste de quantités</li>
+<li>multiplication : liste de quantités</li>
+<li>division : liste de quantités</li>
+<li>puissance : quantité</li>
+<li>racine carrée : quantité</li>
+<li>exponentielle : quantité</li>
+<li>logarithme : quantité</li>
+<li>modulo : deux quantités</li>
+</ul>
+<h3 id="logique">Logique</h3>
+<ul>
+<li>existe : valeur</li>
+<li>et : liste de booléens</li>
+<li>ou : liste de booléens</li>
+<li>non : booléen</li>
+</ul>
+<h3 id="comparaisons">Comparaisons</h3>
+<ul>
+<li>moins que (&lt;) : deux quantités</li>
+<li>au plus (&lt;=) : deux quantités</li>
+<li>au moins (&gt;=) : deux quantités</li>
+<li>plus que (&gt;) : deux quantités</li>
+<li>égal à : deux quantités</li>
+<li>différent de : deux quantités</li>
+<li>différent de tous : une valeur, une liste de valeurs</li>
+<li>différent d’un seul : une valeur, une liste de valeurs</li>
+<li>égal à tous : une valeur, une liste de valeurs</li>
+<li>égal à un seul : une valeur, une liste de valeurs</li>
+</ul>
+<h2 id="formats">Formats</h2>
+<h3 id="commun">Commun</h3>
+<ul>
+<li>taille en caractères d’une valeur ou d’éléments d’une liste (length) : valeur ou liste</li>
+<li>comparaison des Formats : valeur à vérifier, <a href="/fr/concepts/recipes/formats">Format</a> à détecter</li>
+</ul>
+<h3 id="textes">Textes</h3>
+<ul>
+<li>concaténer : valeurs, texte séparateur (" ")</li>
+<li>découper : valeur, texte séparateur</li>
+<li>chercher une chaîne de caractères (match) : texte dans lequel chercher, expression régulière</li>
+<li>remplacer : texte dans lequel chercher, texte à remplacer, texte de remplacement</li>
+<li>traduire : valeur, langue, nombre, article à utiliser</li>
+<li>minuscule : texte</li>
+<li>majuscule : texte</li>
+<li>majuscules des premières lettres de chaque mot  (titleCase) : texte</li>
+<li>tronquer les espaces de début et de fin (trim) : texte, caractères ([""]), droite (true), gauche (true)</li>
+<li>abréger : texte, maximum, texte de fin ("...")</li>
+<li>transformation d’un texte avec une Syntaxe : texte, <a class="cico cico-syntaxes" href="/fr/concepts/validations/syntaxes">Syntaxe</a> et ses <a href="/fr/concepts/recipes/options">Options</a></li>
+<li>sélectionner une partie du texte : texte à découper, début, fin</li>
+</ul>
+<h3 id="quantites">Quantités</h3>
+<ul>
+<li>moyenne : liste de quantités</li>
+<li>arrondi : quantité, nombre de décimales (2), type d’arrondi (au plus proche, inférieur ou supérieur)</li>
+</ul>
+<h3 id="dates">Dates</h3>
+<ul>
+<li>durée entre deux dates : début, fin, unité de retour ("s")</li>
+<li>jour de la semaine d’une date : date</li>
+<li>extraction (jour, semaine, mois, année, heures, ...) : date</li>
+<li>ajouter une période à une date : date, période (jours, mois, années, ...)</li>
+</ul>
+<h3 id="listes">Listes</h3>
+<ul>
+<li>quantité maximale dans une liste : liste de quantités</li>
+<li>quantité minimale dans une liste : liste de quantités</li>
+<li>fusionner plusieurs listes : liste de listes</li>
+<li>sélectionner des éléments : liste de valeurs, index de début, index de fin</li>
+</ul>
+<h3 id="valeurs">Valeurs</h3>
+<ul>
+<li>nombre aléatoire : quantité minimale (0), quantité maximale (1), nombre de décimales (2)</li>
+<li>pi : nombre de décimales (15)</li>
+<li>date actuelle : variation de retour ("timestamp")</li>
+</ul>
 
 
 

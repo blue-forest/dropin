@@ -53,6 +53,13 @@
   user-select: none; /* Other */
 }
 
+.i18n_top_link {
+  color: grey;
+  font-size: 0.8em;
+  cursor: pointer;
+  font-style: italic;
+}
+
 .cico::before {
   background-repeat: no-repeat;
   background-size: 1em;

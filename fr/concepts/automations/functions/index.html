@@ -1249,6 +1249,11 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Fonctions<span class="menu-item-tag menu-item-tag-alpha">alpha</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
@@ -1258,6 +1263,39 @@
         </div>
         <span class="menu-item-tag menu-item-tag-alpha">alpha</span>
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#etapes" class="md-nav__link">
+    Étapes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    Actions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2040,6 +2078,28 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#etapes" class="md-nav__link">
+    Étapes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    Actions
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2063,6 +2123,22 @@
 
 
 <h1 id="fonctions">Fonctions</h1>
+<p>Les Fonctions permettent de décrire un comportement en Étapes lorsqu'un <a class="cico cico-triggers" href="/fr/concepts/automations/triggers">Déclencheur</a> est activé ou lorsqu'on les exécute manuellement.</p>
+<h2 id="etapes">Étapes</h2>
+<p>Une Étape est une série d'actions exécutée par des Fonctions. Les Étapes sont liées par un système de dépendances permettant d'identifier leur ordre d'exécution. Les actions d'une Étape sont exécutées successivement.</p>
+<h2 id="actions">Actions</h2>
+<ul>
+<li>requête : envoi d'une requête à un serveur (HTTP, WS, ...)</li>
+<li>recherche : parcours une donnée avec des Manipulateurs pour extraire des informations</li>
+<li>transformation : permet de passer d'un texte à en un objet via une Syntaxe</li>
+<li>cryptographie : génère des clés de cryptage (bcrypt, JWT, UUID, RSA, ...)</li>
+<li>collection : effectue une opération de lecture ou d'écriture sur une <a class="cico cico-collections" href="/fr/concepts/storage/collections">Collection</a></li>
+<li>fonction : appel d'une autre Fonction avec ses <a href="/fr/concepts/recipes/options">Options</a></li>
+<li>connecteur : communication avec une service externe (API) via un <a class="cico cico-connectors" href="/fr/concepts/endpoints/connectors">Connecteur</a> et ses <a href="/fr/concepts/recipes/options">Options</a></li>
+<li>base de données : effectue des lectures ou des écritures avec une requête</li>
+<li>email : permet un envoi manuel de messages</li>
+<li>page : permet de simuler la navigation sur une <a class="cico cico-pages" href="/fr/concepts/recipes/pages">Page</a></li>
+</ul>
 
 
 

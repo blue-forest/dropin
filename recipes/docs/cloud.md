@@ -8,7 +8,7 @@ dropin.cloud is a cloud service provided by [Blue Forest](https://blueforest.cc)
 dropin.cloud ecosystem will be composed of four main services:
 
 - [Studio](#studio): create your applications based on [Models](/concepts/catalog/models/){.cico .cico-models}
-- [Editor](/concepts/editor/): manage your data structure refined by [Editor recipes](/concepts/editor/){.cico .cico-editor}
+- [Editor](/concepts/editor/): daily manage your data structure
 - [Catalog](/concepts/catalog/): a marketplace of drop'in [Models](/concepts/catalog/models/){.cico .cico-models} and [Projects](/concepts/catalog/projects/){.cico .cico-projects}
 - [Community](#community): a place to share your creations and find inspiration
 

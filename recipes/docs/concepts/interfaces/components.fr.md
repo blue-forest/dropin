@@ -4,13 +4,11 @@ tags: [ alpha ]
 ---
 # Composants
 
-## Description
-
-Les Composants permettent de créer une interface graphique décomposée en éléments réutilisables et imbriquables.
-
-L'ensemble du contenu d'un Composant est défini par des Blocs qui sont découpées en deux catégories : les Blocs statiques et les Blocs dynamiques.
+Les Composants permettent de créer une interface graphique décomposée en éléments réutilisables et imbriquables. L'ensemble du contenu d'un Composant est défini par des Blocs qui sont découpées en deux catégories : les Blocs statiques et les Blocs dynamiques.
 
 Chaque Bloc possède des Options qui permettent de définir son comportement. Il est par exemple possible de définir le déclenchement d'une [Fonction](/fr/concepts/automations/functions/){.cico .cico-functions} lors d'un appui sur un Bloc, ou encore en tant que condition pour déterminer si un Bloc doit être affiché ou non.
+
+Les Blocs peuvent aussi être liés à des [Styles](/fr/concepts/interfaces/styles/){.cico .cico-styles} qui permettent de définir leur apparence. L'application d'un Style peut être conditionné par une condition exécutée par une [Fonction](/fr/concepts/automations/functions/){.cico .cico-functions}.
 
 ### Blocs statiques
 - Zone : permet le regroupement Blocs

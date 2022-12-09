@@ -3,7 +3,7 @@ hide: [ "toc" ]
 ---
 # Concepts
 
-Un Concept drop'in est la représentation d’un ensemble de fonctionnalités qui permettent de décrire un besoin spécifique. En d'autres termes, nous avons créé un Concept pour chaque aspect dont vous pourriez avoir besoin dans le cadre de la création d'une application.
+Un Concept drop'in est la représentation d'un ensemble de fonctionnalités qui permettent de décrire un besoin spécifique. En d'autres termes, nous avons créé un Concept pour chaque aspect dont vous pourriez avoir besoin dans le cadre de la création d'une application.
 
 Vous trouverez donc dans cette section l'ensemble des Concepts disponibles sur drop'in. Pour chaque Concept, vous trouverez une description de son fonctionnement ainsi que des exemples d'utilisation.
 

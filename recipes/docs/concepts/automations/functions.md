@@ -10,7 +10,7 @@ Functions are used to describe behavior in Steps when a [Trigger](/concepts/auto
 A Step is a series of actions performed by Functions. The Steps are linked by a system of dependencies allowing to identify their execution order. The actions of a Step are executed successively.
 
 ## Actions
-- request: send a request to a server (HTTP, WS, ...)
+- request: send a request to a server (HTTP, WebSocket, ...)
 - lookup: browse a data with Manipulators to extract information
 - parse: allows to pass from a text to an object via a Syntax
 - cryptography: generates encryption keys (bcrypt, JWT, UUID, RSA, ...)

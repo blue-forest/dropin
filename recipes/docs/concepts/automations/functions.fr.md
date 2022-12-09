@@ -10,7 +10,7 @@ Les Fonctions permettent de décrire un comportement en Étapes lorsqu'un [Décl
 Une Étape est une série d'actions exécutée par des Fonctions. Les Étapes sont liées par un système de dépendances permettant d'identifier leur ordre d'exécution. Les actions d'une Étape sont exécutées successivement.
 
 ## Actions
-- requête : envoi d'une requête à un serveur (HTTP, WS, ...)
+- requête : envoi d'une requête à un serveur (HTTP, WebSocket, ...)
 - recherche : parcours une donnée avec des Manipulateurs pour extraire des informations
 - transformation : permet de passer d'un texte à en un objet via une Syntaxe
 - cryptographie : génère des clés de cryptage (bcrypt, JWT, UUID, RSA, ...)

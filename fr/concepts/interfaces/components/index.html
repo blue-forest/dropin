@@ -834,6 +834,11 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Composants<span class="menu-item-tag menu-item-tag-alpha">alpha</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
@@ -843,6 +848,52 @@
         </div>
         <span class="menu-item-tag menu-item-tag-alpha">alpha</span>
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blocs-statiques" class="md-nav__link">
+    Blocs statiques
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocs-dynamiques" class="md-nav__link">
+    Blocs dynamiques
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2040,6 +2091,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blocs-statiques" class="md-nav__link">
+    Blocs statiques
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blocs-dynamiques" class="md-nav__link">
+    Blocs dynamiques
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2063,6 +2149,30 @@
 
 
 <h1 id="composants">Composants</h1>
+<h2 id="description">Description</h2>
+<p>Les Composants permettent de créer une interface graphique décomposée en éléments réutilisables et imbriquables.</p>
+<p>L'ensemble du contenu d'un Composant est défini par des Blocs qui sont découpées en deux catégories : les Blocs statiques et les Blocs dynamiques.</p>
+<p>Chaque Bloc possède des Options qui permettent de définir son comportement. Il est par exemple possible de définir le déclenchement d'une <a class="cico cico-functions" href="/fr/concepts/automations/functions/">Fonction</a> lors d'un appui sur un Bloc, ou encore en tant que condition pour déterminer si un Bloc doit être affiché ou non.</p>
+<h3 id="blocs-statiques">Blocs statiques</h3>
+<ul>
+<li>Zone : permet le regroupement Blocs</li>
+<li>Texte : affiche du texte potentiellement dans plusieurs langues</li>
+<li>Image : affiche une image contenue dans un <a class="cico cico-volumes" href="/fr/concepts/storage/volumes/">Volume</a> ou depuis une URL externe</li>
+<li>Lien : lien vers une <a class="cico cico-pages" href="/fr/concepts/interfaces/pages/">Page</a> ou une URL externe</li>
+<li>Bouton : déclenche une action lors d'un appui</li>
+<li>Saisie : entrée d'une valeur par l'utilisateur</li>
+<li>Case à cocher : permet de définir un état binaire</li>
+<li>Vidéo : affiche une vidéo contenue dans un <a class="cico cico-volumes" href="/fr/concepts/storage/volumes/">Volume</a> ou depuis une URL externe</li>
+<li>Diviseur : sépare dynamiquement deux Blocs horizontalement ou verticalement</li>
+<li>Déplaçable : permet de déplacer ce Bloc dans un Emplacement</li>
+<li>Emplacement : regroupe des Blocs Déplaçables</li>
+</ul>
+<h3 id="blocs-dynamiques">Blocs dynamiques</h3>
+<ul>
+<li>Composant : permet d'appeler une autre Recette Composant</li>
+<li>Référence : permet d'afficher la valeur d'une <a href="/fr/concepts/recipes/options/">Option</a> d'un autre Bloc</li>
+<li>Itération : permet d'afficher autant de Blocs qu'il y a d'éléments retournés par une <a class="cico cico-functions" href="/fr/concepts/automations/functions/">Fonction</a></li>
+</ul>
 
 
 

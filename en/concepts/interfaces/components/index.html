@@ -834,6 +834,11 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Components<span class="menu-item-tag menu-item-tag-alpha">alpha</span>
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
@@ -843,6 +848,52 @@
         </div>
         <span class="menu-item-tag menu-item-tag-alpha">alpha</span>
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-blocks" class="md-nav__link">
+    Static Blocks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-blocks" class="md-nav__link">
+    Dynamic Blocks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2040,6 +2091,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+    <nav class="md-nav" aria-label="Description">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-blocks" class="md-nav__link">
+    Static Blocks
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-blocks" class="md-nav__link">
+    Dynamic Blocks
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2063,6 +2149,30 @@
 
 
 <h1 id="components">Components</h1>
+<h2 id="description">Description</h2>
+<p>Components allow you to create a graphical interface made up of reusable and nestable elements.</p>
+<p>The entire content of a Component is defined by Blocks that are divided into two categories: Static Blocks and Dynamic Blocks.</p>
+<p>Each Block has Options that allow you to define its behavior. For example, it is possible to define the triggering of a <a class="cico cico-functions" href="/concepts/automations/functions/">Function</a> when a Block is pressed, or as a condition to determine whether a Block should be displayed or not.</p>
+<h3 id="static-blocks">Static Blocks</h3>
+<ul>
+<li>Zone: allows grouping Blocks</li>
+<li>Text: displays text potentially in multiple languages</li>
+<li>Image: displays an image contained in a <a class="cico cico-volumes" href="/concepts/storage/volumes/">Volume</a> or from an external URL</li>
+<li>Link: link to a <a class="cico cico-pages" href="/concepts/interfaces/pages/">Page</a> or an external URL</li>
+<li>Button: triggers an action when pressed</li>
+<li>Input: user input</li>
+<li>Checkbox: allows you to define a binary state</li>
+<li>Video: displays a video contained in a <a class="cico cico-volumes" href="/concepts/storage/volumes/">Volume</a> or from an external URL</li>
+<li>Divider: dynamically separates two Blocks horizontally or vertically</li>
+<li>Draggable: allows you to move this Block to a Droppable Block</li>
+<li>Droppable: groups Draggable Blocks</li>
+</ul>
+<h3 id="dynamic-blocks">Dynamic Blocks</h3>
+<ul>
+<li>Component: allows you to call another Component Recipe</li>
+<li>Reference: allows you to display the value of an <a href="/concepts/recipes/options/">Option</a> of another Block</li>
+<li>Iteration: allows you to display as many Blocks as there are elements returned by a <a class="cico cico-functions" href="/concepts/automations/functions/">Function</a></li>
+</ul>
 
 
 

@@ -4,8 +4,8 @@
          <loc>https://dropin.recipes/</loc>
          <lastmod>2022-12-09</lastmod>
          <changefreq>daily</changefreq>
-         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/"/>
-         
+         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/en/"/>
+         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/"/>
          
     </url>
     <url>

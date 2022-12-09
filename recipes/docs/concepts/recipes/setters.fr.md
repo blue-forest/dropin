@@ -5,9 +5,9 @@ Les Définisseurs permettent de déterminer et transformer des données.
 Dans les différents Définisseurs ci-dessous, les valeurs utilisées sont :
 
 - soit des données brutes
-- soit issues d’un [Récupérateur](/fr/concepts/recipes/getters)
+- soit issues d'un [Récupérateur](/fr/concepts/recipes/getters)
 
-Dans un texte, il est possible d’utiliser un Définisseur pour rendre un texte dynamique.
+Dans un texte, il est possible d'utiliser un Définisseur pour rendre un texte dynamique.
 
 ## Opérations
 
@@ -36,7 +36,7 @@ Dans un texte, il est possible d’utiliser un Définisseur pour rendre un texte
 - égal à : deux quantités
 - différent de : deux quantités
 - différent de tous : une valeur, une liste de valeurs
-- différent d’un seul : une valeur, une liste de valeurs
+- différent d'un seul : une valeur, une liste de valeurs
 - égal à tous : une valeur, une liste de valeurs
 - égal à un seul : une valeur, une liste de valeurs
 
@@ -45,7 +45,7 @@ Dans un texte, il est possible d’utiliser un Définisseur pour rendre un texte
 ## Formats
 
 ### Commun
-- taille en caractères d’une valeur ou d’éléments d’une liste (length) : valeur ou liste
+- taille en caractères d'une valeur ou d'éléments d'une liste (length) : valeur ou liste
 - comparaison des Formats : valeur à vérifier, [Format](/fr/concepts/recipes/formats) à détecter
 
 ### Textes
@@ -59,16 +59,16 @@ Dans un texte, il est possible d’utiliser un Définisseur pour rendre un texte
 - majuscules des premières lettres de chaque mot  (titleCase) : texte
 - tronquer les espaces de début et de fin (trim) : texte, caractères ([""]), droite (true), gauche (true)
 - abréger : texte, maximum, texte de fin ("...")
-- transformation d’un texte avec une Syntaxe : texte, [Syntaxe](/fr/concepts/validations/syntaxes){.cico .cico-syntaxes} et ses [Options](/fr/concepts/recipes/options)
+- transformation d'un texte avec une Syntaxe : texte, [Syntaxe](/fr/concepts/validations/syntaxes){.cico .cico-syntaxes} et ses [Options](/fr/concepts/recipes/options)
 - sélectionner une partie du texte : texte à découper, début, fin
 
 ### Quantités
 - moyenne : liste de quantités
-- arrondi : quantité, nombre de décimales (2), type d’arrondi (au plus proche, inférieur ou supérieur)
+- arrondi : quantité, nombre de décimales (2), type d'arrondi (au plus proche, inférieur ou supérieur)
 
 ### Dates
 - durée entre deux dates : début, fin, unité de retour ("s")
-- jour de la semaine d’une date : date
+- jour de la semaine d'une date : date
 - extraction (jour, semaine, mois, année, heures, ...) : date
 - ajouter une période à une date : date, période (jours, mois, années, ...)
 

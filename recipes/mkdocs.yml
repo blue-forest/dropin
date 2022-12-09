@@ -106,7 +106,7 @@ plugins:
         Owners: Propriétaires
         Storage: Stockage
         Automations: Automatisations
-        Endpoints: Points de terminaison
+        Endpoints: Terminaisons
         Auth: Authentification
         Editor: Éditeur
 

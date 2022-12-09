@@ -5,12 +5,7 @@ site_author: Blue Forest
 nav:
 - index.md
 - roadmap.md
-- dropin.cloud:
-  - cloud/index.md
-  - cloud/studio.md
-  - cloud/editor.md
-  - cloud/catalog.md
-  - cloud/community.md
+- cloud.md
 - Concepts:
   - concepts/index.md
   - Recipes:

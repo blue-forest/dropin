@@ -11,7 +11,7 @@ There are two types of Recipes:
 
 - those found in a [Model](/concepts/catalog/models/){.cico .cico-models} such as [Components](/concepts/interfaces/components/){.cico .cico-components}, [Functions](/concepts/automations/functions/){.cico .cico-functions}, or [Collections](/concepts/storage/collections/){.cico .cico-collections}
 
-Only Recipes from [Models](/concepts/catalog/models/){.cico .cico-models} can be used to create [Projects](/concepts/catalog/projects/){.cico .cico-projects} or be shared with other users via the [Catalog](/cloud/catalog/).
+Only Recipes from [Models](/concepts/catalog/models/){.cico .cico-models} can be used to create [Projects](/concepts/catalog/projects/){.cico .cico-projects} or be shared with other users via the [Catalog](/concepts/catalog/).
 
 ## Categories
 - [Catalog](/concepts/catalog/){.cico .cico-catalog}: management of [Models](/concepts/catalog/models/){.cico .cico-models} and [Projects](/concepts/catalog/projects/){.cico .cico-projects}

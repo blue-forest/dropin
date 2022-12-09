@@ -12,7 +12,7 @@ Il existe deux types de Recettes :
 
 - celles se trouvant dans un [Modèle](/fr/concepts/catalog/models/){.cico .cico-models} comme par exemple les [Composants](/fr/concepts/interfaces/components/){.cico .cico-components}, les [Fonctions](/fr/concepts/automations/functions/){.cico .cico-functions}, ou encore les [Collections](/fr/concepts/storage/collections/){.cico .cico-collections}
 
-Seules les Recettes de [Modèles](/fr/concepts/catalog/models/){.cico .cico-models} peuvent être utilisées pour créer des [Projets](/fr/concepts/catalog/projects/){.cico .cico-projects} ou être partagées avec d’autres utilisateurs via le [Catalogue](/fr/cloud/catalog/).
+Seules les Recettes de [Modèles](/fr/concepts/catalog/models/){.cico .cico-models} peuvent être utilisées pour créer des [Projets](/fr/concepts/catalog/projects/){.cico .cico-projects} ou être partagées avec d’autres utilisateurs via le [Catalogue](/fr/concepts/catalog/).
 
 ## Catégories
 - [Catalogue](/fr/concepts/catalog/){.cico .cico-catalog} : gestion des [Modèles](/fr/concepts/catalog/models/){.cico .cico-models} et des [Projets](/fr/concepts/catalog/projects/){.cico .cico-projects}

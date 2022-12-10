@@ -1280,15 +1280,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#etapes" class="md-nav__link">
-    Étapes
+  <a href="#actions" class="md-nav__link">
+    Actions
   </a>
+  
+    <nav class="md-nav" aria-label="Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generales" class="md-nav__link">
+    Générales
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uniquement-accessibles-depuis-un-composant" class="md-nav__link">
+    Uniquement accessibles depuis un Composant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uniquement-dans-les-iterations-et-les-intervalles" class="md-nav__link">
+    Uniquement dans les itérations et les intervalles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#actions" class="md-nav__link">
-    Actions
+  <a href="#manipulateurs" class="md-nav__link">
+    Manipulateurs
   </a>
   
 </li>
@@ -2085,15 +2112,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#etapes" class="md-nav__link">
-    Étapes
+  <a href="#actions" class="md-nav__link">
+    Actions
   </a>
+  
+    <nav class="md-nav" aria-label="Actions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generales" class="md-nav__link">
+    Générales
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uniquement-accessibles-depuis-un-composant" class="md-nav__link">
+    Uniquement accessibles depuis un Composant
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uniquement-dans-les-iterations-et-les-intervalles" class="md-nav__link">
+    Uniquement dans les itérations et les intervalles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#actions" class="md-nav__link">
-    Actions
+  <a href="#manipulateurs" class="md-nav__link">
+    Manipulateurs
   </a>
   
 </li>
@@ -2123,21 +2177,44 @@
 
 
 <h1 id="fonctions">Fonctions</h1>
-<p>Les Fonctions permettent de décrire un comportement en Étapes lorsqu'un <a class="cico cico-triggers" href="/fr/concepts/automations/triggers">Déclencheur</a> est activé ou lorsqu'on les exécute manuellement.</p>
-<h2 id="etapes">Étapes</h2>
-<p>Une Étape est une série d'actions exécutée par des Fonctions. Les Étapes sont liées par un système de dépendances permettant d'identifier leur ordre d'exécution. Les actions d'une Étape sont exécutées successivement.</p>
+<p>Les Fonctions permettent de décrire un ensemble d'Actions à effectuer qui peuvent être exécutées lorsqu'un <a class="cico cico-triggers" href="/fr/concepts/automations/triggers">Déclencheur</a> est activé ou par appel d'un <a class="cico cico-components" href="/fr/concepts/interfaces/components">Composant</a> ou d'une autre <a class="cico cico-functions" href="/fr/concepts/automations/functions">Fonction</a>.</p>
 <h2 id="actions">Actions</h2>
+<h3 id="generales">Générales</h3>
 <ul>
-<li>requête : envoi d'une requête à un serveur (HTTP, WebSocket, ...)</li>
-<li>recherche : parcours une donnée avec des Manipulateurs pour extraire des informations</li>
-<li>transformation : permet de passer d'un texte à en un objet via une Syntaxe</li>
-<li>cryptographie : génère des clés de cryptage (bcrypt, JWT, UUID, RSA, ...)</li>
-<li>collection : effectue une opération de lecture ou d'écriture sur une <a class="cico cico-collections" href="/fr/concepts/storage/collections">Collection</a></li>
-<li>fonction : appel d'une autre Fonction avec ses <a href="/fr/concepts/recipes/options">Options</a></li>
 <li>connecteur : communication avec une service externe (API) via un <a class="cico cico-connectors" href="/fr/concepts/endpoints/connectors">Connecteur</a> et ses <a href="/fr/concepts/recipes/options">Options</a></li>
-<li>base de données : effectue des lectures ou des écritures avec une requête</li>
-<li>email : permet un envoi manuel de messages</li>
+<li>collection : effectue une opération de lecture ou d'écriture sur une <a class="cico cico-collections" href="/fr/concepts/storage/collections">Collection</a></li>
+<li>recherche : parcours une donnée pour extraire des informations</li>
+<li>fonction : appel d'une autre Fonction avec ses <a href="/fr/concepts/recipes/options">Options</a></li>
+<li>cryptographie : génère des clés de cryptage (bcrypt, JWT, UUID, RSA, ...)</li>
+<li>e-mail : permet un envoi manuel de messages</li>
 <li>page : permet de simuler la navigation sur une <a class="cico cico-pages" href="/fr/concepts/recipes/pages">Page</a></li>
+<li>transformation : permet de passer d'un texte à en un objet via une <a class="cico cico-syntaxes" href="/fr/concepts/validations/syntaxes">Syntaxe</a></li>
+<li>base de données : effectue des lectures ou des écritures avec une requête sur une <a class="cico cico-databases" href="/fr/concepts/endpoints/databases">Base de données</a></li>
+</ul>
+<h3 id="uniquement-accessibles-depuis-un-composant">Uniquement accessibles depuis un Composant</h3>
+<ul>
+<li>session : permet de gérer une Session</li>
+<li>navigation : permet de manipuler l'historique des Pages</li>
+<li>imprimer : si disponible, déclenche une impression</li>
+<li>notification : permet de gérer les notifications de l'appareil</li>
+<li>vibrer : si disponible, faire vibrer l'appareil</li>
+<li>presse-papiers : permet de gérer la copie et le collage</li>
+</ul>
+<h3 id="uniquement-dans-les-iterations-et-les-intervalles">Uniquement dans les itérations et les intervalles</h3>
+<ul>
+<li>continuer (continue)</li>
+<li>sortir (break)</li>
+</ul>
+<h2 id="manipulateurs">Manipulateurs</h2>
+<ul>
+<li>assignation : valeur à définir, nouvelle valeur</li>
+<li>suppression : valeur à supprimer</li>
+<li>condition : déclencheur, alors <a href="#actions">Actions</a>, sinon <a href="#actions">Actions</a></li>
+<li>itération (iterate) : liste ou objet, <a href="#actions">Actions</a></li>
+<li>intervalle (range) : valeur de début, valeur de fin, décalages (quantités, jours, …), <a href="#actions">Actions</a></li>
+<li>tant que (while) : condition, <a href="#actions">Actions</a></li>
+<li>cas : valeur à tester, <a href="#actions">Actions</a> pour chaque combinaison possible</li>
+<li>contrainte : condition, <a class="cico cico-issues" href="/fr/concepts/validations/issues">Anomalie</a> à déclencher</li>
 </ul>
 
 

@@ -1,6 +1,6 @@
 ---
 icon: migrations
-tags: [ beta ]
+tags: [ cloud, beta ]
 ---
 # Migrations
 

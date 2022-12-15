@@ -1,6 +1,6 @@
 ---
 icon: organizations
-tags: [ beta ]
+tags: [ cloud, beta ]
 ---
 # Organizations
 

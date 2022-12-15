@@ -1,6 +1,6 @@
 ---
 icon: collections
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Collections
 

@@ -1,6 +1,6 @@
 ---
 icon: maps
-tags: [ beta ]
+tags: [ cloud, beta ]
 ---
 # Cartes
 

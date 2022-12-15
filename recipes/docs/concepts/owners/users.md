@@ -1,6 +1,6 @@
 ---
 icon: users
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Users
 

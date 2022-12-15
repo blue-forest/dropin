@@ -1,6 +1,6 @@
 ---
 icon: domains
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Domains
 

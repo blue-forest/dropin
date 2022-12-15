@@ -1,6 +1,6 @@
 ---
 icon: repositories
-tags: [ stable ]
+tags: [ cloud, stable ]
 ---
 # Dépôts
 

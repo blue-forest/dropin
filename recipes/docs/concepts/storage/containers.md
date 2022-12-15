@@ -1,6 +1,6 @@
 ---
 icon: containers
-tags: [ stable ]
+tags: [ cloud, stable ]
 ---
 # Containers
 

@@ -4,8 +4,13 @@
     {% set class = class ~ " md-nav__item--active" %}
   {% endif %}
 
+  {% set tags = "" %}
   {% if "tags" in nav_item.meta %}
-    {% set tag = '<span class="menu-item-tag menu-item-tag-'+nav_item.meta.tags[0]+'">'+nav_item.meta.tags[0]+'</span>' %}
+    {% set tagsList = [] %}
+    {% for tag in nav_item.meta.tags %}
+      {% set tagsList = tagsList.append('<span class="menu-item-tag menu-item-tag-'+tag+'">'+tag+'</span>') %}
+    {% endfor %}
+    {% set tags = '<span>' + tagsList|join + '</span>' %}
   {% endif %}
 
   {% if nav_item.children %}
@@ -35,7 +40,7 @@
 
       {% if not indexes %}
         <label class="md-nav__link" for="{{ path }}">
-          {{ nav_item.title }}{{tag}}
+          {{ nav_item.title }}{{tags}}
           <span class="md-nav__icon md-icon"></span>
         </label>
       {% else %}
@@ -46,7 +51,7 @@
               <img src="/assets/icons/{{index.meta.icon}}.svg" class="menu-item-icon"/>
             {% endif %}
             {{ nav_item.title }}
-            {{tag}}
+            {{tags}}
           </a>
           {% if nav_item.children | length > 1 %}
             <label for="{{ path }}">
@@ -58,7 +63,7 @@
       <nav class="md-nav" aria-label="{{ nav_item.title }}" data-md-level="{{ level }}">
         <label class="md-nav__title" for="{{ path }}">
           <span class="md-nav__icon md-icon"></span>
-          {{ nav_item.title }}{{tag}}
+          {{ nav_item.title }}{{tags}}
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           {% for nav_item in nav_item.children %}
@@ -79,7 +84,7 @@
       {% endif %}
       {% if toc %}
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          {{ nav_item.title }}{{tag}}
+          {{ nav_item.title }}{{tags}}
           <span class="md-nav__icon md-icon"></span>
         </label>
       {% endif %}
@@ -90,7 +95,7 @@
           {% endif %}
           {{ nav_item.title }}
         </div>
-        {{tag}}
+        {{tags}}
       </a>
       {% if toc %}
         {% include "partials/toc.html" %}
@@ -105,7 +110,7 @@
           {% endif %}
           {{ nav_item.title }}
         </div>
-        {{tag}}
+        {{tags}}
       </a>
     </li>
   {% endif %}

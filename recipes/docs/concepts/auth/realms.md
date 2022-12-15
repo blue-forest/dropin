@@ -1,6 +1,6 @@
 ---
 icon: realms
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Realms
 

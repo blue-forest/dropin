@@ -1,6 +1,6 @@
 ---
 icon: sections
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Sections
 

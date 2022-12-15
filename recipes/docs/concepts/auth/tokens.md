@@ -1,6 +1,6 @@
 ---
 icon: tokens
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Tokens
 

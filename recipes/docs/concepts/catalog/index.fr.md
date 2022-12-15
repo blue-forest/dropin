@@ -3,7 +3,7 @@ icon: catalog
 ---
 # Catalogue
 
-Le Catalogue drop'in est un service [dropin.cloud](/cloud/) qui vous permettra de découvrir des [Modèles](/concepts/catalog/models/){.cico .cico-models} et des [Projets](/concepts/catalog/projects/){.cico .cico-projects} créés par la communauté.
+Le Catalogue drop'in est un service [dropin.cloud](/fr/cloud/) qui vous permettra de découvrir des [Modèles](/fr/concepts/catalog/models/){.cico .cico-models} et des [Projets](/fr/concepts/catalog/projects/){.cico .cico-projects} créés par la communauté.
 
 Un système de points sera mis en place pour récompenser les éléments les plus populaires et les contributeurs les plus actifs.
 

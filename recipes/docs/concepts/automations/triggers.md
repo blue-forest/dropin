@@ -1,6 +1,6 @@
 ---
 icon: triggers
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Triggers
 

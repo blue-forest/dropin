@@ -1,6 +1,6 @@
 ---
 icon: visualizations
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Visualizations
 

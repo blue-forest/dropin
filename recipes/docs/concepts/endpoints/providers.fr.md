@@ -1,6 +1,6 @@
 ---
 icon: providers
-tags: [ stable ]
+tags: [ cloud, stable ]
 ---
 # Fournisseurs
 

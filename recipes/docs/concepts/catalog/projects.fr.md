@@ -1,6 +1,6 @@
 ---
 icon: projects
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Projets
 

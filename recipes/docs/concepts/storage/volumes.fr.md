@@ -1,6 +1,6 @@
 ---
 icon: volumes
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Volumes
 

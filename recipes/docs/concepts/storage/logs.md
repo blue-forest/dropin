@@ -1,6 +1,6 @@
 ---
 icon: logs
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Logs
 

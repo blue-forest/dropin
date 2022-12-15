@@ -1,6 +1,6 @@
 ---
 icon: groups
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Groups
 

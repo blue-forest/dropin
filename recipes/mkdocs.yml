@@ -27,8 +27,8 @@ nav:
     - concepts/interfaces/themes.md
     - concepts/interfaces/components.md
     - concepts/interfaces/styles.md
-    - concepts/interfaces/pages.md
     - concepts/interfaces/sessions.md
+    - concepts/interfaces/pages.md
   - Storage:
     - concepts/storage/index.md
     - concepts/storage/collections.md
@@ -59,9 +59,9 @@ nav:
     - concepts/endpoints/index.md
     - concepts/endpoints/domains.md
     - concepts/endpoints/connectors.md
+    - concepts/endpoints/databases.md
     - concepts/endpoints/addresses.md
     - concepts/endpoints/providers.md
-    - concepts/endpoints/databases.md
   - Editor:
     - concepts/editor/index.md
     - concepts/editor/sections.md

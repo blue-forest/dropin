@@ -1,6 +1,6 @@
 ---
 icon: permissions
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Permissions
 

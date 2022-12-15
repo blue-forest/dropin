@@ -1,6 +1,6 @@
 ---
 icon: pages
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Pages
 

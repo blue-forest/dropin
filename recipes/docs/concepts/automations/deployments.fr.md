@@ -1,6 +1,6 @@
 ---
 icon: deployments
-tags: [ stable ]
+tags: [ cloud, stable ]
 ---
 # Déploiements
 

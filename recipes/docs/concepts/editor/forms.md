@@ -1,6 +1,6 @@
 ---
 icon: forms
-tags: [ beta ]
+tags: [ cloud, beta ]
 ---
 # Forms
 

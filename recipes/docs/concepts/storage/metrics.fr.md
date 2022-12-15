@@ -1,6 +1,6 @@
 ---
 icon: metrics
-tags: [ alpha ]
+tags: [ cloud, alpha ]
 ---
 # Métriques
 

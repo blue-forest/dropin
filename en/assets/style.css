@@ -43,6 +43,10 @@
 .menu-item-tag-alpha { background: #10632d; }
 .menu-item-tag-beta { background: #b66e02; }
 .menu-item-tag-stable { background: #9e251d; }
+.menu-item-tag-cloud {
+  background: #0d47a1;
+  margin-right: 5px;
+}
 
 .md-nav {
   -webkit-touch-callout: none; /* iOS Safari */

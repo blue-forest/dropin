@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "drop'in Styles",
+  "definitions": {
+    "Theme": {
+      "type": "object",
+      "required": [ "$theme" ],
+      "additionalProperties": false,
+      "properties": { "$theme": { "type": "string" } }
+    },
+    "Value<number>": {
+      "anyOf": [ { "type": "number" }, { "$ref": "#/definitions/Theme" } ]
+    },
+    "Value<string>": {
+      "anyOf": [ { "type": "string" }, { "$ref": "#/definitions/Theme" } ]
+    },
+    "Value<number|string>": {
+      "anyOf": [ { "type": [ "number", "string" ] }, { "$ref": "#/definitions/Theme" } ]
+    },
+    "Color": {
+      "anyOf": [
+        { "$ref": "#/definitions/Value<string>" },
+        {
+          "type": "object",
+          "required": [ "r", "g", "b" ],
+          "additionalProperties": false,
+          "propertyOrder": [ "r", "g", "b" ],
+          "properties": { "r": { "$ref": "#/definitions/Value<number>" }, "g": { "$ref": "#/definitions/Value<number>" }, "b": { "$ref": "#/definitions/Value<number>" } }
+        },
+        {
+          "type": "object",
+          "required": [ "h", "s", "l", "a" ],
+          "additionalProperties": false,
+          "propertyOrder": [ "h", "s", "l", "a" ],
+          "properties": { "h": { "$ref": "#/definitions/Value<number>" }, "s": { "$ref": "#/definitions/Value<number>" }, "l": { "$ref": "#/definitions/Value<number>" }, "a": { "$ref": "#/definitions/Value<number>" } }
+        }
+      ]
+    },
+    "BorderStyle": {
+      "type": "string", "enum": [ "dotted", "solid" ]
+    },
+    "Directions<BorderStyle>": {
+      "anyOf": [
+        { "$ref": "#/definitions/BorderStyle" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "top", "right", "bottom", "left" ],
+          "properties": { "top": { "$ref": "#/definitions/BorderStyle" }, "right": { "$ref": "#/definitions/BorderStyle" }, "bottom": { "$ref": "#/definitions/BorderStyle" }, "left": { "$ref": "#/definitions/BorderStyle" } }
+        }
+      ]
+    },
+    "Directions<Color>": {
+      "anyOf": [
+        { "$ref": "#/definitions/Color" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "top", "right", "bottom", "left" ],
+          "properties": { "top": { "$ref": "#/definitions/Color" }, "right": { "$ref": "#/definitions/Color" }, "bottom": { "$ref": "#/definitions/Color" }, "left": { "$ref": "#/definitions/Color" } }
+        }
+      ]
+    },
+    "Directions<Value<number>>": {
+      "anyOf": [
+        { "$ref": "#/definitions/Value<number>" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "top", "right", "bottom", "left" ],
+          "properties": { "top": { "$ref": "#/definitions/Value<number>" }, "right": { "$ref": "#/definitions/Value<number>" }, "bottom": { "$ref": "#/definitions/Value<number>" }, "left": { "$ref": "#/definitions/Value<number>" } }
+        }
+      ]
+    },
+    "Directions<Value<string|number>>": {
+      "anyOf": [
+        { "$ref": "#/definitions/Value<string|number>" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "top", "right", "bottom", "left" ],
+          "properties": { "top": { "$ref": "#/definitions/Value<string|number>" }, "right": { "$ref": "#/definitions/Value<string|number>" }, "bottom": { "$ref": "#/definitions/Value<string|number>" }, "left": { "$ref": "#/definitions/Value<string|number>" } }
+        }
+      ]
+    },
+    "DimensionsValue": {
+      "anyOf": [
+        { "$ref": "#/definitions/Value<number|string>" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "min", "max", "value" ],
+          "properties": { "min": { "$ref": "#/definitions/Value<string|number>" }, "max": { "$ref": "#/definitions/Value<string|number>" }, "value": { "$ref": "#/definitions/Value<string|number>" } }
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "required": [ "name", "classes" ],
+  "additionalProperties": false,
+  "propertyOrder": [ "name", "classes" ],
+  "properties": {
+    "name": { "type": "string" },
+    "classes": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_]+$": {
+          "type": "array",
+          "items": {
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-06/schema#",
-  "$ref": "#/definitions/Project",
+  "$ref": "#/definitions/Model",
   "definitions": {
-    "Project": {
-      "title": "drop'in Project",
+    "Model": {
+      "title": "drop'in Model",
       "type": "object",
       "properties": {
         "organization": { "type": "string" },

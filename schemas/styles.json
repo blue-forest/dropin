@@ -72,14 +72,14 @@
         }
       ]
     },
-    "Directions<Value<string|number>>": {
+    "Directions<Value<number|string>>": {
       "anyOf": [
-        { "$ref": "#/definitions/Value<string|number>" },
+        { "$ref": "#/definitions/Value<number|string>" },
         {
           "type": "object",
           "additionalProperties": false,
           "propertyOrder": [ "top", "right", "bottom", "left" ],
-          "properties": { "top": { "$ref": "#/definitions/Value<string|number>" }, "right": { "$ref": "#/definitions/Value<string|number>" }, "bottom": { "$ref": "#/definitions/Value<string|number>" }, "left": { "$ref": "#/definitions/Value<string|number>" } }
+          "properties": { "top": { "$ref": "#/definitions/Value<number|string>" }, "right": { "$ref": "#/definitions/Value<number|string>" }, "bottom": { "$ref": "#/definitions/Value<number|string>" }, "left": { "$ref": "#/definitions/Value<number|string>" } }
         }
       ]
     },
@@ -90,9 +90,206 @@
           "type": "object",
           "additionalProperties": false,
           "propertyOrder": [ "min", "max", "value" ],
-          "properties": { "min": { "$ref": "#/definitions/Value<string|number>" }, "max": { "$ref": "#/definitions/Value<string|number>" }, "value": { "$ref": "#/definitions/Value<string|number>" } }
+          "properties": { "min": { "$ref": "#/definitions/Value<number|string>" }, "max": { "$ref": "#/definitions/Value<number|string>" }, "value": { "$ref": "#/definitions/Value<number|string>" } }
         }
       ]
+    },
+    "Style": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyOrder": [ "dimensions", "position", "margin", "padding", "border", "shadows", "background", "view", "text", "input" ],
+      "properties": {
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "width", "height" ],
+          "properties": { "height": { "$ref": "#/definitions/DimensionsValue" }, "width": { "$ref": "#/definitions/DimensionsValue" } }
+        },
+        "position": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "absolute", "top", "right", "bottom", "left", "rotation", "layer" ],
+          "properties": {
+            "absolute": { "type": "boolean" },
+            "top": { "$ref": "#/definitions/Value<string|number>" },
+            "right": { "$ref": "#/definitions/Value<string|number>" },
+            "bottom": { "$ref": "#/definitions/Value<string|number>" },
+            "left": { "$ref": "#/definitions/Value<string|number>" },
+            "rotation": { "$ref": "#/definitions/Value<number>" },
+            "layer": { "$ref": "#/definitions/Value<number>" }
+          }
+        },
+        "margin": {
+          "$ref": "#/definitions/Directions<Value<string|number>>"
+        },
+        "padding": {
+          "$ref": "#/definitions/Directions<Value<string|number>>"
+        },
+        "border": {
+          "type": "object",
+          "required": [ "color" ],
+          "additionalProperties": false,
+          "propertyOrder": [ "color", "style", "size", "radius" ],
+          "properties": {
+            "color": { "$ref": "#/definitions/Directions<Color>" },
+            "style": { "$ref": "#/definitions/Directions<BorderStyle>" },
+            "size": { "$ref": "#/definitions/Directions<Value<number>>" },
+            "radius": { "$ref": "#/definitions/Directions<Value<string|number>>" }
+          }
+        },
+        "shadows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "propertyOrder": [ "offset", "color", "blur", "inner" ],
+            "properties": {
+              "offset": {
+                "type": "object",
+                "additionalProperties": false,
+                "propertyOrder": [ "horizontal", "vertical" ],
+                "properties": {
+                  "horizontal": { "$ref": "#/definitions/Value<string|number>" },
+                  "vertical": { "$ref": "#/definitions/Value<string|number>" }
+                }
+              },
+              "color": { "$ref": "#/definitions/Color" },
+              "blur": { "$ref": "#/definitions/Value<string|number>" },
+              "inner": { "type": "boolean" }
+            }
+          }
+        },
+        "background": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "color", "type", "repeat", "image" ],
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/Color"
+            },
+            "type": {
+              "type": "string",
+              "enum": [ "contain", "cover" ]
+            },
+            "repeat": {
+              "anyOf": [
+                { "type": "boolean" },
+                {
+                  "type": "string",
+                  "enum": [ "horizontal", "vertical" ]
+                }
+              ]
+            },
+            "image": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [ "$volume" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "$volume" ],
+                  "properties": { "$volume": { "type": "string" } }
+                },
+                {
+                  "type": "object",
+                  "required": [ "url" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "url" ],
+                  "properties": { "url": { "type": "string" } }
+                },
+                {
+                  "type": "object",
+                  "required": [ "gradient" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "gradient" ],
+                  "properties": {
+                    "gradient": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": [ "color" ],
+                        "additionalProperties": false,
+                        "propertyOrder": [ "color", "position" ],
+                        "properties": {
+                          "color": { "$ref": "#/definitions/Color" },
+                          "position": { "$ref": "#/definitions/Value<number>" }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "view": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "size", "direction", "align", "wrap", "restrain" ],
+          "properties": {
+            "size": { "$ref": "#/definitions/Value<number>" },
+            "direction": { "type": "string", "enum": [ "horizontal", "vertical" ] },
+            "align": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "horizontal", "vertical" ],
+              "properties": {
+                "horizontal": { "type": "string", "enum": [ "center", "left", "right" ] },
+                "vertical": { "type": "string", "enum": [ "bottom", "center", "top" ] }
+              }
+            },
+            "wrap": { "type": "boolean" },
+            "restrain": { "type": "boolean" }
+          }
+        },
+        "text": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "size", "color", "weight", "font", "opacity", "columns", "align", "line", "spacing" ],
+          "properties": {
+            "size": { "$ref": "#/definitions/Value<number>" },
+            "color": { "$ref": "#/definitions/Color" },
+            "weight": { "$ref": "#/definitions/Value<number>" },
+            "font": { "$ref": "#/definitions/Value<string>" },
+            "opacity": { "$ref": "#/definitions/Value<number>" },
+            "columns": { "$ref": "#/definitions/Value<number>" },
+            "align": { "type": "string", "enum": [ "center", "justify", "left", "right" ] },
+            "line": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "position", "color" ],
+              "properties": {
+                "position": { "type": "string", "enum": [ "bottom", "center", "top" ] },
+                "color": { "$ref": "#/definitions/Color" }
+              }
+            },
+            "spacing": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "lines", "letters" ],
+              "properties": {
+                "lines": { "$ref": "#/definitions/Value<number>" },
+                "letters": { "$ref": "#/definitions/Value<number>" }
+              }
+            }
+          }
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "placeholder" ],
+          "properties": {
+            "placeholder": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "color", "opacity" ],
+              "properties": {
+                "color": { "$ref": "#/definitions/Color" },
+                "opacity": { "$ref": "#/definitions/Value<number>" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "type": "object",
@@ -107,6 +304,8 @@
         "^[a-zA-Z0-9_]+$": {
           "type": "array",
           "items": {
+            "type": "object",
+            "additionalProperties": false
           }
         }
       }

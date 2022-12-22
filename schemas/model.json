@@ -2,61 +2,65 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "drop'in Model",
   "type": "object",
+  "required": [ "organization", "name" ],
+  "additionalProperties": false,
+  "propertyOrder": [ "organization", "name", "app" ],
   "properties": {
     "organization": { "type": "string" },
     "name": { "type": "string" },
     "app": {
       "type": "object",
+      "required": [ "name", "version", "pages" ],
+      "additionalProperties": false,
+      "propertyOrder": [ "name", "version", "theme", "platforms", "pages" ],
       "properties": {
         "name": { "type": "string" },
         "version": { "type": "string" },
         "theme": { "type": "string" },
         "platforms": {
           "type": "object",
+          "additionalProperties": false,
+          "propertyOrder": [ "android", "ios" ],
           "properties": {
             "android": {
               "type": "object",
+              "required": [ "package", "build" ],
+              "additionalProperties": false,
+              "propertyOrder": [ "package", "build" ],
               "properties": {
                 "package": { "type": "string" },
                 "build": { "type": "integer" }
-              },
-              "required": [ "package", "build" ],
-              "additionalProperties": false
+              }
             },
             "ios": {
               "type": "object",
+              "required": [ "bundle", "build" ],
+              "additionalProperties": false,
+              "propertyOrder": [ "bundle", "build" ],
               "properties": {
                 "bundle": { "type": "string" },
                 "build": { "type": "integer" }
-              },
-              "required": [ "bundle", "build" ],
-              "additionalProperties": false
+              }
             }
-          },
-          "additionalProperties": false
-
+          }
         },
         "pages": {
           "type": "object",
           "patternProperties": {
             "^[a-zA-Z0-9_]+$": {
               "type": "object",
+              "required": [ "component", "path" ],
+              "additionalProperties": false,
+              "propertyOrder": [ "component", "path", "title" ],
               "properties": {
                 "component": { "type": "string" },
                 "path": { "type": "string" },
                 "title": { "type": "string" }
-              },
-              "required": [ "component", "path" ],
-              "additionalProperties": false
+              }
             }
-          },
-          "additionalProperties": false
+          }
         }
-      },
-      "required": [ "name", "version", "pages" ],
-      "additionalProperties": false
+      }
     }
-  },
-  "required": [ "organization", "name" ],
-  "additionalProperties": false
+  }
 }

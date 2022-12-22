@@ -1,67 +1,62 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
-  "$ref": "#/definitions/Model",
-  "definitions": {
-    "Model": {
-      "title": "drop'in Model",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "drop'in Model",
+  "type": "object",
+  "properties": {
+    "organization": { "type": "string" },
+    "name": { "type": "string" },
+    "app": {
       "type": "object",
       "properties": {
-        "organization": { "type": "string" },
         "name": { "type": "string" },
-        "app": {
+        "version": { "type": "string" },
+        "theme": { "type": "string" },
+        "platforms": {
           "type": "object",
           "properties": {
-            "name": { "type": "string" },
-            "version": { "type": "string" },
-            "theme": { "type": "string" },
-            "platforms": {
+            "android": {
               "type": "object",
               "properties": {
-                "android": {
-                  "type": "object",
-                  "properties": {
-                    "package": { "type": "string" },
-                    "build": { "type": "integer" }
-                  },
-                  "required": [ "package", "build" ],
-                  "additionalProperties": false
-                },
-                "ios": {
-                  "type": "object",
-                  "properties": {
-                    "bundle": { "type": "string" },
-                    "build": { "type": "integer" }
-                  },
-                  "required": [ "bundle", "build" ],
-                  "additionalProperties": false
-                }
+                "package": { "type": "string" },
+                "build": { "type": "integer" }
               },
+              "required": [ "package", "build" ],
               "additionalProperties": false
-
             },
-            "pages": {
+            "ios": {
               "type": "object",
-              "patternProperties": {
-                "^[a-zA-Z0-9_]+$": {
-                  "type": "object",
-                  "properties": {
-                    "component": { "type": "string" },
-                    "path": { "type": "string" },
-                    "title": { "type": "string" }
-                  },
-                  "required": [ "component", "path" ],
-                  "additionalProperties": false
-                }
+              "properties": {
+                "bundle": { "type": "string" },
+                "build": { "type": "integer" }
               },
+              "required": [ "bundle", "build" ],
               "additionalProperties": false
             }
           },
-          "required": [ "name", "version", "pages" ],
+          "additionalProperties": false
+
+        },
+        "pages": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_]+$": {
+              "type": "object",
+              "properties": {
+                "component": { "type": "string" },
+                "path": { "type": "string" },
+                "title": { "type": "string" }
+              },
+              "required": [ "component", "path" ],
+              "additionalProperties": false
+            }
+          },
           "additionalProperties": false
         }
       },
-      "required": [ "organization", "name" ],
+      "required": [ "name", "version", "pages" ],
       "additionalProperties": false
     }
-  }
+  },
+  "required": [ "organization", "name" ],
+  "additionalProperties": false
 }

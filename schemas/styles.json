@@ -366,7 +366,7 @@
                 "properties": {
                   "width": {
                     "type": "object",
-                    "required": [ "min", "max" ],
+                    "oneOf": [ { "required": ["min"] }, { "required": ["max"] } ],
                     "additionalProperties": false,
                     "propertyOrder": [ "min", "max" ],
                     "properties": {
@@ -376,7 +376,7 @@
                   },
                   "height": {
                     "type": "object",
-                    "required": [ "min", "max" ],
+                    "oneOf": [ { "required": ["min"] }, { "required": ["max"] } ],
                     "additionalProperties": false,
                     "propertyOrder": [ "min", "max" ],
                     "properties": {

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "drop'in Component",
+  "type": "object",
+  "additionalProperties": false,
+  "propertyOrder": [ "name", "functions", "options" ],
+  "properties": {
+    "name": { "type": "string" },
+    "functions": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_]+$": {
+          "type": "object",
+          "required": [ "id" ],
+          "additionalProperties": false,
+          "propertyOrder": [ "id", "params" ],
+          "properties": {
+            "id": { "type": "string" },
+            "params": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  { "type": "string" },
+                  { "type": "number" },
+                  { "type": "boolean" },
+                  {
+                    "type": "object",
+                    "required": [ "$" ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "$": { "type": "string" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9_]+$": {
+          "anyOf": [
+            { "type": "string" },
+            {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [ "type" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "type", "default" ],
+                  "properties": {
+                    "type": { "type": "string", "enum": [ "string" ] },
+                    "default": { "type": "string" }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [ "type" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "type", "default" ],
+                  "properties": {
+                    "type": { "type": "string", "enum": [ "quantity" ] },
+                    "default": { "type": "number" }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [ "type" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "type", "default" ],
+                  "properties": {
+                    "type": { "type": "string", "enum": [ "boolean" ] },
+                    "default": { "type": "boolean" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

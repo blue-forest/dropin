@@ -52,7 +52,7 @@
                   "additionalProperties": false,
                   "propertyOrder": [ "type", "default" ],
                   "properties": {
-                    "type": { "type": "string", "enum": [ "string" ] },
+                    "type": { "type": "string", "enum": [ "text" ] },
                     "default": { "type": "string" }
                   }
                 },

@@ -259,7 +259,18 @@
                 "vertical": { "type": "string", "enum": [ "bottom", "center", "top" ] }
               }
             },
-            "wrap": { "type": "boolean" },
+            "wrap": {
+              "oneOf": [
+                { "type": "boolean" },
+                {
+                  "type": "object",
+                  "required": [ "reverse" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "reverse" ],
+                  "properties": { "reverse": { "type": "boolean" } }
+                }
+              ]
+            },
             "restrain": { "type": "boolean" }
           }
         },

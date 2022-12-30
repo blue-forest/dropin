@@ -205,10 +205,10 @@
               "anyOf": [
                 {
                   "type": "object",
-                  "required": [ "$volume" ],
+                  "required": [ "$file" ],
                   "additionalProperties": false,
-                  "propertyOrder": [ "$volume" ],
-                  "properties": { "$volume": { "type": "string" } }
+                  "propertyOrder": [ "$file" ],
+                  "properties": { "$file": { "type": "string" } }
                 },
                 {
                   "type": "object",

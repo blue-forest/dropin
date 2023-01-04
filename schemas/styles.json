@@ -271,7 +271,21 @@
                 }
               ]
             },
-            "restrain": { "type": "boolean" }
+            "restrain": { "type": "boolean" },
+            "scroll": {
+              "oneOf": [
+                { "type": "boolean" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "propertyOrder": [ "horizontal", "vertical" ],
+                  "properties": {
+                    "horizontal": { "type": "boolean" },
+                    "vertical": { "type": "boolean" }
+                  }
+                }
+              ]
+            }
           }
         },
         "text": {

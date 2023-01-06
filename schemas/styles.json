@@ -249,7 +249,21 @@
           "propertyOrder": [ "size", "direction", "align", "wrap", "restrain" ],
           "properties": {
             "size": { "$ref": "#/definitions/Value<number>" },
-            "direction": { "type": "string", "enum": [ "horizontal", "vertical" ] },
+            "direction": {
+              "oneOf": [
+                { "type": "string", "enum": [ "horizontal", "vertical" ] },
+                {
+                  "type": "object",
+                  "required": [ "value" ],
+                  "additionalProperties": false,
+                  "propertyOrder": [ "value", "reverse" ],
+                  "properties": {
+                    "value": { "type": "string", "enum": [ "horizontal", "vertical" ] },
+                    "reverse": { "type": "boolean" }
+                  }
+                }
+              ]
+            },
             "align": {
               "type": "object",
               "additionalProperties": false,
@@ -391,22 +405,22 @@
                 "properties": {
                   "width": {
                     "type": "object",
-                    "oneOf": [ { "required": ["min"] }, { "required": ["max"] } ],
                     "additionalProperties": false,
-                    "propertyOrder": [ "min", "max" ],
+                    "propertyOrder": [ "min", "max", "value" ],
                     "properties": {
                       "min": { "$ref": "#/definitions/Value<number|string>" },
-                      "max": { "$ref": "#/definitions/Value<number|string>" }
+                      "max": { "$ref": "#/definitions/Value<number|string>" },
+                      "value": { "$ref": "#/definitions/Value<number|string>" }
                     }
                   },
                   "height": {
                     "type": "object",
-                    "oneOf": [ { "required": ["min"] }, { "required": ["max"] } ],
                     "additionalProperties": false,
-                    "propertyOrder": [ "min", "max" ],
+                    "propertyOrder": [ "min", "max", "value" ],
                     "properties": {
                       "min": { "$ref": "#/definitions/Value<number|string>" },
-                      "max": { "$ref": "#/definitions/Value<number|string>" }
+                      "max": { "$ref": "#/definitions/Value<number|string>" },
+                      "value": { "$ref": "#/definitions/Value<number|string>" }
                     }
                   },
                   "platform": { "type": "string", "enum": [ "android", "ios", "linux", "macos", "web", "windows" ] },

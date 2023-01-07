@@ -6,6 +6,9 @@ tags: [ alpha ]
 
 Components allow you to create a graphical interface made up of reusable and nestable elements. The entire content of a Component is defined by Blocks that are divided into two categories: Static Blocks and Dynamic Blocks.
 
+
+## Blocks
+
 Each Block has Options that allow you to define its behavior. For example, it is possible to define the triggering of a [Function](/concepts/automations/functions/){.cico .cico-functions} when a Block is pressed, or as a condition to determine whether a Block should be displayed or not.
 
 Blocks can also be linked to [Styles](/concepts/interfaces/styles/){.cico .cico-styles} that allow you to define their appearance. Applying a Style can be conditioned by a condition executed by a [Function](/concepts/automations/functions/){.cico .cico-functions}.

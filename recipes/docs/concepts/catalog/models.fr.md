@@ -52,3 +52,12 @@ Les [Recettes](/fr/concepts/catalog/recipes/){.cico .cico-recipes} pouvant se tr
     - les [Visualisations](/fr/concepts/editor/visualizations/){.cico .cico-visualizations}
     - les [Formulaires](/fr/concepts/editor/forms/){.cico .cico-forms}
     - les [Cartes](/fr/concepts/editor/maps/){.cico .cico-maps}
+
+
+## Aperçu de Studio (dropin.cloud)
+
+La version alpha de drop'in Studio sera basée sur l'éditeur [Visual Studio Code](https://code.visualstudio.com/){:target="_blank" rel="noopener"} avec lequel une extension a été développée. De cette manière, les fonctionnalités initiales comme le parcours de la structure des fichiers, la navigation entre les fichiers et le support du versionnement Git sont déjà disponibles.
+
+Voici un exemple d'une Recette de Modèle dans Studio :
+
+![](/assets/studio/model.png)

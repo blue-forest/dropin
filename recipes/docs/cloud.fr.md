@@ -22,6 +22,12 @@ Pour des concepts plus algorithmiques, Studio vous permettra de décrire votre a
 
 Pour chaque concept d'un [Modèle](/fr/concepts/catalog/models/){.cico .cico-models}, Studio vous permettra de décrire votre application sans avoir à écrire une seule ligne de code. Si cependant vous souhaitez aller plus loin, vous pourrez toujours éditer le code source de votre application directement depuis Studio.
 
+Pour voir quelques exemples d'interfaces de Studio, voici quelques pages à consulter :
+
+- [Interfaces](/fr/concepts/interfaces/#apercu-de-studio-dropincloud){.cico .cico-interfaces}
+- [Automatisations](/fr/concepts/automations/#apercu-de-studio-dropincloud){.cico .cico-automations}
+- [Modèles](/fr/concepts/catalog/models/#apercu-de-studio-dropincloud){.cico .cico-models}
+
 
 # Communauté
 Voici quelques fonctionnalités que nous avons prévus pour ce service :

@@ -52,3 +52,12 @@ Each Version is isolated from the others but it is possible to link [Recipes](/c
     - [Visualizations](/concepts/editor/visualizations/){.cico .cico-visualizations}
     - [Forms](/concepts/editor/forms/){.cico .cico-forms}
     - [Maps](/concepts/editor/maps/){.cico .cico-maps}
+
+
+## Studio overview (dropin.cloud)
+
+The alpha version of drop'in Studio will be based on [Visual Studio Code](https://code.visualstudio.com/){:target="_blank" rel="noopener"} with which an extension has been developed. In this way, initial features like file structure browsing, file navigation and Git versioning support are already available.
+
+Here is an example of a Model Recipe in Studio :
+
+![](/assets/studio/model.png)

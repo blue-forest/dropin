@@ -1,6 +1,7 @@
 ---
 icon: forms
 tags: [ cloud, beta ]
+hide: [toc]
 ---
 # Forms
 

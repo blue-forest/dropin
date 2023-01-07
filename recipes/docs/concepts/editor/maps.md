@@ -1,6 +1,7 @@
 ---
 icon: maps
 tags: [ cloud, beta ]
+hide: [toc]
 ---
 # Maps
 

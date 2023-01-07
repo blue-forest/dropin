@@ -61,3 +61,10 @@ The alpha version of drop'in Studio will be based on [Visual Studio Code](https:
 Here is an example of a Model Recipe in Studio :
 
 ![](/assets/studio/model.png)
+
+
+## Schema
+
+[Overview](https://json-schema.app/view/%23?url=https%3A%2F%2Fraw.githubusercontent.com%2Fblue-forest%2Fdropin%2Fmain%2Fschemas%2Fmodel.json){:target="_blank" rel="noopener"}
+
+[Source](https://github.com/blue-forest/dropin/blob/main/schemas/model.json){:target="_blank" rel="noopener"}

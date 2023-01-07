@@ -6,6 +6,7 @@ tags: [ alpha ]
 
 Les Composants permettent de créer une interface graphique décomposée en éléments réutilisables et imbriquables. L'ensemble du contenu d'un Composant est défini par des Blocs qui sont découpées en deux catégories : les Blocs statiques et les Blocs dynamiques.
 
+
 ## Blocs
 
 Chaque Bloc possède des Options qui permettent de définir son comportement. Il est par exemple possible de définir le déclenchement d'une [Fonction](/fr/concepts/automations/functions/){.cico .cico-functions} lors d'un appui sur un Bloc, ou encore en tant que condition pour déterminer si un Bloc doit être affiché ou non.
@@ -29,3 +30,10 @@ Les Blocs peuvent aussi être liés à des [Styles](/fr/concepts/interfaces/styl
 - Composant : permet d'appeler une autre Recette Composant
 - Référence : permet d'afficher la valeur d'une [Option](/fr/concepts/recipes/options/) d'un autre Bloc
 - Itération : permet d'afficher autant de Blocs qu'il y a d'éléments retournés par une [Fonction](/fr/concepts/automations/functions/){.cico .cico-functions}
+
+
+## Schéma
+
+[Aperçu](https://json-schema.app/view/%23?url=https%3A%2F%2Fraw.githubusercontent.com%2Fblue-forest%2Fdropin%2Fmain%2Fschemas%2Fcomponent.json){:target="_blank" rel="noopener"}
+
+[Source](https://github.com/blue-forest/dropin/blob/main/schemas/component.json){:target="_blank" rel="noopener"}

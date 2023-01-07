@@ -61,3 +61,10 @@ La version alpha de drop'in Studio sera basée sur l'éditeur [Visual Studio Cod
 Voici un exemple d'une Recette de Modèle dans Studio :
 
 ![](/assets/studio/model.png)
+
+
+## Schéma
+
+[Aperçu](https://json-schema.app/view/%23?url=https%3A%2F%2Fraw.githubusercontent.com%2Fblue-forest%2Fdropin%2Fmain%2Fschemas%2Fmodel.json){:target="_blank" rel="noopener"}
+
+[Source](https://github.com/blue-forest/dropin/blob/main/schemas/model.json){:target="_blank" rel="noopener"}

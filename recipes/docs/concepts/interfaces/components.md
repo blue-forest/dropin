@@ -31,3 +31,10 @@ Blocks can also be linked to [Styles](/concepts/interfaces/styles/){.cico .cico-
 - Component: allows you to call another Component Recipe
 - Reference: allows you to display the value of an [Option](/concepts/recipes/options/) of another Block
 - Iteration: allows you to display as many Blocks as there are elements returned by a [Function](/concepts/automations/functions/){.cico .cico-functions}
+
+
+## Schema
+
+[Overview](https://json-schema.app/view/%23?url=https%3A%2F%2Fraw.githubusercontent.com%2Fblue-forest%2Fdropin%2Fmain%2Fschemas%2Fcomponent.json){:target="_blank" rel="noopener"}
+
+[Source](https://github.com/blue-forest/dropin/blob/main/schemas/component.json){:target="_blank" rel="noopener"}

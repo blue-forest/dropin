@@ -27,3 +27,9 @@ It is possible to create conditional Classes in order to apply Styles depending 
 - the state (hover, focus, print)
 
 Finally, it is possible to create animations in order to use styles frames on a Block with a defined duration and frequency.
+
+## Schema
+
+[Overview](https://json-schema.app/view/%23?url=https%3A%2F%2Fraw.githubusercontent.com%2Fblue-forest%2Fdropin%2Fmain%2Fschemas%2Fstyles.json){:target="_blank" rel="noopener"}
+
+[Source](https://github.com/blue-forest/dropin/blob/main/schemas/styles.json){:target="_blank" rel="noopener"}

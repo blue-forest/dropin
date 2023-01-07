@@ -5,8 +5,43 @@ hide: [ "toc" ]
 
 Le développement de drop'in a été divisé en saisons et épisodes : nous sommes passés de version en version depuis 2016 et nous sommes actuellement à l'épisode 2 de la saison 6.
 
-Au cours de parcours, nous avons parcourus plusieurs stacks techniques avec une multitude d'expérimentations qui nous ont permis de progressivement établir un ensemble de fonctionnalités et de définir des concepts clés.
+Au cours de parcours, nous avons établis plusieurs stacks techniques avec une multitude d'expérimentations qui nous ont permis de progressivement établir un ensemble de fonctionnalités et de définir des concepts clés.
 
-Durant les saisons précédentes, drop'in a été utilisé dans le cadre des services de [Blue Forest](https://blueforest.cc){:target="_blank" rel="noopener"} pour créer des applications multi-plateformes pour ses clients. Aujourd'hui, nous avons finalisé les spécifications de drop'in pour le rendre disponible publiquement et permettant à n'importe qui de construire ses propres applications en totale autonomie.
+Durant les saisons précédentes, drop'in a été utilisé dans le cadre des services de [Blue Forest](https://blueforest.cc){:target="_blank" rel="noopener"} pour créer des applications multi-plateformes pour ses clients. Aujourd'hui, nous avons finalisé les spécifications de drop'in pour le rendre disponible publiquement et permettant prochainement à n'importe qui de construire ses propres applications en totale autonomie.
 
-Cette documentation est en cours de rédaction, nous vous invitons à visiter [notre dépôt GitHub](https://github.com/blue-forest/dropin){:target="_blank" rel="noopener"} pour suivre les prochaines mises à jour. A partir des prochains épisodes, nous publierons plus de détails sur cette page.
+## alpha
+
+Cette première phase sera consacrée à la mise en place des concepts fondamentaux de drop'in avec tout ce qui est nécessaire à la création d'applications comme les [Interfaces](/fr/concepts/interfaces/){.cico .cico-interfaces} ou les [Automatisations](/fr/concepts/automations/){.cico .cico-automations} par exemple.
+
+Notre stratégie sera d'utiliser [Visual Studio Code](https://code.visualstudio.com/){:target="_blank" rel="noopener"} comme base et y intégrer notre extension pour accéder à toutes les fonctionnalités de drop'in. Les projets seront hébergés sur le service de votre choix (GitHub, GitLab, Gitea, BitBucket, ...) et l'utilisation de [dropin.cloud](/fr/cloud/) sera possible par le biais de l'extension qui vous guidera tout au long de la création de votre application. Cette documentation sera également disponible au travers de l'extension.
+
+Nous travaillons activement sur cette phase mais nous n'avons pas encore de date de sortie. Nous avons cependant déjà mis à disposition [ce formulaire d'inscription](https://docs.google.com/forms/d/e/1FAIpQLSejGbv2SCbZ7xZwpdGSDTqEi3e7eg2FQNmsoZeJWaNxv27Nkw/viewform){:target="_blank" rel="noopener"} pour être informé de la sortie de la version alpha et pour pouvoir tester l'extension dès qu'elle sera disponible.
+
+Une fois la phase lancée, l'accès à [dropin.cloud](/fr/cloud/) sera totalement gratuite et limitée à un nombre spécifique de ressources. L'accès ne sera uniquement possible que par invitation, un formulaire d'inscription sera mis à disposition pour permettre à n'importe qui de demander un accès sur notre page d'accueil finale.
+
+Ce qui est ou sera rendu open source :
+
+- [cette documentation](https://github.com/blue-forest/dropin/tree/main/recipes){:target="_blank" rel="noopener"}
+- [Les schémas de notre langage](https://github.com/blue-forest/dropin/tree/main/schemas){:target="_blank" rel="noopener"}
+- le code source de l'extension Visual Studio Code
+
+## beta
+
+Cette phase sera consacrée à la stabilisation de l'ensemble des fonctionnalités existantes et à l'ajout de nouvelles fonctionnalités.
+
+Parmi les fonctionnalités à venir qui offriront un nouveau niveau de possibilités, nous avons :
+
+- les [Migrations](/fr/concepts/automations/migrations/){.cico .cico-migrations} qui permettront de faciliter le changement de structure de données entre les différentes versions de votre application
+- les [Syntaxes](/fr/concepts/validations/syntaxes/){.cico .cico-syntaxes} qui permettront de décomposer n'importe quel texte
+- les [Connecteurs](/fr/concepts/endpoints/connectors/){.cico .cico-connectors} qui permettront de connecter votre application à n'importe quel service tiers par le biais d'API
+- ... et tous les autres concepts possédant la mention "beta" dans la documentation
+
+L'accès à [dropin.cloud](/fr/cloud/) sera possible sans invitation et une conservation d'une version gratuite avec un nombre limité de ressources sera toujours disponible. Les utilisateurs pourront également choisir de passer à un abonnement payant pour bénéficier d'un nombre illimité de ressources ainsi que l'accès à un support technique avancé. Nous communiquerons plus en détail sur les tarifs et les fonctionnalités de l'abonnement payant lors de la sortie de la version beta.
+
+En plus de ce qui est open source la version alpha, [le code source du compilateur de notre language](https://github.com/blue-forest/dropin/tree/main/compiler){:target="_blank" rel="noopener"} sera aussi disponible publiquement. Les seuls services qui ne seront pas open source seront ceux intégrés à [dropin.cloud](/fr/cloud/) et qui nécessitant la création d'un compte pour pouvoir les utiliser.
+
+## stable
+
+Cette dernière phase permettra de stabiliser l'ensemble des fonctionnalités en verrouillant les spécifications de drop'in tout en s'assurant que l'ensemble des fonctionnalités fonctionnelles et entièrement testées.
+
+Il est essentiel pour nous de pouvoir garantir une stabilité et une sécurité maximale pour nos utilisateurs. Nous avons donc décidé de ne pas proposer de version stable tant que nous n'aurons pas atteint cet objectif.

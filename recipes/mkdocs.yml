@@ -108,6 +108,7 @@ plugins:
 markdown_extensions:
 - attr_list
 - def_list
+- md_in_html
 
 extra_css: [ assets/style.css ]
 

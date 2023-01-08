@@ -3,7 +3,7 @@ hide: [ "toc" ]
 ---
 # Introduction
 
-drop'in is a technology for creating cross-platform applications (web, Android and iOS) based on a single code written in files called *recipes*. All aspects of your project are defined in recipes, from the graphical interface to the business logic and data management, so you do not need to know any programming language to create your application.
+drop'in is a technology for creating cross-platform applications (web, Android and iOS) based on a single code written in files called *Recipes*. All aspects of your project are defined in Recipes, from the graphical interface to the business logic and data management, so you do not need to know any programming language to create your application.
 
 [Blue Forest](https://blueforest.cc){:target="_blank" rel="noopener"}, a French company based at Marseille, is currently developing this technology and uses drop'in to create applications for its clients. After many years of research and development, we believe that this technology can be useful to a larger number of organizations and individuals, so we decided to make it accessible to everyone. We have published this documentation to introduce the basic Concepts of drop'in and to help you understand how you can use it to create your own applications.
 

@@ -1,4 +1,4 @@
-# drop'in
+# drop'in compiler notes
 
  - [Recipes](https://dropin.recipes/)
  - [CLI](CLI.md)

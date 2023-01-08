@@ -22,9 +22,9 @@ Les Recettes pouvant se trouver au niveau d'un Propriétaire sont :
     - les [Dépôts](/fr/concepts/storage/repositories){.cico .cico-repositories}
     - les [Conteneurs](/fr/concepts/storage/containers){.cico .cico-containers}
 
-- pour l'[Authentification](/fr/concepts/authentication){.cico .cico-authentication} :
-    - les [Royaumes](/fr/concepts/authentication/realms){.cico .cico-realms}
-    - les [Groupes](/fr/concepts/authentication/groups){.cico .cico-groups}
+- pour l'[Authentification](/fr/concepts/auth){.cico .cico-auth} :
+    - les [Royaumes](/fr/concepts/auth/realms){.cico .cico-realms}
+    - les [Groupes](/fr/concepts/auth/groups){.cico .cico-groups}
 
 - pour les [Terminaisons](/fr/concepts/endpoints){.cico .cico-endpoints} :
     - les [Domaines](/fr/concepts/endpoints/domains){.cico .cico-domains}

@@ -22,9 +22,9 @@ Recipes that can be found at the Owner level are:
     - [Repositories](/concepts/storage/repositories){.cico .cico-repositories}
     - [Containers](/concepts/storage/containers){.cico .cico-containers}
 
-- for [Authentication](/concepts/authentication){.cico .cico-authentication}:
-    - [Realms](/concepts/authentication/realms){.cico .cico-realms}
-    - [Groups](/concepts/authentication/groups){.cico .cico-groups}
+- for [Authentication](/concepts/auth){.cico .cico-auth}:
+    - [Realms](/concepts/auth/realms){.cico .cico-realms}
+    - [Groups](/concepts/auth/groups){.cico .cico-groups}
 
 - for [Endpoints](/concepts/endpoints){.cico .cico-endpoints}:
     - [Domains](/concepts/endpoints/domains){.cico .cico-domains}

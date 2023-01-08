@@ -1,4 +1,4 @@
-# drop'in Compiler
+# drop'in compiler
 
 [![License](https://img.shields.io/github/license/blue-forest/dropin)](../COPYING)
 [![Maintenance](https://img.shields.io/badge/maintained-no-red.svg)](#)

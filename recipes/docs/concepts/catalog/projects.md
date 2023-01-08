@@ -4,7 +4,7 @@ tags: [ cloud, alpha ]
 ---
 # Projects
 
-A Project is the use of a [Model](/concepts/catalog/models/){.cico .cico-models} : it applies the content of the [Recipes](/concepts/catalog/recipes/){.cico .cico-recipes} of a Model to work. It is therefore possible to have a single Model and several Projects with specific Options for each environment.
+A Project is the use of a [Model](/concepts/catalog/models/){.cico .cico-models}: it applies the content of the [Recipes](/concepts/catalog/recipes/){.cico .cico-recipes} of a Model to work. It is therefore possible to have a single Model and several Projects with specific Options for each environment.
 
 The elements specified in a Project are:
 

@@ -3,7 +3,7 @@ hide: [ "toc" ]
 ---
 # Roadmap
 
-The development of drop'in was divided into seasons and episodes : we have been going from version to version since 2016 and we are currently at episode 2 of season 6.
+The development of drop'in was divided into seasons and episodes: we have been going from version to version since 2016 and we are currently at episode 2 of season 6.
 
 During our journey we went through several technical stacks with a multitude of sandboxes which allowed us to progressively establish a set of features and define core concepts.
 
@@ -31,7 +31,7 @@ What is or will be made open source:
 
 This phase will be devoted to stabilizing all existing features and adding new ones.
 
-Among the upcoming features that will offer a new level of possibilities, we have :
+Among the upcoming features that will offer a new level of possibilities, we have:
 
 - [Migrations](/concepts/automations/migrations/){.cico .cico-migrations} which will make it easier to change the data structure between different versions of your application
 - [Syntaxes](/concepts/validations/syntaxes/){.cico .cico-syntaxes} which will allow to decompose any text
@@ -49,7 +49,7 @@ In addition to what is open source the alpha version, [our language compiler sou
 
 This last phase will allow us to stabilize all the functionalities by locking the drop'in specifications while ensuring that all the functionalities are fully tested.
 
-In addition, new features will be added to allow the creation of more complex applications. Among these, we have :
+In addition, new features will be added to allow the creation of more complex applications. Among these, we have:
 
 - [Containers](/concepts/storage/containers/){.cico .cico-containers} which will allow to describe the functioning of any containerized application
 - [Repositories](/concepts/storage/repositories/){.cico .cico-repositories} which will allow to link a Git code repository to a [Container](/concepts/storage/containers/){.cico .cico-containers}

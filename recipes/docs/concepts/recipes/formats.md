@@ -49,7 +49,7 @@ Formats can also contain Labels to apply dynamic selections with for example the
 #### Date
 - Options: min and max
 - Format: timestamp
-- Display : units (seconds, minutes, hours, days, months, years)
+- Display: units (seconds, minutes, hours, days, months, years)
 
 #### Duration
 - Options: min and max

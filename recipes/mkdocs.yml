@@ -14,14 +14,14 @@ nav:
     - concepts/recipes/options.md
     - concepts/recipes/getters.md
     - concepts/recipes/setters.md
-  - Catalog:
-    - concepts/catalog/index.md
-    - concepts/catalog/models.md
-    - concepts/catalog/projects.md
   - Owners:
     - concepts/owners/index.md
     - concepts/owners/users.md
     - concepts/owners/organizations.md
+  - Catalog:
+    - concepts/catalog/index.md
+    - concepts/catalog/models.md
+    - concepts/catalog/projects.md
   - Interfaces:
     - concepts/interfaces/index.md
     - concepts/interfaces/themes.md

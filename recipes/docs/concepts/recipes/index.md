@@ -1,21 +1,21 @@
 ---
 icon: recipes
+hide: [ toc ]
 ---
 # Recipes
 
 A Recipe is the description of an entity, a state or a behavior.
 
+drop'in allows the writing of 32 different types of Recipes each having a specific role.
+
 There are two types of Recipes:
 
 - those directly linked to an [Owner](/concepts/owners/){.cico .cico-owners} such as [Groups](/concepts/auth/groups/){.cico .cico-groups}, [Volumes](/concepts/storage/volumes/){.cico .cico-volumes}, or [Domains](/concepts/endpoints/domains/){.cico .cico-domains}
 
-- those found in a [Model](/concepts/catalog/models/){.cico .cico-models} such as [Components](/concepts/interfaces/components/){.cico .cico-components}, [Functions](/concepts/automations/functions/){.cico .cico-functions}, or [Collections](/concepts/storage/collections/){.cico .cico-collections}
-
-Only Recipes from [Models](/concepts/catalog/models/){.cico .cico-models} can be used to create [Projects](/concepts/catalog/projects/){.cico .cico-projects} or be shared with other users via the [Catalog](/concepts/catalog/).
+- those found in a [Model](/concepts/catalog/models/){.cico .cico-models} (such as [Components](/concepts/interfaces/components/){.cico .cico-components}, [Functions](/concepts/automations/functions/){.cico .cico-functions} or [Collections](/concepts/storage/collections/){.cico .cico-collections}) that can be used to create [Projects](/concepts/catalog/projects/){.cico .cico-projects} or be shared with other users via the [Catalog](/concepts/catalog/).
 
 ## Categories
 - [Catalog](/concepts/catalog/){.cico .cico-catalog}: management of [Models](/concepts/catalog/models/){.cico .cico-models} and [Projects](/concepts/catalog/projects/){.cico .cico-projects}
-- [Owners](/concepts/owners/){.cico .cico-owners}: management of [Users](/concepts/owners/users/){.cico .cico-users} and [Organizations](/concepts/owners/organizations/){.cico .cico-organizations}
 - [Interfaces](/concepts/interfaces/){.cico .cico-interfaces}: creating graphical experiences
 - [Storage](/concepts/storage/){.cico .cico-storage}: persistence of formatted data
 - [Automations](/concepts/automations/){.cico .cico-automations}: automated actions

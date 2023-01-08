@@ -23,7 +23,7 @@ Une fois la phase lancée, l'accès à [dropin.cloud](/fr/cloud/) sera totalemen
 Ce qui est ou sera rendu open source :
 
 - [cette documentation](https://github.com/blue-forest/dropin/tree/main/recipes){:target="_blank" rel="noopener"}
-- [Les schémas de notre langage](https://github.com/blue-forest/dropin/tree/main/schemas){:target="_blank" rel="noopener"}
+- [les schémas de notre langage](https://github.com/blue-forest/dropin/tree/main/schemas){:target="_blank" rel="noopener"}
 - le code source de l'extension Visual Studio Code
 
 

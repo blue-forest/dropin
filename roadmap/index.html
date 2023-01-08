@@ -19,7 +19,7 @@
         <link rel="next" href="../cloud/">
       
       <link rel="icon" href="../assets/logo.png">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
     
     
       
@@ -27,7 +27,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f56500e0.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6b71719e.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
@@ -253,6 +253,11 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Roadmap
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         <div>
           
@@ -260,6 +265,46 @@
         </div>
         
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#alpha" class="md-nav__link">
+    alpha
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beta" class="md-nav__link">
+    beta
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stable" class="md-nav__link">
+    stable
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2285,6 +2330,35 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#alpha" class="md-nav__link">
+    alpha
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#beta" class="md-nav__link">
+    beta
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stable" class="md-nav__link">
+    stable
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2310,7 +2384,31 @@
 <p>The development of drop'in was divided into seasons and episodes : we have been going from version to version since 2016 and we are currently at episode 2 of season 6.</p>
 <p>During our journey we went through several technical stacks with a multitude of sandboxes which allowed us to progressively establish a set of features and define core concepts.</p>
 <p>In previous seasons, drop'in was used as part of <a href="https://blueforest.cc" rel="noopener" target="_blank">Blue Forest</a>'s services to create cross-platform applications for its clients. Today, we have finalized the specifications of drop'in to make it available publicly allowing anyone to build their own applications in total autonomy.</p>
-<p>This documentation is in progress, we invite you to visit <a href="https://github.com/blue-forest/dropin" rel="noopener" target="_blank">our GitHub repository</a> to follow the next updates. Starting next episodes, we will post more details on this page.</p>
+<h2 id="alpha">alpha</h2>
+<p>This first phase will be dedicated to the implementation of the fundamental concepts of drop'in with all that is necessary for the creation of applications such as <a class="cico cico-interfaces" href="/concepts/interfaces/">Interfaces</a> or <a class="cico cico-automations" href="/concepts/automations/">Automations</a> for example.</p>
+<p>Our strategy will be to use <a href="https://code.visualstudio.com/" rel="noopener" target="_blank">Visual Studio Code</a> as a base and integrate our extension to access all drop'in features. The projects will be hosted on the service of your choice (GitHub, GitLab, Gitea, BitBucket, ...) and the use of <a href="/cloud/">dropin.cloud</a> will be possible through the extension that will guide you throughout the creation of your application. This documentation will also be integrated in the extension.</p>
+<p>We are actively working on this phase but we do not have a release date yet. However, we have already made <a href="https://docs.google.com/forms/d/e/1FAIpQLSejGbv2SCbZ7xZwpdGSDTqEi3e7eg2FQNmsoZeJWaNxv27Nkw/viewform" rel="noopener" target="_blank">this registration form</a> available to be informed about the alpha release and to be able to test the extension as soon as it becomes available.</p>
+<p>Once the phase is launched, access to <a href="/cloud/">dropin.cloud</a> will be completely free and limited to a specific number of resources. Access will be by invitation only, a registration form will be made available to allow anyone to request access on our final homepage.</p>
+<p>What is or will be made open source:</p>
+<ul>
+<li><a href="https://github.com/blue-forest/dropin/tree/main/recipes" rel="noopener" target="_blank">this documentation</a></li>
+<li>our language schemas](https://github.com/blue-forest/dropin/tree/main/schemas){:target="_blank" rel="noopener"}</li>
+<li>the source code of the Visual Studio Code extension</li>
+</ul>
+<h2 id="beta">beta</h2>
+<p>This phase will be devoted to stabilizing all existing features and adding new ones.</p>
+<p>Among the upcoming features that will offer a new level of possibilities, we have :</p>
+<ul>
+<li><a class="cico cico-migrations" href="/concepts/automations/migrations/">Migrations</a> which will make it easier to change the data structure between different versions of your application</li>
+<li><a class="cico cico-syntaxes" href="/concepts/validations/syntaxes/">Syntaxes</a> which will allow to decompose any text</li>
+<li><a class="cico cico-connectors" href="/concepts/endpoints/connectors/">Connectors</a> which will allow to connect your application to any third party service through APIs</li>
+<li>... and all the other concepts that have the "beta" mention in the documentation</li>
+</ul>
+<p>Access to <a href="/cloud/">dropin.cloud</a> will be possible without an invitation and a free version with a limited number of resources will still be available. Users will also be able to choose to upgrade to a paid subscription for unlimited resources and access to advanced technical support. We will communicate more about the pricing and features of the paid subscription when the beta version is released.</p>
+<p>In addition to what is open source the alpha version, <a href="https://github.com/blue-forest/dropin/tree/main/compiler" rel="noopener" target="_blank">our language compiler source code</a> will also be publicly available. The only services that will not be open source will be those integrated to <a href="/cloud/">dropin.cloud</a> and that require creation of an account to use them.</p>
+<h2 id="stable">stable</h2>
+<p>This last phase will allow us to stabilize all the functionalities by locking the drop'in specifications while ensuring that all the functionalities are fully tested.</p>
+<p>It is essential for us to be able to guarantee maximum stability and security for our users. We have therefore decided not to offer a stable version until we have achieved this goal.</p>
 
 
 
@@ -2389,10 +2487,10 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.sections", "navigation.tracking", "navigation.prune", "navigation.top", "toc.follow"], "search": "../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.indexes", "navigation.sections", "navigation.tracking", "navigation.prune", "navigation.top", "toc.follow"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.5cf534bf.min.js"></script>
+      <script src="../assets/javascripts/bundle.ba449ae6.min.js"></script>
       
     
   </body>

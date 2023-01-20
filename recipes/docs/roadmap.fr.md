@@ -47,7 +47,7 @@ En plus de ce qui est open source la version alpha, [le code source du compilate
 
 ## stable
 
-Cette dernière phase permettra de stabiliser l'ensemble des fonctionnalités en verrouillant les spécifications de drop'in tout en s'assurant que l'ensemble des fonctionnalités fonctionnelles et entièrement testées.
+Cette dernière phase permettra de stabiliser l'ensemble des fonctionnalités en verrouillant les spécifications de drop'in tout en s'assurant que l'ensemble des fonctionnalités soient opérationnelles et entièrement testées.
 
 Par ailleurs, de nouvelles fonctionnalités seront ajoutées pour permettre de créer des applications plus complexes. Parmi celles-ci, nous avons :
 

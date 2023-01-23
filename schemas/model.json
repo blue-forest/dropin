@@ -20,8 +20,16 @@
         "platforms": {
           "type": "object",
           "additionalProperties": false,
-          "propertyOrder": [ "android", "ios" ],
+          "propertyOrder": [ "web", "android", "ios" ],
           "properties": {
+            "web": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "icon" ],
+              "properties": {
+                "icon": { "type": "string" }
+              }
+            },
             "android": {
               "type": "object",
               "required": [ "package", "build" ],

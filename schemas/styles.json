@@ -239,6 +239,15 @@
                   }
                 }
               ]
+            },
+            "position": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyOrder": [ "horizontal", "vertical" ],
+              "properties": {
+                "horizontal": { "type": "string", "enum": [ "left", "center", "right" ] },
+                "vertical": { "type": "string", "enum": [ "top", "center", "bottom" ] }
+              }
             }
           }
         },

@@ -10,5 +10,5 @@ license = "AGPL-3.0-only"
 [dependencies]
 pretty-hex = "0.2.1"
 structopt = "0.3"
-wasmtime = "0.39.1"
+wasmtime = "2.0.2"
 wasmtime-wasi = "0.36.0"

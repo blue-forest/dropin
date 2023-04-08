@@ -8,7 +8,5 @@
 This repository contains different parts of the drop'in project :
 - [Recipes](./recipes) : contains the source code of the documentation
   website [dropin.recipes](https://dropin.recipes)
-- [VSCode extension](./vscode) : allows you to write drop'in code
-  in Visual Studio Code
 - [Compiler](./compiler) : allows you to compile drop'in code
   into WebAssembly files

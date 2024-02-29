@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -55,9 +55,7 @@ impl<'a> Token<'a> for Not<'a> {
 		expr: &mut Expression<'a, 'b>,
 	) -> Result<(), ParseError> {
 		let mut iter_clone = iter.clone();
-		if let Ok(()) =
-			self.token.parse(patterns, module, &mut iter_clone, expr)
-		{
+		if let Ok(()) = self.token.parse(patterns, module, &mut iter_clone, expr) {
 			Err(ParseError::new(format!(
 				"expected not {}",
 				self.token.expected()

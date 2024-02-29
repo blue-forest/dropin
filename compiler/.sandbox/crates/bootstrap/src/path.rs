@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -48,9 +48,8 @@ pub fn read_file(path: &Path) -> String {
 				}],
 			)
 			.wasi_unwrap();
-			content.push_str(
-				str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap(),
-			);
+			content
+				.push_str(str::from_utf8(buf.get(..size).wasi_unwrap()).wasi_unwrap());
 			if size < buf.len() || size == 0 {
 				break;
 			}

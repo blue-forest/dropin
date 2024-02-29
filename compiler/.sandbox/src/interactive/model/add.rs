@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -40,14 +40,11 @@ impl Display for Add {
 impl Command for Add {
 	fn run(&self, cli: &mut Cli) -> u32 {
 		let model_name = loop {
-			let model_name: String =
-				Input::with_theme(&ColorfulTheme::default())
-					.with_prompt(
-						"Model name for your recipes ? (leave empty to cancel)",
-					)
-					.allow_empty(true)
-					.interact_text()
-					.unwrap();
+			let model_name: String = Input::with_theme(&ColorfulTheme::default())
+				.with_prompt("Model name for your recipes ? (leave empty to cancel)")
+				.allow_empty(true)
+				.interact_text()
+				.unwrap();
 			if model_name.is_empty() {
 				return 0;
 			}

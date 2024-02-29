@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -59,7 +59,8 @@ impl<'a> FunctionBuilder<'a> {
 	}
 
 	pub fn basic(&mut self, instruction: Instruction<'a>) {
-		self.instructions
+		self
+			.instructions
 			.push_back(InstructionBuilder::Basic(instruction));
 	}
 

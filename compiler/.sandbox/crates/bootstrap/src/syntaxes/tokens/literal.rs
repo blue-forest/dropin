@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -47,9 +47,7 @@ impl<'a> Literal<'a> {
 			if !is_escaped {
 				match c {
 					'"' => {
-						value = Some(
-							syntax.get(start.wasi_unwrap()..i).wasi_unwrap(),
-						);
+						value = Some(syntax.get(start.wasi_unwrap()..i).wasi_unwrap());
 						break;
 					}
 					'\\' => {
@@ -92,10 +90,7 @@ impl<'a> Token<'a> for Literal<'a> {
 				false
 			};
 			if !ok {
-				return Err(ParseError::new(format!(
-					"expected {}",
-					self.value
-				)));
+				return Err(ParseError::new(format!("expected {}", self.value)));
 			}
 			is_escaped = false;
 		}

@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -74,8 +74,7 @@ impl<'a> Patterns<'a> {
 	pub fn new(syntax: &'a str) -> Self {
 		let mut patterns = HashMap::new();
 		let mut iter = syntax.char_indices().peekable();
-		let mut key =
-			get_key(syntax, &mut iter).wasi_expect("no pattern found");
+		let mut key = get_key(syntax, &mut iter).wasi_expect("no pattern found");
 		let entry = key;
 		loop {
 			let token = Concat::parse(syntax, &mut iter);
@@ -100,8 +99,7 @@ impl<'a> Patterns<'a> {
 		module: &'b str,
 	) -> Result<Expression<'a, 'b>, ParseError> {
 		let mut iter = module.char_indices().peekable();
-		let result =
-			self.patterns[self.entry].parse(self, module, &mut iter)?;
+		let result = self.patterns[self.entry].parse(self, module, &mut iter)?;
 		if let Some((i, _)) = iter.peek() {
 			let remaining = module.get(*i..).wasi_unwrap();
 			// ignore new line
@@ -132,8 +130,7 @@ fn get_key<'a>(
 	pattern_start?;
 	for (i, c) in iter {
 		if c.is_whitespace() {
-			result =
-				Some(syntax.get(pattern_start.wasi_unwrap()..i).wasi_unwrap());
+			result = Some(syntax.get(pattern_start.wasi_unwrap()..i).wasi_unwrap());
 			break;
 		}
 	}

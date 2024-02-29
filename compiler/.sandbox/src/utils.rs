@@ -3,7 +3,28 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*     _              _ _
+ *  __| |_ _ ___ _ __( |_)_ _
+ * / _` | '_/ _ \ '_ \/| | ' \
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
+ *              |_|
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -52,12 +73,9 @@ impl Display for NameValidationError {
 	fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
 		match self {
 			Self::Invalid => {
-				"Name may only be composed of alphanumerics, '.', '-' and '_'"
-					.fmt(f)
+				"Name may only be composed of alphanumerics, '.', '-' and '_'".fmt(f)
 			}
-			Self::Exists(dir) => {
-				format!("{} directory already exists", dir).fmt(f)
-			}
+			Self::Exists(dir) => format!("{} directory already exists", dir).fmt(f),
 		}
 	}
 }
@@ -69,8 +87,7 @@ pub fn get_dirs(path: &Path) -> Vec<String> {
 	for owner_dir in path.read_dir().unwrap().flatten() {
 		let path = owner_dir.path();
 		if path.is_dir() {
-			result
-				.push(path.file_name().unwrap().to_str().unwrap().to_string());
+			result.push(path.file_name().unwrap().to_str().unwrap().to_string());
 		}
 	}
 	result

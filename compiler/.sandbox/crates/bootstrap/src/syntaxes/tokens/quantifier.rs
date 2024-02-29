@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -89,8 +89,7 @@ impl Parser {
 					}
 					self.is_parsing_min = false;
 					if let Some(start) = self.quantity_start {
-						self.current_min =
-							Some(Self::get_quantity(syntax, start, i));
+						self.current_min = Some(Self::get_quantity(syntax, start, i));
 						self.quantity_start = None;
 					}
 					let (_, next) = iter.next().wasi_unwrap();

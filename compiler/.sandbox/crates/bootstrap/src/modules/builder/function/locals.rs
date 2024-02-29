@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -27,7 +27,8 @@ use super::{FunctionBuilder, InstructionBuilder};
 
 impl<'a> FunctionBuilder<'a> {
 	pub fn local(&mut self, local: Local, cb: fn(u32) -> Instruction<'a>) {
-		self.instructions
+		self
+			.instructions
 			.push_back(InstructionBuilder::Local(local, cb));
 	}
 
@@ -64,7 +65,7 @@ impl Locals {
 		if let &Local::I32(idx) = local {
 		 idx
 		} else {
-		  unreachable!();
+			unreachable!();
 		}
 		*/
 		let &Local::I32(idx) = local;

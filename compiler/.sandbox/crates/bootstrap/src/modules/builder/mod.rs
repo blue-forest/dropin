@@ -3,7 +3,7 @@
  * / _` | '_/ _ \ '_ \/| | ' \
  * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
- * Copyright © 2019-2023 Blue Forest
+ * Copyright © 2019-2024 Blue Forest
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
@@ -61,7 +61,8 @@ impl<'module> Default for ModuleBuilder<'module> {
 impl<'module> ModuleBuilder<'module> {
 	pub fn build(self) -> Module {
 		let mut module = Module::new();
-		self.build_type(&mut module)
+		self
+			.build_type(&mut module)
 			.build_import(&mut module)
 			.build_function(&mut module)
 			.build_export(&mut module)

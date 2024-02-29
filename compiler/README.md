@@ -3,11 +3,11 @@
       __| |_ _ ___ _ __( |_)_ _
      / _` | '_/ _ \ '_ \/| | ' \
      \__,_|_| \___/ .__/ |_|_||_|
-                  |_|
+                  |_|  compiler
 ```
 
 [![License](https://img.shields.io/github/license/blue-forest/dropin)](../COPYING)
-[![Maintenance](https://img.shields.io/badge/maintained-no-red.svg)](#)
+[![Maintenance](https://img.shields.io/badge/maintained-yes-green.svg)](#)
 [![Stability](https://img.shields.io/badge/stable-no-red.svg)](#)
 [![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)
 [![Crates.io total downloads](https://img.shields.io/crates/d/dropin)](https://crates.io/crates/dropin)

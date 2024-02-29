@@ -1,0 +1,7 @@
+[package]
+name = "dropin-parser"
+version = "0.6.7-0"
+edition = "2021"
+
+[dependencies]
+dropin-parser-macros = { path = "../parser-macros" }

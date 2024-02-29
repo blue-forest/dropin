@@ -1,47 +1,8 @@
 [workspace]
+resolver = "2"
 members = [
-  "crates/bootstrap",
-  "crates/core",
-  "crates/debugger",
-  "crates/pm",
-  "crates/utils",
+  #"cli",
+  "parser",
+  "parser-macros",
+  #"transpiler-typescript",
 ]
-exclude = ["etc/sandbox"]
-
-[package]
-name = "dropin"
-version = "0.5.3-7"
-authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
-edition = "2021"
-description = "drop'in [WIP]"
-repository = "https://github.com/blue-forest/dropin"
-license = "AGPL-3.0-only"
-keywords = ["WebAssembly"]
-
-[profile.release]
-strip = "symbols"
-
-[dependencies]
-dropin-pm = { path = "./crates/pm", version = "0.5.3-7" }
-dropin-utils = { path = "./crates/utils", version = "0.5.3-4" }
-cap-std = "0.24"
-dialoguer = "0.10.0"
-edit = "0.1.3"
-home = "0.5.3"
-humantime = "2.1"
-path-clean = "0.1.0"
-regex = "1.5.5"
-reqwest = { version = "0.11", features = [ "blocking" ] }
-serde = "1.0.136"
-serde_derive = "1.0.136"
-structopt = "0.3"
-toml = "0.5.8"
-wasmtime = "0.39"
-wasmtime-wasi = "0.36"
-
-[[bin]]
-name = "dropin"
-path = "src/main.rs"
-test = false
-bench = false
-

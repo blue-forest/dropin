@@ -8,5 +8,5 @@
 This repository contains different parts of the drop'in project :
 - [Recipes](./recipes) : contains the source code of the documentation
   website [dropin.recipes](https://dropin.recipes)
-- [Compiler](./compiler) : allows you to compile drop'in code
-  into WebAssembly files
+- [Compiler](./compiler) : allows you to compile drop'in code into multiple
+  targets (only TypeScript for now)

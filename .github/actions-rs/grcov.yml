@@ -1,3 +1,2 @@
 output-type: lcov
 output-path: ./lcov.info
-prefix-dir: ./compiler

@@ -1,0 +1,4 @@
+[package]
+name = "dropin-cli"
+version = "0.6.7-0"
+edition = "2021"

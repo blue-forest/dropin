@@ -28,6 +28,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ad32ce52e4161730f7098c077cd2ed6229b5804ccf99e5366be1ab72a98b4e1"
 
 [[package]]
+name = "dropin-cli"
+version = "0.6.7-0"
+
+[[package]]
 name = "dropin-common"
 version = "0.6.7-0"
 
@@ -52,6 +56,18 @@ dependencies = [
  "serde_json",
  "syn",
 ]
+
+[[package]]
+name = "dropin-target-dart"
+version = "0.6.7-0"
+
+[[package]]
+name = "dropin-target-typescript"
+version = "0.6.7-0"
+
+[[package]]
+name = "dropin-target-wasm"
+version = "0.6.7-0"
 
 [[package]]
 name = "itoa"

@@ -8,5 +8,8 @@
 This repository contains different parts of the drop'in project :
 - [Recipes](./recipes) : contains the source code of the documentation
   website [dropin.recipes](https://dropin.recipes)
+- [CLI](./cli) : the command line interface to interact with drop'in
 - [Compiler](./compiler) : allows you to compile drop'in code into multiple
   targets (only TypeScript for now)
+- [Targets](./targets) : contains the source code of the different targets
+  available for the compiler

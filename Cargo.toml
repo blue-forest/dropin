@@ -1,13 +1,13 @@
 [workspace]
 resolver = "2"
 members = [
-  "compiler/cli",
+  "cli",
   "compiler/common",
   "compiler/parser",
   "compiler/parser-macros",
-  "compiler/target-dart",
-  "compiler/target-typescript",
-  "compiler/target-wasm",
+  "targets/dart",
+  "targets/typescript",
+  "targets/wasm",
 ]
 exclude = [
   "recipes",

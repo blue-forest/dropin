@@ -12,7 +12,7 @@
 [![Crates.io latest version](https://img.shields.io/crates/v/dropin)](https://crates.io/crates/dropin/versions)
 [![Crates.io total downloads](https://img.shields.io/crates/d/dropin)](https://crates.io/crates/dropin)
 
-This directory contains the source code of the drop'in compiler written in Rust and that compiles the [drop'in recipes](https://dropin.recipes) langage into multiple targets (only TypeScript for now).
+This directory contains the source code of the drop'in compiler written in Rust and that compiles the [drop'in recipes](https://dropin.recipes) langage into multiple targets (only TypeScript for now, Dart and WebAssembly are planned).
 
 This source code is in an experimental state and will be fully documented in its final version, we are NOT currently working on it and the code is here for testing purposes only. If you want to know when we will start working on it again, check out our [roadmap](https://dropin.recipes/roadmap/).
 

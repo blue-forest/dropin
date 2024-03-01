@@ -1,5 +1,4 @@
 [workspace]
-resolver = "2"
 members = [
   "cli",
   "common",
@@ -9,3 +8,9 @@ members = [
   "target-typescript",
   "target-wasm",
 ]
+
+[workspace.package]
+license = "AGPL-3.0-only"
+homepage = "https://dropin.recipes"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"

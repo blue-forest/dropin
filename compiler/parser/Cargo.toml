@@ -1,7 +1,11 @@
 [package]
 name = "dropin-parser"
 version = "0.6.7-0"
-edition = "2021"
+description = "drop'in parser"
+license.workspace = true
+homepage.workspace = true
+authors.workspace = true
+edition.workspace = true
 
 [dependencies]
 dropin-common = { path = "../common" }

@@ -1,8 +1,11 @@
 [package]
 name = "dropin"
 version = "0.6.7-0"
-description = "drop'in compiler"
-edition = "2021"
+description = "drop'in compiler - CLI tool for compiling drop'in recipes"
+license.workspace = true
+homepage.workspace = true
+authors.workspace = true
+edition.workspace = true
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }

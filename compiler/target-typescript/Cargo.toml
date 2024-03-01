@@ -1,4 +1,8 @@
 [package]
 name = "dropin-target-typescript"
 version = "0.6.7-0"
-edition = "2021"
+description = "drop'in TypeScript code generation"
+license.workspace = true
+homepage.workspace = true
+authors.workspace = true
+edition.workspace = true

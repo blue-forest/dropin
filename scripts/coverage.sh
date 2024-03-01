@@ -22,11 +22,27 @@
 
 set -e
 
-GIT_HOOK_DIR=$(git rev-parse --show-toplevel)/.git/hooks
-
-ETC_DIR=$(realpath $(dirname ${BASH_SOURCE[0]}))
-
-if [ ! -f $GIT_HOOK_DIR/pre-commit ]; then
-  echo "Adding Git pre-commit hook"
-  ln -s $ETC_DIR/hooks/pre-commit.sh $GIT_HOOK_DIR/pre-commit
+if ! command -v rustfilt &> /dev/null; then
+	cargo install rustfilt
 fi
+
+cd $(git rev-parse --show-toplevel)
+
+OUT_DIR=$PWD/.coverage
+IGNORE_LIST=".cargo|/rustc|.rustup|target"
+
+eval "objects=($(cat $OUT_DIR/paths.txt))"
+
+$(rustc +nightly --print target-libdir)/../bin/llvm-cov show \
+  --instr-profile=$OUT_DIR/tests.profdata \
+  --Xdemangler=rustfilt \
+  --ignore-filename-regex=$IGNORE_LIST \
+  --format html \
+  --project-title "drop'in" \
+  --output-dir=$OUT_DIR/report \
+  --show-line-counts-or-regions \
+  --show-instantiations \
+  --use-color \
+  $(for o in "${objects[@]}" target/debug/doctestbins/*/rust_out; do [[ -x $o ]] && printf "%s %s " --object $o; done)
+
+echo "Report generated at $OUT_DIR/report/index.html"

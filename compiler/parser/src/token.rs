@@ -23,36 +23,64 @@ use dropin_common::token::TokenKind;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct Token<'a> {
-  kind: TokenKind<'a>,
-  pub span: (usize, usize),
-  state: Option<TokenState>,
+	pub kind: TokenKind<'a>,
+	pub span: (usize, usize),
+	pub state: Option<TokenState>,
 }
 
 impl<'a> Token<'a> {
-  pub fn new(kind: TokenKind<'a>, span: (usize, usize), state: Option<TokenState>) -> Self {
-    Token { kind, span, state }
-  }
+	pub fn new(kind: TokenKind<'a>, span: (usize, usize)) -> Self {
+		Token {
+			kind,
+			span,
+			state: None,
+		}
+	}
 
-  pub fn clone(&self, end: usize) -> Self {
-    Token {
-      kind: self.kind,
-      span: (self.span.0, end),
-      state: None,
-    }
-  }
+	pub fn new_with_state(
+		kind: TokenKind<'a>,
+		span: (usize, usize),
+		state: Option<TokenState>,
+	) -> Self {
+		Token { kind, span, state }
+	}
+
+	pub fn clone_end(&self, end: usize) -> Self {
+		Token {
+			kind: self.kind,
+			span: (self.span.0, end),
+			state: None,
+		}
+	}
+
+	pub fn clone_state(&self, state: TokenState) -> Self {
+		Token {
+			kind: self.kind,
+			span: self.span,
+			state: Some(state),
+		}
+	}
 }
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct TokenState {
-  is_escaped: Option<bool>,
-  decimals: Option<bool>,
+	is_escaped: Option<bool>,
+	decimals: Option<bool>,
 }
 
 impl TokenState {
-  pub fn new(
-    is_escaped: Option<bool>,
-    decimals: Option<bool>,
-  ) -> Self {
-    TokenState { is_escaped, decimals }
-  }
+	pub fn new(is_escaped: Option<bool>, decimals: Option<bool>) -> Self {
+		TokenState {
+			is_escaped,
+			decimals,
+		}
+	}
+
+	pub fn is_escaped(&self) -> bool {
+		self.is_escaped.unwrap_or(false)
+	}
+
+	pub fn decimals(&self) -> bool {
+		self.decimals.unwrap_or(false)
+	}
 }

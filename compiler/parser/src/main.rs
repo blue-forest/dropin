@@ -19,9 +19,6 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod lexer;
-//mod parser;
-pub mod token;
-
-#[dropin_parser_macros::table(grammar = "parser/src/grammar.abnf")]
-pub struct Table;
+fn main() {
+	todo!()
+}

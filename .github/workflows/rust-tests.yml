@@ -1,10 +1,10 @@
-name: Compiler tests
+name: Rust - Tests
 
 on:
   workflow_dispatch:
   push:
     branches: [ main ]
-    paths: [ compiler/**/* ]
+    paths: [ cli/**/*, compiler/**/*, targets/**/* ]
 
 jobs:
   tests:

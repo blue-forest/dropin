@@ -1,15 +1,17 @@
-name: Compiler Rust checks
+name: Rust - Checks
+
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-    paths: [ compiler/src/**/*, compiler/crates/*/src/**/* ]
-  workflow_dispatch:
+    paths: [ cli/**/*, compiler/**/*, targets/**/* ]
+
 jobs:
-  rust_checks:
-    if: ${{ false }} # TEMPORARY DISABLED
+  checks:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
     - uses: actions/cache@v3
       with:
         path: |
@@ -17,24 +19,25 @@ jobs:
           ~/.cargo/git
           target
         key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-    - name: goto compiler
-      run: cd compiler
+
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         components: clippy
+
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         target: wasm32-unknown-unknown
+
     - name: Build
       run: cargo build
+
     - uses: actions-rs/clippy-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         args: --all-features -- -D warnings
+
     - uses: actions-rs/audit-check@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Run tests
-      run: cargo test --verbose

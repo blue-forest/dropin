@@ -102,12 +102,14 @@ pub fn lexer(input: &str) -> Vec<Token> {
 						tokens.push(Token::new(TokenKind::Else, (index, index + 4)));
 						index += 3;
 					} else if input[index..].starts_with("false")
-						&& !bytes[index + 5].is_ascii_alphabetic()
+						&& (index + 5 >= bytes_length
+							|| !bytes[index + 5].is_ascii_alphabetic())
 					{
 						tokens.push(Token::new(TokenKind::False, (index, index + 5)));
 						index += 4;
 					} else if input[index..].starts_with("true")
-						&& !bytes[index + 4].is_ascii_alphabetic()
+						&& (index + 4 >= bytes_length
+							|| !bytes[index + 4].is_ascii_alphabetic())
 					{
 						tokens.push(Token::new(TokenKind::True, (index, index + 4)));
 						index += 3;
@@ -120,6 +122,7 @@ pub fn lexer(input: &str) -> Vec<Token> {
 						(index, index),
 						Some(TokenState::new(Some(false), None)),
 					));
+					index += 1;
 				} else if char.is_ascii_digit() {
 					current = Some(Token::new_with_state(
 						TokenKind::Quantity,
@@ -194,9 +197,12 @@ pub fn lexer(input: &str) -> Vec<Token> {
 					panic!("unexpected token: {}", char);
 				}
 			}
+			index += 1;
+			continue;
 		}
 
 		if let Some(token) = &current {
+			let char = bytes[index];
 			match token.kind {
 				TokenKind::Id => {
 					if !char.is_ascii_alphabetic() && char != b'_' {
@@ -208,6 +214,7 @@ pub fn lexer(input: &str) -> Vec<Token> {
 					if let Some(state) = &token.state {
 						let is_escaped = state.is_escaped();
 						if !is_escaped && char == b'"' {
+							println!("text: {:?}", index);
 							current = tokens.next(current, index + 1);
 						} else {
 							current = Some(token.clone_state(TokenState::new(

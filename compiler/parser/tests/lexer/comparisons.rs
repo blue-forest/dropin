@@ -76,10 +76,10 @@ fn test_operator(operator: &str, expected: TokenKind) {
 		],
 	);
 
-	//test_values(operator, expected, TokenKind::True, &["true"]);
-	//test_values(operator, expected, TokenKind::False, &["false"]);
+	test_values(operator, expected, TokenKind::True, &["true"]);
+	test_values(operator, expected, TokenKind::False, &["false"]);
 
-	//test_values(operator, expected, TokenKind::Text, &["'test'"]);
+	test_values(operator, expected, TokenKind::Text, &["\"test\""]);
 }
 
 fn test_values(

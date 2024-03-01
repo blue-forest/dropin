@@ -20,10 +20,10 @@
  */
 
 use abnf::types::Node;
+use dropin_common::token::TokenKind;
+use crate::token::node_to_token;
 
-use crate::{token::node_to_token, Token};
-
-pub struct Concatenation<'a>(Option<Vec<Token<'a>>>);
+pub struct Concatenation<'a>(Option<Vec<TokenKind<'a>>>);
 
 impl<'a> Concatenation<'a> {
 	pub fn new(nodes: &'a [Node]) -> Self {
@@ -32,7 +32,7 @@ impl<'a> Concatenation<'a> {
 }
 
 impl<'a> Iterator for Concatenation<'a> {
-	type Item = Vec<Token<'a>>;
+	type Item = Vec<TokenKind<'a>>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.0.take()

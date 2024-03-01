@@ -20,8 +20,8 @@
  */
 
 use abnf::types::Node;
-
-use crate::{production::Production, Token};
+use dropin_common::token::TokenKind;
+use crate::production::Production;
 
 pub struct Alternatives<'a> {
 	nodes: &'a [Node],
@@ -40,7 +40,7 @@ impl<'a> Alternatives<'a> {
 }
 
 impl<'a> Iterator for Alternatives<'a> {
-	type Item = Vec<Token<'a>>;
+	type Item = Vec<TokenKind<'a>>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		loop {

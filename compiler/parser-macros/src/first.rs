@@ -20,29 +20,28 @@
  */
 
 use std::collections::{HashMap, HashSet};
-
-use crate::Token;
+use dropin_common::token::TokenKind;
 
 #[derive(Default)]
-pub struct First<'a>(HashMap<Token<'a>, HashSet<Token<'a>>>);
+pub struct First<'a>(HashMap<TokenKind<'a>, HashSet<TokenKind<'a>>>);
 
 impl<'a> First<'a> {
 	pub fn insert_non_terminal(&mut self, name: &'a str) {
-		self.0.insert(Token::NonTerminal(name), HashSet::new());
+		self.0.insert(TokenKind::NonTerminal(name), HashSet::new());
 	}
 
-	pub fn insert_terminal(&mut self, token: Token<'a>) {
+	pub fn insert_terminal(&mut self, token: TokenKind<'a>) {
 		self.0.insert(token, HashSet::from([token]));
 	}
 
-	pub fn init(&mut self, productions: &[(&'a str, Vec<Token<'a>>)]) {
+	pub fn init(&mut self, productions: &[(&'a str, Vec<TokenKind<'a>>)]) {
 		let mut has_changed = true;
 		while has_changed {
 			has_changed = false;
 			for (name, tokens) in productions.iter() {
 				let mut iter = tokens.iter();
 				let mut token = iter.next().unwrap();
-				let mut right_hand: HashSet<Token> =
+				let mut right_hand: HashSet<TokenKind> =
 					HashSet::from_iter(self.iter_filter_empty(token));
 				let mut is_ended = false;
 				loop {
@@ -59,34 +58,34 @@ impl<'a> First<'a> {
 					right_hand.extend(self.iter_filter_empty(token));
 				}
 				if is_ended && self.contains_empty(token) {
-					right_hand.insert(Token::Empty);
+					right_hand.insert(TokenKind::Empty);
 				}
 				has_changed =
-					has_changed || self.extend(&Token::NonTerminal(name), right_hand);
+					has_changed || self.extend(&TokenKind::NonTerminal(name), right_hand);
 			}
 		}
 	}
 
-	pub fn get(&self, token: &Token<'a>) -> &HashSet<Token<'a>> {
+	pub fn get(&self, token: &TokenKind<'a>) -> &HashSet<TokenKind<'a>> {
 		self.0.get(token).unwrap()
 	}
 
 	pub fn iter<'b>(
 		&'b self,
-		token: &Token<'a>,
-	) -> impl Iterator<Item = Token<'a>> + 'b {
+		token: &TokenKind<'a>,
+	) -> impl Iterator<Item = TokenKind<'a>> + 'b {
 		self.0.get(token).unwrap().iter().map(|current| *current)
 	}
 
 	pub fn iter_filter_empty<'b>(
 		&'b self,
-		token: &Token<'a>,
-	) -> impl Iterator<Item = Token<'a>> + 'b {
+		token: &TokenKind<'a>,
+	) -> impl Iterator<Item = TokenKind<'a>> + 'b {
 		let Some(first) = self.0.get(token) else {
 			panic!("{token:?} not found");
 		};
 		first.iter().filter_map(|current| {
-			if let Token::Empty = current {
+			if let TokenKind::Empty = current {
 				None
 			} else {
 				Some(*current)
@@ -108,14 +107,14 @@ impl<'a> First<'a> {
 	}
 	*/
 
-	pub fn contains_empty(&self, token: &Token<'a>) -> bool {
-		self.0.get(token).unwrap().contains(&Token::Empty)
+	pub fn contains_empty(&self, token: &TokenKind<'a>) -> bool {
+		self.0.get(token).unwrap().contains(&TokenKind::Empty)
 	}
 
 	pub fn extend(
 		&mut self,
-		token: &Token<'a>,
-		tokens: HashSet<Token<'a>>,
+		token: &TokenKind<'a>,
+		tokens: HashSet<TokenKind<'a>>,
 	) -> bool {
 		let first = self.0.get_mut(token).unwrap();
 		let old_len = first.len();

@@ -20,7 +20,6 @@
  */
 
 use abnf::types::Rule as ABNFRule;
-
 use crate::production::Production;
 
 pub struct Rules {

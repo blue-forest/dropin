@@ -21,7 +21,6 @@
 
 extern crate proc_macro;
 
-use self::token::Token;
 use self::{rules::Rules, table::Table};
 use abnf::rulelist;
 use proc_macro::TokenStream;

@@ -20,10 +20,10 @@
  */
 
 use abnf::types::Node;
+use dropin_common::token::TokenKind;
+use crate::token::node_to_token;
 
-use crate::{token::node_to_token, Token};
-
-pub struct Term<'a>(Option<Token<'a>>);
+pub struct Term<'a>(Option<TokenKind<'a>>);
 
 impl<'a> Term<'a> {
 	pub fn new(node: &'a Node) -> Self {
@@ -32,7 +32,7 @@ impl<'a> Term<'a> {
 }
 
 impl<'a> Iterator for Term<'a> {
-	type Item = Vec<Token<'a>>;
+	type Item = Vec<TokenKind<'a>>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.0.take().map(|token| vec![token])

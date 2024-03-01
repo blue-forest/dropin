@@ -19,6 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use dropin_common::token::TokenKind;
 use quote::{quote, ToTokens};
 use serde::{
 	ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeTuple},
@@ -28,12 +29,11 @@ use std::{
 	collections::HashMap,
 	ops::{Deref, DerefMut},
 };
-
-use crate::{first::First, follow::Follow, rules::Rule, Token};
+use crate::{first::First, follow::Follow, rules::Rule};
 
 pub struct Table<'a> {
 	pub(crate) non_terminals: NonTerminals<'a>,
-	productions: Vec<(&'a str, Vec<Token<'a>>)>,
+	productions: Vec<(&'a str, Vec<TokenKind<'a>>)>,
 	data: TableData<'a>,
 }
 
@@ -43,7 +43,7 @@ impl<'a> Table<'a> {
 		let mut follow = Follow::default();
 		let mut non_terminals = HashMap::new();
 		let mut non_terminal_id = 0;
-		let mut productions: Vec<(&'a str, Vec<Token<'a>>)> = vec![];
+		let mut productions: Vec<(&'a str, Vec<TokenKind<'a>>)> = vec![];
 		let mut is_first = true;
 		while let Some(rule) = rules.next() {
 			let name = rule.name();
@@ -58,7 +58,7 @@ impl<'a> Table<'a> {
 			for tokens in rule.iter() {
 				for token in tokens.iter() {
 					match token {
-						Token::NonTerminal(_) => {}
+						TokenKind::NonTerminal(_) => {}
 						_ => first.insert_terminal(*token),
 					}
 				}
@@ -72,11 +72,11 @@ impl<'a> Table<'a> {
 		let mut data: TableData<'a> = HashMap::new();
 		for (i, (name, tokens)) in productions.iter().enumerate() {
 			let mut first_tokens = first.get(tokens.get(0).unwrap()).clone();
-			if first_tokens.contains(&Token::Empty) {
+			if first_tokens.contains(&TokenKind::Empty) {
 				first_tokens.extend(follow.get(name));
 			}
 			for token in first_tokens {
-				if let Token::Empty = token {
+				if let TokenKind::Empty = token {
 					continue;
 				}
 				if let Some(production) =
@@ -164,7 +164,7 @@ impl<'a> Serialize for NonTerminals<'a> {
 
 */
 struct SerializableProductions<'rules, 'table> {
-	productions: &'table Vec<(&'rules str, Vec<Token<'rules>>)>,
+	productions: &'table Vec<(&'rules str, Vec<TokenKind<'rules>>)>,
 	non_terminals: &'table HashMap<&'rules str, u64>,
 }
 
@@ -193,7 +193,7 @@ impl<'a> ToTokens for NonTerminals<'a> {
 }
 
 struct SerializableProduction<'rules, 'table> {
-	production: &'table (&'rules str, Vec<Token<'rules>>),
+	production: &'table (&'rules str, Vec<TokenKind<'rules>>),
 	non_terminals: &'table HashMap<&'rules str, u64>,
 }
 
@@ -214,7 +214,7 @@ impl<'rules, 'table> Serialize for SerializableProduction<'rules, 'table> {
 }
 
 struct SerializableTokens<'rules, 'table> {
-	tokens: &'table Vec<Token<'rules>>,
+	tokens: &'table Vec<TokenKind<'rules>>,
 	non_terminals: &'table HashMap<&'rules str, u64>,
 }
 
@@ -225,7 +225,7 @@ impl<'rules, 'table> Serialize for SerializableTokens<'rules, 'table> {
 	{
 		let mut seq = serializer.serialize_seq(Some(self.tokens.len()))?;
 		for token in self.tokens.iter().rev() {
-			if let Token::NonTerminal(name) = token {
+			if let TokenKind::NonTerminal(name) = token {
 				seq.serialize_element(&self.non_terminals.get(name).unwrap())?;
 				continue;
 			}
@@ -235,7 +235,7 @@ impl<'rules, 'table> Serialize for SerializableTokens<'rules, 'table> {
 	}
 }
 
-type TableData<'a> = HashMap<&'a str, HashMap<Token<'a>, usize>>;
+type TableData<'a> = HashMap<&'a str, HashMap<TokenKind<'a>, usize>>;
 
 struct SerializableTableData<'rules, 'table> {
 	data: &'table TableData<'rules>,
@@ -259,7 +259,7 @@ impl<'rules, 'table> Serialize for SerializableTableData<'rules, 'table> {
 }
 
 struct SerializableTokenMapping<'rules, 'table>(
-	&'table HashMap<Token<'rules>, usize>,
+	&'table HashMap<TokenKind<'rules>, usize>,
 );
 
 impl<'rules, 'table> Serialize for SerializableTokenMapping<'rules, 'table> {

@@ -20,12 +20,10 @@
  */
 
 use abnf::types::Node;
+use dropin_common::token::TokenKind;
+use crate::{alternatives::Alternatives, concatenation::Concatenation, term::Term};
 
-use crate::{
-	alternatives::Alternatives, concatenation::Concatenation, term::Term, Token,
-};
-
-pub struct Production<'a>(Box<dyn Iterator<Item = Vec<Token<'a>>> + 'a>);
+pub struct Production<'a>(Box<dyn Iterator<Item = Vec<TokenKind<'a>>> + 'a>);
 
 impl<'a> Production<'a> {
 	pub fn new(node: &'a Node) -> Self {
@@ -39,7 +37,7 @@ impl<'a> Production<'a> {
 }
 
 impl<'a> Iterator for Production<'a> {
-	type Item = Vec<Token<'a>>;
+	type Item = Vec<TokenKind<'a>>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.0.next()

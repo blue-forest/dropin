@@ -20,32 +20,33 @@
  */
 
 use abnf::types::Node;
+use dropin_common::token::TokenKind;
 
-pub fn node_to_token(node: &Node) -> Token {
+pub fn node_to_token(node: &Node) -> TokenKind {
 	match node {
-		Node::String(lit) => Token::Terminal(lit.value()),
+		Node::String(lit) => TokenKind::Terminal(lit.value()),
 		Node::Rulename(name) => match name.as_str() {
-			"NEWLINE" => Token::Newline,
-			"INDENT" => Token::Indent,
-			"DEINDENT" => Token::Deindent,
-			"PARGLUED" => Token::ParGlued,
-			"PARSPACED" => Token::ParSpaced,
-			"BRACGLUED" => Token::BracGlued,
-			"BRACSPACED" => Token::BracSpaced,
-			"IF" => Token::If,
-			"ELSE" => Token::Else,
-			"TRUE" => Token::True,
-			"FALSE" => Token::False,
-			"SAMEKEY" => Token::Samekey,
-			"ID" => Token::Id,
-			"TEXT" => Token::Text,
-			"QUANTITY" => Token::Quantity,
-			"EMPTY" => Token::Empty,
-			"LESSTHAN" => Token::LessThan,
-			"MORETHAN" => Token::MoreThan,
-			"ATLEAST" => Token::AtLeast,
-			"ATMOST" => Token::AtMost,
-			_ => Token::NonTerminal(name),
+			"NEWLINE" => TokenKind::Newline,
+			"INDENT" => TokenKind::Indent,
+			"DEINDENT" => TokenKind::Deindent,
+			"PARGLUED" => TokenKind::ParGlued,
+			"PARSPACED" => TokenKind::ParSpaced,
+			"BRACGLUED" => TokenKind::BracGlued,
+			"BRACSPACED" => TokenKind::BracSpaced,
+			"IF" => TokenKind::If,
+			"ELSE" => TokenKind::Else,
+			"TRUE" => TokenKind::True,
+			"FALSE" => TokenKind::False,
+			"SAMEKEY" => TokenKind::Samekey,
+			"ID" => TokenKind::Id,
+			"TEXT" => TokenKind::Text,
+			"QUANTITY" => TokenKind::Quantity,
+			"EMPTY" => TokenKind::Empty,
+			"LESSTHAN" => TokenKind::LessThan,
+			"MORETHAN" => TokenKind::MoreThan,
+			"ATLEAST" => TokenKind::AtLeast,
+			"ATMOST" => TokenKind::AtMost,
+			_ => TokenKind::NonTerminal(name),
 		},
 		Node::Repetition { .. } => todo!("Repetition"),
 		Node::Group(_) => todo!("Group"),
@@ -53,64 +54,5 @@ pub fn node_to_token(node: &Node) -> Token {
 		Node::TerminalValues(_) => todo!("TerminalValues"),
 		Node::Prose(_) => todo!("Prose"),
 		_ => unreachable!(),
-	}
-}
-
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
-pub enum Token<'a> {
-	Terminal(&'a str),
-	NonTerminal(&'a str),
-	Newline,
-	Indent,
-	Deindent,
-	ParGlued,
-	ParSpaced,
-	BracGlued,
-	BracSpaced,
-	If,
-	Else,
-	True,
-	False,
-	Samekey,
-	Id,
-	Text,
-	Quantity,
-	LessThan,
-	MoreThan,
-	AtLeast,
-	AtMost,
-	Empty,
-	End,
-	Eof,
-}
-
-impl<'a> Token<'a> {
-	pub fn as_str(&self) -> &'a str {
-		match self {
-			Self::Terminal(name) => name,
-			Self::NonTerminal(name) => name,
-			Self::Newline => "NEWLINE",
-			Self::Indent => "INDENT",
-			Self::Deindent => "DEINDENT",
-			Self::ParGlued => "PARGLUED",
-			Self::ParSpaced => "PARSPACED",
-			Self::BracGlued => "BRACGLUED",
-			Self::BracSpaced => "BRACSPACED",
-			Self::If => "IF",
-			Self::Else => "ELSE",
-			Self::True => "TRUE",
-			Self::False => "FALSE",
-			Self::Samekey => "SAMEKEY",
-			Self::Id => "ID",
-			Self::Text => "TEXT",
-			Self::Quantity => "QUANTITY",
-			Self::LessThan => "LESSTHAN",
-			Self::MoreThan => "MORETHAN",
-			Self::AtLeast => "ATLEAST",
-			Self::AtMost => "ATMOST",
-			Self::Empty => "EMPTY",
-			Self::End => "END",
-			Self::Eof => "EOF",
-		}
 	}
 }

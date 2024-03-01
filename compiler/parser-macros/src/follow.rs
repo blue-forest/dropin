@@ -20,24 +20,24 @@
  */
 
 use std::collections::{HashMap, HashSet};
-
-use crate::{first::First, Token};
+use dropin_common::token::TokenKind;
+use crate::first::First;
 
 #[derive(Default, Debug)]
-pub struct Follow<'a>(HashMap<&'a str, HashSet<Token<'a>>>);
+pub struct Follow<'a>(HashMap<&'a str, HashSet<TokenKind<'a>>>);
 
 impl<'a> Follow<'a> {
 	pub fn insert_non_terminal(&mut self, name: &'a str, is_first: bool) {
 		let follow = self.0.entry(name).or_insert(HashSet::new());
 		if is_first {
-			follow.insert(Token::Eof);
+			follow.insert(TokenKind::Eof);
 		}
 	}
 
 	pub fn init(
 		&mut self,
 		first: &First<'a>,
-		productions: &[(&'a str, Vec<Token<'a>>)],
+		productions: &[(&'a str, Vec<TokenKind<'a>>)],
 	) {
 		let mut has_changed = true;
 		while has_changed {
@@ -45,7 +45,7 @@ impl<'a> Follow<'a> {
 			for (name, tokens) in productions.iter() {
 				let mut trailer = self.0.get(name).unwrap().clone();
 				for token in tokens.iter().rev() {
-					if let Token::NonTerminal(token_name) = token {
+					if let TokenKind::NonTerminal(token_name) = token {
 						let Some(follow) = self.0.get_mut(token_name) else {
 							panic!("{token_name} not found");
 						};
@@ -63,7 +63,7 @@ impl<'a> Follow<'a> {
 		}
 	}
 
-	pub fn get(&self, name: &'a str) -> &HashSet<Token<'a>> {
+	pub fn get(&self, name: &'a str) -> &HashSet<TokenKind<'a>> {
 		self.0.get(name).unwrap()
 	}
 }

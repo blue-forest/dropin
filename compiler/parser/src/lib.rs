@@ -20,7 +20,7 @@
  */
 
 pub mod lexer;
-//mod parser;
+//pub mod parser;
 pub mod token;
 
 #[dropin_parser_macros::table(grammar = "parser/src/grammar.abnf")]

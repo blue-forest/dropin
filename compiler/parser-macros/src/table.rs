@@ -19,6 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crate::{first::First, follow::Follow, rules::Rule};
 use dropin_common::token::TokenKind;
 use quote::{quote, ToTokens};
 use serde::{
@@ -29,7 +30,6 @@ use std::{
 	collections::HashMap,
 	ops::{Deref, DerefMut},
 };
-use crate::{first::First, follow::Follow, rules::Rule};
 
 pub struct Table<'a> {
 	pub(crate) non_terminals: NonTerminals<'a>,
@@ -161,8 +161,8 @@ impl<'a> Serialize for NonTerminals<'a> {
 		serializer.collect_map(self.iter().map(|(k, v)| (v, k)))
 	}
 }
-
 */
+
 struct SerializableProductions<'rules, 'table> {
 	productions: &'table Vec<(&'rules str, Vec<TokenKind<'rules>>)>,
 	non_terminals: &'table HashMap<&'rules str, u64>,
@@ -227,13 +227,27 @@ impl<'rules, 'table> Serialize for SerializableTokens<'rules, 'table> {
 		for token in self.tokens.iter().rev() {
 			if let TokenKind::NonTerminal(name) = token {
 				seq.serialize_element(&self.non_terminals.get(name).unwrap())?;
-				continue;
+			} else {
+				seq.serialize_element(token.as_str())?;
 			}
-			seq.serialize_element(token.as_str())?;
 		}
 		seq.end()
 	}
 }
+
+/*impl ToTokens for SerializableTokens<'_, '_> {
+	fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+		let mut content = proc_macro2::TokenStream::new();
+		for token in self.tokens.iter().rev() {
+			if let TokenKind::NonTerminal(name) = token {
+				content.extend(quote!(#name,))
+			} else {
+				content.extend(quote!(#token,))
+			}
+		}
+		tokens.extend(quote!(vec![#content]))
+	}
+}*/
 
 type TableData<'a> = HashMap<&'a str, HashMap<TokenKind<'a>, usize>>;
 

@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
   #"cli",
+  "common",
   "parser",
   "parser-macros",
   #"transpiler-typescript",

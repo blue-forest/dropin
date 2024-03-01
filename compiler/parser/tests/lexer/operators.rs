@@ -78,7 +78,6 @@ fn test_operator(operator: &str, expected: TokenKind) {
 
 	test_values(operator, expected, TokenKind::True, &["true"]);
 	test_values(operator, expected, TokenKind::False, &["false"]);
-
 	test_values(operator, expected, TokenKind::Text, &["\"test\""]);
 }
 
@@ -130,3 +129,69 @@ fn less_than() {
 fn at_most() {
 	test_operator("<=", TokenKind::AtMost);
 }
+
+#[test]
+fn add() {
+	test_operator("+", TokenKind::Add);
+}
+
+#[test]
+fn subtract() {
+	test_operator("-", TokenKind::Sub);
+}
+
+#[test]
+fn and() {
+	test_operator("&", TokenKind::And);
+}
+
+#[test]
+fn or() {
+	test_operator("|", TokenKind::Or);
+}
+
+#[test]
+fn not() {
+	test_lexer(
+		"!a",
+		vec![
+			Token::new(TokenKind::Not, (0, 1)),
+			Token::new(TokenKind::Id, (1, 2)),
+		],
+	);
+	test_lexer(
+		"(!a & b) | c",
+		vec![
+			Token::new(TokenKind::ParSpaced, (0, 1)),
+			Token::new(TokenKind::Not, (1, 2)),
+			Token::new(TokenKind::Id, (2, 3)),
+			Token::new(TokenKind::And, (4, 5)),
+			Token::new(TokenKind::Id, (6, 7)),
+			Token::new(TokenKind::Rpar, (7, 8)),
+			Token::new(TokenKind::Or, (9, 10)),
+			Token::new(TokenKind::Id, (11, 12)),
+		],
+	);
+}
+
+#[test]
+fn exists() {
+	test_lexer(
+		"a?",
+		vec![
+			Token::new(TokenKind::Id, (0, 1)),
+			Token::new(TokenKind::Exists, (1, 2)),
+		],
+	);
+}
+
+/*#[test]
+fn cast() {
+	test_lexer(
+		"a = \"\\\"b\\\"",
+		vec![
+			Token::new(TokenKind::Id, (0, 1)),
+			Token::new(TokenKind::Assign, (2, 3)),
+		],
+	);
+}*/

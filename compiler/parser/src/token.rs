@@ -45,14 +45,6 @@ impl<'a> Token<'a> {
 		Token { kind, span, state }
 	}
 
-	pub fn clone_end(&self, end: usize) -> Self {
-		Token {
-			kind: self.kind,
-			span: (self.span.0, end),
-			state: None,
-		}
-	}
-
 	pub fn clone_state(&self, state: TokenState) -> Self {
 		Token {
 			kind: self.kind,

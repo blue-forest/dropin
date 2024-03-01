@@ -214,7 +214,6 @@ pub fn lexer(input: &str) -> Vec<Token> {
 					if let Some(state) = &token.state {
 						let is_escaped = state.is_escaped();
 						if !is_escaped && char == b'"' {
-							println!("text: {:?}", index);
 							current = tokens.next(current, index + 1);
 						} else {
 							current = Some(token.clone_state(TokenState::new(

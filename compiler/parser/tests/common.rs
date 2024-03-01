@@ -22,12 +22,22 @@
 use dropin_compiler_parser::{lexer::lexer, token::Token};
 
 pub fn test_lexer(input: &str, expected: Vec<Token>) {
-	println!("> `{}`", input);
+	println!("> `{}`", input.replace("\n", "`  `"));
 	let result = lexer(input);
 	if result != expected {
-		eprintln!(
-			"    /!\\ Test failed /!\\\n    Expected: {:?}\n    Got:      {:?}\n",
-			expected, result,
+		panic!(
+			"/!\\ Test failed /!\\\n\n# Input\n`{}`\n\n# Expected\n{}\n# Got\n{}",
+			input,
+			expected
+				.iter()
+				.map(|t| format!("- {} -> {} : {:?}\n", t.span.0, t.span.1, t.kind))
+				.collect::<Vec<String>>()
+				.join(""),
+			result
+				.iter()
+				.map(|t| format!("- {} -> {} : {:?}\n", t.span.0, t.span.1, t.kind))
+				.collect::<Vec<String>>()
+				.join(""),
 		);
 	}
 }

@@ -6,6 +6,10 @@ on:
     branches: [ main ]
     paths: [ compiler/**/* ]
 
+defaults:
+  run:
+    working-directory: ./compiler
+
 jobs:
   tests:
     runs-on: ubuntu-latest

@@ -19,9 +19,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use abnf::types::Node;
-use dropin_common::token::TokenKind;
 use crate::production::Production;
+use abnf::types::Node;
+use dropin_compiler_common::token::TokenKind;
 
 pub struct Alternatives<'a> {
 	nodes: &'a [Node],

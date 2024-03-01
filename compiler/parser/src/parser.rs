@@ -20,7 +20,7 @@
  */
 
 use crate::{lexer::lexer, token::Token, Table};
-use dropin_common::token::TokenKind;
+use dropin_compiler_common::token::TokenKind;
 
 struct Node {
 	token: NodeToken,

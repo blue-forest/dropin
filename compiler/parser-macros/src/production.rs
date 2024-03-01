@@ -19,9 +19,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use crate::{
+	alternatives::Alternatives, concatenation::Concatenation, term::Term,
+};
 use abnf::types::Node;
-use dropin_common::token::TokenKind;
-use crate::{alternatives::Alternatives, concatenation::Concatenation, term::Term};
+use dropin_compiler_common::token::TokenKind;
 
 pub struct Production<'a>(Box<dyn Iterator<Item = Vec<TokenKind<'a>>> + 'a>);
 

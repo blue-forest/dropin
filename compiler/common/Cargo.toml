@@ -1,5 +1,5 @@
 [package]
-name = "dropin-common"
+name = "dropin-compiler-common"
 version = "0.6.7-0"
 description = "drop'in common library"
 license.workspace = true

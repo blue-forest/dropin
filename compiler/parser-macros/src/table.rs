@@ -20,7 +20,7 @@
  */
 
 use crate::{first::First, follow::Follow, rules::Rule};
-use dropin_common::token::TokenKind;
+use dropin_compiler_common::token::TokenKind;
 use quote::{quote, ToTokens};
 use serde::{
 	ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeTuple},

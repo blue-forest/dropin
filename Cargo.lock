@@ -129,24 +129,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "dropin-common"
+name = "dropin-compiler-common"
 version = "0.6.7-0"
 
 [[package]]
-name = "dropin-parser"
+name = "dropin-compiler-parser"
 version = "0.6.7-0"
 dependencies = [
- "dropin-common",
- "dropin-parser-macros",
+ "dropin-compiler-common",
+ "dropin-compiler-parser-macros",
 ]
 
 [[package]]
-name = "dropin-parser-macros"
+name = "dropin-compiler-parser-macros"
 version = "0.6.7-0"
 dependencies = [
  "abnf",
  "anyhow",
- "dropin-common",
+ "dropin-compiler-common",
  "proc-macro2",
  "quote",
  "serde",

@@ -19,9 +19,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::collections::{HashMap, HashSet};
-use dropin_common::token::TokenKind;
 use crate::first::First;
+use dropin_compiler_common::token::TokenKind;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Default, Debug)]
 pub struct Follow<'a>(HashMap<&'a str, HashSet<TokenKind<'a>>>);

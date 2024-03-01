@@ -20,7 +20,7 @@
  */
 
 use abnf::types::Node;
-use dropin_common::token::TokenKind;
+use dropin_compiler_common::token::TokenKind;
 
 pub fn node_to_token(node: &Node) -> TokenKind {
 	match node {

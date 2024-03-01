@@ -19,9 +19,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use abnf::types::Node;
-use dropin_common::token::TokenKind;
 use crate::token::node_to_token;
+use abnf::types::Node;
+use dropin_compiler_common::token::TokenKind;
 
 pub struct Concatenation<'a>(Option<Vec<TokenKind<'a>>>);
 

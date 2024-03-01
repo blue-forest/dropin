@@ -19,7 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_parser::{lexer::lexer, token::Token};
+use dropin_compiler_parser::{lexer::lexer, token::Token};
 
 pub fn test_lexer(input: &str, expected: Vec<Token>) {
 	println!("> `{}`", input);

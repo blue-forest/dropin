@@ -19,8 +19,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use dropin_compiler_common::token::TokenKind;
 use std::collections::{HashMap, HashSet};
-use dropin_common::token::TokenKind;
 
 #[derive(Default)]
 pub struct First<'a>(HashMap<TokenKind<'a>, HashSet<TokenKind<'a>>>);

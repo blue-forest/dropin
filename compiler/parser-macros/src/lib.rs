@@ -55,7 +55,7 @@ pub fn table(attr: TokenStream, item: TokenStream) -> TokenStream {
 	});
 	parse_macro_input!(attr with attr_parser);
 	let grammar = read_to_string(grammar.unwrap().value()).unwrap();
-	let table_struct = parse_macro_input!(item as ItemStruct);
+	let _table_struct = parse_macro_input!(item as ItemStruct);
 	let rules = rulelist(&grammar).unwrap();
 	let rules = Rules::new(rules);
 	let table = Table::new(rules.iter());

@@ -23,5 +23,5 @@ pub mod lexer;
 //pub mod parser;
 pub mod token;
 
-#[dropin_parser_macros::table(grammar = "parser/src/grammar.abnf")]
+#[dropin_parser_macros::table(grammar = "compiler/parser/src/grammar.abnf")]
 pub struct Table;

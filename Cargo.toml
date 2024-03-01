@@ -1,2 +1,23 @@
 [workspace]
-members = ["compiler"]
+resolver = "2"
+members = [
+  "compiler/cli",
+  "compiler/common",
+  "compiler/parser",
+  "compiler/parser-macros",
+  "compiler/target-dart",
+  "compiler/target-typescript",
+  "compiler/target-wasm",
+]
+exclude = [
+  "recipes",
+  "sandbox",
+  "schemas",
+  "scripts",
+]
+
+[workspace.package]
+license = "AGPL-3.0-only"
+homepage = "https://dropin.recipes"
+authors = ["Nazim Lachter <nazim@blueforest.cc>", "Vulcain <vulcain@blueforest.cc>"]
+edition = "2021"

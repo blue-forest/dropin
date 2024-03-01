@@ -1,4 +1,8 @@
 [package]
-name = "dropin-cli"
+name = "dropin"
 version = "0.6.7-0"
+description = "drop'in compiler"
 edition = "2021"
+
+[dependencies]
+clap = { version = "4.5", features = ["derive"] }

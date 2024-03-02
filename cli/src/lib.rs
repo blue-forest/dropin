@@ -19,10 +19,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::Parser;
-use dropin::Args;
+use clap::{Parser, ValueEnum};
 
-fn main() {
-	let args = Args::parse();
-	println!("{:?}", args);
+#[derive(Parser, Debug)]
+#[command(
+	about = env!("CARGO_PKG_DESCRIPTION"),
+	version = env!("CARGO_PKG_VERSION"),
+	long_about = None
+)]
+pub struct Args {
+	#[arg(short, long, name = "compilation target")]
+	pub target: Target,
+	#[arg(name = "drop'in code")]
+	pub input: String,
+}
+
+#[derive(ValueEnum, Clone, Debug, PartialEq)]
+pub enum Target {
+	Dart,
+	Typescript,
+	Wasm,
 }

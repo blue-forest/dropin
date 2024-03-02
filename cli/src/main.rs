@@ -22,9 +22,7 @@
 use clap::Parser;
 use dropin::Args;
 
-// @codeCoverageIgnoreStart
 fn main() {
 	let args = Args::parse();
 	println!("{:?}", args);
 }
-// @codeCoverageIgnoreEnd

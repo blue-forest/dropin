@@ -7,6 +7,9 @@ homepage.workspace = true
 authors.workspace = true
 edition.workspace = true
 
+[features]
+coverage = []
+
 [lib]
 proc-macro = true
 

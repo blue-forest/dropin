@@ -6,3 +6,6 @@ license.workspace = true
 homepage.workspace = true
 authors.workspace = true
 edition.workspace = true
+
+[features]
+coverage = []

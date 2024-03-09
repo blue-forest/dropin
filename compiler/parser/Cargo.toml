@@ -7,6 +7,9 @@ homepage.workspace = true
 authors.workspace = true
 edition.workspace = true
 
+[features]
+coverage = []
+
 [dependencies]
 dropin-compiler-common = { path = "../common" }
 dropin-compiler-parser-macros = { path = "../parser-macros" }

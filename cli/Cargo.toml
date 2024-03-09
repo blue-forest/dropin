@@ -7,5 +7,8 @@ homepage.workspace = true
 authors.workspace = true
 edition.workspace = true
 
+[features]
+coverage = []
+
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }

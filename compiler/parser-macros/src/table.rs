@@ -51,18 +51,13 @@ impl<'a> ToTokens for Table<'a> {
 				stream
 			},
 		);
-		let non_terminals = self
-			.non_terminals
-			.iter()
-			.map(|(name, id)| (*id, *name))
-			.collect::<HashMap<_, _>>();
 		let mut data = proc_macro2::TokenStream::new();
-		for i in 0..non_terminals.len() {
+		for (non_terminal, _) in self.non_terminals.iter() {
 			data.extend(quote!(let mut redirect = std::collections::HashMap::new();));
-			for (token, production) in self.data[non_terminals[&(i as u64)]].iter() {
+			for (token, production) in self.data[non_terminal].iter() {
 				data.extend(quote!(redirect.insert(#token, #production);));
 			}
-			data.extend(quote!(data.push(redirect);));
+			data.extend(quote!(data.insert(#non_terminal, redirect);));
 		}
 
 		let productions_capacity = self.productions.len();
@@ -70,15 +65,15 @@ impl<'a> ToTokens for Table<'a> {
 
 		tokens.extend(quote!(
 			struct Table {
-				productions: Vec<Vec<dropin_compiler_common::token::TokenKind<'static>>>,
-				data: Vec<std::collections::HashMap<dropin_compiler_common::token::TokenKind<'static>, usize>>
+				pub productions: Vec<Vec<dropin_compiler_common::token::TokenKind<'static>>>,
+				pub data: std::collections::HashMap<&'static str, std::collections::HashMap<dropin_compiler_common::token::TokenKind<'static>, usize>>
 			}
 
 			impl Default for Table {
 				fn default() -> Self {
 					let mut productions = Vec::with_capacity(#productions_capacity);
 					#productions
-					let mut data = Vec::with_capacity(#data_capacity);
+					let mut data = std::collections::HashMap::with_capacity(#data_capacity);
 					#data
 					Self { productions, data }
 				}

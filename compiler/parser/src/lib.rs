@@ -20,7 +20,7 @@
  */
 
 pub mod lexer;
-//pub mod parser;
+pub mod parser;
 pub mod token;
 
 #[dropin_compiler_parser_macros::table(

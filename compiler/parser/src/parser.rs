@@ -21,16 +21,21 @@
 
 use crate::{lexer::lexer, token::Token, Table};
 use dropin_compiler_common::token::TokenKind;
+use std::{
+	fmt::{Debug, Formatter},
+	sync::Arc,
+	vec,
+};
 
-struct Node {
-	token: NodeToken,
-	children: Vec<Node>,
-	parent: Option<Box<Node>>,
+struct Node<'a> {
+	token: TokenKind<'a>,
+	children: Vec<Node<'a>>,
+	parent: Option<usize>,
 	span: Option<(usize, usize)>,
 }
 
-impl Node {
-	fn new(token: NodeToken, parent: Option<Box<Node>>) -> Node {
+impl<'a> Node<'a> {
+	fn new(token: TokenKind<'a>, parent: Option<usize>) -> Node<'a> {
 		Node {
 			token,
 			children: Vec::new(),
@@ -38,88 +43,143 @@ impl Node {
 			span: None,
 		}
 	}
+
+	fn print(&self, input: &str, n_indent: usize, table: &Table) {
+		let mut indent = String::new();
+		for _ in 0..n_indent {
+			indent.push_str("  ");
+		}
+		if let TokenKind::Eof | TokenKind::Empty = self.token {
+			return;
+		}
+		println!("{}{}", indent, self.token.as_str());
+		if let TokenKind::Terminal(_) = self.token {
+			let span = self.span.unwrap();
+			println!("{}\"{}\"", indent, &input[span.0..span.1],);
+		}
+	}
 }
 
-#[derive(PartialEq)]
-enum NodeToken {
-	Text(String),
-	Quantity(u64),
+struct Stack<'a>(Vec<Node<'a>>);
+
+impl Debug for Stack<'_> {
+	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+		let mut first = true;
+		for node in &self.0 {
+			if !first {
+				write!(f, ", ")?;
+			}
+			write!(f, "{:?}", node.token.as_str())?;
+			first = false;
+		}
+		Ok(())
+	}
+}
+
+impl<'a> Stack<'a> {
+	fn new(main_non_terminal: Option<&'a str>) -> Stack<'a> {
+		Stack(vec![
+			Node::new(TokenKind::NonTerminal("root"), None),
+			Node::new(
+				TokenKind::NonTerminal(main_non_terminal.unwrap_or("predicate")),
+				Some(0),
+			),
+		])
+	}
+
+	fn push(&mut self, node: Node<'a>) {
+		self.0.push(node.into());
+	}
+
+	fn pop(&mut self) -> Node<'a> {
+		self.0.pop().unwrap()
+	}
+
+	fn is_empty(&self) -> bool {
+		self.0.is_empty()
+	}
+
+	fn into_tree(mut self) -> Node<'a> {
+		self.0[0].children.pop().unwrap()
+	}
+
+	fn push_children(&mut self, node: Node<'a>) -> usize {
+		let parent = node.parent.unwrap();
+		self.0[parent].children.push(node);
+		parent
+	}
+
+	fn pop_children(&mut self, parent: usize) {
+		self.0[parent].children.pop();
+	}
 }
 
 const DEBUG: bool = false;
 
-fn parse(input: &str, main_non_terminal: Option<&str>, table: &Table) -> Node {
+fn parse<'a>(
+	input: &str,
+	main_non_terminal: Option<&'a str>,
+	table: &'a Table,
+) -> Node<'a> {
 	if DEBUG {
 		println!("{:?}", input);
 	}
 
-	let tokens = lexer(input);
+	let mut tokens = lexer(input);
 	if DEBUG {
 		println!("{:?}", tokens);
 	}
 
-	let mut root = Node::new(NodeToken::Text("EOF".to_string()), None);
-
-	let mut main_non_terminal_id = 0;
-	if let Some(main_non_terminal) = main_non_terminal {
-		for (id, non_terminal) in table.non_terminals.iter() {
-			if non_terminal == &main_non_terminal {
-				main_non_terminal_id = *id;
-				break;
-			}
-		}
-	}
-
-	let mut stack = vec![
-		root,
-		Node::new(
-			NodeToken::Quantity(main_non_terminal_id),
-			Some(Box::new(root)),
-		),
-	];
+	let mut stack = Stack::new(main_non_terminal);
 
 	let mut is_deindent = false;
 	let mut current = 0;
 
 	while !stack.is_empty() {
 		if DEBUG {
-			println!(
-				"STACK {:?}",
-				stack
-					.iter()
-					.map(|node| {
-						match &node.token {
-							NodeToken::Quantity(token) => {
-								*table.non_terminals.get(token).unwrap()
-							}
-							NodeToken::Text(token) => token,
-						}
-					})
-					.collect::<Vec<&str>>()
-			);
+			println!("STACK {:?}", stack);
 		}
 
-		let stack_top = stack.pop().unwrap();
-		match stack_top.token {
-			NodeToken::Quantity(token) => {
-				let token_type = if current < tokens.len() {
-					tokens[current].kind
-				} else {
-					TokenKind::Eof
-				};
+		let stack_top = stack.pop();
 
-				if !table.non_terminals.get(&token).unwrap().ends_with("-") {
-					let parent = stack_top.parent.unwrap();
-					parent.children.push(stack_top);
+		if let TokenKind::NonTerminal(token) = stack_top.token {
+			let token_type = if current < tokens.len() {
+				tokens[current].kind
+			} else {
+				TokenKind::Eof
+			};
+
+			let parent = if !token.ends_with("-") {
+				Some(stack.push_children(stack_top))
+			} else {
+				None
+			};
+
+			let index = table.data.get(&token).unwrap().get(&token_type).unwrap();
+			let substitute = &table.productions.get(*index);
+
+			if substitute.is_none() {
+				if main_non_terminal.is_some() && token_type == TokenKind::Eof {
+					break;
 				}
 
-				let index = table.data[&token][&token_type];
-				let substitute = table.productions[index].clone();
-
-				if substitute.is_none() {
-					if main_non_terminal.is_some() && token_type == TokenKind::Eof {
-						break;
+				if is_deindent {
+					if DEBUG {
+						println!("NEWLINE after DEINDENT");
 					}
+					tokens.insert(current, Token::new(TokenKind::Newline, (0, 0)));
+					if let Some(parent) = parent {
+						stack.pop_children(parent);
+					}
+					is_deindent = false;
+					continue;
+				}
+			}
+		}
+
+		/*match stack_top.token {
+			NodeToken::Quantity(token) => {
+				if substitute.is_none() {
 					if is_deindent {
 						if DEBUG {
 							println!("NEWLINE after DEINDENT");
@@ -196,7 +256,7 @@ fn parse(input: &str, main_non_terminal: Option<&str>, table: &Table) -> Node {
 					current += 1;
 				}
 			}
-		}
+		}*/
 
 		if DEBUG {
 			let now = std::time::Instant::now();
@@ -206,40 +266,11 @@ fn parse(input: &str, main_non_terminal: Option<&str>, table: &Table) -> Node {
 		}
 	}
 
+	let root = stack.into_tree();
+
 	if DEBUG {
-		print(input, &root.children[0], 0, table);
+		root.print(input, 0, table);
 	}
 
-	root.children[0]
-}
-
-fn print(input: &str, node: &Node, n_indent: usize, table: &Table) {
-	let mut indent = String::new();
-	for _ in 0..n_indent {
-		indent.push_str("  ");
-	}
-	match &node.token {
-		NodeToken::Quantity(token) => {
-			if node.children.is_empty() {
-				return;
-			}
-			println!("{}{}", indent, table.non_terminals.get(token).unwrap());
-			for child in &node.children {
-				print(input, child, n_indent + 1, table);
-			}
-		}
-		NodeToken::Text(token) => {
-			if token != "EMPTY" && token != "EOF" {
-				let span = node.span.unwrap();
-				println!(
-					"{}{} \"{}\"",
-					indent,
-					token,
-					input.chars().collect::<Vec<char>>()[span.0..span.1]
-						.iter()
-						.collect::<String>(),
-				);
-			}
-		}
-	}
+	root
 }

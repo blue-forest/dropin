@@ -59,21 +59,5 @@ pub fn table(attr: TokenStream, item: TokenStream) -> TokenStream {
 	let rules = rulelist(&grammar).unwrap();
 	let rules = Rules::new(rules);
 	let table = Table::new(rules.iter());
-	let non_terminals = &table.non_terminals;
-	quote!(
-		struct Table {
-			non_terminals: std::collections::HashMap<u64, &'static str>,
-		}
-
-		impl Default for Table {
-			fn default() -> Self {
-				Self {
-					non_terminals: std::collections::HashMap::from([
-						#non_terminals
-					]),
-				}
-			}
-		}
-	)
-	.into()
+	quote!(#table).into()
 }

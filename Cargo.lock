@@ -131,6 +131,10 @@ dependencies = [
 [[package]]
 name = "dropin-compiler-common"
 version = "0.6.7-0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+]
 
 [[package]]
 name = "dropin-compiler-parser"

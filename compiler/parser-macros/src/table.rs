@@ -37,6 +37,56 @@ pub struct Table<'a> {
 	data: TableData<'a>,
 }
 
+impl<'a> ToTokens for Table<'a> {
+	fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+		let productions = self.productions.iter().fold(
+			proc_macro2::TokenStream::new(),
+			|mut stream, (_, tokens)| {
+				let capacity = tokens.len();
+				stream.extend(quote!(let mut rules = Vec::with_capacity(#capacity);));
+				for token in tokens {
+					stream.extend(quote!(rules.push(#token);));
+				}
+				stream.extend(quote!(productions.push(rules);));
+				stream
+			},
+		);
+		let non_terminals = self
+			.non_terminals
+			.iter()
+			.map(|(name, id)| (*id, *name))
+			.collect::<HashMap<_, _>>();
+		let mut data = proc_macro2::TokenStream::new();
+		for i in 0..non_terminals.len() {
+			data.extend(quote!(let mut redirect = std::collections::HashMap::new();));
+			for (token, production) in self.data[non_terminals[&(i as u64)]].iter() {
+				data.extend(quote!(redirect.insert(#token, #production);));
+			}
+			data.extend(quote!(data.push(redirect);));
+		}
+
+		let productions_capacity = self.productions.len();
+		let data_capacity = self.data.len();
+
+		tokens.extend(quote!(
+			struct Table {
+				productions: Vec<Vec<dropin_compiler_common::token::TokenKind<'static>>>,
+				data: Vec<std::collections::HashMap<dropin_compiler_common::token::TokenKind<'static>, usize>>
+			}
+
+			impl Default for Table {
+				fn default() -> Self {
+					let mut productions = Vec::with_capacity(#productions_capacity);
+					#productions
+					let mut data = Vec::with_capacity(#data_capacity);
+					#data
+					Self { productions, data }
+				}
+			}
+		))
+	}
+}
+
 impl<'a> Table<'a> {
 	pub fn new(mut rules: impl Iterator<Item = Rule<'a>>) -> Self {
 		let mut first = First::default();
@@ -118,13 +168,13 @@ impl<'a> Serialize for Table<'a> {
 	{
 		let mut table = serializer.serialize_struct("Table", 3)?;
 		//table.serialize_field("non_terminals", &self.non_terminals)?;
-		table.serialize_field(
-			"productions",
-			&SerializableProductions {
-				productions: &self.productions,
-				non_terminals: &self.non_terminals,
-			},
-		)?;
+		// table.serialize_field(
+		// 	"productions",
+		// 	&SerializableProductions {
+		// 		productions: &self.productions,
+		// 		non_terminals: &self.non_terminals,
+		// 	},
+		// )?;
 		table.serialize_field(
 			"data",
 			&SerializableTableData {
@@ -161,11 +211,15 @@ impl<'a> Serialize for NonTerminals<'a> {
 		serializer.collect_map(self.iter().map(|(k, v)| (v, k)))
 	}
 }
-*/
 
 struct SerializableProductions<'rules, 'table> {
 	productions: &'table Vec<(&'rules str, Vec<TokenKind<'rules>>)>,
-	non_terminals: &'table HashMap<&'rules str, u64>,
+}
+
+impl<'rules, 'table> ToTokens for SerializableProductions<'rules, 'table> {
+	fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+		todo!()
+	}
 }
 
 impl<'rules, 'table> Serialize for SerializableProductions<'rules, 'table> {
@@ -183,6 +237,7 @@ impl<'rules, 'table> Serialize for SerializableProductions<'rules, 'table> {
 		seq.end()
 	}
 }
+*/
 
 impl<'a> ToTokens for NonTerminals<'a> {
 	fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {

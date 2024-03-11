@@ -6,3 +6,11 @@ license.workspace = true
 homepage.workspace = true
 authors.workspace = true
 edition.workspace = true
+
+[features]
+default = ["macros"]
+macros = ["dep:quote", "dep:proc-macro2"]
+
+[dependencies]
+quote = { version = "1.0", optional = true }
+proc-macro2 = { version = "1.0", optional = true }

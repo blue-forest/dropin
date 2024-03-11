@@ -19,6 +19,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[cfg(feature = "macros")]
+use proc_macro2::TokenStream;
+#[cfg(feature = "macros")]
+use quote::{quote, ToTokens};
+
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub enum TokenKind<'a> {
 	Terminal(&'a str),
@@ -110,5 +115,87 @@ impl<'a> TokenKind<'a> {
 			Self::Exists => "?",
 			Self::Backslash => "\\",
 		}
+	}
+}
+
+#[cfg(feature = "macros")]
+impl<'a> ToTokens for TokenKind<'a> {
+	fn to_tokens(&self, tokens: &mut TokenStream) {
+		let extension = match self {
+			Self::Terminal(value) => {
+				quote!(dropin_compiler_common::token::TokenKind::Terminal(#value))
+			}
+			Self::NonTerminal(value) => {
+				quote!(dropin_compiler_common::token::TokenKind::NonTerminal(#value))
+			}
+			Self::Newline => {
+				quote!(dropin_compiler_common::token::TokenKind::Newline)
+			}
+			Self::Indent => quote!(dropin_compiler_common::token::TokenKind::Indent),
+			Self::Deindent => {
+				quote!(dropin_compiler_common::token::TokenKind::Deindent)
+			}
+			Self::ParGlued => {
+				quote!(dropin_compiler_common::token::TokenKind::ParGlued)
+			}
+			Self::ParSpaced => {
+				quote!(dropin_compiler_common::token::TokenKind::ParSpaced)
+			}
+			Self::BracGlued => {
+				quote!(dropin_compiler_common::token::TokenKind::BracGlued)
+			}
+			Self::BracSpaced => {
+				quote!(dropin_compiler_common::token::TokenKind::BracSpaced)
+			}
+			Self::If => quote!(dropin_compiler_common::token::TokenKind::If),
+			Self::Else => quote!(dropin_compiler_common::token::TokenKind::Else),
+			Self::True => quote!(dropin_compiler_common::token::TokenKind::True),
+			Self::False => quote!(dropin_compiler_common::token::TokenKind::False),
+			Self::Samekey => {
+				quote!(dropin_compiler_common::token::TokenKind::Samekey)
+			}
+			Self::Id => quote!(dropin_compiler_common::token::TokenKind::Id),
+			Self::Text => quote!(dropin_compiler_common::token::TokenKind::Text),
+			Self::Quantity => {
+				quote!(dropin_compiler_common::token::TokenKind::Quantity)
+			}
+			Self::LessThan => {
+				quote!(dropin_compiler_common::token::TokenKind::LessThan)
+			}
+			Self::MoreThan => {
+				quote!(dropin_compiler_common::token::TokenKind::MoreThan)
+			}
+			Self::AtLeast => {
+				quote!(dropin_compiler_common::token::TokenKind::AtLeast)
+			}
+			Self::AtMost => quote!(dropin_compiler_common::token::TokenKind::AtMost),
+			Self::Empty => quote!(dropin_compiler_common::token::TokenKind::Empty),
+			Self::End => quote!(dropin_compiler_common::token::TokenKind::End),
+			Self::Eof => quote!(dropin_compiler_common::token::TokenKind::Eof),
+			Self::Block => quote!(dropin_compiler_common::token::TokenKind::Block),
+			Self::EqualsTo => {
+				quote!(dropin_compiler_common::token::TokenKind::EqualsTo)
+			}
+			Self::DifferentFrom => {
+				quote!(dropin_compiler_common::token::TokenKind::DifferentFrom)
+			}
+			Self::In => quote!(dropin_compiler_common::token::TokenKind::In),
+			Self::Add => quote!(dropin_compiler_common::token::TokenKind::Add),
+			Self::Sub => quote!(dropin_compiler_common::token::TokenKind::Sub),
+			Self::Dot => quote!(dropin_compiler_common::token::TokenKind::Dot),
+			Self::Comma => quote!(dropin_compiler_common::token::TokenKind::Comma),
+			Self::And => quote!(dropin_compiler_common::token::TokenKind::And),
+			Self::Or => quote!(dropin_compiler_common::token::TokenKind::Or),
+			Self::Not => quote!(dropin_compiler_common::token::TokenKind::Not),
+			Self::Rpar => quote!(dropin_compiler_common::token::TokenKind::Rpar),
+			Self::Rbrac => quote!(dropin_compiler_common::token::TokenKind::Rbrac),
+			Self::Lbrace => quote!(dropin_compiler_common::token::TokenKind::Lbrace),
+			Self::Rbrace => quote!(dropin_compiler_common::token::TokenKind::Rbrace),
+			Self::Exists => quote!(dropin_compiler_common::token::TokenKind::Exists),
+			Self::Backslash => {
+				quote!(dropin_compiler_common::token::TokenKind::Backslash)
+			}
+		};
+		tokens.extend(extension);
 	}
 }

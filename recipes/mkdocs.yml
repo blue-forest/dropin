@@ -91,11 +91,12 @@ plugins:
 - tags
 - i18n:
     languages:
-      en: { name: English }
-      fr: { name: Français }
-    default_language: en
-    nav_translations:
-      fr:
+    - locale: en
+      name: English
+      default: true
+    - locale: fr
+      name: Français
+      nav_translations:
         Recipes: Recettes
         Catalog: Catalogue
         Owners: Propriétaires

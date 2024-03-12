@@ -23,11 +23,10 @@ use crate::{lexer::lexer, token::Token, Table};
 use dropin_compiler_common::token::TokenKind;
 use std::{
 	fmt::{Debug, Formatter},
-	sync::Arc,
 	vec,
 };
 
-struct Node<'a> {
+pub struct Node<'a> {
 	token: TokenKind<'a>,
 	children: Vec<Node<'a>>,
 	parent: Option<usize>,
@@ -44,7 +43,7 @@ impl<'a> Node<'a> {
 		}
 	}
 
-	fn print(&self, input: &str, n_indent: usize, table: &Table) {
+	pub fn print(&self, input: &str, n_indent: usize) {
 		let mut indent = String::new();
 		for _ in 0..n_indent {
 			indent.push_str("  ");
@@ -105,6 +104,9 @@ impl<'a> Stack<'a> {
 
 	fn push_children(&mut self, node: Node<'a>) -> usize {
 		let parent = node.parent.unwrap();
+		if DEBUG {
+			println!("PUSH_CHILDREN {:?} {:?}", node.token.as_str(), parent);
+		}
 		self.0[parent].children.push(node);
 		parent
 	}
@@ -112,11 +114,36 @@ impl<'a> Stack<'a> {
 	fn pop_children(&mut self, parent: usize) {
 		self.0[parent].children.pop();
 	}
+
+	fn substitute(
+		&mut self,
+		mut parent: Option<usize>,
+		substitute: &[TokenKind<'a>],
+	) {
+		while let Some(new_parent) = parent {
+			println!("NEW_PARENT {:?}", new_parent);
+			let TokenKind::NonTerminal(token) = self.0[new_parent].token else {
+				unreachable!()
+			};
+			if token.ends_with("-") || self.0[new_parent].parent.is_none() {
+				break;
+			}
+			parent = self.0[new_parent].parent;
+		}
+		if DEBUG {
+			println!("SUBSTITUTE PARENT {:?}", parent);
+		}
+		self.0.extend(
+			substitute
+				.into_iter()
+				.map(|token| Node::new(*token, parent)),
+		);
+	}
 }
 
-const DEBUG: bool = false;
+const DEBUG: bool = true;
 
-fn parse<'a>(
+pub fn parse<'a>(
 	input: &str,
 	main_non_terminal: Option<&'a str>,
 	table: &'a Table,
@@ -158,7 +185,9 @@ fn parse<'a>(
 			let index = table.data.get(&token).unwrap().get(&token_type).unwrap();
 			let substitute = &table.productions.get(*index);
 
-			if substitute.is_none() {
+			let substitute = if let Some(substitute) = substitute {
+				substitute
+			} else {
 				if main_non_terminal.is_some() && token_type == TokenKind::Eof {
 					break;
 				}
@@ -174,89 +203,43 @@ fn parse<'a>(
 					is_deindent = false;
 					continue;
 				}
+				panic!("{} unexpected {}", input, token);
+			};
+
+			if DEBUG {
+				println!("STACK BEFORE SUBSTITUTION {:?}", stack);
+				println!(
+					"Substitution {} + {} => {}",
+					token,
+					token_type.as_str(),
+					substitute
+						.iter()
+						.map(|sub| sub.as_str())
+						.collect::<Vec<_>>()
+						.join(", "),
+				);
 			}
+
+			stack.substitute(parent, substitute);
+		} else {
+			todo!()
+			/*
+				NodeToken::Text(token) => {
+					if token != "EMPTY" {
+						if token != "EOF" {
+							if DEBUG {
+								println!("PUSH {}", token);
+							}
+							is_deindent = token == "DEINDENT";
+							let parent = stack_top.parent.unwrap();
+							stack_top.span = Some(tokens[current].span);
+							parent.children.push(stack_top);
+						}
+						current += 1;
+					}
+				}
+			}*/
 		}
-
-		/*match stack_top.token {
-			NodeToken::Quantity(token) => {
-				if substitute.is_none() {
-					if is_deindent {
-						if DEBUG {
-							println!("NEWLINE after DEINDENT");
-						}
-						tokens.insert(current, Token::new(TokenKind::Newline, (0, 0)));
-						stack.push(stack_top);
-						if !table.non_terminals.get(&token).unwrap().ends_with("-") {
-							stack_top.parent.unwrap().children.pop();
-						}
-						is_deindent = false;
-						continue;
-					}
-					panic!(
-						"{} unexpected {}",
-						input,
-						table.non_terminals.get(&token).unwrap()
-					);
-				}
-
-				if DEBUG {
-					println!(
-						"Substitution {} + {} => {}",
-						table.non_terminals.get(&token).unwrap(),
-						token_type.as_str(),
-						substitute
-							.iter()
-							.map(|sub| {
-								match sub {
-									NodeToken::Quantity(token) => {
-										*table.non_terminals.get(&token).unwrap()
-									}
-									NodeToken::Text(token) => &token,
-								}
-							})
-							.collect::<Vec<&str>>(),
-					);
-				}
-
-				let mut substitute_parent = stack_top;
-				let NodeToken::Quantity(mut substitute_parent_token) =
-					substitute_parent.token
-				else {
-					unreachable!()
-				};
-				while substitute_parent.token != NodeToken::Text("EOF".to_string())
-					&& table
-						.non_terminals
-						.get(&substitute_parent_token)
-						.unwrap()
-						.ends_with("-")
-				{
-					substitute_parent = *substitute_parent.parent.unwrap();
-					let NodeToken::Quantity(new_value) = substitute_parent.token else {
-						unreachable!()
-					};
-					substitute_parent_token = new_value;
-				}
-
-				stack.extend(substitute.unwrap().iter().map(|token| {
-					Node::new(token.clone(), Some(Box::new(substitute_parent)))
-				}));
-			}
-			NodeToken::Text(token) => {
-				if token != "EMPTY" {
-					if token != "EOF" {
-						if DEBUG {
-							println!("PUSH {}", token);
-						}
-						is_deindent = token == "DEINDENT";
-						let parent = stack_top.parent.unwrap();
-						stack_top.span = Some(tokens[current].span);
-						parent.children.push(stack_top);
-					}
-					current += 1;
-				}
-			}
-		}*/
 
 		if DEBUG {
 			let now = std::time::Instant::now();
@@ -269,7 +252,7 @@ fn parse<'a>(
 	let root = stack.into_tree();
 
 	if DEBUG {
-		root.print(input, 0, table);
+		root.print(input, 0);
 	}
 
 	root

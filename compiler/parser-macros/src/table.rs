@@ -44,7 +44,7 @@ impl<'a> ToTokens for Table<'a> {
 			|mut stream, (_, tokens)| {
 				let capacity = tokens.len();
 				stream.extend(quote!(let mut rules = Vec::with_capacity(#capacity);));
-				for token in tokens {
+				for token in tokens.into_iter().rev() {
 					stream.extend(quote!(rules.push(#token);));
 				}
 				stream.extend(quote!(productions.push(rules);));
@@ -64,7 +64,7 @@ impl<'a> ToTokens for Table<'a> {
 		let data_capacity = self.data.len();
 
 		tokens.extend(quote!(
-			struct Table {
+			pub struct Table {
 				pub productions: Vec<Vec<dropin_compiler_common::token::TokenKind<'static>>>,
 				pub data: std::collections::HashMap<&'static str, std::collections::HashMap<dropin_compiler_common::token::TokenKind<'static>, usize>>
 			}

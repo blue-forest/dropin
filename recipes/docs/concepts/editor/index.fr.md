@@ -18,38 +18,38 @@ Voici quelques exemples d'interfaces qui seront disponibles dans l'Éditeur.
 L'esthétique de ces interfaces n'est pas finalisée et sera amenée à énormément évoluer d'ici la sortie de la version alpha, elle est ici essentiellement conçue pour mettre en avant les fonctionnalités de l'Éditeur.
 
 <figure markdown>
-  ![](/assets/editor/edit.fr.png)
+  ![](/assets/editor/edit.png)
   <figcaption>Édition d'un Item d'une <a href="/fr/concepts/storage/collections/" class="cico cico-collections">Collection</a></figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/collection.fr.png)
+  ![](/assets/editor/collection.png)
   <figcaption>
     Affichage d'une <a href="/fr/concepts/storage/collections/" class="cico cico-collections">Collection</a>
   </figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/sorting.fr.png)
+  ![](/assets/editor/sorting.png)
   <figcaption>Clic sur l'entête d'une colonne</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/columns.fr.png)
+  ![](/assets/editor/columns.png)
   <figcaption>Outil Colonnes</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/filtering.fr.png)
+  ![](/assets/editor/filtering.png)
   <figcaption>Outil Filtres</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/density.fr.png)
+  ![](/assets/editor/density.png)
   <figcaption>Outil Densité</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/export.fr.png)
+  ![](/assets/editor/export.png)
   <figcaption>Outil Exportation</figcaption>
 </figure>

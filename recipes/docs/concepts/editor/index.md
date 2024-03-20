@@ -19,40 +19,40 @@ The aesthetics of these interfaces is not finalized and will be greatly evolving
 The current shown interfaces are in French, but the final version will obviously be available in English.
 
 <figure markdown>
-  ![](/assets/editor/edit.fr.png)
+  ![](/assets/editor/edit.png)
   <figcaption>
     Edition of a <a href="/concepts/storage/collections/" class="cico cico-collections">Collection</a> Item
   </figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/collection.fr.png)
+  ![](/assets/editor/collection.png)
   <figcaption>
     View of a <a href="/concepts/storage/collections/" class="cico cico-collections">Collection</a>
   </figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/sorting.fr.png)
+  ![](/assets/editor/sorting.png)
   <figcaption>Click on a header column</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/columns.fr.png)
+  ![](/assets/editor/columns.png)
   <figcaption>Columns tool</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/filtering.fr.png)
+  ![](/assets/editor/filtering.png)
   <figcaption>Filters tool</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/density.fr.png)
+  ![](/assets/editor/density.png)
   <figcaption>Density tool</figcaption>
 </figure>
 
 <figure markdown>
-  ![](/assets/editor/export.fr.png)
+  ![](/assets/editor/export.png)
   <figcaption>Export tool</figcaption>
 </figure>

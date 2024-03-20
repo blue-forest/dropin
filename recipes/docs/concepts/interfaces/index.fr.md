@@ -1,6 +1,7 @@
 ---
 icon: interfaces
 hide: [toc]
+tags: [root]
 ---
 # Interfaces
 

@@ -1,5 +1,6 @@
 ---
 icon: validations
+tags: [root]
 ---
 # Validations
 

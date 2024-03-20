@@ -7,7 +7,7 @@
   {% set tags = "" %}
   {% if "tags" in nav_item.meta %}
     {% set tagsList = [] %}
-    {% for tag in nav_item.meta.tags %}
+    {% for tag in nav_item.meta.tags if tag != "" %}
       {% set tagsList = tagsList.append('<span class="menu-item-tag menu-item-tag-'+tag+'">'+tag+'</span>') %}
     {% endfor %}
     {% set tags = '<span>' + tagsList|join + '</span>' %}

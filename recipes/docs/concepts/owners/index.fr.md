@@ -1,5 +1,6 @@
 ---
 icon: owners
+tags: [root]
 ---
 # Propriétaires
 

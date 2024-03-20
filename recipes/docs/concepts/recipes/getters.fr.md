@@ -1,3 +1,7 @@
+---
+tags: [""]
+---
+
 # Récupérateurs
 
 Un Récupérateur permet d'accéder à une information dynamiquement.

@@ -1,5 +1,6 @@
 ---
 icon: endpoints
+tags: [root]
 ---
 # Endpoints
 

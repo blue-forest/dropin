@@ -1,5 +1,6 @@
 ---
 icon: catalog
+tags: [root]
 ---
 # Catalog
 

@@ -1,3 +1,7 @@
+---
+tags: [""]
+---
+
 # Options
 
 Les Options permettent aux [Recettes](/fr/concepts/recipes){.cico .cico-recipes} d'utiliser des paramètres personnalisés quand elles fonctionnent.

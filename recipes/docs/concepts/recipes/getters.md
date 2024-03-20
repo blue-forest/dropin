@@ -1,3 +1,7 @@
+---
+tags: [""]
+---
+
 # Getters
 
 A Getter allows to access information dynamically.

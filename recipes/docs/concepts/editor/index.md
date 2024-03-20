@@ -1,6 +1,7 @@
 ---
 icon: editor
 hide: [toc]
+tags: [root]
 ---
 # Editor
 

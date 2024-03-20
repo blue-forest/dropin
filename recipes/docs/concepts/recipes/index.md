@@ -1,6 +1,7 @@
 ---
 icon: recipes
 hide: [ toc ]
+tags: [root]
 ---
 # Recipes
 

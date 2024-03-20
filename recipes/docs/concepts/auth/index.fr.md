@@ -1,5 +1,6 @@
 ---
 icon: auth
+tags: [root]
 ---
 # Authentification
 

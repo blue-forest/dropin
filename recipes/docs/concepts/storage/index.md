@@ -1,5 +1,6 @@
 ---
 icon: storage
+tags: [root]
 ---
 # Storage
 

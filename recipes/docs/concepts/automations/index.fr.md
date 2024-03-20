@@ -1,6 +1,7 @@
 ---
 icon: automations
 hide: [toc]
+tags: [root]
 ---
 # Automatisations
 

@@ -1,5 +1,6 @@
 ---
 hide: [ "toc" ]
+tags: [root]
 ---
 # Concepts
 

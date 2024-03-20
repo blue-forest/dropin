@@ -2,756 +2,756 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://dropin.recipes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/cloud/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/cloud/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/roadmap/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/roadmap/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/auth/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/auth/groups/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/groups/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/groups/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/auth/permissions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/permissions/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/permissions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/auth/realms/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/realms/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/realms/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/auth/tokens/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/tokens/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/tokens/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/automations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/automations/deployments/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/deployments/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/deployments/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/automations/functions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/functions/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/functions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/automations/migrations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/migrations/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/migrations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/automations/triggers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/triggers/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/triggers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/catalog/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/catalog/models/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/models/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/models/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/catalog/projects/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/projects/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/projects/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/editor/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/editor/forms/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/forms/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/forms/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/editor/maps/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/maps/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/maps/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/editor/sections/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/sections/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/sections/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/editor/visualizations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/visualizations/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/visualizations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/addresses/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/addresses/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/addresses/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/connectors/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/connectors/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/connectors/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/databases/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/databases/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/databases/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/domains/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/domains/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/domains/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/endpoints/providers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/providers/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/providers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/components/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/components/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/components/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/pages/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/pages/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/pages/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/sessions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/sessions/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/sessions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/styles/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/styles/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/styles/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/interfaces/themes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/themes/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/themes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/owners/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/owners/organizations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/organizations/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/organizations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/owners/users/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/users/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/users/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/recipes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/recipes/formats/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/formats/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/formats/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/recipes/getters/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/getters/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/getters/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/recipes/options/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/options/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/options/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/recipes/setters/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/setters/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/setters/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/collections/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/collections/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/collections/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/containers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/containers/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/containers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/logs/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/logs/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/logs/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/metrics/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/metrics/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/metrics/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/repositories/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/repositories/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/repositories/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/values/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/values/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/values/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/storage/volumes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/volumes/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/volumes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/validations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/validations/issues/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/issues/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/issues/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/validations/syntaxes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/syntaxes/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/syntaxes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/concepts/validations/types/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/types/"/>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/types/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/cloud/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/cloud/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/cloud/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/roadmap/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/roadmap/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/roadmap/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/auth/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/auth/groups/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/groups/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/groups/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/auth/permissions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/permissions/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/permissions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/auth/realms/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/realms/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/realms/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/auth/tokens/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/auth/tokens/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/auth/tokens/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/automations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/automations/deployments/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/deployments/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/deployments/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/automations/functions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/functions/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/functions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/automations/migrations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/migrations/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/migrations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/automations/triggers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/automations/triggers/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/automations/triggers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/catalog/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/catalog/models/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/models/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/models/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/catalog/projects/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/catalog/projects/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/catalog/projects/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/editor/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/editor/forms/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/forms/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/forms/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/editor/maps/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/maps/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/maps/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/editor/sections/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/sections/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/sections/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/editor/visualizations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/editor/visualizations/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/editor/visualizations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/addresses/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/addresses/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/addresses/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/connectors/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/connectors/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/connectors/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/databases/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/databases/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/databases/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/domains/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/domains/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/domains/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/endpoints/providers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/endpoints/providers/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/endpoints/providers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/components/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/components/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/components/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/pages/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/pages/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/pages/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/sessions/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/sessions/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/sessions/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/styles/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/styles/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/styles/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/interfaces/themes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/interfaces/themes/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/interfaces/themes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/owners/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/owners/organizations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/organizations/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/organizations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/owners/users/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/owners/users/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/owners/users/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/recipes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/recipes/formats/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/formats/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/formats/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/recipes/getters/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/getters/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/getters/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/recipes/options/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/options/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/options/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/recipes/setters/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/recipes/setters/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/recipes/setters/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/collections/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/collections/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/collections/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/containers/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/containers/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/containers/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/logs/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/logs/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/logs/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/metrics/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/metrics/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/metrics/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/repositories/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/repositories/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/repositories/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/values/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/values/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/values/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/storage/volumes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/storage/volumes/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/storage/volumes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/validations/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/validations/issues/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/issues/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/issues/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/validations/syntaxes/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/syntaxes/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/syntaxes/"/>
     </url>
     <url>
         <loc>https://dropin.recipes/fr/concepts/validations/types/</loc>
-        <lastmod>2024-03-08</lastmod>
+        <lastmod>2024-03-20</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="fr" href="https://dropin.recipes/fr/concepts/validations/types/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://dropin.recipes/concepts/validations/types/"/>

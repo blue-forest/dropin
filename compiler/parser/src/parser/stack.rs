@@ -48,18 +48,18 @@ impl<'a> Stack<'a> {
     }
   }
 
-  pub(super) fn push(&mut self, node: NodeBuilder<'a>) {
-    self.nodes.push(node.into());
-    self.stack.push(self.nodes.len() - 1);
-  }
+  // pub(super) fn push(&mut self, node: NodeBuilder<'a>) {
+  //   self.nodes.push(node.into());
+  //   self.stack.push(self.nodes.len() - 1);
+  // }
 
-  pub(super) fn pop(&mut self) -> (usize, &mut NodeBuilder<'a>) {
+  pub(super) fn pop<'s>(&'s mut self) -> StackNode<'a, 's> {
     let i = self.stack.pop().unwrap();
-    (i, self.nodes[i].as_mut().unwrap())
+    StackNode { stack: self, i }
   }
 
   pub(super) fn is_empty(&self) -> bool {
-    self.stack.is_empty()
+    self.stack.len() <= 1
   }
 
   pub(super) fn into_tree(mut self) -> Node<'a> {
@@ -111,5 +111,16 @@ impl<'a> Stack<'a> {
         .map(|token| Some(NodeBuilder::new(*token, parent))),
     );
     self.stack.extend(old_len..self.nodes.len());
+  }
+}
+
+pub(super) struct StackNode<'a, 's> {
+  pub(super) stack: &'s mut Stack<'a>,
+  pub(super) i: usize,
+}
+
+impl<'a> StackNode<'a, '_> {
+  pub(super) fn builder(&mut self) -> &mut NodeBuilder<'a> {
+    self.stack.nodes[self.i].as_mut().unwrap()
   }
 }

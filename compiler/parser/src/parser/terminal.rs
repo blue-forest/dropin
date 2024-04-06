@@ -1,16 +1,14 @@
 use crate::token::Token;
 
-use super::{node::NodeBuilder, stack::Stack, LoopControl};
+use super::{stack::StackNode, LoopControl};
 
-pub(super) fn parse_terminal<'a>(
+pub(super) fn parse_terminal(
   tokens: &[Token],
   current: &mut usize,
-  stack: &'a mut Stack,
-  stack_top_index: usize,
-  stack_top: &'a mut NodeBuilder,
+  mut stack_top: StackNode,
 ) -> LoopControl {
-  stack_top.span = Some(tokens[*current].span);
-  stack.push_children(stack_top_index);
+  stack_top.builder().span = Some(tokens[*current].span);
+  stack_top.stack.push_children(stack_top.i);
   *current += 1;
   LoopControl::Continue
 }

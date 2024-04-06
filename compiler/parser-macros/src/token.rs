@@ -24,7 +24,10 @@ use dropin_compiler_common::token::TokenKind;
 
 pub fn node_to_token(node: &Node) -> TokenKind {
   match node {
-    Node::String(lit) => TokenKind::Terminal(lit.value()),
+    Node::String(lit) => match lit.value() {
+      "==" => TokenKind::EqualsTo,
+      _ => TokenKind::Terminal(lit.value()),
+    },
     Node::Rulename(name) => match name.as_str() {
       "NEWLINE" => TokenKind::Newline,
       "INDENT" => TokenKind::Indent,

@@ -58,19 +58,23 @@ pub fn parse<'a>(
       println!("STACK {:?}", stack);
     }
 
-    let (stack_top_index, stack_top) = stack.pop();
+    let mut stack_top = stack.pop();
+    let token = stack_top.builder().token;
 
-    let control = match stack_top.token {
-      TokenKind::NonTerminal(name) => parse_non_terminal(
-        &table,
-        &input,
-        &mut tokens,
-        current,
-        &mut stack,
-        stack_top_index,
-        &name,
-        is_deindent,
-      ),
+    let control = match token {
+      TokenKind::NonTerminal(name) => {
+        let (control, new_is_deindent) = parse_non_terminal(
+          &table,
+          &input,
+          &mut tokens,
+          current,
+          stack_top,
+          name,
+          is_deindent,
+        );
+        is_deindent = new_is_deindent;
+        control
+      }
       TokenKind::Empty => LoopControl::Continue,
       TokenKind::Eof => break,
       TokenKind::Deindent => {
@@ -78,26 +82,14 @@ pub fn parse<'a>(
           println!("DEINDENT");
         }
         is_deindent = true;
-        parse_terminal(
-          &tokens,
-          &mut current,
-          &mut stack,
-          stack_top_index,
-          stack_top,
-        )
+        parse_terminal(&tokens, &mut current, stack_top)
       }
       _ => {
         if DEBUG {
-          println!("PUSH {}", stack_top.token.as_str());
+          println!("PUSH {}", token.as_str());
         }
         is_deindent = false;
-        parse_terminal(
-          &tokens,
-          &mut current,
-          &mut stack,
-          stack_top_index,
-          stack_top,
-        )
+        parse_terminal(&tokens, &mut current, stack_top)
       }
     };
     if let LoopControl::Break = control {

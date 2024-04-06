@@ -26,15 +26,15 @@ use dropin_compiler_common::token::TokenKind;
 pub struct Concatenation<'a>(Option<Vec<TokenKind<'a>>>);
 
 impl<'a> Concatenation<'a> {
-	pub fn new(nodes: &'a [Node]) -> Self {
-		Self(Some(nodes.iter().map(|node| node_to_token(node)).collect()))
-	}
+  pub fn new(nodes: &'a [Node]) -> Self {
+    Self(Some(nodes.iter().map(|node| node_to_token(node)).collect()))
+  }
 }
 
 impl<'a> Iterator for Concatenation<'a> {
-	type Item = Vec<TokenKind<'a>>;
+  type Item = Vec<TokenKind<'a>>;
 
-	fn next(&mut self) -> Option<Self::Item> {
-		self.0.take()
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    self.0.take()
+  }
 }

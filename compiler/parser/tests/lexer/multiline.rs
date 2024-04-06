@@ -26,41 +26,41 @@ use indoc::indoc;
 
 #[test]
 fn variables() {
-	test_lexer(
-		indoc! {"
+  test_lexer(
+    indoc! {"
 			a = 1
 			b = \"ok\"
 		"},
-		vec![
-			Token::new(TokenKind::Id, (0, 1)),
-			Token::new(TokenKind::Samekey, (2, 3)),
-			Token::new(TokenKind::Quantity, (4, 5)),
-			Token::new(TokenKind::Newline, (6, 6)),
-			Token::new(TokenKind::Id, (6, 7)),
-			Token::new(TokenKind::Samekey, (8, 9)),
-			Token::new(TokenKind::Text, (10, 14)),
-		],
-	);
+    vec![
+      Token::new(TokenKind::Id, (0, 1)),
+      Token::new(TokenKind::Samekey, (2, 3)),
+      Token::new(TokenKind::Quantity, (4, 5)),
+      Token::new(TokenKind::Newline, (6, 6)),
+      Token::new(TokenKind::Id, (6, 7)),
+      Token::new(TokenKind::Samekey, (8, 9)),
+      Token::new(TokenKind::Text, (10, 14)),
+    ],
+  );
 
-	test_lexer(
-		"	a = 1\n  b = \"ok\"",
-		vec![
-			Token::new(TokenKind::Id, (1, 2)),
-			Token::new(TokenKind::Samekey, (3, 4)),
-			Token::new(TokenKind::Quantity, (5, 6)),
-			Token::new(TokenKind::Indent, (7, 9)),
-			Token::new(TokenKind::Id, (9, 10)),
-			Token::new(TokenKind::Samekey, (11, 12)),
-			Token::new(TokenKind::Text, (13, 17)),
-			Token::new(TokenKind::Deindent, (17, 17)),
-		],
-	);
+  test_lexer(
+    "	a = 1\n  b = \"ok\"",
+    vec![
+      Token::new(TokenKind::Id, (1, 2)),
+      Token::new(TokenKind::Samekey, (3, 4)),
+      Token::new(TokenKind::Quantity, (5, 6)),
+      Token::new(TokenKind::Indent, (7, 9)),
+      Token::new(TokenKind::Id, (9, 10)),
+      Token::new(TokenKind::Samekey, (11, 12)),
+      Token::new(TokenKind::Text, (13, 17)),
+      Token::new(TokenKind::Deindent, (17, 17)),
+    ],
+  );
 
-	/*test_lexer(
-		indoc! {"
-			test1 = 1
-			test2 = \"ok\"
-		"},
-		vec![Token::new(TokenKind::Id, (0, 5))],
-	);*/
+  /*test_lexer(
+    indoc! {"
+      test1 = 1
+      test2 = \"ok\"
+    "},
+    vec![Token::new(TokenKind::Id, (0, 5))],
+  );*/
 }

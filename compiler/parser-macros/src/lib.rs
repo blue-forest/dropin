@@ -41,23 +41,23 @@ mod token;
 
 #[proc_macro_attribute]
 pub fn table(attr: TokenStream, item: TokenStream) -> TokenStream {
-	let mut grammar: Option<LitStr> = None;
-	let attr_parser = syn::meta::parser(|meta| {
-		if meta.path.is_ident("grammar") {
-			grammar = Some(meta.value()?.parse()?);
-			Ok(())
-		} else {
-			Err(syn::Error::new(
-				Span::call_site(),
-				"grammar attribute is required",
-			))
-		}
-	});
-	parse_macro_input!(attr with attr_parser);
-	let grammar = read_to_string(grammar.unwrap().value()).unwrap();
-	let _table_struct = parse_macro_input!(item as ItemStruct);
-	let rules = rulelist(&grammar).unwrap();
-	let rules = Rules::new(rules);
-	let table = Table::new(rules.iter());
-	quote!(#table).into()
+  let mut grammar: Option<LitStr> = None;
+  let attr_parser = syn::meta::parser(|meta| {
+    if meta.path.is_ident("grammar") {
+      grammar = Some(meta.value()?.parse()?);
+      Ok(())
+    } else {
+      Err(syn::Error::new(
+        Span::call_site(),
+        "grammar attribute is required",
+      ))
+    }
+  });
+  parse_macro_input!(attr with attr_parser);
+  let grammar = read_to_string(grammar.unwrap().value()).unwrap();
+  let _table_struct = parse_macro_input!(item as ItemStruct);
+  let rules = rulelist(&grammar).unwrap();
+  let rules = Rules::new(rules);
+  let table = Table::new(rules.iter());
+  quote!(#table).into()
 }

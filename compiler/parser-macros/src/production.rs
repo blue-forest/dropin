@@ -20,7 +20,7 @@
  */
 
 use crate::{
-	alternatives::Alternatives, concatenation::Concatenation, term::Term,
+  alternatives::Alternatives, concatenation::Concatenation, term::Term,
 };
 use abnf::types::Node;
 use dropin_compiler_common::token::TokenKind;
@@ -28,20 +28,20 @@ use dropin_compiler_common::token::TokenKind;
 pub struct Production<'a>(Box<dyn Iterator<Item = Vec<TokenKind<'a>>> + 'a>);
 
 impl<'a> Production<'a> {
-	pub fn new(node: &'a Node) -> Self {
-		Self(match node {
-			Node::Alternatives(nodes) => Box::new(Alternatives::new(nodes)),
-			Node::Concatenation(nodes) => Box::new(Concatenation::new(nodes)),
-			Node::Repetition { .. } => todo!("Repetition"),
-			_ => Box::new(Term::new(node)),
-		})
-	}
+  pub fn new(node: &'a Node) -> Self {
+    Self(match node {
+      Node::Alternatives(nodes) => Box::new(Alternatives::new(nodes)),
+      Node::Concatenation(nodes) => Box::new(Concatenation::new(nodes)),
+      Node::Repetition { .. } => todo!("Repetition"),
+      _ => Box::new(Term::new(node)),
+    })
+  }
 }
 
 impl<'a> Iterator for Production<'a> {
-	type Item = Vec<TokenKind<'a>>;
+  type Item = Vec<TokenKind<'a>>;
 
-	fn next(&mut self) -> Option<Self::Item> {
-		self.0.next()
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    self.0.next()
+  }
 }

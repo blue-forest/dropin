@@ -26,28 +26,28 @@ use indoc::indoc;
 
 #[test]
 fn conditions() {
-	test_lexer(
-		indoc! {"if a == b {
+  test_lexer(
+    indoc! {"if a == b {
 			1
 		} else {
 			2
 		}"},
-		vec![
-			Token::new(TokenKind::If, (0, 2)),
-			Token::new(TokenKind::Id, (3, 4)),
-			Token::new(TokenKind::EqualsTo, (5, 7)),
-			Token::new(TokenKind::Id, (8, 9)),
-			Token::new(TokenKind::Lbrace, (10, 11)),
-			Token::new(TokenKind::Indent, (12, 13)),
-			Token::new(TokenKind::Quantity, (13, 14)),
-			Token::new(TokenKind::Deindent, (15, 15)),
-			Token::new(TokenKind::Rbrace, (15, 16)),
-			Token::new(TokenKind::Else, (17, 21)),
-			Token::new(TokenKind::Lbrace, (22, 23)),
-			Token::new(TokenKind::Indent, (24, 25)),
-			Token::new(TokenKind::Quantity, (25, 26)),
-			Token::new(TokenKind::Deindent, (27, 27)),
-			Token::new(TokenKind::Rbrace, (27, 28)),
-		],
-	);
+    vec![
+      Token::new(TokenKind::If, (0, 2)),
+      Token::new(TokenKind::Id, (3, 4)),
+      Token::new(TokenKind::EqualsTo, (5, 7)),
+      Token::new(TokenKind::Id, (8, 9)),
+      Token::new(TokenKind::Lbrace, (10, 11)),
+      Token::new(TokenKind::Indent, (12, 13)),
+      Token::new(TokenKind::Quantity, (13, 14)),
+      Token::new(TokenKind::Deindent, (15, 15)),
+      Token::new(TokenKind::Rbrace, (15, 16)),
+      Token::new(TokenKind::Else, (17, 21)),
+      Token::new(TokenKind::Lbrace, (22, 23)),
+      Token::new(TokenKind::Indent, (24, 25)),
+      Token::new(TokenKind::Quantity, (25, 26)),
+      Token::new(TokenKind::Deindent, (27, 27)),
+      Token::new(TokenKind::Rbrace, (27, 28)),
+    ],
+  );
 }

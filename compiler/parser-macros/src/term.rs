@@ -26,15 +26,15 @@ use dropin_compiler_common::token::TokenKind;
 pub struct Term<'a>(Option<TokenKind<'a>>);
 
 impl<'a> Term<'a> {
-	pub fn new(node: &'a Node) -> Self {
-		Self(Some(node_to_token(node)))
-	}
+  pub fn new(node: &'a Node) -> Self {
+    Self(Some(node_to_token(node)))
+  }
 }
 
 impl<'a> Iterator for Term<'a> {
-	type Item = Vec<TokenKind<'a>>;
+  type Item = Vec<TokenKind<'a>>;
 
-	fn next(&mut self) -> Option<Self::Item> {
-		self.0.take().map(|token| vec![token])
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    self.0.take().map(|token| vec![token])
+  }
 }

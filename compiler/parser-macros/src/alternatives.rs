@@ -24,41 +24,41 @@ use abnf::types::Node;
 use dropin_compiler_common::token::TokenKind;
 
 pub struct Alternatives<'a> {
-	nodes: &'a [Node],
-	current: Option<Production<'a>>,
-	next: usize,
+  nodes: &'a [Node],
+  current: Option<Production<'a>>,
+  next: usize,
 }
 
 impl<'a> Alternatives<'a> {
-	pub fn new(nodes: &'a [Node]) -> Self {
-		Self {
-			nodes,
-			current: None,
-			next: 0,
-		}
-	}
+  pub fn new(nodes: &'a [Node]) -> Self {
+    Self {
+      nodes,
+      current: None,
+      next: 0,
+    }
+  }
 }
 
 impl<'a> Iterator for Alternatives<'a> {
-	type Item = Vec<TokenKind<'a>>;
+  type Item = Vec<TokenKind<'a>>;
 
-	fn next(&mut self) -> Option<Self::Item> {
-		loop {
-			let current = if let Some(current) = &mut self.current {
-				current
-			} else {
-				let Some(node) = self.nodes.get(self.next) else {
-					return None;
-				};
-				self.next += 1;
-				self.current = Some(Production::new(node));
-				self.current.as_mut().unwrap()
-			};
-			let Some(tokens) = current.next() else {
-				self.current = None;
-				continue;
-			};
-			break Some(tokens);
-		}
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    loop {
+      let current = if let Some(current) = &mut self.current {
+        current
+      } else {
+        let Some(node) = self.nodes.get(self.next) else {
+          return None;
+        };
+        self.next += 1;
+        self.current = Some(Production::new(node));
+        self.current.as_mut().unwrap()
+      };
+      let Some(tokens) = current.next() else {
+        self.current = None;
+        continue;
+      };
+      break Some(tokens);
+    }
+  }
 }

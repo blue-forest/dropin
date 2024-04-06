@@ -19,58 +19,58 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use abnf::types::Rule as ABNFRule;
 use crate::production::Production;
+use abnf::types::Rule as ABNFRule;
 
 pub struct Rules {
-	rules: Vec<ABNFRule>,
+  rules: Vec<ABNFRule>,
 }
 
 impl Rules {
-	pub fn new(rules: Vec<ABNFRule>) -> Self {
-		Self { rules }
-	}
+  pub fn new(rules: Vec<ABNFRule>) -> Self {
+    Self { rules }
+  }
 
-	pub fn iter(&self) -> Iter {
-		Iter::new(self)
-	}
+  pub fn iter(&self) -> Iter {
+    Iter::new(self)
+  }
 
-	fn get(&self, index: usize) -> Option<&ABNFRule> {
-		self.rules.get(index)
-	}
+  fn get(&self, index: usize) -> Option<&ABNFRule> {
+    self.rules.get(index)
+  }
 }
 
 pub struct Iter<'a> {
-	rules: &'a Rules,
-	current: usize,
+  rules: &'a Rules,
+  current: usize,
 }
 
 impl<'a> Iter<'a> {
-	fn new(rules: &'a Rules) -> Self {
-		Self { rules, current: 0 }
-	}
+  fn new(rules: &'a Rules) -> Self {
+    Self { rules, current: 0 }
+  }
 }
 
 impl<'a> Iterator for Iter<'a> {
-	type Item = Rule<'a>;
+  type Item = Rule<'a>;
 
-	fn next(&mut self) -> Option<Self::Item> {
-		let Some(rule) = self.rules.get(self.current) else {
-			return None;
-		};
-		self.current += 1;
-		Some(Rule(rule))
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    let Some(rule) = self.rules.get(self.current) else {
+      return None;
+    };
+    self.current += 1;
+    Some(Rule(rule))
+  }
 }
 
 pub struct Rule<'a>(&'a ABNFRule);
 
 impl<'a> Rule<'a> {
-	pub fn name(&self) -> &'a str {
-		self.0.name()
-	}
+  pub fn name(&self) -> &'a str {
+    self.0.name()
+  }
 
-	pub fn iter(&self) -> Production<'a> {
-		Production::new(self.0.node())
-	}
+  pub fn iter(&self) -> Production<'a> {
+    Production::new(self.0.node())
+  }
 }

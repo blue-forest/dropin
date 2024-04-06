@@ -27,43 +27,43 @@ use std::collections::{HashMap, HashSet};
 pub struct Follow<'a>(HashMap<&'a str, HashSet<TokenKind<'a>>>);
 
 impl<'a> Follow<'a> {
-	pub fn insert_non_terminal(&mut self, name: &'a str, is_first: bool) {
-		let follow = self.0.entry(name).or_insert(HashSet::new());
-		if is_first {
-			follow.insert(TokenKind::Eof);
-		}
-	}
+  pub fn insert_non_terminal(&mut self, name: &'a str, is_first: bool) {
+    let follow = self.0.entry(name).or_insert(HashSet::new());
+    if is_first {
+      follow.insert(TokenKind::Eof);
+    }
+  }
 
-	pub fn init(
-		&mut self,
-		first: &First<'a>,
-		productions: &[(&'a str, Vec<TokenKind<'a>>)],
-	) {
-		let mut has_changed = true;
-		while has_changed {
-			has_changed = false;
-			for (name, tokens) in productions.iter() {
-				let mut trailer = self.0.get(name).unwrap().clone();
-				for token in tokens.iter().rev() {
-					if let TokenKind::NonTerminal(token_name) = token {
-						let Some(follow) = self.0.get_mut(token_name) else {
-							panic!("{token_name} not found");
-						};
-						let old_len = follow.len();
-						follow.extend(trailer.iter());
-						has_changed = has_changed || old_len != follow.len();
-						if first.contains_empty(token) {
-							trailer.extend(first.iter_filter_empty(token));
-							continue;
-						}
-					}
-					trailer = HashSet::from_iter(first.iter(token));
-				}
-			}
-		}
-	}
+  pub fn init(
+    &mut self,
+    first: &First<'a>,
+    productions: &[(&'a str, Vec<TokenKind<'a>>)],
+  ) {
+    let mut has_changed = true;
+    while has_changed {
+      has_changed = false;
+      for (name, tokens) in productions.iter() {
+        let mut trailer = self.0.get(name).unwrap().clone();
+        for token in tokens.iter().rev() {
+          if let TokenKind::NonTerminal(token_name) = token {
+            let Some(follow) = self.0.get_mut(token_name) else {
+              panic!("{token_name} not found");
+            };
+            let old_len = follow.len();
+            follow.extend(trailer.iter());
+            has_changed = has_changed || old_len != follow.len();
+            if first.contains_empty(token) {
+              trailer.extend(first.iter_filter_empty(token));
+              continue;
+            }
+          }
+          trailer = HashSet::from_iter(first.iter(token));
+        }
+      }
+    }
+  }
 
-	pub fn get(&self, name: &'a str) -> &HashSet<TokenKind<'a>> {
-		self.0.get(name).unwrap()
-	}
+  pub fn get(&self, name: &'a str) -> &HashSet<TokenKind<'a>> {
+    self.0.get(name).unwrap()
+  }
 }

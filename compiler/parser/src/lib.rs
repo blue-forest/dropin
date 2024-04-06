@@ -24,6 +24,6 @@ pub mod parser;
 pub mod token;
 
 #[dropin_compiler_parser_macros::table(
-	grammar = "compiler/parser/src/grammar.abnf"
+  grammar = "compiler/parser/src/grammar.abnf"
 )]
 pub struct Table;

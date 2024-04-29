@@ -1,4 +1,0 @@
-*.wasm
-
-recipes/config.toml
-recipes/.builds

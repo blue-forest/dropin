@@ -25,8 +25,24 @@ use dropin_compiler_common::token::TokenKind;
 pub fn node_to_token(node: &Node) -> TokenKind {
   match node {
     Node::String(lit) => match lit.value() {
+      ":" => TokenKind::Block,
       "==" => TokenKind::EqualsTo,
-      _ => TokenKind::Terminal(lit.value()),
+      "!=" => TokenKind::DifferentFrom,
+      "in" => TokenKind::In,
+      "+" => TokenKind::Add,
+      "-" => TokenKind::Sub,
+      "." => TokenKind::Dot,
+      "," => TokenKind::Comma,
+      "&" => TokenKind::And,
+      "|" => TokenKind::Or,
+      "!" => TokenKind::Not,
+      ")" => TokenKind::Rpar,
+      "]" => TokenKind::Rbrac,
+      "{" => TokenKind::Lbrace,
+      "}" => TokenKind::Rbrace,
+      "?" => TokenKind::Exists,
+      "\\" => TokenKind::Backslash,
+      _ => panic!("token unknown: {lit}"),
     },
     Node::Rulename(name) => match name.as_str() {
       "NEWLINE" => TokenKind::Newline,

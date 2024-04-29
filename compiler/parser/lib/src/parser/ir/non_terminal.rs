@@ -28,7 +28,7 @@ use dropin_compiler_common::{
   token::TokenKind,
 };
 
-use super::ExpressionBuilder;
+use super::{BuildState, ExpressionBuilder};
 
 impl<'a> ExpressionBuilder<'a> {
   pub(super) fn build_non_terminal(
@@ -36,28 +36,31 @@ impl<'a> ExpressionBuilder<'a> {
     #[cfg(debug_assertions)] stdout: &mut impl Write,
     nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
     input: &str,
+    state: BuildState,
   ) -> Result<Expression, ExpressionBuilder<'a>> {
     let TokenKind::NonTerminal(non_terminal) = self.token else {
       return Err(self);
     };
     Ok(match non_terminal {
       "expression" => {
-        let left = nodes[self.children[0]].take().unwrap().build(
+        let left = nodes[self.children[0]].take().unwrap().build_inner(
           #[cfg(debug_assertions)]
           stdout,
           nodes,
           input,
+          state,
         );
         if self.children.len() > 1 {
           let continuation_token =
             nodes[self.children[1]].take().unwrap().token;
           match continuation_token {
             TokenKind::EqualsTo => {
-              let right = nodes[self.children[2]].take().unwrap().build(
+              let right = nodes[self.children[2]].take().unwrap().build_inner(
                 #[cfg(debug_assertions)]
                 stdout,
                 nodes,
                 input,
+                state,
               );
               Expression::Comparison(Comparison::EqualsTo(
                 Box::new(left),
@@ -72,24 +75,53 @@ impl<'a> ExpressionBuilder<'a> {
           left
         }
       }
+      "value-no-indent" => {
+        let node = nodes[self.children[0]].take().unwrap();
+        let first_token = &node.token;
+        match first_token {
+          // value-lit
+          TokenKind::NonTerminal(_) => node.build_inner(
+            #[cfg(debug_assertions)]
+            stdout,
+            nodes,
+            input,
+            state,
+          ),
+          TokenKind::Id => node.build_terminal(
+            #[cfg(debug_assertions)]
+            stdout,
+            nodes,
+            input,
+            state,
+            &self.children[1..],
+          ),
+          TokenKind::Exists => todo!(),
+          TokenKind::Not => todo!(),
+          _ => unreachable!(),
+        }
+      }
       _ => {
         // if self.children.len() != 1 {
         //   print!(
         //     stdout,
-        //     "=================\n{:?}\n{:?}",
-        //     self.children,
-        //     self.children.iter().map(|i| &nodes[*i]).collect::<Vec<_>>()
+        //     "=================\n{:?}",
+        //     self
+        //       .children
+        //       .iter()
+        //       .map(|i| format!("{:?}", nodes[*i].as_ref().unwrap().token))
+        //       .collect::<Vec<_>>()
         //   );
         // }
         assert!(
           self.children.len() == 1,
           "{non_terminal} has several children"
         );
-        nodes[self.children[0]].take().unwrap().build(
+        nodes[self.children[0]].take().unwrap().build_inner(
           #[cfg(debug_assertions)]
           stdout,
           nodes,
           input,
+          state,
         )
       }
     })

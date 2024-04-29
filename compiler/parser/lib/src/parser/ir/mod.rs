@@ -55,6 +55,16 @@ impl<'a> ExpressionBuilder<'a> {
     nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
     input: &str,
   ) -> Expression {
+    self.build_inner(stdout, nodes, input, BuildState::default())
+  }
+
+  fn build_inner(
+    self,
+    #[cfg(debug_assertions)] stdout: &mut impl Write,
+    nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
+    input: &str,
+    state: BuildState,
+  ) -> Expression {
     print!(
       stdout,
       "NODES {:?}",
@@ -68,6 +78,7 @@ impl<'a> ExpressionBuilder<'a> {
       stdout,
       nodes,
       input,
+      state,
     ) {
       Ok(expr) => {
         return expr;
@@ -77,25 +88,14 @@ impl<'a> ExpressionBuilder<'a> {
         stdout,
         nodes,
         input,
+        state,
+        &[],
       ),
     }
-    /*
-    print!(stdout, "{}: {:?}", self.token.as_str(), self.children);
-    Node {
-      token: self.token,
-      children: self
-        .children
-        .into_iter()
-        .map(|i| {
-          nodes[i].take().unwrap().build(
-            #[cfg(debug_assertions)]
-            stdout,
-            nodes,
-          )
-        })
-        .collect(),
-      span: self.span,
-    }
-    */
   }
+}
+
+#[derive(Default, Clone, Copy)]
+struct BuildState {
+  in_keys: bool,
 }

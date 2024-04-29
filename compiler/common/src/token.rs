@@ -26,7 +26,6 @@ use quote::{quote, ToTokens};
 
 #[derive(Debug, Clone, Copy, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum TokenKind<'a> {
-  Terminal(&'a str),
   NonTerminal(&'a str),
   Newline,
   Indent,
@@ -72,7 +71,6 @@ pub enum TokenKind<'a> {
 impl<'a> TokenKind<'a> {
   pub fn as_str(&self) -> &'a str {
     match self {
-      Self::Terminal(name) => name,
       Self::NonTerminal(name) => name,
       Self::Newline => "NEWLINE",
       Self::Indent => "INDENT",
@@ -122,9 +120,6 @@ impl<'a> TokenKind<'a> {
 impl<'a> ToTokens for TokenKind<'a> {
   fn to_tokens(&self, tokens: &mut TokenStream) {
     let extension = match self {
-      Self::Terminal(value) => {
-        quote!(dropin_compiler_common::token::TokenKind::Terminal(#value))
-      }
       Self::NonTerminal(value) => {
         quote!(dropin_compiler_common::token::TokenKind::NonTerminal(#value))
       }

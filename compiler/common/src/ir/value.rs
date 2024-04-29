@@ -23,16 +23,10 @@ use super::Expression;
 
 #[derive(Debug)]
 pub enum Value {
-  Getter(String, Vec<Key>),
+  Getter(String, Vec<Expression>),
   Text(String),
   Quantity(f64),
   Boolean(bool),
   List(Vec<Expression>),
   Object(Vec<(String, Expression)>),
-}
-
-#[derive(Debug)]
-pub enum Key {
-  Text(String),
-  Quantity(u32),
 }

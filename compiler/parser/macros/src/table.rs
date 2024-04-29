@@ -141,7 +141,7 @@ impl<'a> Table<'a> {
           data.entry(name).or_insert(HashMap::new()).insert(token, i)
         {
           let (collision_name, collision_tokens) = &productions[production];
-          println!(
+          eprintln!(
             "{collision_name} = {}",
             collision_tokens
               .iter()
@@ -149,7 +149,7 @@ impl<'a> Table<'a> {
               .collect::<Vec<_>>()
               .join(" ")
           );
-          println!(
+          eprintln!(
             "{name} = {}",
             tokens
               .iter()

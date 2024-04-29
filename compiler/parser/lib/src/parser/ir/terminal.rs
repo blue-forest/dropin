@@ -28,19 +28,20 @@ use dropin_compiler_common::{
   token::TokenKind,
 };
 
-use super::ExpressionBuilder;
+use super::{BuildState, ExpressionBuilder};
 
 impl<'a> ExpressionBuilder<'a> {
   pub(super) fn build_terminal(
     self,
-    #[cfg(debug_assertions)] _stdout: &mut impl Write,
-    _nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
+    #[cfg(debug_assertions)] stdout: &mut impl Write,
+    nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
     input: &str,
+    state: BuildState,
+    siblings: &[usize],
   ) -> Expression {
     let (start, end) = self.span.unwrap();
     let spanned_input = &input[start..end];
     match self.token {
-      TokenKind::Terminal(_) => unreachable!(),
       TokenKind::NonTerminal(_) => todo!("NonTerminal"),
       TokenKind::Newline => todo!("Newline"),
       TokenKind::Indent => todo!("Indent"),
@@ -55,7 +56,29 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::False => todo!("False"),
       TokenKind::Samekey => todo!("Samekey"),
       TokenKind::Id => {
-        Expression::Value(Value::Getter(spanned_input.into(), vec![]))
+        if state.in_keys {
+          return Expression::Value(Value::Text(spanned_input.into()));
+        }
+        let mut indexes = Vec::with_capacity(siblings.len() / 2);
+        let mut i = 1;
+        let mut keys_state = state;
+        keys_state.in_keys = true;
+        while i < siblings.len() {
+          let sep = nodes[siblings[i - 1]].take().unwrap().token;
+          let key = nodes[siblings[i]].take().unwrap();
+          indexes.push(key.build_inner(
+            #[cfg(debug_assertions)]
+            stdout,
+            nodes,
+            input,
+            keys_state,
+          ));
+          if let TokenKind::BracGlued = sep {
+            i += 1;
+          }
+          i += 2;
+        }
+        Expression::Value(Value::Getter(spanned_input.into(), indexes))
       }
       TokenKind::Text => todo!("Text"),
       TokenKind::Quantity => {

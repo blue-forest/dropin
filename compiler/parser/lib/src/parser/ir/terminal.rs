@@ -52,8 +52,8 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::BracSpaced => todo!("BracSpaced"),
       TokenKind::If => todo!("If"),
       TokenKind::Else => todo!("Else"),
-      TokenKind::True => todo!("True"),
-      TokenKind::False => todo!("False"),
+      TokenKind::True => Expression::Value(Value::Boolean(true)),
+      TokenKind::False => Expression::Value(Value::Boolean(false)),
       TokenKind::Samekey => todo!("Samekey"),
       TokenKind::Id => {
         if state.in_keys {

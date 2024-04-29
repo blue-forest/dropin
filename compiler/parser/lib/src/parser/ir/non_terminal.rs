@@ -24,7 +24,7 @@ use core::fmt::Write;
 
 use alloc::{boxed::Box, vec::Vec};
 use dropin_compiler_common::{
-  ir::{Comparison, Expression},
+  ir::{Comparison, Expression, Logic},
   token::TokenKind,
 };
 
@@ -73,6 +73,56 @@ impl<'a> ExpressionBuilder<'a> {
           }
         } else {
           left
+        }
+      }
+      "predicate" => {
+        let first_operand =
+          nodes[self.children[0]].take().unwrap().build_inner(
+            #[cfg(debug_assertions)]
+            stdout,
+            nodes,
+            input,
+            state,
+          );
+        if self.children.len() > 1 {
+          let mut operands = vec![first_operand];
+          let mut i = 2;
+          let mut logic_token =
+            nodes[self.children[i - 1]].as_ref().unwrap().token;
+          while i < self.children.len() {
+            let new_logic_token =
+              nodes[self.children[i - 1]].take().unwrap().token;
+            if new_logic_token != logic_token {
+              match logic_token {
+                TokenKind::And => {
+                  let and = Expression::Logic(Logic::And(operands));
+                  operands = vec![and];
+                }
+                TokenKind::Or => {
+                  let or = Expression::Logic(Logic::Or(operands));
+                  operands = vec![or];
+                }
+                _ => unreachable!(),
+              }
+              logic_token = new_logic_token;
+            }
+            let node = nodes[self.children[i]].take().unwrap();
+            operands.push(node.build_inner(
+              #[cfg(debug_assertions)]
+              stdout,
+              nodes,
+              input,
+              state,
+            ));
+            i += 2;
+          }
+          match logic_token {
+            TokenKind::And => Expression::Logic(Logic::And(operands)),
+            TokenKind::Or => Expression::Logic(Logic::Or(operands)),
+            _ => unreachable!(),
+          }
+        } else {
+          first_operand
         }
       }
       "value-no-indent" => {

@@ -19,7 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_compiler_common::ir::{Comparison, Expression, Value};
+use dropin_compiler_common::ir::{Comparison, Expression, Logic, Value};
 use dropin_compiler_parser_lib::{parse, Table};
 
 use crate::common::Printer;
@@ -88,4 +88,62 @@ fn nested_equals_to_quantity() {
     return;
   };
   assert!(*quantity == 5.0, "wrong quantity: {quantity}");
+}
+
+#[test]
+fn logic_priority_and() {
+  let table = Table::default();
+  let input = "true & false | false";
+  let expr = parse(&mut Printer, input.into(), None, &table);
+  let Expression::Logic(Logic::Or(or)) = expr else {
+    assert!(false, r#""{input}" ==> {expr:?}"#);
+    return;
+  };
+  assert!(or.len() == 2, "wrong or: {or:?}");
+  let Expression::Logic(Logic::And(and)) = &or[0] else {
+    assert!(false, "wrong or first operand: {:?}", or[0]);
+    return;
+  };
+  assert!(and.len() == 2, "wrong and: {and:?}");
+  let Expression::Value(Value::Boolean(true)) = and[0] else {
+    assert!(false, "wrong and first operand: {:?}", and[0]);
+    return;
+  };
+  let Expression::Value(Value::Boolean(false)) = and[1] else {
+    assert!(false, "wrong and second operand: {:?}", and[1]);
+    return;
+  };
+  let Expression::Value(Value::Boolean(false)) = or[1] else {
+    assert!(false, "wrong or second operand: {:?}", or[1]);
+    return;
+  };
+}
+
+#[test]
+fn logic_priority_or() {
+  let table = Table::default();
+  let input = "false | true & false";
+  let expr = parse(&mut Printer, input.into(), None, &table);
+  let Expression::Logic(Logic::And(and)) = expr else {
+    assert!(false, r#""{input}" ==> {expr:?}"#);
+    return;
+  };
+  assert!(and.len() == 2, "wrong or: {and:?}");
+  let Expression::Logic(Logic::Or(or)) = &and[0] else {
+    assert!(false, "wrong and first operand: {:?}", and[0]);
+    return;
+  };
+  assert!(or.len() == 2, "wrong and: {or:?}");
+  let Expression::Value(Value::Boolean(false)) = or[0] else {
+    assert!(false, "wrong or first operand: {:?}", or[0]);
+    return;
+  };
+  let Expression::Value(Value::Boolean(true)) = or[1] else {
+    assert!(false, "wrong or second operand: {:?}", or[1]);
+    return;
+  };
+  let Expression::Value(Value::Boolean(false)) = and[1] else {
+    assert!(false, "wrong and second operand: {:?}", and[1]);
+    return;
+  };
 }

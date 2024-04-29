@@ -24,7 +24,7 @@ use core::fmt::Write;
 
 use alloc::{boxed::Box, vec::Vec};
 use dropin_compiler_common::{
-  ir::{Comparison, Expression, Logic},
+  ir::{control::If, Comparison, Control, Expression, Logic},
   token::TokenKind,
 };
 
@@ -150,6 +150,46 @@ impl<'a> ExpressionBuilder<'a> {
           _ => unreachable!(),
         }
       }
+      "if" => {
+        let condition = nodes[self.children[1]].take().unwrap().build_inner(
+          #[cfg(debug_assertions)]
+          stdout,
+          nodes,
+          input,
+          state,
+        );
+        let then = nodes[self.children[3]].take().unwrap().build_inner(
+          #[cfg(debug_assertions)]
+          stdout,
+          nodes,
+          input,
+          state,
+        );
+        let mut else_ = None;
+        if self.children.len() > 4 {
+          else_ = Some(Box::new(
+            nodes[self.children[4]].take().unwrap().build_inner(
+              #[cfg(debug_assertions)]
+              stdout,
+              nodes,
+              input,
+              state,
+            ),
+          ))
+        }
+        Expression::Control(Control::If(If {
+          condition: Box::new(condition),
+          then: Box::new(then),
+          else_,
+        }))
+      }
+      "if-else" => nodes[self.children[2]].take().unwrap().build_inner(
+        #[cfg(debug_assertions)]
+        stdout,
+        nodes,
+        input,
+        state,
+      ),
       _ => {
         // if self.children.len() != 1 {
         //   print!(

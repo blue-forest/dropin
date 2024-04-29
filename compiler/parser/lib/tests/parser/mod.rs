@@ -19,7 +19,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_compiler_common::ir::{Comparison, Expression, Logic, Value};
+use dropin_compiler_common::ir::{
+  Comparison, Control, Expression, Logic, Value,
+};
 use dropin_compiler_parser_lib::{parse, Table};
 
 use crate::common::Printer;
@@ -144,6 +146,53 @@ fn logic_priority_or() {
   };
   let Expression::Value(Value::Boolean(false)) = and[1] else {
     assert!(false, "wrong and second operand: {:?}", and[1]);
+    return;
+  };
+}
+
+#[test]
+fn simple_if() {
+  let table = Table::default();
+  let input = r#"if a == "test": false else: true"#;
+  let expr = parse(&mut Printer, input.into(), None, &table);
+  let Expression::Control(Control::If(if_)) = expr else {
+    assert!(false, r#""{input}" ==> {expr:?}"#);
+    return;
+  };
+  let Expression::Comparison(Comparison::EqualsTo(
+    condition_left,
+    condition_right,
+  )) = if_.condition.as_ref()
+  else {
+    assert!(false, "wrong condition: {:?}", if_.condition);
+    return;
+  };
+  let Expression::Value(Value::Getter(ident, indexes)) =
+    condition_left.as_ref()
+  else {
+    assert!(false, "wrong condition left: {:?}", condition_left);
+    return;
+  };
+  assert!(ident == "a", r#"wrong identifier: "{ident}""#);
+  assert!(indexes.is_empty(), "unexpected indexes: {indexes:?}");
+  let Expression::Value(Value::Text(condition_right_text)) =
+    condition_right.as_ref()
+  else {
+    assert!(false, "wrong condition right: {:?}", condition_right);
+    return;
+  };
+  assert!(
+    condition_right_text == "test",
+    r#"wrong condition right text: "{condition_right_text}""#
+  );
+  let Expression::Value(Value::Boolean(false)) = if_.then.as_ref() else {
+    assert!(false, "wrong then: {:?}", if_.then);
+    return;
+  };
+  let Some(&Expression::Value(Value::Boolean(true))) =
+    if_.else_.as_ref().map(|e| e.as_ref())
+  else {
+    assert!(false, "wrong else: {:?}", if_.else_);
     return;
   };
 }

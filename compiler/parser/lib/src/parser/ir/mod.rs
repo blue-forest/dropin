@@ -55,7 +55,13 @@ impl<'a> ExpressionBuilder<'a> {
     nodes: &mut Vec<Option<ExpressionBuilder<'a>>>,
     input: &str,
   ) -> Expression {
-    self.build_inner(stdout, nodes, input, BuildState::default())
+    self.build_inner(
+      #[cfg(debug_assertions)]
+      stdout,
+      nodes,
+      input,
+      BuildState::default(),
+    )
   }
 
   fn build_inner(

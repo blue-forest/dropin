@@ -80,7 +80,9 @@ impl<'a> ExpressionBuilder<'a> {
         }
         Expression::Value(Value::Getter(spanned_input.into(), indexes))
       }
-      TokenKind::Text => todo!("Text"),
+      TokenKind::Text => {
+        Expression::Value(Value::Text(spanned_input.trim_matches('"').into()))
+      }
       TokenKind::Quantity => {
         Expression::Value(Value::Quantity(spanned_input.parse().unwrap()))
       }
@@ -91,7 +93,7 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::Empty => todo!("Empty"),
       TokenKind::End => todo!("End"),
       TokenKind::Eof => todo!("Eof"),
-      TokenKind::Block => todo!("Block"),
+      TokenKind::Block => unreachable!(),
       TokenKind::EqualsTo => todo!("EqualsTo"),
       TokenKind::DifferentFrom => todo!("DifferentFrom"),
       TokenKind::In => todo!("In"),

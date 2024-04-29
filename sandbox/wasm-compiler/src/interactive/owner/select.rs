@@ -1,7 +1,7 @@
 /*     _              _ _
  *  __| |_ _ ___ _ __( |_)_ _
  * / _` | '_/ _ \ '_ \/| | ' \
- * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler
  *              |_|
  * Copyright © 2019-2024 Blue Forest
  *

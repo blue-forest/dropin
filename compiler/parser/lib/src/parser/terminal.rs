@@ -19,12 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// struct If {
-// }
+#[cfg(debug_assertions)]
+use core::fmt::Write;
 
-// impl Emmitter for If {
-//   fn start_if(&mut self, if_: If) {}
-//   fn end_if(&mut self, buf: impl fmt::Write, if_: If) -> Result<()> {
-//     write!(buf, "/*dart code*/")?;
-//   }
-// }
+use crate::token::Token;
+
+use super::{stack::StackNode, LoopControl};
+
+pub(super) fn parse_terminal(
+  #[cfg(debug_assertions)] stdout: &mut impl Write,
+  tokens: &[Token],
+  current: &mut usize,
+  mut stack_top: StackNode,
+) -> LoopControl {
+  stack_top.builder().span = Some(tokens[*current].span);
+  stack_top.stack.push_children(
+    #[cfg(debug_assertions)]
+    stdout,
+    stack_top.i,
+  );
+  *current += 1;
+  LoopControl::Continue
+}

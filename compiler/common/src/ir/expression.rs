@@ -1,7 +1,7 @@
 /*     _              _ _
  *  __| |_ _ ___ _ __( |_)_ _
  * / _` | '_/ _ \ '_ \/| | ' \
- * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
  * Copyright © 2019-2024 Blue Forest
  *
@@ -19,6 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-fn main() {
-  todo!()
+use super::{Arithmetic, Comparison, Control, Logic, Value};
+
+#[derive(Debug)]
+pub enum Expression {
+  Value(Value),
+  Arithmetic(Arithmetic),
+  Comparison(Comparison),
+  Logic(Logic),
+  Control(Control),
 }

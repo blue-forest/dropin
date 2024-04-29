@@ -21,46 +21,33 @@
 
 use crate::common::test_lexer;
 use dropin_compiler_common::token::TokenKind;
-use dropin_compiler_parser::token::Token;
+use dropin_compiler_parser_lib::Token;
 use indoc::indoc;
 
 #[test]
-fn variables() {
+fn conditions() {
   test_lexer(
-    indoc! {"
-			a = 1
-			b = \"ok\"
-		"},
+    indoc! {"if a == b {
+			1
+		} else {
+			2
+		}"},
     vec![
-      Token::new(TokenKind::Id, (0, 1)),
-      Token::new(TokenKind::Samekey, (2, 3)),
-      Token::new(TokenKind::Quantity, (4, 5)),
-      Token::new(TokenKind::Newline, (6, 6)),
-      Token::new(TokenKind::Id, (6, 7)),
-      Token::new(TokenKind::Samekey, (8, 9)),
-      Token::new(TokenKind::Text, (10, 14)),
+      Token::new(TokenKind::If, (0, 2)),
+      Token::new(TokenKind::Id, (3, 4)),
+      Token::new(TokenKind::EqualsTo, (5, 7)),
+      Token::new(TokenKind::Id, (8, 9)),
+      Token::new(TokenKind::Lbrace, (10, 11)),
+      Token::new(TokenKind::Indent, (12, 13)),
+      Token::new(TokenKind::Quantity, (13, 14)),
+      Token::new(TokenKind::Deindent, (15, 15)),
+      Token::new(TokenKind::Rbrace, (15, 16)),
+      Token::new(TokenKind::Else, (17, 21)),
+      Token::new(TokenKind::Lbrace, (22, 23)),
+      Token::new(TokenKind::Indent, (24, 25)),
+      Token::new(TokenKind::Quantity, (25, 26)),
+      Token::new(TokenKind::Deindent, (27, 27)),
+      Token::new(TokenKind::Rbrace, (27, 28)),
     ],
   );
-
-  test_lexer(
-    "	a = 1\n  b = \"ok\"",
-    vec![
-      Token::new(TokenKind::Id, (1, 2)),
-      Token::new(TokenKind::Samekey, (3, 4)),
-      Token::new(TokenKind::Quantity, (5, 6)),
-      Token::new(TokenKind::Indent, (7, 9)),
-      Token::new(TokenKind::Id, (9, 10)),
-      Token::new(TokenKind::Samekey, (11, 12)),
-      Token::new(TokenKind::Text, (13, 17)),
-      Token::new(TokenKind::Deindent, (17, 17)),
-    ],
-  );
-
-  /*test_lexer(
-    indoc! {"
-      test1 = 1
-      test2 = \"ok\"
-    "},
-    vec![Token::new(TokenKind::Id, (0, 5))],
-  );*/
 }

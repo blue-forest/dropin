@@ -19,6 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use alloc::vec::Vec;
 use dropin_compiler_common::token::TokenKind;
 
 use crate::token::{Token, TokenState};

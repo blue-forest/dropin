@@ -1,7 +1,7 @@
 /*     _              _ _
  *  __| |_ _ ___ _ __( |_)_ _
  * / _` | '_/ _ \ '_ \/| | ' \
- * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler
  *              |_|
  * Copyright © 2019-2024 Blue Forest
  *
@@ -19,12 +19,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// struct If {
-// }
+#![no_std]
 
-// impl Emmitter for If {
-//   fn start_if(&mut self, if_: If) {}
-//   fn end_if(&mut self, buf: impl fmt::Write, if_: If) -> Result<()> {
-//     write!(buf, "/*dart code*/")?;
-//   }
-// }
+#[cfg(test)]
+extern crate std;
+
+#[macro_use]
+extern crate alloc;
+
+pub use crate::lexer::lexer;
+pub use crate::parser::parse;
+pub use crate::token::Token;
+
+macro_rules! print {
+  ($stdout:ident, $($arg:tt)*) => {
+    #[cfg(debug_assertions)]
+    let _ = writeln!($stdout, $($arg)*);
+  };
+}
+
+mod lexer;
+mod parser;
+mod token;
+
+#[dropin_compiler_parser_macros::table(
+  grammar = "compiler/parser/lib/src/grammar.abnf"
+)]
+pub struct Table;

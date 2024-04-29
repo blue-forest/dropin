@@ -19,12 +19,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// struct If {
-// }
+use super::Expression;
 
-// impl Emmitter for If {
-//   fn start_if(&mut self, if_: If) {}
-//   fn end_if(&mut self, buf: impl fmt::Write, if_: If) -> Result<()> {
-//     write!(buf, "/*dart code*/")?;
-//   }
-// }
+#[derive(Debug)]
+pub enum Control {
+  If(If),
+  AnonymousFunction(AnonymousFunction),
+  FunctionCall(FunctionCall),
+}
+
+#[derive(Debug)]
+pub struct If {
+  pub condition: Box<Expression>,
+  pub then: Box<Expression>,
+  pub else_: Option<Box<Expression>>,
+}
+
+#[derive(Debug)]
+pub struct AnonymousFunction {
+  pub args: Vec<String>,
+  pub body: Box<Expression>,
+}
+
+#[derive(Debug)]
+pub struct FunctionCall {
+  pub function: Box<Expression>,
+  pub args: Vec<Expression>,
+}

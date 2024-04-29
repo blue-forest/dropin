@@ -24,7 +24,7 @@ use proc_macro2::TokenStream;
 #[cfg(feature = "macros")]
 use quote::{quote, ToTokens};
 
-#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Hash, PartialOrd, Ord, PartialEq, Eq)]
 pub enum TokenKind<'a> {
   Terminal(&'a str),
   NonTerminal(&'a str),

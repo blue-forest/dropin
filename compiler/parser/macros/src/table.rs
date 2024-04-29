@@ -43,7 +43,9 @@ impl<'a> ToTokens for Table<'a> {
       proc_macro2::TokenStream::new(),
       |mut stream, (_, tokens)| {
         let capacity = tokens.len();
-        stream.extend(quote!(let mut rules = Vec::with_capacity(#capacity);));
+        stream.extend(
+          quote!(let mut rules = alloc::vec::Vec::with_capacity(#capacity);),
+        );
         for token in tokens.into_iter().rev() {
           stream.extend(quote!(rules.push(#token);));
         }
@@ -53,7 +55,9 @@ impl<'a> ToTokens for Table<'a> {
     );
     let mut data = proc_macro2::TokenStream::new();
     for (non_terminal, _) in self.non_terminals.iter() {
-      data.extend(quote!(let mut redirect = std::collections::HashMap::new();));
+      data.extend(
+        quote!(let mut redirect = alloc::collections::BTreeMap::new();),
+      );
       for (token, production) in self.data[non_terminal].iter() {
         data.extend(quote!(redirect.insert(#token, #production);));
       }
@@ -61,19 +65,28 @@ impl<'a> ToTokens for Table<'a> {
     }
 
     let productions_capacity = self.productions.len();
-    let data_capacity = self.data.len();
 
     tokens.extend(quote!(
 			pub struct Table {
-				pub productions: Vec<Vec<dropin_compiler_common::token::TokenKind<'static>>>,
-				pub data: std::collections::HashMap<&'static str, std::collections::HashMap<dropin_compiler_common::token::TokenKind<'static>, usize>>
+				pub productions: alloc::vec::Vec<
+                  alloc::vec::Vec<
+                    dropin_compiler_common::token::TokenKind<'static>
+                  >
+                >,
+				pub data: alloc::collections::BTreeMap<
+                  &'static str,
+                  alloc::collections::BTreeMap<
+                    dropin_compiler_common::token::TokenKind<'static>,
+                    usize
+                  >
+                >
 			}
 
 			impl Default for Table {
 				fn default() -> Self {
-					let mut productions = Vec::with_capacity(#productions_capacity);
+					let mut productions = alloc::vec::Vec::with_capacity(#productions_capacity);
 					#productions
-					let mut data = std::collections::HashMap::with_capacity(#data_capacity);
+					let mut data = alloc::collections::BTreeMap::new();
 					#data
 					Self { productions, data }
 				}

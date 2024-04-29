@@ -1,7 +1,7 @@
 /*     _              _ _
  *  __| |_ _ ___ _ __( |_)_ _
  * / _` | '_/ _ \ '_ \/| | ' \
- * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
  * Copyright © 2019-2024 Blue Forest
  *
@@ -19,11 +19,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub mod lexer;
-pub mod parser;
-pub mod token;
+use super::Expression;
 
-#[dropin_compiler_parser_macros::table(
-  grammar = "compiler/parser/src/grammar.abnf"
-)]
-pub struct Table;
+#[derive(Debug)]
+pub enum Value {
+  Getter(String, Vec<Key>),
+  Text(String),
+  Quantity(f64),
+  Boolean(bool),
+  List(Vec<Expression>),
+  Object(Vec<(String, Expression)>),
+}
+
+#[derive(Debug)]
+pub enum Key {
+  Text(String),
+  Quantity(u32),
+}

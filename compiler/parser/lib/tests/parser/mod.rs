@@ -19,13 +19,30 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_compiler_parser::parser::parse;
-use dropin_compiler_parser::Table;
+use dropin_compiler_common::ir::{Comparison, Expression, Value};
+use dropin_compiler_parser_lib::{parse, Table};
+
+use crate::common::Printer;
 
 #[test]
 fn example() {
   let table = Table::default();
 
   let input = "a == 1";
-  parse(input, None, &table);
+  let expr = parse(&mut Printer, input.into(), None, &table);
+  let Expression::Comparison(Comparison::EqualsTo(left, right)) = &expr else {
+    assert!(false, r#""{input}" ==> {expr:?}"#);
+    return;
+  };
+  let Expression::Value(Value::Getter(ident, indexes)) = left.as_ref() else {
+    assert!(false, r#"wrong left value: "{input}" ==> {expr:?}"#);
+    return;
+  };
+  assert!(ident == "a", "wrong identifier: {ident}");
+  assert!(indexes.is_empty(), "indexes are not empty: {indexes:?}");
+  let Expression::Value(Value::Quantity(quantity)) = right.as_ref() else {
+    assert!(false, r#"wrong right value: "{input}" ==> {expr:?}"#);
+    return;
+  };
+  assert!(*quantity == 1.0, "wrong quantity: {quantity}");
 }

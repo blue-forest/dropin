@@ -19,12 +19,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-// struct If {
-// }
+use super::Expression;
 
-// impl Emmitter for If {
-//   fn start_if(&mut self, if_: If) {}
-//   fn end_if(&mut self, buf: impl fmt::Write, if_: If) -> Result<()> {
-//     write!(buf, "/*dart code*/")?;
-//   }
-// }
+#[derive(Debug)]
+pub enum Logic {
+  And(Vec<Expression>),
+  Or(Vec<Expression>),
+  Not(Box<Expression>),
+  Exists(Box<Expression>),
+}

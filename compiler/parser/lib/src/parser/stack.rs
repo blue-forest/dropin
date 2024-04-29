@@ -1,16 +1,42 @@
-use std::fmt::{Debug, Formatter};
+/*     _              _ _
+ *  __| |_ _ ___ _ __( |_)_ _
+ * / _` | '_/ _ \ '_ \/| | ' \
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
+ *              |_|
+ * Copyright © 2019-2024 Blue Forest
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
 
+#[cfg(debug_assertions)]
+use core::fmt::Write;
+
+use alloc::fmt::{Debug, Formatter};
+
+use alloc::vec::Vec;
+use dropin_compiler_common::ir::Expression;
 use dropin_compiler_common::token::TokenKind;
 
-use super::{node::NodeBuilder, Node, DEBUG};
+use crate::parser::ir::ExpressionBuilder;
 
 pub(super) struct Stack<'a> {
-  nodes: Vec<Option<NodeBuilder<'a>>>,
+  nodes: Vec<Option<ExpressionBuilder<'a>>>,
   stack: Vec<usize>,
 }
 
 impl Debug for Stack<'_> {
-  fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+  fn fmt(&self, f: &mut Formatter<'_>) -> alloc::fmt::Result {
     let mut first = true;
     write!(f, "ALL NODES\n")?;
     for node in &self.nodes {
@@ -35,12 +61,12 @@ impl Debug for Stack<'_> {
 }
 
 impl<'a> Stack<'a> {
-  pub(super) fn new(main_non_terminal: Option<&'a str>) -> Stack<'a> {
+  pub(super) fn new(main_non_terminal: &'a str) -> Stack<'a> {
     Stack {
       nodes: vec![
-        Some(NodeBuilder::new(TokenKind::NonTerminal("root"), None)),
-        Some(NodeBuilder::new(
-          TokenKind::NonTerminal(main_non_terminal.unwrap_or("predicate")),
+        Some(ExpressionBuilder::new(TokenKind::NonTerminal("root"), None)),
+        Some(ExpressionBuilder::new(
+          TokenKind::NonTerminal(main_non_terminal),
           Some(0),
         )),
       ],
@@ -62,17 +88,33 @@ impl<'a> Stack<'a> {
     self.stack.len() <= 1
   }
 
-  pub(super) fn into_tree(mut self) -> Node<'a> {
+  pub(super) fn into_expression(
+    mut self,
+    #[cfg(debug_assertions)] stdout: &mut impl Write,
+    input: &str,
+  ) -> Expression {
     let i = self.nodes[0].as_mut().unwrap().children.pop().unwrap();
-    self.nodes[i].take().unwrap().build(&mut self.nodes)
+    self.nodes[i].take().unwrap().build(
+      #[cfg(debug_assertions)]
+      stdout,
+      &mut self.nodes,
+      input,
+    )
   }
 
-  pub(super) fn push_children(&mut self, i: usize) {
+  pub(super) fn push_children(
+    &mut self,
+    #[cfg(debug_assertions)] stdout: &mut impl Write,
+    i: usize,
+  ) {
     let node = self.nodes[i].as_ref().unwrap();
     let parent = node.parent.unwrap();
-    if DEBUG {
-      println!("PUSH_CHILDREN {:?} {:?}", node.token.as_str(), parent);
-    }
+    print!(
+      stdout,
+      "PUSH_CHILDREN {:?} {:?}",
+      node.token.as_str(),
+      parent
+    );
     self.nodes[parent].as_mut().unwrap().children.push(i);
   }
 
@@ -82,13 +124,12 @@ impl<'a> Stack<'a> {
 
   pub(super) fn substitute(
     &mut self,
+    #[cfg(debug_assertions)] stdout: &mut impl Write,
     mut parent: Option<usize>,
     substitute: &[TokenKind<'a>],
   ) {
     while let Some(new_parent) = parent {
-      // if DEBUG {
-      // 	println!("NEW_PARENT {:?}", new_parent);
-      // }
+      // 	print!(stdout, "NEW_PARENT {:?}", new_parent);
       let TokenKind::NonTerminal(token) =
         self.nodes[new_parent].as_ref().unwrap().token
       else {
@@ -101,14 +142,12 @@ impl<'a> Stack<'a> {
       }
       parent = self.nodes[new_parent].as_ref().unwrap().parent;
     }
-    if DEBUG {
-      println!("SUBSTITUTE PARENT {:?}", parent);
-    }
+    print!(stdout, "SUBSTITUTE PARENT {:?}", parent);
     let old_len = self.nodes.len();
     self.nodes.extend(
       substitute
         .into_iter()
-        .map(|token| Some(NodeBuilder::new(*token, parent))),
+        .map(|token| Some(ExpressionBuilder::new(*token, parent))),
     );
     self.stack.extend(old_len..self.nodes.len());
   }
@@ -120,7 +159,7 @@ pub(super) struct StackNode<'a, 's> {
 }
 
 impl<'a> StackNode<'a, '_> {
-  pub(super) fn builder(&mut self) -> &mut NodeBuilder<'a> {
+  pub(super) fn builder(&mut self) -> &mut ExpressionBuilder<'a> {
     self.stack.nodes[self.i].as_mut().unwrap()
   }
 }

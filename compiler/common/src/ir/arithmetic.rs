@@ -1,7 +1,7 @@
 /*     _              _ _
  *  __| |_ _ ___ _ __( |_)_ _
  * / _` | '_/ _ \ '_ \/| | ' \
- * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler
+ * \__,_|_| \___/ .__/ |_|_||_| dropin-compiler - WebAssembly
  *              |_|
  * Copyright © 2019-2024 Blue Forest
  *
@@ -19,25 +19,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_compiler_parser::{lexer::lexer, token::Token};
+use super::Expression;
 
-pub fn test_lexer(input: &str, expected: Vec<Token>) {
-  println!("> `{}`", input.replace("\n", "`  `"));
-  let result = lexer(input);
-  if result != expected {
-    panic!(
-      "/!\\ Test failed /!\\\n\n# Input\n`{}`\n\n# Expected\n{}\n# Got\n{}",
-      input,
-      expected
-        .iter()
-        .map(|t| format!("- {} -> {} : {:?}\n", t.span.0, t.span.1, t.kind))
-        .collect::<Vec<String>>()
-        .join(""),
-      result
-        .iter()
-        .map(|t| format!("- {} -> {} : {:?}\n", t.span.0, t.span.1, t.kind))
-        .collect::<Vec<String>>()
-        .join(""),
-    );
-  }
+#[derive(Debug)]
+pub enum Arithmetic {
+  Opposite(Box<Expression>),
+  Sub(Box<Expression>, Box<Expression>),
+  Add(Box<Expression>, Box<Expression>),
 }

@@ -3,11 +3,12 @@ resolver = "2"
 members = [
   "cli",
   "compiler/common",
-  "compiler/parser",
-  "compiler/parser-macros",
-  "targets/dart",
-  "targets/typescript",
-  "targets/wasm",
+  "compiler/parser/wasm",
+  "compiler/parser/lib",
+  "compiler/parser/macros",
+  "compiler/targets/flutter",
+  # "targets/typescript",
+  # "targets/wasm",
 ]
 exclude = [
   "recipes",
@@ -15,6 +16,12 @@ exclude = [
   "schemas",
   "scripts",
 ]
+
+[profile.wasm]
+inherits = "release"
+lto = true
+opt-level = 's'
+strip = "symbols"
 
 [workspace.package]
 license = "AGPL-3.0-only"

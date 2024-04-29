@@ -1,7 +1,7 @@
 [package]
-name = "dropin-compiler-parser"
+name = "dropin-compiler-parser-lib"
 version = "0.6.7-0"
-description = "drop'in parser"
+description = "drop'in parser lib"
 license.workspace = true
 homepage.workspace = true
 authors.workspace = true
@@ -11,8 +11,8 @@ edition.workspace = true
 coverage = []
 
 [dependencies]
-dropin-compiler-common = { path = "../common" }
-dropin-compiler-parser-macros = { path = "../parser-macros" }
+dropin-compiler-common = { path = "../../common" }
+dropin-compiler-parser-macros = { path = "../macros" }
 
 [dev-dependencies]
 indoc = "2.0"

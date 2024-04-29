@@ -19,44 +19,46 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use crate::{lexer::lexer, Table};
-use dropin_compiler_common::token::TokenKind;
+#[cfg(debug_assertions)]
+use core::fmt::Write;
 
-pub use self::node::Node;
-use self::{
-  non_terminal::parse_non_terminal, stack::Stack, terminal::parse_terminal,
-};
+use alloc::string::String;
+use dropin_compiler_common::{ir::Expression, token::TokenKind};
 
-mod node;
+use crate::{lexer, Table};
+
+use self::non_terminal::parse_non_terminal;
+use self::stack::Stack;
+use self::terminal::parse_terminal;
+
+mod ir;
 mod non_terminal;
 mod stack;
 mod terminal;
 
-const DEBUG: bool = true;
+pub fn parse(
+  #[cfg(debug_assertions)] stdout: &mut impl Write,
+  input: String,
+  main_non_terminal: Option<String>,
+  table: &Table,
+) -> Expression {
+  print!(stdout, "{:?}", input);
 
-pub fn parse<'a>(
-  input: &str,
-  main_non_terminal: Option<&'a str>,
-  table: &'a Table,
-) -> Node<'a> {
-  if DEBUG {
-    println!("{:?}", input);
-  }
+  let mut tokens = lexer(&input);
+  print!(stdout, "{:?}", tokens);
 
-  let mut tokens = lexer(input);
-  if DEBUG {
-    println!("{:?}", tokens);
-  }
-
-  let mut stack = Stack::new(main_non_terminal);
+  let mut stack = Stack::new(
+    main_non_terminal
+      .as_ref()
+      .map(|s| s.as_str())
+      .unwrap_or("predicate"),
+  );
 
   let mut is_deindent = false;
   let mut current = 0;
 
   while !stack.is_empty() {
-    if DEBUG {
-      println!("STACK {:?}", stack);
-    }
+    print!(stdout, "STACK {:?}", stack);
 
     let mut stack_top = stack.pop();
     let token = stack_top.builder().token;
@@ -64,6 +66,8 @@ pub fn parse<'a>(
     let control = match token {
       TokenKind::NonTerminal(name) => {
         let (control, new_is_deindent) = parse_non_terminal(
+          #[cfg(debug_assertions)]
+          stdout,
           &table,
           &input,
           &mut tokens,
@@ -78,18 +82,26 @@ pub fn parse<'a>(
       TokenKind::Empty => LoopControl::Continue,
       TokenKind::Eof => break,
       TokenKind::Deindent => {
-        if DEBUG {
-          println!("DEINDENT");
-        }
+        print!(stdout, "DEINDENT");
         is_deindent = true;
-        parse_terminal(&tokens, &mut current, stack_top)
+        parse_terminal(
+          #[cfg(debug_assertions)]
+          stdout,
+          &tokens,
+          &mut current,
+          stack_top,
+        )
       }
       _ => {
-        if DEBUG {
-          println!("PUSH {}", token.as_str());
-        }
+        print!(stdout, "PUSH {}", token.as_str());
         is_deindent = false;
-        parse_terminal(&tokens, &mut current, stack_top)
+        parse_terminal(
+          #[cfg(debug_assertions)]
+          stdout,
+          &tokens,
+          &mut current,
+          stack_top,
+        )
       }
     };
     if let LoopControl::Break = control {
@@ -97,12 +109,13 @@ pub fn parse<'a>(
     }
   }
 
-  let root = stack.into_tree();
+  let root = stack.into_expression(
+    #[cfg(debug_assertions)]
+    stdout,
+    &input,
+  );
 
-  if DEBUG {
-    root.print(input, 0);
-  }
-
+  print!(stdout, "{root:?}");
   root
 }
 

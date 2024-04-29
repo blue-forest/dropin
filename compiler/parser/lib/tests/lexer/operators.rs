@@ -21,7 +21,7 @@
 
 use crate::common::test_lexer;
 use dropin_compiler_common::token::TokenKind;
-use dropin_compiler_parser::token::Token;
+use dropin_compiler_parser_lib::Token;
 
 fn test_operator(operator: &str, expected: TokenKind) {
   let shift = operator.len();

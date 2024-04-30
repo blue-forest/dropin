@@ -23,6 +23,7 @@ use dropin_compiler_common::ir::{
   Comparison, Control, Expression, Logic, Value,
 };
 use dropin_compiler_parser_lib::{parse, Table};
+use indoc::indoc;
 
 use crate::common::Printer;
 
@@ -195,4 +196,21 @@ fn simple_if() {
     assert!(false, "wrong else: {:?}", if_.else_);
     return;
   };
+}
+
+#[test]
+fn reverse() {
+  let table = Table::default();
+  let input = "reverse{\
+      list, current, result:\
+        if current < len(list):\
+          reverse(\
+            list,\
+            (current + 1),\
+            push(result, list[(len(list) - current)])\
+          )\
+        else: result\
+      }";
+  let expr = parse(&mut Printer, input.into(), None, &table);
+  println!("{expr:?}");
 }

@@ -37,7 +37,7 @@ pub(super) fn build(
   input: &str,
   mut state: BuildState,
 ) -> Expression {
-  let args_children = nodes[children[0]].take().unwrap().children;
+  let args_children = nodes[children[1]].take().unwrap().children;
   let mut i = 0;
   let mut args = Vec::with_capacity(args_children.len().div_ceil(2));
   while i < args_children.len() {
@@ -47,7 +47,7 @@ pub(super) fn build(
     args.push(arg.into());
     i += 2;
   }
-  let body = nodes[children[2]].take().unwrap().build_inner(
+  let body = nodes[children[3]].take().unwrap().build_inner(
     #[cfg(debug_assertions)]
     stdout,
     nodes,
@@ -66,9 +66,9 @@ pub(super) fn build(
       body: Box::new(body),
     }))
   };
-  if children.len() > 4 {
+  if children.len() > 5 {
     state.function_call = Some(function);
-    nodes[children[4]].take().unwrap().build_inner(
+    nodes[children[5]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,

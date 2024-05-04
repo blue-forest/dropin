@@ -43,7 +43,7 @@ impl<'a> Follow<'a> {
     while has_changed {
       has_changed = false;
       for (name, tokens) in productions.iter() {
-        let mut trailer = self.0.get(name).unwrap().clone();
+        let mut trailer = self.get(name).clone();
         for token in tokens.iter().rev() {
           if let TokenKind::NonTerminal(token_name) = token {
             let Some(follow) = self.0.get_mut(token_name) else {

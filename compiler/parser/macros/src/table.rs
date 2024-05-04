@@ -27,7 +27,7 @@ use serde::{
   Serialize, Serializer,
 };
 use std::{
-  collections::HashMap,
+  collections::{HashMap, HashSet},
   ops::{Deref, DerefMut},
 };
 
@@ -129,11 +129,20 @@ impl<'a> Table<'a> {
 
     let mut data: TableData<'a> = HashMap::new();
     for (i, (name, tokens)) in productions.iter().enumerate() {
-      let mut first_tokens = first.get(tokens.get(0).unwrap()).clone();
-      if first_tokens.contains(&TokenKind::Empty) {
-        first_tokens.extend(follow.get(name));
+      let mut all_first = HashSet::new();
+      let mut is_empty = true;
+      for token in tokens {
+        let token_first = first.get(token);
+        all_first.extend(token_first);
+        if !token_first.contains(&TokenKind::Empty) {
+          is_empty = false;
+          break;
+        }
       }
-      for token in first_tokens {
+      if is_empty {
+        all_first.extend(follow.get(name));
+      }
+      for token in all_first {
         if let TokenKind::Empty = token {
           continue;
         }

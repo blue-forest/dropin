@@ -79,7 +79,7 @@ function-call-args- =/ EMPTY
 function-call-args-next- = "," function-call-args-
 function-call-args-next- =/ EMPTY
 
-anonymous-function = function-args ":" predicate "}" anonymous-function-call-
+anonymous-function = newlines function-args ":" predicate "}" anonymous-function-call-
 function-args = ID function-args-next-
 function-args-next- = "," ID function-args-next-
 function-args-next- =/ EMPTY
@@ -89,3 +89,8 @@ if = IF predicate ":" if-then if-else
 if-then = value-no-indent
 if-then =/ INDENT value-no-indent DEINDENT
 if-else = ELSE ":" if-then / EMPTY
+
+newlines = NEWLINE newlines
+newlines =/ INDENT newlines
+newlines =/ DEINDENT newlines
+newlines =/ EMPTY

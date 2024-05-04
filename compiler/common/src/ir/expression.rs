@@ -19,13 +19,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use core::fmt::{self, Debug, Formatter};
+
 use super::{Arithmetic, Comparison, Control, Logic, Value};
 
-#[derive(Debug)]
+#[derive(Clone)]
 pub enum Expression {
   Value(Value),
   Arithmetic(Arithmetic),
   Comparison(Comparison),
   Logic(Logic),
   Control(Control),
+}
+
+impl Debug for Expression {
+  fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    match self {
+      Expression::Value(inner) => inner.fmt(f),
+      Expression::Arithmetic(inner) => inner.fmt(f),
+      Expression::Comparison(inner) => inner.fmt(f),
+      Expression::Logic(inner) => inner.fmt(f),
+      Expression::Control(inner) => inner.fmt(f),
+    }
+  }
 }

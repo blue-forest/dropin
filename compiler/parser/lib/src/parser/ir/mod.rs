@@ -71,20 +71,12 @@ impl<'a> ExpressionBuilder<'a> {
     input: &str,
     state: BuildState,
   ) -> Expression {
-    print!(
-      stdout,
-      "NODES {:?}",
-      nodes
-        .iter()
-        .map(|node| node.as_ref().map(|n| n.token.as_str()))
-        .collect::<Vec<_>>()
-    );
     match self.build_non_terminal(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
-      state,
+      state.clone(),
     ) {
       Ok(expr) => {
         return expr;
@@ -101,7 +93,9 @@ impl<'a> ExpressionBuilder<'a> {
   }
 }
 
-#[derive(Default, Clone, Copy)]
-struct BuildState {
+#[derive(Default, Clone)]
+struct BuildState<'a> {
   in_keys: bool,
+  function_name: Option<&'a str>,
+  function_call: Option<Expression>,
 }

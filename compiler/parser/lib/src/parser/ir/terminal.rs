@@ -49,7 +49,7 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::ParGlued => todo!("ParGlued"),
       TokenKind::ParSpaced => todo!("ParSpaced"),
       TokenKind::BracGlued => todo!("BracGlued"),
-      TokenKind::BracSpaced => todo!("BracSpaced"),
+      TokenKind::BracSpaced => Expression::Value(Value::List(vec![])),
       TokenKind::If => todo!("If"),
       TokenKind::Else => todo!("Else"),
       TokenKind::True => Expression::Value(Value::Boolean(true)),
@@ -59,9 +59,45 @@ impl<'a> ExpressionBuilder<'a> {
         if state.in_keys {
           return Expression::Value(Value::Text(spanned_input.into()));
         }
+        if !siblings.is_empty() {
+          let continuation_token = nodes[siblings[0]].as_ref().unwrap().token;
+          match continuation_token {
+            // named function
+            TokenKind::Lbrace => {
+              let mut function_state = state;
+              function_state.function_name = Some(spanned_input);
+              let node = nodes[siblings[1]].take().unwrap();
+              return node.build_inner(
+                #[cfg(debug_assertions)]
+                stdout,
+                nodes,
+                input,
+                function_state,
+              );
+            }
+            TokenKind::NonTerminal("function-call") => {
+              let mut call_state = state;
+              call_state.function_call = Some(Expression::Value(
+                Value::Getter(spanned_input.into(), vec![]),
+              ));
+              return nodes[siblings[0]]
+                .take()
+                .unwrap()
+                .build_non_terminal(
+                  #[cfg(debug_assertions)]
+                  stdout,
+                  nodes,
+                  input,
+                  call_state,
+                )
+                .unwrap();
+            }
+            _ => {}
+          }
+        }
         let mut indexes = Vec::with_capacity(siblings.len() / 2);
         let mut i = 1;
-        let mut keys_state = state;
+        let mut keys_state = state.clone();
         keys_state.in_keys = true;
         while i < siblings.len() {
           let sep = nodes[siblings[i - 1]].take().unwrap().token;
@@ -71,7 +107,7 @@ impl<'a> ExpressionBuilder<'a> {
             stdout,
             nodes,
             input,
-            keys_state,
+            keys_state.clone(),
           ));
           if let TokenKind::BracGlued = sep {
             i += 1;

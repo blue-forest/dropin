@@ -23,7 +23,10 @@
 use core::fmt::Write;
 
 use alloc::{boxed::Box, vec::Vec};
-use dropin_compiler_common::ir::{control::If, Control, Expression};
+use dropin_compiler_common::ir::{
+  control::{AnonymousFunction, NamedFunction},
+  Control, Expression,
+};
 
 use crate::parser::ir::{BuildState, ExpressionBuilder};
 
@@ -32,35 +35,47 @@ pub(super) fn build(
   children: &[usize],
   nodes: &mut Vec<Option<ExpressionBuilder>>,
   input: &str,
-  state: BuildState,
+  mut state: BuildState,
 ) -> Expression {
-  let condition = nodes[children[1]].take().unwrap().build_inner(
+  let args_children = nodes[children[0]].take().unwrap().children;
+  let mut i = 0;
+  let mut args = Vec::with_capacity(args_children.len().div_ceil(2));
+  while i < args_children.len() {
+    let arg_child = args_children[i];
+    let (start, end) = nodes[arg_child].take().unwrap().span.unwrap();
+    let arg = &input[start..end];
+    args.push(arg.into());
+    i += 2;
+  }
+  let body = nodes[children[2]].take().unwrap().build_inner(
     #[cfg(debug_assertions)]
     stdout,
     nodes,
     input,
     state.clone(),
   );
-  let then = nodes[children[3]].take().unwrap().build_inner(
-    #[cfg(debug_assertions)]
-    stdout,
-    nodes,
-    input,
-    state.clone(),
-  );
-  let mut else_ = None;
+  let function = if let Some(name) = state.function_name {
+    Expression::Control(Control::NamedFunction(NamedFunction {
+      name: name.into(),
+      args,
+      body: Box::new(body),
+    }))
+  } else {
+    Expression::Control(Control::AnonymousFunction(AnonymousFunction {
+      args,
+      body: Box::new(body),
+    }))
+  };
   if children.len() > 4 {
-    else_ = Some(Box::new(nodes[children[4]].take().unwrap().build_inner(
+    state.function_call = Some(function);
+    nodes[children[4]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
-      state,
-    )))
+      state.clone(),
+    )
+  } else {
+    function
   }
-  Expression::Control(Control::If(If {
-    condition: Box::new(condition),
-    then: Box::new(then),
-    else_,
-  }))
 }

@@ -28,8 +28,14 @@ use dropin_compiler_common::{ir::Expression, token::TokenKind};
 use super::{BuildState, ExpressionBuilder};
 
 mod expression;
+mod function;
+mod function_call;
 mod if_;
+mod if_else;
+mod if_then;
+mod list_lit;
 mod predicate;
+mod value_lit;
 mod value_no_indent;
 
 impl<'a> ExpressionBuilder<'a> {
@@ -43,70 +49,47 @@ impl<'a> ExpressionBuilder<'a> {
     let TokenKind::NonTerminal(non_terminal) = self.token else {
       return Err(self);
     };
-    Ok(match non_terminal {
-      "predicate" => predicate::build(
-        #[cfg(debug_assertions)]
-        stdout,
-        &self.children,
-        nodes,
-        input,
-        state,
-      ),
-      "expression" => expression::build(
-        #[cfg(debug_assertions)]
-        stdout,
-        &self.children,
-        nodes,
-        input,
-        state,
-      ),
-      "value-no-indent" => value_no_indent::build(
-        #[cfg(debug_assertions)]
-        stdout,
-        &self.children,
-        nodes,
-        input,
-        state,
-      ),
-      "if" => if_::build(
-        #[cfg(debug_assertions)]
-        stdout,
-        &self.children,
-        nodes,
-        input,
-        state,
-      ),
-      "if-else" => nodes[self.children[2]].take().unwrap().build_inner(
-        #[cfg(debug_assertions)]
-        stdout,
-        nodes,
-        input,
-        state,
-      ),
-      _ => {
-        // if self.children.len() != 1 {
-        //   print!(
-        //     stdout,
-        //     "=================\n{:?}",
-        //     self
-        //       .children
-        //       .iter()
-        //       .map(|i| format!("{:?}", nodes[*i].as_ref().unwrap().token))
-        //       .collect::<Vec<_>>()
-        //   );
-        // }
-        assert!(
-          self.children.len() == 1,
-          "{non_terminal} has several children"
-        );
-        nodes[self.children[0]].take().unwrap().build_inner(
-          #[cfg(debug_assertions)]
-          stdout,
-          nodes,
-          input,
-          state,
-        )
-      }
-    })
+    macro_rules! build {
+      ($($pat:pat => $module:ident),*) => {
+        match non_terminal {
+          $(
+            $pat => $module::build(
+              #[cfg(debug_assertions)]
+              stdout,
+              &self.children,
+              nodes,
+              input,
+              state,
+            ),
+          )*
+          _ => {
+            assert!(
+              self.children.len() == 1,
+              "{non_terminal} has several children\n{:?}",
+              self.children.iter().map(|i| nodes[*i].as_ref().unwrap().token).collect::<Vec<_>>()
+            );
+            nodes[self.children[0]].take().unwrap().build_inner(
+              #[cfg(debug_assertions)]
+              stdout,
+              nodes,
+              input,
+              state,
+            )
+          }
+        }
+      };
+    }
+    Ok(build!(
+      "predicate" => predicate,
+      "expression" => expression,
+      "value-no-indent" => value_no_indent,
+      "value-lit" => value_lit,
+      "list-lit" => list_lit,
+      "anonymous-function" => function,
+      "function-call" => function_call,
+      "if" => if_,
+      "if-then" => if_then,
+      "if-else" => if_else
+    ))
   }
 }

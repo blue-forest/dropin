@@ -20,7 +20,7 @@
  */
 
 use dropin_compiler_common::ir::{
-  Comparison, Control, Expression, Logic, Value,
+  Arithmetic, Comparison, Control, Expression, Logic, Value,
 };
 use dropin_compiler_parser_lib::{parse, Table};
 use indoc::indoc;
@@ -201,16 +201,365 @@ fn simple_if() {
 #[test]
 fn reverse() {
   let table = Table::default();
-  let input = "reverse{\
+  let input = indoc!(
+    "reverse{\
       list, current, result:\
-        if current < len(list):\
-          reverse(\
-            list,\
-            (current + 1),\
-            push(result, list[(len(list) - current)])\
-          )\
-        else: result\
-      }";
+      if current < len(list):
+        reverse(\
+          list,\
+          (current + 1),\
+          push(result, list[(len(list) - current)])\
+        )
+      else: result\
+    }(\
+      \\
+        1
+        2
+        3
+        4
+      ,\
+      0,\
+      []\
+    )"
+  );
   let expr = parse(&mut Printer, input.into(), None, &table);
-  println!("{expr:?}");
+  let Expression::Control(Control::FunctionCall(function_call)) = expr else {
+    assert!(false, r#""{input}" ==> {expr:?}"#);
+    return;
+  };
+  let Expression::Control(Control::NamedFunction(function)) =
+    function_call.function.as_ref()
+  else {
+    assert!(false, "wrong function called: {:?}", function_call.function);
+    return;
+  };
+  assert!(
+    function.name == "reverse",
+    "wrong function name: {}",
+    function.name
+  );
+  assert!(function.args.len() == 3, "wrong args: {:?}", function.args);
+  assert!(
+    function.args[0] == "list",
+    "wrong first arg: {}",
+    function.args[0]
+  );
+  assert!(
+    function.args[1] == "current",
+    "wrong second arg: {}",
+    function.args[1]
+  );
+  assert!(
+    function.args[2] == "result",
+    "wrong third arg: {}",
+    function.args[2]
+  );
+  // body
+  {
+    let Expression::Control(Control::If(if_)) = function.body.as_ref() else {
+      assert!(false, "wrong function body: {:?}", function.body);
+      return;
+    };
+    // condition
+    {
+      let Expression::Comparison(Comparison::LessThan(left, right)) =
+        if_.condition.as_ref()
+      else {
+        assert!(false, "wrong if condition: {:?}", if_.condition);
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) = left.as_ref()
+      else {
+        assert!(false, "wrong less than left side: {:?}", left);
+        return;
+      };
+      assert!(ident == "current", "wrong condition current ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong condition current indexes: {:?}",
+        indexes
+      );
+      let Expression::Control(Control::FunctionCall(function_call)) =
+        right.as_ref()
+      else {
+        assert!(false, "wrong less than right side: {:?}", right);
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        function_call.function.as_ref()
+      else {
+        assert!(
+          false,
+          "wrong less condition len call: {:?}",
+          function_call.function
+        );
+        return;
+      };
+      assert!(ident == "len", "wrong condition len ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong condition len indexes: {indexes:?}"
+      );
+      assert!(
+        function_call.args.len() == 1,
+        "wrong condition len args: {:?}",
+        function_call.args
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        &function_call.args[0]
+      else {
+        assert!(
+          false,
+          "wrong condition len arg: {:?}",
+          function_call.args[0]
+        );
+        return;
+      };
+      assert!(ident == "list", "wrong condition len arg ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong condition len arg indexes: {indexes:?}"
+      );
+    } // condition
+      // then
+    {
+      let Expression::Control(Control::FunctionCall(function_call)) =
+        if_.then.as_ref()
+      else {
+        assert!(false, "wrong if then: {:?}", if_.then);
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        function_call.function.as_ref()
+      else {
+        assert!(
+          false,
+          "wrong recursion call function: {:?}",
+          function_call.function
+        );
+        return;
+      };
+      assert!(ident == "reverse", "wrong recursion call ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong recursion call indexes: {indexes:?}"
+      );
+      assert!(
+        function_call.args.len() == 3,
+        "wrong recursion call args: {:?}",
+        function_call.args
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        &function_call.args[0]
+      else {
+        assert!(
+          false,
+          "wrong recursion call first arg: {:?}",
+          function_call.args[0]
+        );
+        return;
+      };
+      assert!(
+        ident == "list",
+        "wrong recursion call first arg ident: {ident}"
+      );
+      assert!(
+        indexes.is_empty(),
+        "wrong recursion call first arg indexes: {indexes:?}"
+      );
+      let Expression::Arithmetic(Arithmetic::Add(left, right)) =
+        &function_call.args[1]
+      else {
+        assert!(
+          false,
+          "wrong recursion call second arg: {:?}",
+          function_call.args[1]
+        );
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) = left.as_ref()
+      else {
+        assert!(false, "wrong recursion call second arg left: {left:?}");
+        return;
+      };
+      assert!(
+        ident == "current",
+        "wrong recursion call second arg left ident: {ident}"
+      );
+      assert!(
+        indexes.is_empty(),
+        "wrong recursion call second arg left indexes: {indexes:?}"
+      );
+      let Expression::Value(Value::Quantity(value)) = right.as_ref() else {
+        assert!(false, "wrong recursion call second arg right: {right:?}");
+        return;
+      };
+      assert!(
+        *value == 1.0,
+        "wrong recursion call second arg right value: {value}"
+      );
+      let Expression::Control(Control::FunctionCall(function_call)) =
+        &function_call.args[2]
+      else {
+        assert!(
+          false,
+          "wrong recursion call third arg: {:?}",
+          function_call.args[2]
+        );
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        function_call.function.as_ref()
+      else {
+        assert!(false, "wrong push function: {:?}", function_call.function);
+        return;
+      };
+      assert!(ident == "push", "wrong push function ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong push function indexes: {indexes:?}"
+      );
+      assert!(
+        function_call.args.len() == 2,
+        "wrong push args: {:?}",
+        function_call.args
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        &function_call.args[0]
+      else {
+        assert!(false, "wrong push first arg: {:?}", function_call.args[0]);
+        return;
+      };
+      assert!(ident == "result", "wrong push first arg ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong push first arg indexes: {indexes:?}"
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        &function_call.args[1]
+      else {
+        assert!(false, "wrong push second arg: {:?}", function_call.args[1]);
+        return;
+      };
+      assert!(ident == "list", "wrong push second arg ident: {ident}");
+      assert!(
+        indexes.len() == 1,
+        "wrong push second arg indexes: {indexes:?}"
+      );
+      let Expression::Arithmetic(Arithmetic::Sub(left, right)) = &indexes[0]
+      else {
+        assert!(false, "wrong list index: {:?}", indexes[0]);
+        return;
+      };
+      let Expression::Control(Control::FunctionCall(function_call)) =
+        left.as_ref()
+      else {
+        assert!(false, "wrong list index left: {left:?}");
+        return;
+      };
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        function_call.function.as_ref()
+      else {
+        assert!(
+          false,
+          "wrong list index left function: {:?}",
+          function_call.function
+        );
+        return;
+      };
+      assert!(
+        ident == "len",
+        "wrong list index left function ident: {ident}"
+      );
+      assert!(
+        indexes.is_empty(),
+        "wrong list index left function indexes: {indexes:?}"
+      );
+      assert!(
+        function_call.args.len() == 1,
+        "wrong list index left args: {:?}",
+        function_call.args
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) =
+        &function_call.args[0]
+      else {
+        assert!(
+          false,
+          "wrong list index left arg: {:?}",
+          function_call.args[0]
+        );
+        return;
+      };
+      assert!(ident == "list", "wrong list index left arg ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong list index left arg indexes: {indexes:?}"
+      );
+      let Expression::Value(Value::Getter(ident, indexes)) = right.as_ref()
+      else {
+        assert!(false, "wrong list index right: {right:?}");
+        return;
+      };
+      assert!(ident == "current", "wrong list index right ident: {ident}");
+      assert!(
+        indexes.is_empty(),
+        "wrong list index right indexes: {indexes:?}"
+      );
+    } // then
+      // else
+    {
+      let Some(Expression::Value(Value::Getter(ident, indexes))) =
+        if_.else_.as_ref().map(|expr| expr.as_ref())
+      else {
+        assert!(false, "wrong else: {:?}", if_.else_);
+        return;
+      };
+      assert!(ident == "result", "wrong else ident: {ident}");
+      assert!(indexes.is_empty(), "wrong else indexes: {indexes:?}");
+    } // else
+  } // body
+    // args
+  {
+    assert!(
+      function_call.args.len() == 3,
+      "wrong args: {:?}",
+      function_call.args
+    );
+    let Expression::Value(Value::List(list)) = &function_call.args[0] else {
+      assert!(false, "wrong first arg: {:?}", function_call.args[0]);
+      return;
+    };
+    assert!(list.len() == 4, "wrong list: {list:?}");
+    let Expression::Value(Value::Quantity(value)) = &list[0] else {
+      assert!(false, "wrong list[0]: {:?}", list[0]);
+      return;
+    };
+    assert!(*value == 1.0, "wrong list[0] value: {value}");
+    let Expression::Value(Value::Quantity(value)) = &list[1] else {
+      assert!(false, "wrong list[1]: {:?}", list[1]);
+      return;
+    };
+    assert!(*value == 2.0, "wrong list[1] value: {value}");
+    let Expression::Value(Value::Quantity(value)) = &list[2] else {
+      assert!(false, "wrong list[2]: {:?}", list[2]);
+      return;
+    };
+    assert!(*value == 3.0, "wrong list[2] value: {value}");
+    let Expression::Value(Value::Quantity(value)) = &list[3] else {
+      assert!(false, "wrong list[3]: {:?}", list[3]);
+      return;
+    };
+    assert!(*value == 4.0, "wrong list[3] value: {value}");
+    let Expression::Value(Value::Quantity(value)) = &function_call.args[1]
+    else {
+      assert!(false, "wrong second arg: {:?}", function_call.args[1]);
+      return;
+    };
+    assert!(*value == 0.0, "wrong current value: {value}");
+    let Expression::Value(Value::List(result)) = &function_call.args[2] else {
+      assert!(false, "wrong third arg: {:?}", function_call.args[2]);
+      return;
+    };
+    assert!(result.is_empty(), "wrong result: {result:?}");
+  } // args
 }

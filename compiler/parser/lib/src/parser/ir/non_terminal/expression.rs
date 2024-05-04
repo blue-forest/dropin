@@ -19,11 +19,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[cfg(debug_assertions)]
 use core::fmt::Write;
 
 use alloc::{boxed::Box, vec::Vec};
 use dropin_compiler_common::{
-  ir::{Comparison, Expression},
+  ir::{Arithmetic, Comparison, Expression},
   token::TokenKind,
 };
 
@@ -41,28 +42,43 @@ pub(super) fn build(
     stdout,
     nodes,
     input,
-    state,
+    state.clone(),
   );
   if children.len() > 1 {
     let continuation_token = nodes[children[1]].take().unwrap().token;
-    match continuation_token {
-      TokenKind::EqualsTo => {
-        let right = nodes[children[2]].take().unwrap().build_inner(
-          #[cfg(debug_assertions)]
-          stdout,
-          nodes,
-          input,
-          state,
-        );
-        Expression::Comparison(Comparison::EqualsTo(
-          Box::new(left),
-          Box::new(right),
-        ))
-      }
-      _ => {
-        panic!("unknown expression continuation: {continuation_token:?}")
-      }
+    macro_rules! binary {
+        ($($pat:ident => $expr:ident::$variant:ident),*) => {
+          match continuation_token {
+                $(TokenKind::$pat => {
+                  let right = nodes[children[2]].take().unwrap().build_inner(
+                    #[cfg(debug_assertions)]
+                    stdout,
+                    nodes,
+                    input,
+                    state,
+                  );
+                  Expression::$expr($expr::$variant(
+                    Box::new(left),
+                    Box::new(right),
+                  ))
+                })*
+            _ => {
+              panic!("unknown expression continuation: {continuation_token:?}")
+            }
+          }
+        };
     }
+    binary!(
+      EqualsTo => Comparison::EqualsTo,
+      DifferentFrom => Comparison::DifferentFrom,
+      In => Comparison::In,
+      LessThan => Comparison::LessThan,
+      MoreThan => Comparison::MoreThan,
+      AtLeast => Comparison::AtLeast,
+      AtMost => Comparison::AtMost,
+      Add => Arithmetic::Add,
+      Sub => Arithmetic::Sub
+    )
   } else {
     left
   }

@@ -21,7 +21,7 @@
 
 use super::Expression;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Comparison {
   EqualsTo(Box<Expression>, Box<Expression>),
   DifferentFrom(Box<Expression>, Box<Expression>),

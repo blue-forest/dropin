@@ -21,27 +21,35 @@
 
 use super::Expression;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Control {
   If(If),
   AnonymousFunction(AnonymousFunction),
+  NamedFunction(NamedFunction),
   FunctionCall(FunctionCall),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct If {
   pub condition: Box<Expression>,
   pub then: Box<Expression>,
   pub else_: Option<Box<Expression>>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AnonymousFunction {
   pub args: Vec<String>,
   pub body: Box<Expression>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+pub struct NamedFunction {
+  pub name: String,
+  pub args: Vec<String>,
+  pub body: Box<Expression>,
+}
+
+#[derive(Debug, Clone)]
 pub struct FunctionCall {
   pub function: Box<Expression>,
   pub args: Vec<Expression>,

@@ -69,9 +69,9 @@ object-next- = NEWLINE object-key / EMPTY
 object-value = value- / SAMEKEY
 object-empty = "}"
 
-list-id = NEWLINE list-value-next DEINDENT
-list-lit = value-lit list-value-next DEINDENT
-list-value-next = NEWLINE value-no-indent list-value-next / EMPTY
+list-id = NEWLINE list-value-next- DEINDENT
+list-lit = value-lit list-value-next- DEINDENT
+list-value-next- = NEWLINE value-no-indent list-value-next- / EMPTY
 
 function-call = PARGLUED function-call-args- ")"
 function-call-args- = value- function-call-args-next-

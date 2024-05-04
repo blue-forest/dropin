@@ -19,14 +19,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Expression;
+#[cfg(debug_assertions)]
+use core::fmt::Write;
 
-#[derive(Debug, Clone)]
-pub enum Value {
-  Getter(String, Vec<Expression>),
-  Text(String),
-  Quantity(f64),
-  Boolean(bool),
-  List(Vec<Expression>),
-  Object(Vec<(String, Expression)>),
+use alloc::vec::Vec;
+use dropin_compiler_common::ir::Expression;
+
+use crate::parser::ir::{BuildState, ExpressionBuilder};
+
+pub(super) fn build(
+  #[cfg(debug_assertions)] stdout: &mut impl Write,
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  nodes[children[2]].take().unwrap().build_inner(
+    #[cfg(debug_assertions)]
+    stdout,
+    nodes,
+    input,
+    state,
+  )
 }

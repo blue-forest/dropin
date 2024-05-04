@@ -35,14 +35,15 @@ pub(super) fn build(
   children: &[usize],
   nodes: &mut Vec<Option<ExpressionBuilder>>,
   input: &str,
-  state: BuildState,
+  mut state: BuildState,
 ) -> Expression {
+  state.in_keys = false;
   let first_operand = nodes[children[0]].take().unwrap().build_inner(
     #[cfg(debug_assertions)]
     stdout,
     nodes,
     input,
-    state,
+    state.clone(),
   );
   if children.len() > 1 {
     let mut operands = vec![first_operand];
@@ -70,7 +71,7 @@ pub(super) fn build(
         stdout,
         nodes,
         input,
-        state,
+        state.clone(),
       ));
       i += 2;
     }

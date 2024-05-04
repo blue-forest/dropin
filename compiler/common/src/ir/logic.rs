@@ -21,7 +21,7 @@
 
 use super::Expression;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Logic {
   And(Vec<Expression>),
   Or(Vec<Expression>),

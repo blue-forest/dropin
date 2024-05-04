@@ -21,7 +21,7 @@
 
 use super::Expression;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Arithmetic {
   Opposite(Box<Expression>),
   Sub(Box<Expression>, Box<Expression>),

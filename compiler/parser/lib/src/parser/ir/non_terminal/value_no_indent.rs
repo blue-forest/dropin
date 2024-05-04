@@ -19,6 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#[cfg(debug_assertions)]
 use core::fmt::Write;
 
 use alloc::vec::Vec;
@@ -54,6 +55,17 @@ pub(super) fn build(
     ),
     TokenKind::Exists => todo!(),
     TokenKind::Not => todo!(),
-    _ => unreachable!(),
+    TokenKind::ParSpaced => nodes[children[1]]
+      .take()
+      .unwrap()
+      .build_non_terminal(
+        #[cfg(debug_assertions)]
+        stdout,
+        nodes,
+        input,
+        state,
+      )
+      .unwrap(),
+    _ => unreachable!("{first_token:?}"),
   }
 }

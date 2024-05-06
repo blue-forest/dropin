@@ -34,13 +34,13 @@ pub(super) fn parse_non_terminal(
   table: &Table,
   input: &str,
   tokens: &mut Vec<Token>,
-  current: usize,
+  current: &mut usize,
   stack_top: StackNode,
   name: &str,
   is_deindent: bool,
 ) -> (LoopControl, bool) {
-  let token_type = if current < tokens.len() {
-    tokens[current].kind
+  let token_type = if *current < tokens.len() {
+    tokens[*current].kind
   } else {
     TokenKind::Eof
   };
@@ -73,13 +73,21 @@ pub(super) fn parse_non_terminal(
 
     if is_deindent {
       print!(stdout, "NEWLINE after DEINDENT");
-      tokens.insert(current, Token::new(TokenKind::Newline, (0, 0)));
+      tokens.insert(*current, Token::new(TokenKind::Newline, (0, 0)));
       if let Some(parent) = parent {
         stack_top.stack.pop_children(parent);
       }
       return (LoopControl::Continue, false);
     }
-    panic!("{} unexpected {} {:?}", input, name, token_type);
+
+    if let TokenKind::Newline | TokenKind::Indent | TokenKind::Deindent =
+      tokens[*current].kind
+    {
+      *current += 1;
+      return (LoopControl::Continue, is_deindent);
+    }
+    print!(stdout, "{:?}", &tokens[*current..]);
+    panic!("{}\nunexpected {} {:?}", input, name, token_type);
   };
 
   print!(

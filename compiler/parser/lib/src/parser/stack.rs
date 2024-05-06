@@ -37,15 +37,15 @@ pub(super) struct Stack<'a> {
 
 impl Debug for Stack<'_> {
   fn fmt(&self, f: &mut Formatter<'_>) -> alloc::fmt::Result {
-    let mut first = true;
-    write!(f, "ALL NODES\n")?;
-    for node in &self.nodes {
-      if !first {
-        write!(f, ", ")?;
-      }
-      write!(f, "{:?}", node.as_ref().unwrap().token.as_str())?;
-      first = false;
-    }
+    // let mut first = true;
+    // write!(f, "ALL NODES\n")?;
+    // for node in &self.nodes {
+    //   if !first {
+    //     write!(f, ", ")?;
+    //   }
+    //   write!(f, "{:?}", node.as_ref().unwrap().token.as_str())?;
+    //   first = false;
+    // }
     write!(f, "\nCURRENT\n")?;
     let mut first = true;
     for i in &self.stack {

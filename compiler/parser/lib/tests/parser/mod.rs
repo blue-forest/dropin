@@ -202,7 +202,7 @@ fn simple_if() {
 fn reverse() {
   let table = Table::default();
   let input = indoc!(
-    "reverse{\
+    "reverse{
       list, current, result:\
       if current < len(list):
         reverse(\
@@ -211,8 +211,7 @@ fn reverse() {
           push(result, list[(len(list) - current)])\
         )
       else: result\
-    }(\
-      \\
+    }(
         1
         2
         3

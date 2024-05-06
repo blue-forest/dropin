@@ -35,6 +35,7 @@ mod if_else;
 mod if_then;
 mod list_lit;
 mod predicate;
+mod value;
 mod value_lit;
 mod value_no_indent;
 
@@ -62,12 +63,14 @@ impl<'a> ExpressionBuilder<'a> {
               state,
             ),
           )*
+          "newlines" => unreachable!(),
           _ => {
             assert!(
               self.children.len() == 1,
               "{non_terminal} has several children\n{:?}",
               self.children.iter().map(|i| nodes[*i].as_ref().unwrap().token).collect::<Vec<_>>()
             );
+            print!(stdout, "{non_terminal} default");
             nodes[self.children[0]].take().unwrap().build_inner(
               #[cfg(debug_assertions)]
               stdout,
@@ -82,6 +85,7 @@ impl<'a> ExpressionBuilder<'a> {
     Ok(build!(
       "predicate" => predicate,
       "expression" => expression,
+      "value" => value,
       "value-no-indent" => value_no_indent,
       "value-lit" => value_lit,
       "list-lit" => list_lit,

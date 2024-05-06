@@ -71,7 +71,7 @@ pub fn parse(
           &table,
           &input,
           &mut tokens,
-          current,
+          &mut current,
           stack_top,
           name,
           is_deindent,

@@ -23,26 +23,26 @@ predicate-continuation- = "&" expression predicate-continuation-
 predicate-continuation- =/ "|" expression predicate-continuation-
 predicate-continuation- =/ EMPTY
 
-expression = value- expression-continuation-
-expression =/ "-" value- expression-continuation-
+expression = value expression-continuation-
+expression =/ "-" value expression-continuation-
 expression =/ if
-expression-continuation- = "==" value-
-expression-continuation- =/ "!=" value-
-expression-continuation- =/ "in" value-
-expression-continuation- =/ LESSTHAN value-
-expression-continuation- =/ MORETHAN value-
-expression-continuation- =/ ATLEAST value-
-expression-continuation- =/ ATMOST value-
-expression-continuation- =/ "+" value- expression-continuation-
-expression-continuation- =/ "-" value- expression-continuation-
+expression-continuation- = "==" value
+expression-continuation- =/ "!=" value
+expression-continuation- =/ "in" value
+expression-continuation- =/ LESSTHAN value
+expression-continuation- =/ MORETHAN value
+expression-continuation- =/ ATLEAST value
+expression-continuation- =/ ATMOST value
+expression-continuation- =/ "+" value expression-continuation-
+expression-continuation- =/ "-" value expression-continuation-
 expression-continuation- =/ EMPTY
 
-value- = INDENT value-indent / value-no-indent
+value = INDENT value-indent / value-no-indent
 
 value-no-indent = PARSPACED predicate ")" value-continuation-
 value-no-indent =/ ID id-continuation-
-value-no-indent =/ "?" value-
-value-no-indent =/ "!" value-
+value-no-indent =/ "?" value
+value-no-indent =/ "!" value
 value-no-indent =/ value-lit
 
 value-lit = TEXT
@@ -56,7 +56,7 @@ value-braces- = object-empty / anonymous-function
 
 id-continuation- = "{" anonymous-function / value-continuation-
 value-continuation- = "." ID value-continuation-
-value-continuation- =/ BRACGLUED value- "]" value-continuation-
+value-continuation- =/ BRACGLUED value "]" value-continuation-
 value-continuation- =/ function-call value-continuation-
 value-continuation- =/ EMPTY
 
@@ -66,7 +66,7 @@ value-indent-id- = object / value-continuation- list-id
 object = object-value object-next- DEINDENT
 object-key = ID object-value object-next-
 object-next- = NEWLINE object-key / EMPTY
-object-value = value- / SAMEKEY
+object-value = value / SAMEKEY
 object-empty = "}"
 
 list-id = NEWLINE list-value-next- DEINDENT
@@ -74,7 +74,7 @@ list-lit = value-lit list-value-next- DEINDENT
 list-value-next- = NEWLINE value-no-indent list-value-next- / EMPTY
 
 function-call = PARGLUED function-call-args- ")"
-function-call-args- = value- function-call-args-next-
+function-call-args- = value function-call-args-next-
 function-call-args- =/ EMPTY
 function-call-args-next- = "," function-call-args-
 function-call-args-next- =/ EMPTY

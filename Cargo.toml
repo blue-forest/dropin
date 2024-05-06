@@ -6,7 +6,7 @@ members = [
   "compiler/parser/wasm",
   "compiler/parser/lib",
   "compiler/parser/macros",
-  "compiler/targets/flutter",
+  "compiler/targets/flutter", "compiler/parser/tools",
   # "targets/typescript",
   # "targets/wasm",
 ]

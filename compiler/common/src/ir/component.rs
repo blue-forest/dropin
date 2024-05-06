@@ -19,37 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(debug_assertions)]
-use core::fmt::Write;
+use super::Expression;
 
-use alloc::vec::Vec;
-use dropin_compiler_common::{ir::Expression, token::TokenKind};
+#[derive(Debug)]
+pub struct Component(pub Zone);
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
-
-pub(super) fn build(
-  #[cfg(debug_assertions)] stdout: &mut impl Write,
-  children: &[usize],
-  nodes: &mut Vec<Option<ExpressionBuilder>>,
-  input: &str,
-  state: BuildState,
-) -> Expression {
-  let first_node = nodes[children[0]].take().unwrap();
-  if let TokenKind::Indent = first_node.token {
-    nodes[children[1]].take().unwrap().build_inner(
-      #[cfg(debug_assertions)]
-      stdout,
-      nodes,
-      input,
-      state,
-    )
-  } else {
-    first_node.build_inner(
-      #[cfg(debug_assertions)]
-      stdout,
-      nodes,
-      input,
-      state,
-    )
-  }
+#[derive(Debug)]
+pub struct Zone {
+  pub classes_static: Vec<String>,
+  pub classes_dynamic: Vec<Expression>,
 }

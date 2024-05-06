@@ -23,103 +23,41 @@
 use core::fmt::Write;
 
 use alloc::string::String;
-use dropin_compiler_common::{ir::Expression, token::TokenKind};
+use dropin_compiler_common::ir::{Component, Zone};
 
-use crate::{lexer, Table};
+use crate::Table;
 
-use self::non_terminal::parse_non_terminal;
-use self::stack::Stack;
-use self::terminal::parse_terminal;
+use self::yaml::YamlReader;
 
-mod ir;
-mod non_terminal;
-mod stack;
-mod terminal;
+mod snippet;
+mod yaml;
 
 pub fn parse(
   #[cfg(debug_assertions)] stdout: &mut impl Write,
   input: String,
   main_non_terminal: Option<String>,
   table: &Table,
-) -> Expression {
-  print!(stdout, "{:?}", input);
-
-  let mut tokens = lexer(&input);
-  print!(stdout, "{:?}", tokens);
-
-  let mut stack = Stack::new(
-    main_non_terminal
-      .as_ref()
-      .map(|s| s.as_str())
-      .unwrap_or("predicate"),
-  );
-
-  let mut is_deindent = false;
-  let mut current = 0;
-
-  while !stack.is_empty() {
-    print!(stdout, "STACK {:?}", stack);
-
-    let mut stack_top = stack.pop();
-    let token = stack_top.builder().token;
-
-    let control = match token {
-      TokenKind::NonTerminal(name) => {
-        let (control, new_is_deindent) = parse_non_terminal(
-          #[cfg(debug_assertions)]
-          stdout,
-          &table,
-          &input,
-          &mut tokens,
-          &mut current,
-          stack_top,
-          name,
-          is_deindent,
-        );
-        is_deindent = new_is_deindent;
-        control
-      }
-      TokenKind::Empty => LoopControl::Continue,
-      TokenKind::Eof => break,
-      TokenKind::Deindent => {
-        print!(stdout, "DEINDENT");
-        is_deindent = true;
-        parse_terminal(
-          #[cfg(debug_assertions)]
-          stdout,
-          &tokens,
-          &mut current,
-          stack_top,
-        )
-      }
-      _ => {
-        print!(stdout, "PUSH {}", token.as_str());
-        is_deindent = false;
-        parse_terminal(
-          #[cfg(debug_assertions)]
-          stdout,
-          &tokens,
-          &mut current,
-          stack_top,
-        )
-      }
-    };
-    if let LoopControl::Break = control {
-      break;
-    }
-  }
-
-  let root = stack.into_expression(
-    #[cfg(debug_assertions)]
-    stdout,
-    &input,
-  );
-
-  print!(stdout, "{root:?}");
-  root
+) -> Component {
+  let mut yaml = YamlReader::new(&input);
+  Component(parse_zone(&mut yaml))
 }
 
-pub enum LoopControl {
-  Break,
-  Continue,
+pub fn parse_zone(yaml: &mut YamlReader) -> Zone {
+  let mut classes_static = vec![];
+  let mut classes_dynamic = vec![];
+  while let Some(key) = yaml.next_key() {
+    match key {
+      "classes" => {
+        let mut list = yaml.next_list();
+        while let Some(class) = list.next_text() {
+          classes_static.push(class);
+        }
+      }
+      _ => panic!(r#"unknown zone key "{key}""#),
+    }
+  }
+  Zone {
+    classes_static,
+    classes_dynamic,
+  }
 }

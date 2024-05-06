@@ -19,18 +19,32 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use self::arithmetic::Arithmetic;
-pub use self::comparison::Comparison;
-pub use self::component::{Component, Zone};
-pub use self::control::Control;
-pub use self::expression::Expression;
-pub use self::logic::Logic;
-pub use self::value::Value;
+#[cfg(debug_assertions)]
+use core::fmt::Write;
 
-mod arithmetic;
-mod comparison;
-mod component;
-pub mod control;
-mod expression;
-mod logic;
-mod value;
+use alloc::vec::Vec;
+use dropin_compiler_common::ir::{Expression, Value};
+
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+
+pub(super) fn build(
+  #[cfg(debug_assertions)] stdout: &mut impl Write,
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let mut content = Vec::with_capacity(children.len() - 1);
+  for i in (0..children.len()).step_by(2) {
+    let node = nodes[children[i]].take().unwrap();
+    let expr = node.build_inner(
+      #[cfg(debug_assertions)]
+      stdout,
+      nodes,
+      input,
+      state.clone(),
+    );
+    content.push(expr);
+  }
+  Expression::Value(Value::List(content))
+}

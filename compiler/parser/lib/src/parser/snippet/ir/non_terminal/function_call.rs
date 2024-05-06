@@ -19,18 +19,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-pub use self::arithmetic::Arithmetic;
-pub use self::comparison::Comparison;
-pub use self::component::{Component, Zone};
-pub use self::control::Control;
-pub use self::expression::Expression;
-pub use self::logic::Logic;
-pub use self::value::Value;
+#[cfg(debug_assertions)]
+use core::fmt::Write;
 
-mod arithmetic;
-mod comparison;
-mod component;
-pub mod control;
-mod expression;
-mod logic;
-mod value;
+use alloc::{boxed::Box, vec::Vec};
+use dropin_compiler_common::ir::{control::FunctionCall, Control, Expression};
+
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+
+pub(super) fn build(
+  #[cfg(debug_assertions)] stdout: &mut impl Write,
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let mut args = Vec::with_capacity((children.len() - 2).div_ceil(2));
+  let mut i = 1;
+  while i < children.len() {
+    let arg = nodes[children[i]].take().unwrap().build_inner(
+      #[cfg(debug_assertions)]
+      stdout,
+      nodes,
+      input,
+      state.clone(),
+    );
+    args.push(arg);
+    i += 2;
+  }
+  Expression::Control(Control::FunctionCall(FunctionCall {
+    function: Box::new(state.function_call.unwrap()),
+    args,
+  }))
+}

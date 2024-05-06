@@ -25,7 +25,7 @@ use core::fmt::Write;
 use alloc::vec::Vec;
 use dropin_compiler_common::{ir::Expression, token::TokenKind};
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   #[cfg(debug_assertions)] stdout: &mut impl Write,
@@ -34,38 +34,22 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let node = nodes[children[0]].take().unwrap();
-  let first_token = &node.token;
-  match first_token {
-    // value-lit
-    TokenKind::NonTerminal(_) => node.build_inner(
+  let first_node = nodes[children[0]].take().unwrap();
+  if let TokenKind::Indent = first_node.token {
+    nodes[children[1]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
       state,
-    ),
-    TokenKind::Id => node.build_terminal(
+    )
+  } else {
+    first_node.build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
       state,
-      &children[1..],
-    ),
-    TokenKind::Exists => todo!(),
-    TokenKind::Not => todo!(),
-    TokenKind::ParSpaced => nodes[children[1]]
-      .take()
-      .unwrap()
-      .build_non_terminal(
-        #[cfg(debug_assertions)]
-        stdout,
-        nodes,
-        input,
-        state,
-      )
-      .unwrap(),
-    _ => unreachable!("{first_token:?}"),
+    )
   }
 }

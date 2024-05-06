@@ -25,7 +25,7 @@ use core::fmt::Write;
 use alloc::vec::Vec;
 use dropin_compiler_common::{ir::Expression, token::TokenKind};
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   #[cfg(debug_assertions)] stdout: &mut impl Write,
@@ -35,8 +35,8 @@ pub(super) fn build(
   state: BuildState,
 ) -> Expression {
   let first_node = nodes[children[0]].take().unwrap();
-  if let TokenKind::Indent = first_node.token {
-    nodes[children[1]].take().unwrap().build_inner(
+  if let TokenKind::Backslash = &first_node.token {
+    nodes[children[2]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,

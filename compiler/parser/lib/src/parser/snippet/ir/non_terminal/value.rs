@@ -22,10 +22,10 @@
 #[cfg(debug_assertions)]
 use core::fmt::Write;
 
-use alloc::{boxed::Box, vec::Vec};
-use dropin_compiler_common::ir::{control::FunctionCall, Control, Expression};
+use alloc::vec::Vec;
+use dropin_compiler_common::{ir::Expression, token::TokenKind};
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   #[cfg(debug_assertions)] stdout: &mut impl Write,
@@ -34,21 +34,22 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let mut args = Vec::with_capacity((children.len() - 2).div_ceil(2));
-  let mut i = 1;
-  while i < children.len() {
-    let arg = nodes[children[i]].take().unwrap().build_inner(
+  let first_node = nodes[children[0]].take().unwrap();
+  if let TokenKind::Indent = first_node.token {
+    nodes[children[1]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
-      state.clone(),
-    );
-    args.push(arg);
-    i += 2;
+      state,
+    )
+  } else {
+    first_node.build_inner(
+      #[cfg(debug_assertions)]
+      stdout,
+      nodes,
+      input,
+      state,
+    )
   }
-  Expression::Control(Control::FunctionCall(FunctionCall {
-    function: Box::new(state.function_call.unwrap()),
-    args,
-  }))
 }

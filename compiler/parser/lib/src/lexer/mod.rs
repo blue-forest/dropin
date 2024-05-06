@@ -24,6 +24,10 @@ use dropin_compiler_common::token::TokenKind;
 
 use crate::token::{Token, TokenState};
 
+pub use self::indents::IndentLexer;
+
+mod indents;
+
 struct Tokens<'a>(Vec<Token<'a>>);
 
 impl<'a> Tokens<'a> {
@@ -52,7 +56,7 @@ impl<'a> Tokens<'a> {
 pub fn lexer(input: &str) -> Vec<Token> {
   let mut tokens = Tokens(Vec::new());
   let mut current: Option<Token> = None;
-  let mut indent: Vec<usize> = vec![0];
+  let mut indents = IndentLexer::default();
 
   let mut index = 0;
   let bytes_length = input.len();
@@ -62,30 +66,11 @@ pub fn lexer(input: &str) -> Vec<Token> {
     let char = bytes[index];
     if current.is_none() {
       if char == b'\n' {
-        let mut line_indent = 0;
         index += 1;
         let start = index;
-        while index < bytes_length {
-          let char = bytes[index];
-          if char == b' ' {
-            line_indent += 1;
-          } else if char == b'\t' {
-            line_indent += 2;
-          } else {
-            if indent[indent.len() - 1] < line_indent {
-              indent.push(line_indent);
-              tokens.push(Token::new(TokenKind::Indent, (start, index)));
-            } else if indent[indent.len() - 1] > line_indent {
-              indent.pop();
-              tokens.push(Token::new(TokenKind::Deindent, (start, index)));
-            } else {
-              tokens.push(Token::new(TokenKind::Newline, (start, index)));
-            }
-            index -= 1;
-            break;
-          }
-          index += 1;
-        }
+        let (indent_index, indent_kind) = indents.parse(&bytes[start..]);
+        index += indent_index;
+        tokens.push(Token::new(indent_kind.into(), (start, index)));
       } else if !is_whitespace(char) {
         if char.is_ascii_alphabetic() {
           if input[index..].starts_with("in") && is_whitespace(bytes[index + 2])
@@ -246,7 +231,7 @@ pub fn lexer(input: &str) -> Vec<Token> {
     tokens.next(current, bytes_length);
   }
 
-  for _ in 0..(indent.len() - 1) {
+  for _ in 0..(indents.len() - 1) {
     tokens.push(Token::new(
       TokenKind::Deindent,
       (bytes_length, bytes_length),

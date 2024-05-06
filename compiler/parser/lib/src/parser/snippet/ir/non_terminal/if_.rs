@@ -22,10 +22,10 @@
 #[cfg(debug_assertions)]
 use core::fmt::Write;
 
-use alloc::vec::Vec;
-use dropin_compiler_common::{ir::Expression, token::TokenKind};
+use alloc::{boxed::Box, vec::Vec};
+use dropin_compiler_common::ir::{control::If, Control, Expression};
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   #[cfg(debug_assertions)] stdout: &mut impl Write,
@@ -34,22 +34,33 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let first_node = nodes[children[0]].take().unwrap();
-  if let TokenKind::Backslash = &first_node.token {
-    nodes[children[2]].take().unwrap().build_inner(
+  let condition = nodes[children[1]].take().unwrap().build_inner(
+    #[cfg(debug_assertions)]
+    stdout,
+    nodes,
+    input,
+    state.clone(),
+  );
+  let then = nodes[children[3]].take().unwrap().build_inner(
+    #[cfg(debug_assertions)]
+    stdout,
+    nodes,
+    input,
+    state.clone(),
+  );
+  let mut else_ = None;
+  if children.len() > 4 {
+    else_ = Some(Box::new(nodes[children[4]].take().unwrap().build_inner(
       #[cfg(debug_assertions)]
       stdout,
       nodes,
       input,
       state,
-    )
-  } else {
-    first_node.build_inner(
-      #[cfg(debug_assertions)]
-      stdout,
-      nodes,
-      input,
-      state,
-    )
+    )))
   }
+  Expression::Control(Control::If(If {
+    condition: Box::new(condition),
+    then: Box::new(then),
+    else_,
+  }))
 }

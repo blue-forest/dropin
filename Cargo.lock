@@ -194,6 +194,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "dropin-compiler-parser-tools"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dropin-compiler-parser-lib",
+]
+
+[[package]]
 name = "dropin-target-flutter"
 version = "0.6.7-0"
 

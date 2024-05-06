@@ -19,32 +19,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#[cfg(debug_assertions)]
-use core::fmt::Write;
+use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
 
-use alloc::vec::Vec;
-use dropin_compiler_common::ir::{Expression, Value};
+use anyhow::Result;
+use clap::{Parser, Subcommand};
+use dropin_compiler_parser_lib::{parse, Table};
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+#[derive(Parser)]
+struct Args {
+  #[command(subcommand)]
+  command: Commands,
+}
 
-pub(super) fn build(
-  #[cfg(debug_assertions)] stdout: &mut impl Write,
-  children: &[usize],
-  nodes: &mut Vec<Option<ExpressionBuilder>>,
-  input: &str,
-  state: BuildState,
-) -> Expression {
-  let mut content = Vec::with_capacity(children.len() - 1);
-  for i in (0..children.len()).step_by(2) {
-    let node = nodes[children[i]].take().unwrap();
-    let expr = node.build_inner(
-      #[cfg(debug_assertions)]
-      stdout,
-      nodes,
-      input,
-      state.clone(),
-    );
-    content.push(expr);
+#[derive(Subcommand)]
+enum Commands {
+  Debug { path: PathBuf },
+}
+
+fn main() -> Result<()> {
+  let args = Args::parse();
+
+  match args.command {
+    Commands::Debug { path } => {
+      let mut f = File::open(path)?;
+      let mut recipe = String::new();
+      f.read_to_string(&mut recipe)?;
+      let ir = parse(&mut Printer, recipe, None, &Table::default());
+      println!("{ir:?}");
+    }
   }
-  Expression::Value(Value::List(content))
+  Ok(())
+}
+
+pub struct Printer;
+
+impl Write for Printer {
+  fn write_str(&mut self, s: &str) -> std::fmt::Result {
+    print!("{s}");
+    Ok(())
+  }
 }

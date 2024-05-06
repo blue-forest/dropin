@@ -28,7 +28,7 @@ use dropin_compiler_common::ir::{
   Control, Expression,
 };
 
-use crate::parser::ir::{BuildState, ExpressionBuilder};
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   #[cfg(debug_assertions)] stdout: &mut impl Write,

@@ -28,7 +28,7 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 
 use alloc::{boxed::Box, string::String};
 use dlmalloc::GlobalDlmalloc;
-use dropin_compiler_common::ir::Expression;
+use dropin_compiler_common::ir::Component;
 use dropin_compiler_parser_lib::Table;
 #[cfg(debug_assertions)]
 use lazy_static::lazy_static;
@@ -61,7 +61,7 @@ pub fn parse(
   input: String,
   main_non_terminal: Option<String>,
   table: *mut Table,
-) -> *mut Expression {
+) -> *mut Component {
   let table = unsafe { Box::from_raw(table) };
   let expr = dropin_compiler_parser_lib::parse(
     #[cfg(debug_assertions)]

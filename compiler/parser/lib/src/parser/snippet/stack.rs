@@ -28,7 +28,7 @@ use alloc::vec::Vec;
 use dropin_compiler_common::ir::Expression;
 use dropin_compiler_common::token::TokenKind;
 
-use crate::parser::ir::ExpressionBuilder;
+use crate::parser::snippet::ir::ExpressionBuilder;
 
 pub(super) struct Stack<'a> {
   nodes: Vec<Option<ExpressionBuilder<'a>>>,

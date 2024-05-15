@@ -1,0 +1,23 @@
+[package]
+name = "dropin-compiler-recipes"
+version = "0.6.7-0"
+description = "drop'in recipes"
+license.workspace = true
+homepage.workspace = true
+authors.workspace = true
+edition.workspace = true
+
+[features]
+default = ["parser"]
+coverage = []
+parser = []
+
+[dependencies]
+dropin-compiler-recipes-macros = { path = "../recipes-macros" }
+dropin-compiler-common = { path = "../common" }
+
+prost = "0.12"
+serde = { version = "1.0", features = ["derive"] }
+
+[build-dependencies]
+prost-build = "0.12"

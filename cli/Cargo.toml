@@ -11,4 +11,9 @@ edition.workspace = true
 coverage = []
 
 [dependencies]
+dropin-compiler-recipes = { path = "../compiler/recipes" }
+
+anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }
+# prost = "0.12"
+serde_yaml = "0.9"

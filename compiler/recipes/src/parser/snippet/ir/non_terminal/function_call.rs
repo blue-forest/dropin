@@ -19,43 +19,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
+use std::vec::Vec;
 
-use anyhow::Result;
-use clap::{Parser, Subcommand};
-use dropin_compiler_recipes::ir::Component;
+use dropin_compiler_common::TokenKind;
 
-#[derive(Parser)]
-struct Args {
-	#[command(subcommand)]
-	command: Commands,
-}
+use crate::ir::Expression;
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
-#[derive(Subcommand)]
-enum Commands {
-	Debug { path: PathBuf },
-}
-
-fn main() -> Result<()> {
-	let args = Args::parse();
-
-	match args.command {
-		Commands::Debug { path } => {
-			let mut f = File::open(path)?;
-			let mut recipe = String::new();
-			f.read_to_string(&mut recipe)?;
-			let ir = serde_yaml::from_str::<Component>(&recipe)?;
-			println!("{ir:#?}");
-		}
-	}
-	Ok(())
-}
-
-pub struct Printer;
-
-impl Write for Printer {
-	fn write_str(&mut self, s: &str) -> std::fmt::Result {
-		print!("{s}");
-		Ok(())
-	}
+pub(super) fn build(
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let mut args = Vec::with_capacity((children.len() - 2).div_ceil(2));
+  let mut i = 1;
+  while i < children.len() {
+    let node = nodes[children[i]].take().unwrap();
+    if let TokenKind::Rpar = node.token {
+      break;
+    }
+    let arg = node.build_inner(nodes, input, state.clone());
+    args.push(arg);
+    i += 2;
+  }
+  Expression::function_call(state.function_call.unwrap(), args)
 }

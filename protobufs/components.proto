@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package dropin.components;
+
+message Component {
+  repeated RichText classes = 1;
+}
+
+message Expression {
+  oneof expression_inner {
+    Value value = 1;
+    Comparison comparison = 2;
+    Logic logic = 3;
+    Control control = 4;
+    Arithmetic arithmetic = 5;
+  };
+}
+
+// ----------------------------------------------------------------------- VALUE
+
+message Value {
+  oneof value_inner {
+    RichText text = 1;
+    double quantity = 2;
+    bool boolean = 3;
+    Getter getter = 4;
+    List list = 5;
+    Object object = 6;
+  };
+}
+
+message RichText {
+  repeated RichTextPart parts = 1;
+}
+
+message RichTextPart {
+  oneof rich_text_inner {
+    string static = 1;
+    Expression dynamic = 2;
+  };
+}
+
+message Getter {
+  string ident = 1;
+  repeated Expression indexes = 2;
+}
+
+message Object {
+  map<string, Expression> values = 1;
+}
+
+message List {
+  repeated Expression values = 1;
+}
+
+// ------------------------------------------------------------------ COMPARISON
+
+message Comparison {
+  oneof comparison_inner {
+    Binary equals_to = 1;
+    Binary different_from = 2;
+    Binary in_ = 3;
+    Binary less_than = 4;
+    Binary more_than = 5;
+    Binary at_least = 6;
+    Binary at_most = 7;
+  };
+}
+
+// ----------------------------------------------------------------------- LOGIC
+
+message Logic {
+  oneof logic_inner {
+    Operands and = 1;
+    Operands or = 2;
+    Expression not_ = 3;
+    Expression exists = 4;
+  };
+}
+
+message Binary {
+  Expression left = 1;
+  Expression right = 2;
+}
+
+message Operands {
+  repeated Expression operands = 1;
+}
+
+// --------------------------------------------------------------------- CONTROL
+
+message Control {
+  oneof control_inner {
+    If if_ = 1;
+    AnonymousFunction anonymous_function = 2;
+    NamedFunction named_function = 3;
+    FunctionCall function_call = 4;
+  };
+}
+
+message If {
+  Expression condition = 1;
+  Expression then = 2;
+  optional Expression else_ = 3;
+}
+
+message AnonymousFunction {
+  repeated string args = 1;
+  Expression body = 2;
+}
+
+message NamedFunction {
+  string name = 1;
+  repeated string args = 2;
+  Expression body = 3;
+}
+
+message FunctionCall {
+  Expression function = 1;
+  repeated Expression args = 2;
+}
+
+// ------------------------------------------------------------------ ARITHMETIC
+
+message Arithmetic {
+  oneof arithmetic_inner {
+    Expression opposite = 1;
+    Binary add = 2;
+    Binary sub = 3;
+  };
+}

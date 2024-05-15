@@ -19,43 +19,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
+use crate::token::node_to_token;
+use abnf::types::Node;
+use dropin_compiler_common::TokenKind;
 
-use anyhow::Result;
-use clap::{Parser, Subcommand};
-use dropin_compiler_recipes::ir::Component;
+pub struct Term<'a>(Option<TokenKind<'a>>);
 
-#[derive(Parser)]
-struct Args {
-	#[command(subcommand)]
-	command: Commands,
+impl<'a> Term<'a> {
+  pub fn new(node: &'a Node) -> Self {
+    Self(Some(node_to_token(node)))
+  }
 }
 
-#[derive(Subcommand)]
-enum Commands {
-	Debug { path: PathBuf },
-}
+impl<'a> Iterator for Term<'a> {
+  type Item = Vec<TokenKind<'a>>;
 
-fn main() -> Result<()> {
-	let args = Args::parse();
-
-	match args.command {
-		Commands::Debug { path } => {
-			let mut f = File::open(path)?;
-			let mut recipe = String::new();
-			f.read_to_string(&mut recipe)?;
-			let ir = serde_yaml::from_str::<Component>(&recipe)?;
-			println!("{ir:#?}");
-		}
-	}
-	Ok(())
-}
-
-pub struct Printer;
-
-impl Write for Printer {
-	fn write_str(&mut self, s: &str) -> std::fmt::Result {
-		print!("{s}");
-		Ok(())
-	}
+  fn next(&mut self) -> Option<Self::Item> {
+    self.0.take().map(|token| vec![token])
+  }
 }

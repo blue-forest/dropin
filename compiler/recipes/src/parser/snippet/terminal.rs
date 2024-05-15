@@ -19,43 +19,17 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
+use crate::parser::token::Token;
 
-use anyhow::Result;
-use clap::{Parser, Subcommand};
-use dropin_compiler_recipes::ir::Component;
+use super::{stack::StackNode, LoopControl};
 
-#[derive(Parser)]
-struct Args {
-	#[command(subcommand)]
-	command: Commands,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-	Debug { path: PathBuf },
-}
-
-fn main() -> Result<()> {
-	let args = Args::parse();
-
-	match args.command {
-		Commands::Debug { path } => {
-			let mut f = File::open(path)?;
-			let mut recipe = String::new();
-			f.read_to_string(&mut recipe)?;
-			let ir = serde_yaml::from_str::<Component>(&recipe)?;
-			println!("{ir:#?}");
-		}
-	}
-	Ok(())
-}
-
-pub struct Printer;
-
-impl Write for Printer {
-	fn write_str(&mut self, s: &str) -> std::fmt::Result {
-		print!("{s}");
-		Ok(())
-	}
+pub(super) fn parse_terminal(
+  tokens: &[Token],
+  current: &mut usize,
+  mut stack_top: StackNode,
+) -> LoopControl {
+  stack_top.builder().span = Some(tokens[*current].span);
+  stack_top.stack.push_children(stack_top.i);
+  *current += 1;
+  LoopControl::Continue
 }

@@ -2,13 +2,12 @@
 resolver = "2"
 members = [
   "cli",
+  "compiler/recipes-macros",
+  "compiler/targets/flutter",
+  "compiler/recipes",
   "compiler/common",
-  "compiler/parser/wasm",
-  "compiler/parser/lib",
-  "compiler/parser/macros",
-  "compiler/targets/flutter", "compiler/parser/tools",
-  # "targets/typescript",
-  # "targets/wasm",
+  # "compiler/targets/typescript",
+  # "compiler/targets/wasm",
 ]
 exclude = [
   "recipes",

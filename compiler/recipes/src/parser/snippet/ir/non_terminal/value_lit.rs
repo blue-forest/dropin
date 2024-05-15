@@ -19,43 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
+use dropin_compiler_common::TokenKind;
+use std::vec::Vec;
 
-use anyhow::Result;
-use clap::{Parser, Subcommand};
-use dropin_compiler_recipes::ir::Component;
+use crate::ir::Expression;
+use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
 
-#[derive(Parser)]
-struct Args {
-	#[command(subcommand)]
-	command: Commands,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-	Debug { path: PathBuf },
-}
-
-fn main() -> Result<()> {
-	let args = Args::parse();
-
-	match args.command {
-		Commands::Debug { path } => {
-			let mut f = File::open(path)?;
-			let mut recipe = String::new();
-			f.read_to_string(&mut recipe)?;
-			let ir = serde_yaml::from_str::<Component>(&recipe)?;
-			println!("{ir:#?}");
-		}
-	}
-	Ok(())
-}
-
-pub struct Printer;
-
-impl Write for Printer {
-	fn write_str(&mut self, s: &str) -> std::fmt::Result {
-		print!("{s}");
-		Ok(())
-	}
+pub(super) fn build(
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let first_node = nodes[children[0]].take().unwrap();
+  if let TokenKind::Backslash = &first_node.token {
+    nodes[children[2]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state)
+  } else {
+    first_node.build_inner(nodes, input, state)
+  }
 }

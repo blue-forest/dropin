@@ -22,19 +22,41 @@
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
   nodes: &mut Vec<Option<ExpressionBuilder>>,
   input: &str,
-  state: BuildState,
+  mut state: BuildState,
 ) -> Expression {
-  let mut content = Vec::with_capacity(children.len() - 1);
-  for i in (0..children.len()).step_by(2) {
-    let node = nodes[children[i]].take().unwrap();
-    let expr = node.build_inner(nodes, input, state.clone());
-    content.push(expr);
+  let args_children = nodes[children[1]].take().unwrap().children;
+  let mut i = 0;
+  let mut args = Vec::with_capacity(args_children.len().div_ceil(2));
+  while i < args_children.len() {
+    let arg_child = args_children[i];
+    let (start, end) = nodes[arg_child].take().unwrap().span.unwrap();
+    let arg = &input[start..end];
+    args.push(arg.into());
+    i += 2;
   }
-  Expression::list(content)
+  let body =
+    nodes[children[3]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state.clone());
+  let function = if let Some(name) = state.function_name {
+    Expression::named_function(name.into(), args, body)
+  } else {
+    Expression::anonymous_function(args, body)
+  };
+  if children.len() > 5 {
+    state.function_call = Some(function);
+    nodes[children[5]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state.clone())
+  } else {
+    function
+  }
 }

@@ -22,7 +22,7 @@
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
@@ -30,24 +30,8 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let condition =
-    nodes[children[1]]
-      .take()
-      .unwrap()
-      .build_inner(nodes, input, state.clone());
-  let then =
-    nodes[children[3]]
-      .take()
-      .unwrap()
-      .build_inner(nodes, input, state.clone());
-  let mut else_ = None;
-  if children.len() > 4 {
-    else_ = Some(
-      nodes[children[4]]
-        .take()
-        .unwrap()
-        .build_inner(nodes, input, state),
-    )
-  }
-  Expression::r#if(condition, then, else_)
+  nodes[children[2]]
+    .take()
+    .unwrap()
+    .build_inner(nodes, input, state)
 }

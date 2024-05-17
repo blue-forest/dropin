@@ -19,13 +19,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Expression;
+use std::vec::Vec;
 
-#[derive(Debug)]
-pub struct Component(pub Zone);
+use dropin_compiler_common::TokenKind;
 
-#[derive(Debug)]
-pub struct Zone {
-  pub classes_static: Vec<String>,
-  pub classes_dynamic: Vec<Expression>,
+use crate::ir::Expression;
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
+
+pub(super) fn build(
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let mut args = Vec::with_capacity((children.len() - 2).div_ceil(2));
+  let mut i = 1;
+  while i < children.len() {
+    let node = nodes[children[i]].take().unwrap();
+    if let TokenKind::Rpar = node.token {
+      break;
+    }
+    let arg = node.build_inner(nodes, input, state.clone());
+    args.push(arg);
+    i += 2;
+  }
+  Expression::function_call(state.function_call.unwrap(), args)
 }

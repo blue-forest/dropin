@@ -24,7 +24,7 @@ use std::fmt::{Debug, Formatter};
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::ExpressionBuilder;
+use crate::parser::expression::ir::ExpressionBuilder;
 
 pub(super) struct Stack<'a> {
   pub(super) nodes: Vec<Option<ExpressionBuilder<'a>>>,

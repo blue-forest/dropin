@@ -19,14 +19,25 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use super::Expression;
+use dropin_compiler_common::TokenKind;
+use std::vec::Vec;
 
-#[derive(Debug, Clone)]
-pub enum Value {
-  Getter(String, Vec<Expression>),
-  Text(String),
-  Quantity(f64),
-  Boolean(bool),
-  List(Vec<Expression>),
-  Object(Vec<(String, Expression)>),
+use crate::ir::Expression;
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
+
+pub(super) fn build(
+  children: &[usize],
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+) -> Expression {
+  let first_node = nodes[children[0]].take().unwrap();
+  if let TokenKind::Backslash = &first_node.token {
+    nodes[children[2]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state)
+  } else {
+    first_node.build_inner(nodes, input, state)
+  }
 }

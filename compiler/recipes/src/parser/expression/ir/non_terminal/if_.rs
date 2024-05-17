@@ -21,10 +21,8 @@
 
 use std::vec::Vec;
 
-use dropin_compiler_common::TokenKind;
-
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
@@ -32,16 +30,22 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let mut args = Vec::with_capacity((children.len() - 2).div_ceil(2));
-  let mut i = 1;
-  while i < children.len() {
-    let node = nodes[children[i]].take().unwrap();
-    if let TokenKind::Rpar = node.token {
-      break;
+  let condition =
+    nodes[children[1]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state.clone());
+  let then =
+    nodes[children[3]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state.clone());
+  let mut else_ = None;
+  if children.len() > 4 {
+    let else_node = nodes[children[4]].take().unwrap();
+    if !else_node.children.is_empty() {
+      else_ = Some(else_node.build_inner(nodes, input, state))
     }
-    let arg = node.build_inner(nodes, input, state.clone());
-    args.push(arg);
-    i += 2;
   }
-  Expression::function_call(state.function_call.unwrap(), args)
+  Expression::r#if(condition, then, else_)
 }

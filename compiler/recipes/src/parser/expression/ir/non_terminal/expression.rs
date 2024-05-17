@@ -19,44 +19,54 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use dropin_compiler_common::TokenKind;
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
   nodes: &mut Vec<Option<ExpressionBuilder>>,
   input: &str,
-  mut state: BuildState,
+  state: BuildState,
 ) -> Expression {
-  let args_children = nodes[children[1]].take().unwrap().children;
-  let mut i = 0;
-  let mut args = Vec::with_capacity(args_children.len().div_ceil(2));
-  while i < args_children.len() {
-    let arg_child = args_children[i];
-    let (start, end) = nodes[arg_child].take().unwrap().span.unwrap();
-    let arg = &input[start..end];
-    args.push(arg.into());
-    i += 2;
-  }
-  let body =
-    nodes[children[3]]
+  let left =
+    nodes[children[0]]
       .take()
       .unwrap()
       .build_inner(nodes, input, state.clone());
-  let function = if let Some(name) = state.function_name {
-    Expression::named_function(name.into(), args, body)
+  if children.len() > 1 {
+    let continuation_token = nodes[children[1]].take().unwrap().token;
+    macro_rules! binary {
+        ($($pat:ident => $expr:ident),*) => {
+          match continuation_token {
+            $(TokenKind::$pat => {
+              let right = nodes[children[2]].take().unwrap().build_inner(
+                nodes,
+                input,
+                state,
+              );
+              Expression::$expr(left, right)
+            })*
+            _ => {
+              panic!("unknown expression continuation: {continuation_token:?}")
+            }
+          }
+        };
+    }
+    binary!(
+      EqualsTo => equals_to,
+      DifferentFrom => different_from,
+      In => r#in,
+      LessThan => less_than,
+      MoreThan => more_than,
+      AtLeast => at_least,
+      AtMost => at_most,
+      Add => add,
+      Sub => sub
+    )
   } else {
-    Expression::anonymous_function(args, body)
-  };
-  if children.len() > 5 {
-    state.function_call = Some(function);
-    nodes[children[5]]
-      .take()
-      .unwrap()
-      .build_inner(nodes, input, state.clone())
-  } else {
-    function
+    left
   }
 }

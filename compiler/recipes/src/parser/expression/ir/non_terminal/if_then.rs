@@ -19,10 +19,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use dropin_compiler_common::TokenKind;
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
@@ -30,8 +31,13 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  nodes[children[2]]
-    .take()
-    .unwrap()
-    .build_inner(nodes, input, state)
+  let first_node = nodes[children[0]].take().unwrap();
+  if let TokenKind::Indent = first_node.token {
+    nodes[children[1]]
+      .take()
+      .unwrap()
+      .build_inner(nodes, input, state)
+  } else {
+    first_node.build_inner(nodes, input, state)
+  }
 }

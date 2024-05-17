@@ -23,7 +23,7 @@ use dropin_compiler_common::TokenKind;
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],

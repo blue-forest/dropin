@@ -19,11 +19,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use dropin_compiler_common::TokenKind;
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
@@ -31,29 +30,11 @@ pub(super) fn build(
   input: &str,
   state: BuildState,
 ) -> Expression {
-  let node = nodes[children[0]].take().unwrap();
-  let first_token = &node.token;
-  match first_token {
-    // value-lit
-    TokenKind::NonTerminal(_) => node.build_inner(nodes, input, state),
-    TokenKind::Id => node.build_terminal(nodes, input, state, &children[1..]),
-    TokenKind::Exists => Expression::exists(
-      nodes[children[1]]
-        .take()
-        .unwrap()
-        .build_inner(nodes, input, state),
-    ),
-    TokenKind::Not => Expression::not(
-      nodes[children[1]]
-        .take()
-        .unwrap()
-        .build_inner(nodes, input, state),
-    ),
-    TokenKind::ParSpaced => nodes[children[1]]
-      .take()
-      .unwrap()
-      .build_non_terminal(nodes, input, state)
-      .unwrap(),
-    _ => unreachable!("{first_token:?}"),
+  let mut content = Vec::with_capacity(children.len() - 1);
+  for i in (0..children.len()).step_by(2) {
+    let node = nodes[children[i]].take().unwrap();
+    let expr = node.build_inner(nodes, input, state.clone());
+    content.push(expr);
   }
+  Expression::list(content)
 }

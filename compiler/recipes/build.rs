@@ -28,8 +28,9 @@ fn main() -> Result<()> {
   if parser_feature.is_ok() {
     println!("cargo:rerun-if-changed=src/parser/grammar.abnf");
     config
-      .type_attribute("components.Component", "#[derive(serde::Deserialize)]");
+      .type_attribute("components.KeyFormat", "#[derive(serde::Deserialize)]");
   }
+  config.btree_map(["."]);
   config.compile_protos(
     &["../../protobufs/components.proto"],
     &["../../protobufs/"],

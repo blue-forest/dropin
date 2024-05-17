@@ -3,7 +3,28 @@ syntax = "proto3";
 package dropin.components;
 
 message Component {
+  optional Keys variables = 1;
+  ComponentZone zone = 2;
+}
+
+message ComponentZone {
+  ComponentCommon common = 1;
+  repeated ComponentChild blocks = 2;
+}
+
+message ComponentCommon {
   repeated RichText classes = 1;
+}
+
+message ComponentChild {
+  oneof component_child_inner {
+    ComponentText text = 1;
+  };
+}
+
+message ComponentText {
+  ComponentCommon common = 1;
+  RichText content = 2;
 }
 
 message Expression {
@@ -129,3 +150,78 @@ message Arithmetic {
     Binary sub = 3;
   };
 }
+
+// --------------------------------------------------------------------- FORMATS
+
+message Keys {
+  map<string, Expression> required = 1;
+  repeated KeyFormat keys = 2;
+}
+
+message KeyFormat {
+  string key = 1;
+  Format format = 2;
+}
+
+message Format {
+  oneof format_inner {
+    FormatCommon any = 1;
+    FormatBoolean boolean = 2;
+    FormatChoices choices = 3;
+    FormatDate date = 4;
+    FormatIndex index = 5;
+    FormatList list = 6;
+    FormatObject object = 7;
+    FormatQuantity quantity = 8;
+    FormatText text = 9;
+  };
+}
+
+message FormatCommon {
+  repeated Constraint constraints = 1;
+}
+
+message Constraint {
+  Expression assert = 1;
+  string issue = 2;
+}
+
+message FormatBoolean {
+  FormatCommon common = 1;
+}
+
+
+message FormatChoices {
+  FormatCommon common = 1;
+}
+
+
+message FormatDate {
+  FormatCommon common = 1;
+}
+
+
+message FormatIndex {
+  FormatCommon common = 1;
+}
+
+
+message FormatList {
+  FormatCommon common = 1;
+}
+
+
+message FormatObject {
+  FormatCommon common = 1;
+}
+
+
+message FormatQuantity {
+  FormatCommon common = 1;
+}
+
+
+message FormatText {
+  FormatCommon common = 1;
+}
+

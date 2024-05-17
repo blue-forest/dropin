@@ -19,7 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+use std::fmt::{self, Formatter};
+
 use dropin_compiler_common::TokenKind;
+use serde::{
+  de::{self, Visitor},
+  Deserialize, Deserializer,
+};
 
 use crate::{
   ir::Expression,
@@ -34,6 +40,32 @@ mod ir;
 mod non_terminal;
 mod stack;
 mod terminal;
+
+impl<'de> Deserialize<'de> for Expression {
+  fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+  where
+    D: Deserializer<'de>,
+  {
+    struct ExpressionVisitor;
+
+    impl<'de> Visitor<'de> for ExpressionVisitor {
+      type Value = Expression;
+
+      fn expecting(&self, f: &mut Formatter) -> fmt::Result {
+        f.write_str("a drop'in expression")
+      }
+
+      fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+      where
+        E: de::Error,
+      {
+        Ok(parse(v, None, &Table::default()))
+      }
+    }
+
+    deserializer.deserialize_str(ExpressionVisitor)
+  }
+}
 
 pub fn parse(
   input: &str,

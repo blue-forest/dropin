@@ -23,7 +23,7 @@ use dropin_compiler_common::TokenKind;
 use std::vec::Vec;
 
 use crate::ir::Expression;
-use crate::parser::snippet::ir::{BuildState, ExpressionBuilder};
+use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
   children: &[usize],
@@ -32,8 +32,8 @@ pub(super) fn build(
   state: BuildState,
 ) -> Expression {
   let first_node = nodes[children[0]].take().unwrap();
-  if let TokenKind::Backslash = &first_node.token {
-    nodes[children[2]]
+  if let TokenKind::Indent = first_node.token {
+    nodes[children[1]]
       .take()
       .unwrap()
       .build_inner(nodes, input, state)

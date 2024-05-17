@@ -78,7 +78,7 @@ impl<'a> ExpressionBuilder<'a> {
     indent: usize,
   ) {
     if let TokenKind::NonTerminal(name) = self.token {
-      println!("{name:>0$}", name.len() + indent * 2);
+      debug!("{name:>0$}", name.len() + indent * 2);
       for child in &self.children {
         nodes[*child]
           .as_ref()
@@ -91,7 +91,7 @@ impl<'a> ExpressionBuilder<'a> {
         name.push(' ');
         name.push_str(&input[start..end]);
       }
-      println!("{name:>0$}", name.len() + indent * 2);
+      debug!("{name:>0$}", name.len() + indent * 2);
     }
   }
 }

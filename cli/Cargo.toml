@@ -12,8 +12,9 @@ coverage = []
 
 [dependencies]
 dropin-compiler-recipes = { path = "../compiler/recipes" }
+dropin-target-debug = { path = "../compiler/targets/debug" }
 
 anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }
-# prost = "0.12"
+prost = "0.12"
 serde_yaml = "0.9"

@@ -19,6 +19,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+macro_rules! debug {
+  ($($args:tt)*) => {
+    #[cfg(debug_assertions)]
+    println!($($args)*)
+  };
+}
+
 pub mod ir;
 #[cfg(feature = "parser")]
 pub mod parser;

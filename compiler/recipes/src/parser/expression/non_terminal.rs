@@ -64,7 +64,7 @@ pub(super) fn parse_non_terminal(
     }
 
     if is_deindent {
-      println!("NEWLINE after DEINDENT");
+      debug!("NEWLINE after DEINDENT");
       tokens.insert(*current, Token::new(TokenKind::Newline, (0, 0)));
       if let Some(parent) = parent {
         stack_top.stack.pop_children(parent);
@@ -78,11 +78,11 @@ pub(super) fn parse_non_terminal(
       *current += 1;
       return (LoopControl::Continue, is_deindent);
     }
-    println!("{:?}", &tokens[*current..]);
+    debug!("{:?}", &tokens[*current..]);
     panic!("{}\nunexpected {} {:?}", input, name, token_type);
   };
 
-  println!(
+  debug!(
     "Substitution {} + {} => {}",
     name,
     token_type.as_str(),

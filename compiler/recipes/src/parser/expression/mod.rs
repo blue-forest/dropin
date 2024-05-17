@@ -72,10 +72,10 @@ pub fn parse(
   main_non_terminal: Option<String>,
   table: &Table,
 ) -> Expression {
-  println!("{:?}", input);
+  debug!("{:?}", input);
 
   let mut tokens = lexer(input);
-  println!("{:?}", tokens);
+  debug!("{:?}", tokens);
 
   let mut stack = Stack::new(
     main_non_terminal
@@ -88,11 +88,11 @@ pub fn parse(
   let mut current = 0;
 
   while !stack.is_empty() {
-    println!("STACK {stack:?}");
+    debug!("STACK {stack:?}");
     if current < tokens.len() {
-      println!("TOKEN {:?}", tokens[current].kind);
+      debug!("TOKEN {:?}", tokens[current].kind);
     } else {
-      println!("NO MORE TOKEN")
+      debug!("NO MORE TOKEN")
     }
 
     let mut stack_top = stack.pop();
@@ -115,12 +115,12 @@ pub fn parse(
       TokenKind::Empty => LoopControl::Continue,
       TokenKind::Eof => break,
       TokenKind::Deindent => {
-        println!("DEINDENT");
+        debug!("DEINDENT");
         is_deindent = true;
         parse_terminal(&tokens, &mut current, stack_top)
       }
       _ => {
-        println!("PUSH {}", token.as_str());
+        debug!("PUSH {}", token.as_str());
         is_deindent = false;
         parse_terminal(&tokens, &mut current, stack_top)
       }
@@ -130,6 +130,7 @@ pub fn parse(
     }
   }
 
+  #[cfg(debug_assertions)]
   stack.nodes[0]
     .as_ref()
     .unwrap()
@@ -137,7 +138,7 @@ pub fn parse(
 
   let root = stack.into_expression(input);
 
-  println!("{root:?}");
+  debug!("{root:?}");
   root
 }
 

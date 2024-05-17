@@ -65,7 +65,7 @@ impl<'a> ExpressionBuilder<'a> {
               "{non_terminal} has several children\n{:?}",
               self.children.iter().map(|i| nodes[*i].as_ref().unwrap().token).collect::<Vec<_>>()
             );
-            println!("{non_terminal} default");
+            debug!("{non_terminal} default");
             nodes[self.children[0]].take().unwrap().build_inner(
               nodes,
               input,

@@ -6,8 +6,8 @@ use serde_yaml::Value;
 use crate::ir::{FormatCommon, FormatInner};
 
 pub(super) fn any<'de, A>(
-  keys: BTreeMap<String, Value>,
-  mut map: A,
+  _keys: BTreeMap<String, Value>,
+  _map: A,
 ) -> Result<FormatInner, A::Error>
 where
   A: MapAccess<'de>,

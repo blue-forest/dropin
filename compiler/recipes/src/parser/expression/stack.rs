@@ -92,7 +92,7 @@ impl<'a> Stack<'a> {
   pub(super) fn push_children(&mut self, i: usize) {
     let node = self.nodes[i].as_ref().unwrap();
     let parent = node.parent.unwrap();
-    println!("PUSH_CHILDREN {:?} {:?}", node.token.as_str(), parent);
+    debug!("PUSH_CHILDREN {:?} {:?}", node.token.as_str(), parent);
     self.nodes[parent].as_mut().unwrap().children.push(i);
   }
 
@@ -106,7 +106,7 @@ impl<'a> Stack<'a> {
     substitute: &[TokenKind<'a>],
   ) {
     while let Some(new_parent) = parent {
-      // 	println!("NEW_PARENT {:?}", new_parent);
+      // 	debug!("NEW_PARENT {:?}", new_parent);
       let TokenKind::NonTerminal(token) =
         self.nodes[new_parent].as_ref().unwrap().token
       else {
@@ -119,7 +119,7 @@ impl<'a> Stack<'a> {
       }
       parent = self.nodes[new_parent].as_ref().unwrap().parent;
     }
-    println!("SUBSTITUTE PARENT {:?}", parent);
+    debug!("SUBSTITUTE PARENT {:?}", parent);
     let old_len = self.nodes.len();
     self.nodes.extend(
       substitute

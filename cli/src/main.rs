@@ -22,10 +22,16 @@
 use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
 
 use anyhow::Result;
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 use dropin_compiler_recipes::ir::Component;
+use prost::Message;
 
 #[derive(Parser)]
+#[command(
+	about = env!("CARGO_PKG_DESCRIPTION"),
+	version = env!("CARGO_PKG_VERSION"),
+	long_about = None
+)]
 struct Args {
 	#[command(subcommand)]
 	command: Commands,
@@ -33,19 +39,41 @@ struct Args {
 
 #[derive(Subcommand)]
 enum Commands {
-	Debug { path: PathBuf },
+	Compile {
+		path: PathBuf,
+		#[arg(short, long, name = "compilation target")]
+		target: Target,
+	},
+}
+
+#[derive(ValueEnum, Clone, Debug, PartialEq)]
+pub enum Target {
+	Dart,
+	// Typescript,
+	// Wasm,
+	Debug,
 }
 
 fn main() -> Result<()> {
 	let args = Args::parse();
 
 	match args.command {
-		Commands::Debug { path } => {
+		Commands::Compile { path, target } => {
 			let mut f = File::open(path)?;
 			let mut recipe = String::new();
 			f.read_to_string(&mut recipe)?;
 			let ir = serde_yaml::from_str::<Component>(&recipe)?;
-			println!("{ir:#?}");
+			let mut protobuf = vec![];
+			ir.encode(&mut protobuf).unwrap();
+			let protobuf = Box::into_raw(protobuf.into_boxed_slice());
+			// println!("{ir:#?}");
+			let output = match target {
+				Target::Dart => todo!("dart"),
+				Target::Debug => dropin_target_debug::codegen(protobuf),
+			}
+			.into_string()
+			.unwrap();
+			println!("{output}");
 		}
 	}
 	Ok(())

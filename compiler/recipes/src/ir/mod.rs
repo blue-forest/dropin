@@ -22,6 +22,7 @@
 include!(concat!(env!("OUT_DIR"), "/dropin.components.rs"));
 
 mod arithmetics;
+mod children;
 mod comparisons;
 mod components;
 mod controls;
@@ -33,6 +34,7 @@ mod values;
 
 use arithmetic::ArithmeticInner;
 use comparison::ComparisonInner;
+pub use component_child::ComponentChildInner;
 use control::ControlInner;
 use expression::ExpressionInner;
 pub use format::FormatInner;

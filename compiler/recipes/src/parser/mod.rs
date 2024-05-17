@@ -22,6 +22,7 @@
 pub use self::lexer::lexer;
 pub use self::token::Token;
 
+mod child;
 mod component;
 mod expression;
 mod format;

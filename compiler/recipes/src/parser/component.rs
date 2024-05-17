@@ -54,8 +54,7 @@ impl<'de> Deserialize<'de> for Component {
               if blocks.is_some() {
                 return Err(de::Error::duplicate_field("blocks"));
               }
-              todo!()
-              // blocks = Some(map.next_value()?)
+              blocks = Some(map.next_value()?)
             }
           }
         }

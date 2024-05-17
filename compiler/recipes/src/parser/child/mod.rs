@@ -26,7 +26,7 @@ impl<'de> Deserialize<'de> for ComponentChild {
       type Value = ComponentChild;
 
       fn expecting(&self, f: &mut Formatter) -> fmt::Result {
-        f.write_str("a drop'in component call")
+        f.write_str("a drop'in component child")
       }
 
       fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>

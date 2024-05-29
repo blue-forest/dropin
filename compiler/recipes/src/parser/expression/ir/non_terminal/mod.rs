@@ -32,8 +32,10 @@ mod if_;
 mod if_else;
 mod if_then;
 mod list_lit;
+mod object;
 mod predicate;
 mod value;
+mod value_indent;
 mod value_lit;
 mod value_no_indent;
 
@@ -80,8 +82,10 @@ impl<'a> ExpressionBuilder<'a> {
       "expression" => expression,
       "value" => value,
       "value-no-indent" => value_no_indent,
+      "value-indent" => value_indent,
       "value-lit" => value_lit,
       "list-lit" => list_lit,
+      "object" => object,
       "anonymous-function" => function,
       "function-call" => function_call,
       "if" => if_,

@@ -204,6 +204,7 @@ message FormatDate {
 
 message FormatIndex {
   FormatCommon common = 1;
+  Format format = 2;
 }
 
 

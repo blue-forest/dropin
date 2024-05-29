@@ -98,6 +98,7 @@ impl<'a> ExpressionBuilder<'a> {
 
 #[derive(Default, Clone)]
 struct BuildState<'a> {
+  value_indent_id: Option<&'a str>,
   in_keys: bool,
   function_name: Option<&'a str>,
   function_call: Option<Expression>,

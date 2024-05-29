@@ -94,7 +94,20 @@ fn new_parts(value: Expression) -> Vec<GenExpressionPart> {
         parts.push(GenExpressionPart::Static("]"));
         parts
       }
-      ValueInner::Object(_) => todo!("object"),
+      ValueInner::Object(object) => {
+        let mut parts = Vec::new();
+        parts.push(GenExpressionPart::Static("{"));
+        for (key, value) in object.values {
+          if parts.len() != 1 {
+            parts.push(GenExpressionPart::Static(","));
+          }
+          parts.push(GenExpressionPart::Dynamic(key));
+          parts.push(GenExpressionPart::Static(":"));
+          parts.extend(new_parts(value));
+        }
+        parts.push(GenExpressionPart::Static("}"));
+        parts
+      }
     },
     ExpressionInner::Comparison(comparison) => {
       match comparison.comparison_inner.unwrap() {

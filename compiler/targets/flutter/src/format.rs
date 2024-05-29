@@ -10,7 +10,7 @@ pub enum GenFormat {
   Boolean,
   Choices,
   Date,
-  Index,
+  Index(Box<GenFormat>),
   List(Box<GenFormat>),
   Object,
   Quantity,
@@ -24,7 +24,9 @@ impl From<Format> for GenFormat {
       FormatInner::Boolean(_) => Self::Boolean,
       FormatInner::Choices(_) => Self::Choices,
       FormatInner::Date(_) => Self::Date,
-      FormatInner::Index(_) => Self::Index,
+      FormatInner::Index(index) => {
+        Self::Index(Box::new((*index.format.unwrap()).into()))
+      }
       FormatInner::List(list) => {
         Self::List(Box::new((*list.format.unwrap()).into()))
       }
@@ -42,7 +44,11 @@ impl GenFormat {
       GenFormat::Boolean => write!(output, "bool")?,
       GenFormat::Choices => todo!(),
       GenFormat::Date => todo!(),
-      GenFormat::Index => write!(output, "Map<String, dynamic>")?,
+      GenFormat::Index(format) => {
+        write!(output, "Map<String,")?;
+        format.gen(output)?;
+        write!(output, ">")?;
+      }
       GenFormat::List(format) => {
         write!(output, "List<")?;
         format.gen(output)?;

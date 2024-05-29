@@ -209,6 +209,7 @@ message FormatIndex {
 
 message FormatList {
   FormatCommon common = 1;
+  Format format = 2;
 }
 
 

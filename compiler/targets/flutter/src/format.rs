@@ -1,4 +1,5 @@
 use alloc::{
+  boxed::Box,
   fmt::{self, Write},
   string::String,
 };
@@ -10,7 +11,7 @@ pub enum GenFormat {
   Choices,
   Date,
   Index,
-  List,
+  List(Box<GenFormat>),
   Object,
   Quantity,
   Text,
@@ -24,7 +25,9 @@ impl From<Format> for GenFormat {
       FormatInner::Choices(_) => Self::Choices,
       FormatInner::Date(_) => Self::Date,
       FormatInner::Index(_) => Self::Index,
-      FormatInner::List(_) => Self::List,
+      FormatInner::List(list) => {
+        Self::List(Box::new((*list.format.unwrap()).into()))
+      }
       FormatInner::Object(_) => Self::Object,
       FormatInner::Quantity(_) => Self::Quantity,
       FormatInner::Text(_) => Self::Text,
@@ -40,7 +43,11 @@ impl GenFormat {
       GenFormat::Choices => todo!(),
       GenFormat::Date => todo!(),
       GenFormat::Index => write!(output, "Map<String, dynamic>")?,
-      GenFormat::List => todo!(),
+      GenFormat::List(format) => {
+        write!(output, "List<")?;
+        format.gen(output)?;
+        write!(output, ">")?;
+      }
       GenFormat::Object => todo!(),
       GenFormat::Quantity => write!(output, "num")?,
       GenFormat::Text => write!(output, "String")?,

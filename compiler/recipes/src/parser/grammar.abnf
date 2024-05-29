@@ -69,7 +69,7 @@ object-next- = NEWLINE object-key / EMPTY
 object-value = value / SAMEKEY
 object-empty = "}"
 
-list-id = NEWLINE list-value-next- DEINDENT
+list-id = list-value-next- DEINDENT
 list-lit = value-lit list-value-next- DEINDENT
 list-value-next- = NEWLINE value-no-indent list-value-next- / EMPTY
 

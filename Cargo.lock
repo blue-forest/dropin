@@ -166,7 +166,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dropin-compiler-recipes",
- "dropin-target-debug",
+ "dropin-target-flutter",
  "prost",
  "serde_yaml",
 ]
@@ -206,20 +206,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "dropin-target-debug"
-version = "0.1.0"
+name = "dropin-target-flutter"
+version = "0.6.7-0"
 dependencies = [
  "anyhow",
  "dlmalloc",
  "dropin-compiler-recipes",
- "lazy_static",
+ "indoc",
  "prost",
- "wasi",
 ]
-
-[[package]]
-name = "dropin-target-flutter"
-version = "0.6.7-0"
 
 [[package]]
 name = "either"
@@ -278,6 +273,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "indoc"
+version = "2.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
+
+[[package]]
 name = "itertools"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -291,12 +292,6 @@ name = "itoa"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49f1f14873335454500d59611f1cf4a4b0f786f9ac11f4312a78e4cf2566695b"
-
-[[package]]
-name = "lazy_static"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
@@ -581,15 +576,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "711b9620af191e0cdc7468a8d14e709c3dcdb115b36f838e601583af800a370a"
 
 [[package]]
-name = "wasi"
-version = "0.12.1+wasi-0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af274f03e73b7d85551b3f9e97b8a04d5c9aec703cfc227a3fe0595a7561c67a"
-dependencies = [
- "wit-bindgen",
-]
-
-[[package]]
 name = "windows-sys"
 version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -661,12 +647,3 @@ name = "windows_x86_64_msvc"
 version = "0.52.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bec47e5bfd1bff0eeaf6d8b485cc1074891a197ab4225d504cb7a1ab88b02bf0"
-
-[[package]]
-name = "wit-bindgen"
-version = "0.19.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b37d270da94012e0ac490ac633ad5bdd76a10a3fb15069edb033c1b771ce931f"
-dependencies = [
- "bitflags",
-]

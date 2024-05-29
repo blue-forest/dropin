@@ -12,7 +12,7 @@ coverage = []
 
 [dependencies]
 dropin-compiler-recipes = { path = "../compiler/recipes" }
-dropin-target-debug = { path = "../compiler/targets/debug" }
+dropin-target-flutter = { path = "../compiler/targets/flutter" }
 
 anyhow = "1.0"
 clap = { version = "4.5", features = ["derive"] }

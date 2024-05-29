@@ -3,8 +3,9 @@ syntax = "proto3";
 package dropin.components;
 
 message Component {
-  optional Keys variables = 1;
-  ComponentZone zone = 2;
+  string name = 1;
+  optional Keys variables = 2;
+  ComponentZone zone = 3;
 }
 
 message ComponentZone {

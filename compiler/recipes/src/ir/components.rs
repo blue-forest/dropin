@@ -9,11 +9,16 @@ impl Component {
     blocks: Vec<ComponentChild>,
   ) -> Self {
     Self {
+      name: String::new(),
       variables,
       zone: Some(ComponentZone {
         common: Some(ComponentCommon { classes }),
         blocks,
       }),
     }
+  }
+
+  pub fn set_name(&mut self, name: String) {
+    self.name = name;
   }
 }

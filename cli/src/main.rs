@@ -40,6 +40,7 @@ struct Args {
 #[derive(Subcommand)]
 enum Commands {
 	Compile {
+		name: String,
 		path: PathBuf,
 		#[arg(short, long, name = "compilation target")]
 		target: Target,
@@ -48,28 +49,27 @@ enum Commands {
 
 #[derive(ValueEnum, Clone, Debug, PartialEq)]
 pub enum Target {
-	Dart,
+	Flutter,
 	// Typescript,
 	// Wasm,
-	Debug,
 }
 
 fn main() -> Result<()> {
 	let args = Args::parse();
 
 	match args.command {
-		Commands::Compile { path, target } => {
+		Commands::Compile { name, path, target } => {
 			let mut f = File::open(path)?;
 			let mut recipe = String::new();
 			f.read_to_string(&mut recipe)?;
-			let ir = serde_yaml::from_str::<Component>(&recipe)?;
+			let mut ir = serde_yaml::from_str::<Component>(&recipe)?;
+			ir.set_name(name);
 			let mut protobuf = vec![];
 			ir.encode(&mut protobuf).unwrap();
 			let protobuf = Box::into_raw(protobuf.into_boxed_slice());
 			// println!("{ir:#?}");
 			let output = match target {
-				Target::Dart => todo!("dart"),
-				Target::Debug => dropin_target_debug::codegen(protobuf),
+				Target::Flutter => dropin_target_flutter::codegen(protobuf),
 			}
 			.into_string()
 			.unwrap();

@@ -8,7 +8,6 @@ members = [
   "compiler/common",
   # "compiler/targets/typescript",
   # "compiler/targets/wasm",
-  "compiler/targets/debug",
 ]
 exclude = [
   "recipes",

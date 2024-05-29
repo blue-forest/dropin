@@ -9,3 +9,11 @@ edition.workspace = true
 
 [features]
 coverage = []
+
+[dependencies]
+dropin-compiler-recipes = { path = "../../recipes" }
+
+anyhow = "1.0"
+dlmalloc = { version = "0.2", features = [ "global" ] }
+indoc = "2.0"
+prost = "0.12"

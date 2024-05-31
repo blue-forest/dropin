@@ -76,9 +76,11 @@ fn new_parts(value: Expression) -> Vec<GenExpressionPart> {
         })])
       }
       ValueInner::Getter(value) => {
-        let parts = Vec::from([GenExpressionPart::Dynamic(value.ident)]);
-        for _index in value.indexes {
-          todo!("getter indexes")
+        let mut parts = Vec::from([GenExpressionPart::Dynamic(value.ident)]);
+        for index in value.indexes {
+          parts.push(GenExpressionPart::Static("["));
+          parts.push(GenExpressionPart::Nested(new_parts(index)));
+          parts.push(GenExpressionPart::Static("]"));
         }
         parts
       }

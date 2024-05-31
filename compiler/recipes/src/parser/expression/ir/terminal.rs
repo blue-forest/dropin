@@ -44,50 +44,7 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::BracSpaced => Expression::list(vec![]),
       TokenKind::True => Expression::boolean(true),
       TokenKind::False => Expression::boolean(false),
-      TokenKind::Id => {
-        if state.in_keys {
-          return Expression::text(vec![RichTextPart::r#static(
-            spanned_input.into(),
-          )]);
-        }
-        if !siblings.is_empty() {
-          let continuation_token = nodes[siblings[0]].as_ref().unwrap().token;
-          match continuation_token {
-            // named function
-            TokenKind::Lbrace => {
-              let mut function_state = state;
-              function_state.function_name = Some(spanned_input);
-              let node = nodes[siblings[1]].take().unwrap();
-              return node.build_inner(nodes, input, function_state);
-            }
-            TokenKind::NonTerminal("function-call") => {
-              let mut call_state = state;
-              call_state.function_call =
-                Some(Expression::getter(spanned_input.into(), vec![]));
-              return nodes[siblings[0]]
-                .take()
-                .unwrap()
-                .build_non_terminal(nodes, input, call_state)
-                .unwrap();
-            }
-            _ => {}
-          }
-        }
-        let mut indexes = Vec::with_capacity(siblings.len() / 2);
-        let mut i = 1;
-        let mut keys_state = state.clone();
-        keys_state.in_keys = true;
-        while i < siblings.len() {
-          let sep = nodes[siblings[i - 1]].take().unwrap().token;
-          let key = nodes[siblings[i]].take().unwrap();
-          indexes.push(key.build_inner(nodes, input, keys_state.clone()));
-          if let TokenKind::BracGlued = sep {
-            i += 1;
-          }
-          i += 2;
-        }
-        Expression::getter(spanned_input.into(), indexes)
-      }
+      TokenKind::Id => id(nodes, input, state, siblings, spanned_input),
       TokenKind::Text => Expression {
         expression_inner: Some(ExpressionInner::Value(Value {
           value_inner: Some(ValueInner::Text(RichText {
@@ -107,4 +64,52 @@ impl<'a> ExpressionBuilder<'a> {
       _ => unreachable!("{:?}", self.token),
     }
   }
+}
+
+pub fn id(
+  nodes: &mut Vec<Option<ExpressionBuilder>>,
+  input: &str,
+  state: BuildState,
+  siblings: &[usize],
+  key: &str,
+) -> Expression {
+  if state.in_keys {
+    return Expression::text(vec![RichTextPart::r#static(key.into())]);
+  }
+  if !siblings.is_empty() {
+    let continuation_token = nodes[siblings[0]].as_ref().unwrap().token;
+    match continuation_token {
+      // named function
+      TokenKind::Lbrace => {
+        let mut function_state = state;
+        function_state.function_name = Some(key);
+        let node = nodes[siblings[1]].take().unwrap();
+        return node.build_inner(nodes, input, function_state);
+      }
+      TokenKind::NonTerminal("function-call") => {
+        let mut call_state = state;
+        call_state.function_call = Some(Expression::getter(key.into(), vec![]));
+        return nodes[siblings[0]]
+          .take()
+          .unwrap()
+          .build_non_terminal(nodes, input, call_state)
+          .unwrap();
+      }
+      _ => {}
+    }
+  }
+  let mut indexes = Vec::with_capacity(siblings.len() / 2);
+  let mut i = 1;
+  let mut keys_state = state.clone();
+  keys_state.in_keys = true;
+  while i < siblings.len() {
+    let sep = nodes[siblings[i - 1]].take().unwrap().token;
+    let key = nodes[siblings[i]].take().unwrap();
+    indexes.push(key.build_inner(nodes, input, keys_state.clone()));
+    if let TokenKind::BracGlued = sep {
+      i += 1;
+    }
+    i += 2;
+  }
+  Expression::getter(key.into(), indexes)
 }

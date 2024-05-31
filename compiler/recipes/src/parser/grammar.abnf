@@ -61,7 +61,7 @@ value-continuation- =/ function-call value-continuation-
 value-continuation- =/ EMPTY
 
 value-indent = ID value-indent-id- / list-lit
-value-indent-id- = object / value-continuation- list-id
+value-indent-id- = object / list-id
 
 object = object-value object-next- DEINDENT
 object-key = ID object-value object-next-
@@ -69,7 +69,7 @@ object-next- = NEWLINE object-key / EMPTY
 object-value = value / SAMEKEY
 object-empty = "}"
 
-list-id = list-value-next- DEINDENT
+list-id = value-continuation- list-value-next- DEINDENT
 list-lit = value-lit list-value-next- DEINDENT
 list-value-next- = NEWLINE value-no-indent list-value-next- / EMPTY
 

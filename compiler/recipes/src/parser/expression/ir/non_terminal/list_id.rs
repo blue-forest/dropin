@@ -21,7 +21,10 @@
 
 use std::vec::Vec;
 
+use dropin_compiler_common::TokenKind;
+
 use crate::ir::Expression;
+use crate::parser::expression::ir::terminal::id;
 use crate::parser::expression::ir::{BuildState, ExpressionBuilder};
 
 pub(super) fn build(
@@ -30,10 +33,21 @@ pub(super) fn build(
   input: &str,
   mut state: BuildState,
 ) -> Expression {
-  let id = state.value_indent_id.take().unwrap();
+  let newline_position = children
+    .into_iter()
+    .position(|child| {
+      if let TokenKind::Newline = nodes[*child].as_ref().unwrap().token {
+        true
+      } else {
+        false
+      }
+    })
+    .unwrap_or(children.len());
+  let siblings = &children[0..newline_position];
+  let key = state.value_indent_id.take().unwrap();
   let mut content = Vec::with_capacity(children.len());
-  content.push(Expression::getter(id.into(), Vec::new()));
-  for i in (1..children.len()).step_by(2) {
+  content.push(id(nodes, input, state.clone(), siblings, key));
+  for i in (newline_position + 1..children.len()).step_by(2) {
     let node = nodes[children[i]].take().unwrap();
     let expr = node.build_inner(nodes, input, state.clone());
     content.push(expr);

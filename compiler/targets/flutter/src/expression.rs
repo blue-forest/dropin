@@ -266,6 +266,7 @@ fn new_parts(value: Expression) -> Vec<GenExpressionPart> {
           is_first = false;
           parts.push(GenExpressionPart::Nested(new_parts(arg)));
         }
+        parts.push(GenExpressionPart::Static(")"));
         parts
       }
     },

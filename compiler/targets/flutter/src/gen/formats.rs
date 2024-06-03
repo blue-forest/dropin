@@ -4,7 +4,19 @@ use alloc::{
 };
 use dropin_compiler_recipes::ir::{Format, FormatInner};
 
-pub fn gen_format(output: &mut String, format: &Format) -> fmt::Result {
+use crate::objects_getter::write_class_name;
+
+use super::Sub;
+
+pub fn gen_format<'a, S>(
+  output: &mut String,
+  state: &S,
+  trace: &[&str],
+  format: &Format,
+) -> fmt::Result
+where
+  S: Sub<'a>,
+{
   let format = format.format_inner.as_ref().unwrap();
   match format {
     FormatInner::Any(_) => write!(output, "dynamic")?,
@@ -13,15 +25,25 @@ pub fn gen_format(output: &mut String, format: &Format) -> fmt::Result {
     FormatInner::Date(_) => todo!(),
     FormatInner::Index(sub) => {
       write!(output, "Map<String,")?;
-      gen_format(output, sub.format.as_ref().unwrap())?;
+      gen_format(
+        output,
+        state,
+        &[trace, &["*"]].concat(),
+        sub.format.as_ref().unwrap(),
+      )?;
       write!(output, ">")?;
     }
     FormatInner::List(sub) => {
       write!(output, "List<")?;
-      gen_format(output, sub.format.as_ref().unwrap())?;
+      gen_format(
+        output,
+        state,
+        &[trace, &["*"]].concat(),
+        sub.format.as_ref().unwrap(),
+      )?;
       write!(output, ">")?;
     }
-    FormatInner::Object(_keys) => todo!(),
+    FormatInner::Object(_) => write_class_name(output, trace)?,
     FormatInner::Quantity(_) => write!(output, "num")?,
     FormatInner::Text(_) => write!(output, "String")?,
   }

@@ -1,4 +1,9 @@
-use alloc::{collections::BTreeSet, vec::Vec};
+use alloc::{
+  collections::BTreeSet,
+  fmt::{self, Write},
+  string::String,
+  vec::Vec,
+};
 use dropin_compiler_recipes::ir::{Component, Format, FormatInner, KeyFormat};
 
 use crate::{Stage, Stated};
@@ -71,16 +76,24 @@ impl<'a> ObjectGetterState<'a> {
           let format = key.format.as_ref().unwrap();
           (&key.key, format)
         }
-        FormatStackNode::Format(format) => ("*", format),
+        FormatStackNode::Format(format) => {
+          let Some(format) = format.take() else {
+            iters.pop();
+            continue;
+          };
+          ("*", format)
+        }
       };
       let format = format.format_inner.as_ref().unwrap();
       match format {
         FormatInner::Index(sub) => {
-          iters.push(FormatStackNode::Format(sub.format.as_ref().unwrap()));
+          iters
+            .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
           keys.push(key);
         }
         FormatInner::List(sub) => {
-          iters.push(FormatStackNode::Format(sub.format.as_ref().unwrap()));
+          iters
+            .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
           keys.push(key);
         }
         FormatInner::Object(sub) => {
@@ -101,5 +114,32 @@ where
   I: Iterator<Item = &'a KeyFormat>,
 {
   Keys(I),
-  Format(&'a Format),
+  Format(Option<&'a Format>),
+}
+
+pub fn write_class_name(output: &mut String, trace: &[&str]) -> fmt::Result {
+  for key in trace {
+    match *key {
+      "*" => {
+        write!(output, "_")?;
+      }
+      "_" => write!(output, "__")?,
+      _ => {
+        let mut is_capital = true;
+        for c in key.chars() {
+          if c == '_' {
+            is_capital = true;
+            continue;
+          }
+          if is_capital {
+            output.push(c.to_ascii_uppercase());
+          } else {
+            output.push(c);
+          }
+          is_capital = false;
+        }
+      }
+    }
+  }
+  Ok(())
 }

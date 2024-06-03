@@ -11,17 +11,21 @@ use self::keys::gen_keys;
 mod formats;
 mod keys;
 
+pub trait Sub<'a>: Stage + Stated<ObjectGetterState<'a>> {}
+
+impl<'a, S> Sub<'a> for S where S: Stage + Stated<ObjectGetterState<'a>> {}
+
 #[derive(Debug)]
 pub struct Gen<'a, S>
 where
-  S: Stage + Stated<ObjectGetterState<'a>>,
+  S: Sub<'a>,
 {
   sub: &'a S,
 }
 
 impl<'a, S> Gen<'a, S>
 where
-  S: Stage + Stated<ObjectGetterState<'a>>,
+  S: Sub<'a>,
 {
   pub fn new(sub: &'a S) -> Self {
     Self { sub }
@@ -40,8 +44,7 @@ where
         "class {} extends StatelessWidget {{ final Core _core;",
         ir.name
       )?;
-      gen_keys(output, ir.variables.as_ref().unwrap())?;
-      // self.variables.gen(output)?;
+      gen_keys(output, self.sub, &[], ir.variables.as_ref().unwrap())?;
       write!(output, "}}")?;
     }
     Ok(output)
@@ -50,7 +53,7 @@ where
 
 impl<'a, S> Stage for Gen<'a, S>
 where
-  S: Stage + Stated<ObjectGetterState<'a>>,
+  S: Sub<'a>,
 {
   fn ir(&self) -> &Component {
     self.sub.ir()

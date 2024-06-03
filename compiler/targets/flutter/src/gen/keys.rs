@@ -4,12 +4,25 @@ use alloc::{
 };
 use dropin_compiler_recipes::ir::Keys;
 
-use super::formats::gen_format;
+use super::{formats::gen_format, Sub};
 
-pub fn gen_keys(output: &mut String, keys: &Keys) -> fmt::Result {
+pub fn gen_keys<'a, S>(
+  output: &mut String,
+  state: &S,
+  trace: &[&str],
+  keys: &Keys,
+) -> fmt::Result
+where
+  S: Sub<'a>,
+{
   for key_format in &keys.keys {
     let default = keys.required.get(&key_format.key);
-    gen_format(output, key_format.format.as_ref().unwrap())?;
+    gen_format(
+      output,
+      state,
+      &[trace, &[key_format.key.as_str()]].concat(),
+      key_format.format.as_ref().unwrap(),
+    )?;
     if default.is_none() {
       write!(output, "?")?;
     }

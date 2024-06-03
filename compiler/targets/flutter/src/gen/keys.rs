@@ -1,8 +1,9 @@
 use alloc::{
+  collections::BTreeMap,
   fmt::{self, Write},
   string::String,
 };
-use dropin_compiler_recipes::ir::Keys;
+use dropin_compiler_recipes::ir::{Expression, KeyFormat};
 
 use super::{formats::gen_format, Sub};
 
@@ -10,13 +11,15 @@ pub fn gen_keys<'a, S>(
   output: &mut String,
   state: &S,
   trace: &[&str],
-  keys: &Keys,
+  write_default: bool,
+  required: &BTreeMap<String, Expression>,
+  keys: &[KeyFormat],
 ) -> fmt::Result
 where
   S: Sub<'a>,
 {
-  for key_format in &keys.keys {
-    let default = keys.required.get(&key_format.key);
+  for key_format in keys {
+    let default = required.get(&key_format.key);
     gen_format(
       output,
       state,
@@ -27,9 +30,11 @@ where
       write!(output, "?")?;
     }
     write!(output, " {}", key_format.key)?;
-    if let Some(_default) = default {
-      write!(output, " =")?;
-      todo!("gen expression");
+    if write_default {
+      if let Some(_default) = default {
+        write!(output, " =")?;
+        todo!("gen expression");
+      }
     }
     write!(output, ";")?;
   }

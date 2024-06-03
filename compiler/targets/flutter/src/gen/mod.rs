@@ -6,8 +6,9 @@ use dropin_compiler_recipes::ir::Component;
 
 use crate::{objects_getter::ObjectGetterState, Stage, Stated};
 
-use self::keys::gen_keys;
+use self::{classes::gen_classes, keys::gen_keys};
 
+mod classes;
 mod formats;
 mod keys;
 
@@ -44,8 +45,17 @@ where
         "class {} extends StatelessWidget {{ final Core _core;",
         ir.name
       )?;
-      gen_keys(output, self.sub, &[], ir.variables.as_ref().unwrap())?;
+      let variables = ir.variables.as_ref().unwrap();
+      gen_keys(
+        output,
+        self.sub,
+        &[],
+        true,
+        &variables.required,
+        &variables.keys,
+      )?;
       write!(output, "}}")?;
+      gen_classes(output, self.sub)?;
     }
     Ok(output)
   }

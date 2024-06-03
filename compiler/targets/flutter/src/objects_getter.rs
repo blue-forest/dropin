@@ -1,10 +1,12 @@
 use alloc::{
-  collections::BTreeSet,
+  collections::BTreeMap,
   fmt::{self, Write},
   string::String,
   vec::Vec,
 };
-use dropin_compiler_recipes::ir::{Component, Format, FormatInner, KeyFormat};
+use dropin_compiler_recipes::ir::{
+  Component, Format, FormatInner, FormatObject, KeyFormat,
+};
 
 use crate::{Stage, Stated};
 
@@ -47,7 +49,7 @@ where
 
 #[derive(Debug)]
 pub struct ObjectGetterState<'a> {
-  pub objects: BTreeSet<Vec<&'a str>>,
+  pub objects: BTreeMap<Vec<&'a str>, &'a FormatObject>,
 }
 
 impl<'a> ObjectGetterState<'a> {
@@ -55,7 +57,7 @@ impl<'a> ObjectGetterState<'a> {
   where
     S: Stage,
   {
-    let mut objects = BTreeSet::new();
+    let mut objects = BTreeMap::new();
 
     let ir = sub.ir();
     let mut nodes = Vec::new();
@@ -99,7 +101,7 @@ impl<'a> ObjectGetterState<'a> {
         FormatInner::Object(sub) => {
           nodes.push(FormatStackNode::Keys(sub.keys.iter()));
           keys.push(key);
-          objects.insert(keys.clone());
+          objects.insert(keys.clone(), sub);
         }
         _ => {}
       }

@@ -63,7 +63,7 @@ impl<'de> Deserialize<'de> for Keys {
 }
 
 #[derive(Default)]
-struct IndexMap {
+pub struct IndexMap {
   value: Vec<KeyFormat>,
 }
 
@@ -98,7 +98,7 @@ impl<'de> Deserialize<'de> for IndexMap {
 }
 
 impl IndexMap {
-  fn into_vec(self) -> Vec<KeyFormat> {
+  pub fn into_vec(self) -> Vec<KeyFormat> {
     self.value
   }
 }

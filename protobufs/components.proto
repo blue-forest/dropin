@@ -216,6 +216,8 @@ message FormatList {
 
 message FormatObject {
   FormatCommon common = 1;
+  map<string, Expression> required = 2;
+  repeated KeyFormat keys = 3;
 }
 
 

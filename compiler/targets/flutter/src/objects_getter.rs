@@ -58,18 +58,18 @@ impl<'a> ObjectGetterState<'a> {
     let mut objects = BTreeSet::new();
 
     let ir = sub.ir();
-    let mut iters = Vec::new();
-    iters.push(FormatStackNode::Keys(
+    let mut nodes = Vec::new();
+    nodes.push(FormatStackNode::Keys(
       ir.variables.as_ref().unwrap().keys.iter(),
     ));
     let mut keys = Vec::new();
 
-    while !iters.is_empty() {
-      let node = iters.last_mut().unwrap();
+    while !nodes.is_empty() {
+      let node = nodes.last_mut().unwrap();
       let (key, format): (&str, &Format) = match node {
         FormatStackNode::Keys(iter) => {
           let Some(key) = iter.next() else {
-            iters.pop();
+            nodes.pop();
             keys.pop();
             continue;
           };
@@ -78,7 +78,7 @@ impl<'a> ObjectGetterState<'a> {
         }
         FormatStackNode::Format(format) => {
           let Some(format) = format.take() else {
-            iters.pop();
+            nodes.pop();
             continue;
           };
           ("*", format)
@@ -87,17 +87,17 @@ impl<'a> ObjectGetterState<'a> {
       let format = format.format_inner.as_ref().unwrap();
       match format {
         FormatInner::Index(sub) => {
-          iters
+          nodes
             .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
           keys.push(key);
         }
         FormatInner::List(sub) => {
-          iters
+          nodes
             .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
           keys.push(key);
         }
         FormatInner::Object(sub) => {
-          iters.push(FormatStackNode::Keys(sub.keys.iter()));
+          nodes.push(FormatStackNode::Keys(sub.keys.iter()));
           keys.push(key);
           objects.insert(keys.clone());
         }

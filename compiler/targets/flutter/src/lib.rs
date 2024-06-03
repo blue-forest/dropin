@@ -10,7 +10,7 @@ use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Component;
 use prost::Message;
 
-use crate::component::ObjectGetter;
+use crate::{gen::Gen, objects_getter::ObjectGetter};
 
 trait Stage {
   fn ir(&self) -> &Component;
@@ -28,7 +28,8 @@ impl Stage for Component {
 
 // use self::component::GenComponent;
 
-mod component;
+mod gen;
+mod objects_getter;
 // mod expression;
 // mod format;
 // mod keys;
@@ -38,11 +39,8 @@ pub fn codegen(protobuf: *mut [u8]) -> CString {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let component = Component::decode(protobuf.as_ref()).unwrap();
   let objects_getter = ObjectGetter::new(&component);
-  todo!("{:#?}", objects_getter.state().objects)
-  /*
-  let gen = GenComponent::from(component);
+  let gen = Gen::new(&objects_getter);
   CString::new(gen.gen().unwrap()).unwrap()
-  */
 }
 
 // #[cfg(debug_assertions)]

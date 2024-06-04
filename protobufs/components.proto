@@ -4,8 +4,9 @@ package dropin.components;
 
 message Component {
   string name = 1;
-  optional Keys variables = 2;
-  ComponentZone zone = 3;
+  optional Keys properties = 2;
+  optional Keys variables = 3;
+  ComponentZone zone = 4;
 }
 
 message ComponentZone {

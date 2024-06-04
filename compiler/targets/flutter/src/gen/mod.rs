@@ -6,7 +6,10 @@ use dropin_compiler_recipes::ir::Component;
 
 use crate::{objects_getter::ObjectGetterState, Stage, Stated};
 
-use self::{classes::gen_classes, keys::gen_keys};
+use self::{
+  classes::gen_classes,
+  keys::{gen_keys, is_undefined},
+};
 
 mod blocks;
 mod classes;
@@ -47,16 +50,40 @@ where
         "class {} extends StatelessWidget {{ final Core _core;",
         ir.name
       )?;
-      let variables = ir.variables.as_ref().unwrap();
-      gen_keys(
-        output,
-        self.sub,
-        &[],
-        true,
-        &variables.required,
-        &variables.keys,
-      )?;
-      write!(output, "}}")?;
+      if let Some(properties) = &ir.properties {
+        gen_keys(
+          output,
+          self.sub,
+          &[],
+          true,
+          &properties.required,
+          &properties.keys,
+        )?;
+      }
+      if let Some(variables) = &ir.variables {
+        gen_keys(
+          output,
+          self.sub,
+          &[],
+          true,
+          &variables.required,
+          &variables.keys,
+        )?;
+      }
+      write!(output, "{}({{required Core core", ir.name)?;
+      if let Some(properties) = &ir.properties {
+        for key_format in &properties.keys {
+          write!(output, ",")?;
+          let default = properties.required.get(&key_format.key);
+          if let Some(default) = default {
+            if is_undefined(default) {
+              write!(output, "required ")?;
+            }
+          }
+          write!(output, "this.{}", key_format.key)?;
+        }
+      }
+      write!(output, "}}) : _core = core;}}")?;
       gen_classes(output, self.sub)?;
     }
     Ok(output)

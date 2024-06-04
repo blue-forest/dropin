@@ -4,12 +4,14 @@ use super::{
 
 impl Component {
   pub fn new(
+    properties: Option<Keys>,
     variables: Option<Keys>,
     classes: Vec<RichText>,
     blocks: Vec<ComponentChild>,
   ) -> Self {
     Self {
       name: String::new(),
+      properties,
       variables,
       zone: Some(ComponentZone {
         common: Some(ComponentCommon { classes }),

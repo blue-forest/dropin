@@ -15,6 +15,7 @@ impl<'de> Deserialize<'de> for Component {
     #[derive(Deserialize)]
     #[serde(field_identifier, rename_all = "lowercase")]
     enum Field {
+      Properties,
       Variables,
       Classes,
       Blocks,
@@ -33,11 +34,18 @@ impl<'de> Deserialize<'de> for Component {
       where
         A: MapAccess<'de>,
       {
+        let mut properties = None;
         let mut variables = None;
         let mut classes = None;
         let mut blocks = None;
         while let Some(key) = map.next_key()? {
           match key {
+            Field::Properties => {
+              if properties.is_some() {
+                return Err(de::Error::duplicate_field("properties"));
+              }
+              properties = Some(map.next_value()?)
+            }
             Field::Variables => {
               if variables.is_some() {
                 return Err(de::Error::duplicate_field("variables"));
@@ -59,6 +67,7 @@ impl<'de> Deserialize<'de> for Component {
           }
         }
         Ok(Component::new(
+          properties,
           variables,
           classes.unwrap_or(vec![]),
           blocks.unwrap_or(vec![]),

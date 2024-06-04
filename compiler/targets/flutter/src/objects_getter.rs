@@ -5,7 +5,7 @@ use alloc::{
   vec::Vec,
 };
 use dropin_compiler_recipes::ir::{
-  Component, Format, FormatInner, FormatObject, KeyFormat,
+  Component, Format, FormatInner, FormatObject, KeyFormat, Keys,
 };
 
 use crate::{Stage, Stated};
@@ -58,56 +58,63 @@ impl<'a> ObjectGetterState<'a> {
     S: Stage,
   {
     let mut objects = BTreeMap::new();
-
     let ir = sub.ir();
-    let mut nodes = Vec::new();
-    nodes.push(FormatStackNode::Keys(
-      ir.variables.as_ref().unwrap().keys.iter(),
-    ));
-    let mut keys = Vec::new();
-
-    while !nodes.is_empty() {
-      let node = nodes.last_mut().unwrap();
-      let (key, format): (&str, &Format) = match node {
-        FormatStackNode::Keys(iter) => {
-          let Some(key) = iter.next() else {
-            nodes.pop();
-            keys.pop();
-            continue;
-          };
-          let format = key.format.as_ref().unwrap();
-          (&key.key, format)
-        }
-        FormatStackNode::Format(format) => {
-          let Some(format) = format.take() else {
-            nodes.pop();
-            continue;
-          };
-          ("*", format)
-        }
-      };
-      let format = format.format_inner.as_ref().unwrap();
-      match format {
-        FormatInner::Index(sub) => {
-          nodes
-            .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
-          keys.push(key);
-        }
-        FormatInner::List(sub) => {
-          nodes
-            .push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
-          keys.push(key);
-        }
-        FormatInner::Object(sub) => {
-          nodes.push(FormatStackNode::Keys(sub.keys.iter()));
-          keys.push(key);
-          objects.insert(keys.clone(), sub);
-        }
-        _ => {}
-      }
+    if let Some(variables) = &ir.variables {
+      fill_keys(&mut objects, variables);
+    }
+    if let Some(properties) = &ir.properties {
+      fill_keys(&mut objects, properties);
     }
 
     Self { objects }
+  }
+}
+
+fn fill_keys<'a>(
+  objects: &mut BTreeMap<Vec<&'a str>, &'a FormatObject>,
+  keys: &'a Keys,
+) {
+  let mut nodes = Vec::new();
+  nodes.push(FormatStackNode::Keys(keys.keys.iter()));
+  let mut keys = Vec::new();
+
+  while !nodes.is_empty() {
+    let node = nodes.last_mut().unwrap();
+    let (key, format): (&str, &Format) = match node {
+      FormatStackNode::Keys(iter) => {
+        let Some(key) = iter.next() else {
+          nodes.pop();
+          keys.pop();
+          continue;
+        };
+        let format = key.format.as_ref().unwrap();
+        (&key.key, format)
+      }
+      FormatStackNode::Format(format) => {
+        let Some(format) = format.take() else {
+          nodes.pop();
+          continue;
+        };
+        ("*", format)
+      }
+    };
+    let format = format.format_inner.as_ref().unwrap();
+    match format {
+      FormatInner::Index(sub) => {
+        nodes.push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
+        keys.push(key);
+      }
+      FormatInner::List(sub) => {
+        nodes.push(FormatStackNode::Format(Some(sub.format.as_ref().unwrap())));
+        keys.push(key);
+      }
+      FormatInner::Object(sub) => {
+        nodes.push(FormatStackNode::Keys(sub.keys.iter()));
+        keys.push(key);
+        objects.insert(keys.clone(), sub);
+      }
+      _ => {}
+    }
   }
 }
 

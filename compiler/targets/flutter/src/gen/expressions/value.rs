@@ -1,9 +1,11 @@
 use alloc::{
   fmt::{self, Write},
   string::String,
+  vec::Vec,
 };
 use dropin_compiler_recipes::ir::{
-  ExpressionInner, Getter, RichTextInner, Value, ValueInner,
+  ExpressionInner, Getter, RichText, RichTextInner, RichTextPart, Value,
+  ValueInner,
 };
 
 use crate::{gen::Sub, objects_getter::write_class_name};
@@ -57,7 +59,36 @@ where
     ValueInner::Getter(value) => {
       write!(output, "{}", value.ident)?;
       if !value.indexes.is_empty() {
-        todo!("getter indexes")
+        let objects = &state.state().objects;
+        let mut trace_current = Vec::new();
+        trace_current.push(value.ident.as_str());
+        for key in &value.indexes {
+          let mut trace_key = "*";
+          if let ExpressionInner::Value(Value {
+            value_inner: Some(ValueInner::Text(RichText { parts })),
+          }) = key.expression_inner.as_ref().unwrap()
+          {
+            if parts.len() == 1 {
+              if let RichTextPart {
+                rich_text_inner: Some(RichTextInner::Static(part)),
+              } = &parts[0]
+              {
+                trace_key = part;
+              }
+            }
+          }
+          if objects.contains_key(&trace_current) {
+            if trace_key == "*" {
+              panic!("Objects cannot be indexed dynamically")
+            }
+            write!(output, ".{trace_key}")?;
+          } else {
+            write!(output, "[")?;
+            gen_expressions(output, state, &trace_current, key)?;
+            write!(output, "]")?;
+          }
+          trace_current.push(trace_key);
+        }
       }
     }
     ValueInner::List(_) => todo!(),

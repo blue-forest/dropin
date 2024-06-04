@@ -24,8 +24,8 @@ use std::vec::Vec;
 use dropin_compiler_common::TokenKind;
 
 use crate::ir::{
-  expression::ExpressionInner, value::ValueInner, Expression, RichText,
-  RichTextPart, Value,
+  expression::ExpressionInner, value::ValueInner, Expression, RichTextPart,
+  Value,
 };
 
 use super::{BuildState, ExpressionBuilder};
@@ -47,15 +47,9 @@ impl<'a> ExpressionBuilder<'a> {
       TokenKind::Id => id(nodes, input, state, siblings, spanned_input),
       TokenKind::Text => Expression {
         expression_inner: Some(ExpressionInner::Value(Value {
-          value_inner: Some(ValueInner::Text(RichText {
-            parts: vec![RichTextPart {
-              rich_text_inner: Some(
-                crate::ir::rich_text_part::RichTextInner::Static(
-                  spanned_input.trim_matches('"').into(),
-                ),
-              ),
-            }],
-          })),
+          value_inner: Some(ValueInner::Text(
+            serde_yaml::from_str(spanned_input.trim_matches('"')).unwrap(),
+          )),
         })),
       },
       TokenKind::Quantity => {

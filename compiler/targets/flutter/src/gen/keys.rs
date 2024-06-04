@@ -5,7 +5,7 @@ use alloc::{
 };
 use dropin_compiler_recipes::ir::{Expression, KeyFormat};
 
-use super::{formats::gen_format, Sub};
+use super::{expressions::gen_expressions, formats::gen_format, Sub};
 
 pub fn gen_keys<'a, S>(
   output: &mut String,
@@ -31,9 +31,9 @@ where
     }
     write!(output, " {}", key_format.key)?;
     if write_default {
-      if let Some(_default) = default {
-        write!(output, " =")?;
-        todo!("gen expression");
+      if let Some(default) = default {
+        write!(output, "=")?;
+        gen_expressions(output, state, default)?;
       }
     }
     write!(output, ";")?;

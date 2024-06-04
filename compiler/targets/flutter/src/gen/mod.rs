@@ -9,6 +9,7 @@ use crate::{objects_getter::ObjectGetterState, Stage, Stated};
 use self::{classes::gen_classes, keys::gen_keys};
 
 mod classes;
+mod expressions;
 mod formats;
 mod keys;
 

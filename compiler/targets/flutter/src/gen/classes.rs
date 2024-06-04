@@ -5,7 +5,7 @@ use alloc::{
 
 use crate::objects_getter::write_class_name;
 
-use super::{keys::gen_keys, Sub};
+use super::{expressions::gen_expressions, keys::gen_keys, Sub};
 
 pub fn gen_classes<'a, S>(output: &mut String, state: &S) -> fmt::Result
 where
@@ -27,9 +27,9 @@ where
       }
       is_first = false;
       write!(output, "this.{}", key_format.key)?;
-      if let Some(_default) = format.required.get(&key_format.key) {
-        write!(output, " =")?;
-        todo!("gen expression");
+      if let Some(default) = format.required.get(&key_format.key) {
+        write!(output, "=")?;
+        gen_expressions(output, state, default)?;
       }
     }
 

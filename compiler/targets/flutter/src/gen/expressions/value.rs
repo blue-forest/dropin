@@ -55,7 +55,13 @@ where
       write!(output, "'")?;
     }
     ValueInner::Quantity(value) => write!(output, "{value}")?,
-    ValueInner::Boolean(_) => todo!(),
+    ValueInner::Boolean(value) => {
+      if *value {
+        write!(output, "true")?;
+      } else {
+        write!(output, "false")?;
+      }
+    }
     ValueInner::Getter(value) => {
       write!(output, "{}", value.ident)?;
       if !value.indexes.is_empty() {
@@ -91,7 +97,19 @@ where
         }
       }
     }
-    ValueInner::List(_) => todo!(),
+    ValueInner::List(values) => {
+      write!(output, "[")?;
+      let mut is_first = true;
+      let trace_current = &[trace, &["*"]].concat();
+      for value in &values.values {
+        if !is_first {
+          write!(output, ",")?;
+        }
+        is_first = false;
+        gen_expressions(output, state, trace_current, value)?;
+      }
+      write!(output, "]")?;
+    }
     ValueInner::Object(value) => {
       if let Some(_) = state.state().objects.get(trace) {
         write_class_name(output, trace)?;

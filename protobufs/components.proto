@@ -48,6 +48,7 @@ message Value {
     Getter getter = 4;
     List list = 5;
     Object object = 6;
+    Undefined undefined = 7;
   };
 }
 
@@ -74,6 +75,8 @@ message Object {
 message List {
   repeated Expression values = 1;
 }
+
+message Undefined {}
 
 // ------------------------------------------------------------------ COMPARISON
 

@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use super::{
   Expression, ExpressionInner, Getter, List, Object, RichText, RichTextPart,
-  Value, ValueInner,
+  Undefined, Value, ValueInner,
 };
 
 impl Expression {
@@ -50,6 +50,14 @@ impl Expression {
     Self {
       expression_inner: Some(ExpressionInner::Value(Value {
         value_inner: Some(ValueInner::Object(Object { values })),
+      })),
+    }
+  }
+
+  pub fn undefined() -> Self {
+    Self {
+      expression_inner: Some(ExpressionInner::Value(Value {
+        value_inner: Some(ValueInner::Undefined(Undefined {})),
       })),
     }
   }

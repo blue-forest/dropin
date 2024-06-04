@@ -3,7 +3,9 @@ use alloc::{
   fmt::{self, Write},
   string::String,
 };
-use dropin_compiler_recipes::ir::{Expression, KeyFormat};
+use dropin_compiler_recipes::ir::{
+  Expression, ExpressionInner, KeyFormat, Value, ValueInner,
+};
 
 use super::{expressions::gen_expressions, formats::gen_format, Sub};
 
@@ -33,11 +35,24 @@ where
     write!(output, " {}", key_format.key)?;
     if write_default {
       if let Some(default) = default {
-        write!(output, "=")?;
-        gen_expressions(output, state, trace_current, default)?;
+        if !is_undefined(default) {
+          write!(output, "=")?;
+          gen_expressions(output, state, trace_current, default)?;
+        }
       }
     }
     write!(output, ";")?;
   }
   Ok(())
+}
+
+fn is_undefined(expression: &Expression) -> bool {
+  if let ExpressionInner::Value(Value {
+    value_inner: Some(ValueInner::Undefined(_)),
+  }) = expression.expression_inner.as_ref().unwrap()
+  {
+    true
+  } else {
+    false
+  }
 }

@@ -138,6 +138,7 @@ where
         write!(output, "}}")?;
       }
     }
+    ValueInner::Undefined(_) => unreachable!(),
   }
   Ok(())
 }

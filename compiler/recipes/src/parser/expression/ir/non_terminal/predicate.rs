@@ -31,6 +31,9 @@ pub(super) fn build(
   input: &str,
   mut state: BuildState,
 ) -> Expression {
+  if children.is_empty() {
+    return Expression::undefined();
+  }
   state.in_keys = false;
   let first_operand =
     nodes[children[0]]

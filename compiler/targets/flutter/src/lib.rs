@@ -26,13 +26,8 @@ impl Stage for Component {
   }
 }
 
-// use self::component::GenComponent;
-
 mod gen;
 mod objects_getter;
-// mod expression;
-// mod format;
-// mod keys;
 
 #[no_mangle]
 pub fn codegen(protobuf: *mut [u8]) -> CString {

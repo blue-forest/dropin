@@ -1,11 +1,12 @@
 use alloc::{fmt, string::String};
 use dropin_compiler_recipes::ir::{Expression, ExpressionInner};
 
-use self::{comparison::gen_comparison, value::gen_value};
+use self::{comparison::gen_comparison, logic::gen_logic, value::gen_value};
 
 use super::Sub;
 
 mod comparison;
+mod logic;
 mod value;
 
 pub fn gen_expressions<'a, S>(
@@ -22,7 +23,7 @@ where
     ExpressionInner::Comparison(comparison) => {
       gen_comparison(output, state, comparison)?
     }
-    ExpressionInner::Logic(_) => todo!(),
+    ExpressionInner::Logic(logic) => gen_logic(output, state, logic)?,
     ExpressionInner::Control(value) => todo!("{value:?}"),
     ExpressionInner::Arithmetic(_) => todo!(),
   }

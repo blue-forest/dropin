@@ -62,18 +62,32 @@ where
     }
     ValueInner::List(_) => todo!(),
     ValueInner::Object(value) => {
-      write_class_name(output, trace)?;
-      write!(output, "(")?;
-      let mut is_first = true;
-      for (key, value) in &value.values {
-        if !is_first {
-          write!(output, ",")?;
+      if let Some(_) = state.state().objects.get(trace) {
+        write_class_name(output, trace)?;
+        write!(output, "(")?;
+        let mut is_first = true;
+        for (key, value) in &value.values {
+          if !is_first {
+            write!(output, ",")?;
+          }
+          is_first = false;
+          write!(output, "{key}: ")?;
+          gen_expressions(output, state, &[trace, &[key]].concat(), value)?;
         }
-        is_first = false;
-        write!(output, "{key}: ")?;
-        gen_expressions(output, state, &[trace, &[key]].concat(), value)?;
+        write!(output, ")")?;
+      } else {
+        write!(output, "{{")?;
+        let mut is_first = true;
+        for (key, value) in &value.values {
+          if !is_first {
+            write!(output, ",")?;
+          }
+          is_first = false;
+          write!(output, "{key}:")?;
+          gen_expressions(output, state, &[trace, &[key]].concat(), value)?;
+        }
+        write!(output, "}}")?;
       }
-      write!(output, ")")?;
     }
   }
   Ok(())

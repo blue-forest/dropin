@@ -5,12 +5,13 @@ use alloc::{
 use dropin_compiler_recipes::ir::{Expression, ExpressionInner};
 
 use self::{
-  comparison::gen_comparison, control::gen_control, logic::gen_logic,
-  value::gen_value,
+  arithmetic::gen_arithmetic, comparison::gen_comparison, control::gen_control,
+  logic::gen_logic, value::gen_value,
 };
 
 use super::Sub;
 
+mod arithmetic;
 mod comparison;
 mod control;
 mod logic;
@@ -33,7 +34,9 @@ where
     }
     ExpressionInner::Logic(logic) => gen_logic(output, state, logic)?,
     ExpressionInner::Control(control) => gen_control(output, state, control)?,
-    ExpressionInner::Arithmetic(_) => todo!(),
+    ExpressionInner::Arithmetic(arithmetic) => {
+      gen_arithmetic(output, state, arithmetic)?;
+    }
   }
   write!(output, ")")?;
   Ok(())

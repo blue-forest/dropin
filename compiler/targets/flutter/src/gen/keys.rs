@@ -19,11 +19,12 @@ where
   S: Sub<'a>,
 {
   for key_format in keys {
+    let trace_current = &[trace, &[key_format.key.as_str()]].concat();
     let default = required.get(&key_format.key);
     gen_format(
       output,
       state,
-      &[trace, &[key_format.key.as_str()]].concat(),
+      trace_current,
       key_format.format.as_ref().unwrap(),
     )?;
     if default.is_none() {
@@ -33,7 +34,7 @@ where
     if write_default {
       if let Some(default) = default {
         write!(output, "=")?;
-        gen_expressions(output, state, default)?;
+        gen_expressions(output, state, trace_current, default)?;
       }
     }
     write!(output, ";")?;

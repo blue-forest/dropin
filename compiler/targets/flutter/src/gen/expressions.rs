@@ -10,16 +10,17 @@ mod value;
 pub fn gen_expressions<'a, S>(
   output: &mut String,
   state: &S,
+  trace: &[&str],
   expression: &Expression,
 ) -> fmt::Result
 where
   S: Sub<'a>,
 {
   match expression.expression_inner.as_ref().unwrap() {
-    ExpressionInner::Value(value) => gen_value(output, state, value)?,
+    ExpressionInner::Value(value) => gen_value(output, state, trace, value)?,
     ExpressionInner::Comparison(_) => todo!(),
     ExpressionInner::Logic(_) => todo!(),
-    ExpressionInner::Control(_) => todo!(),
+    ExpressionInner::Control(value) => todo!("{value:?}"),
     ExpressionInner::Arithmetic(_) => todo!(),
   }
   Ok(())

@@ -29,7 +29,7 @@ where
       write!(output, "this.{}", key_format.key)?;
       if let Some(default) = format.required.get(&key_format.key) {
         write!(output, "=")?;
-        gen_expressions(output, state, default)?;
+        gen_expressions(output, state, trace, default)?;
       }
     }
 

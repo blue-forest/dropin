@@ -46,7 +46,7 @@ where
   Ok(())
 }
 
-fn is_undefined(expression: &Expression) -> bool {
+pub fn is_undefined(expression: &Expression) -> bool {
   if let ExpressionInner::Value(Value {
     value_inner: Some(ValueInner::Undefined(_)),
   }) = expression.expression_inner.as_ref().unwrap()

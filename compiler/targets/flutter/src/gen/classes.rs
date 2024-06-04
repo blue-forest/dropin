@@ -5,7 +5,11 @@ use alloc::{
 
 use crate::objects_getter::write_class_name;
 
-use super::{expressions::gen_expressions, keys::gen_keys, Sub};
+use super::{
+  expressions::gen_expressions,
+  keys::{gen_keys, is_undefined},
+  Sub,
+};
 
 pub fn gen_classes<'a, S>(output: &mut String, state: &S) -> fmt::Result
 where
@@ -28,13 +32,15 @@ where
       is_first = false;
       write!(output, "this.{}", key_format.key)?;
       if let Some(default) = format.required.get(&key_format.key) {
-        write!(output, "=")?;
-        gen_expressions(
-          output,
-          state,
-          &[trace.as_slice(), &[&key_format.key]].concat(),
-          default,
-        )?;
+        if !is_undefined(default) {
+          write!(output, "=")?;
+          gen_expressions(
+            output,
+            state,
+            &[trace.as_slice(), &[&key_format.key]].concat(),
+            default,
+          )?;
+        }
       }
     }
 

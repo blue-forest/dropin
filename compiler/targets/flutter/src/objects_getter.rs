@@ -21,7 +21,7 @@ where
 
 impl<'a, S> ObjectGetter<'a, S>
 where
-  S: Stage + 'a,
+  S: Stage,
 {
   pub fn new(sub: &'a S) -> Self {
     let state = ObjectGetterState::new(sub);

@@ -8,9 +8,14 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 use alloc::{boxed::Box, ffi::CString};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Component;
+use dropin_target_macros::combine;
 use prost::Message;
 
-use crate::{gen::Gen, objects_getter::ObjectGetter};
+use crate::{
+  gen::Gen,
+  listeners::{Listeners, ListenersState},
+  objects_getter::{ObjectGetter, ObjectGetterState},
+};
 
 trait Stage {
   fn ir(&self) -> &Component;
@@ -27,14 +32,23 @@ impl Stage for Component {
 }
 
 mod gen;
+mod listeners;
 mod objects_getter;
+
+#[combine]
+struct Combine<'a>(
+  #[state(ObjectGetterState<'a>)] ObjectGetter<'a>,
+  #[state(ListenersState<'a>)] Listeners<'a>,
+);
 
 #[no_mangle]
 pub fn codegen(protobuf: *mut [u8]) -> CString {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let component = Component::decode(protobuf.as_ref()).unwrap();
   let objects_getter = ObjectGetter::new(&component);
-  let gen = Gen::new(&objects_getter);
+  let listeners = Listeners::new(&component);
+  let combine = Combine(objects_getter, listeners);
+  let gen = Gen::new(&combine);
   CString::new(gen.gen().unwrap()).unwrap()
 }
 

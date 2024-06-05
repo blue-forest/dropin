@@ -212,8 +212,18 @@ dependencies = [
  "anyhow",
  "dlmalloc",
  "dropin-compiler-recipes",
+ "dropin-target-macros",
  "indoc",
  "prost",
+]
+
+[[package]]
+name = "dropin-target-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

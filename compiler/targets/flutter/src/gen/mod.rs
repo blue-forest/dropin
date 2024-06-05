@@ -83,7 +83,16 @@ where
           write!(output, "this.{}", key_format.key)?;
         }
       }
-      write!(output, "}}) : _core = core;}}")?;
+      write!(
+        output,
+        "}}):_core = core;\
+        @override Widget build(BuildContext context){{ \
+        return ListenerWidget(\
+        notifiers:[" //     listenersCode = 'ListenerWidget('
+                     // 'notifiers:[${listeners.join(',')}],'
+                     // 'builder:()=>';
+      )?;
+      write!(output, "}}}}")?;
       gen_classes(output, self.sub)?;
     }
     Ok(output)

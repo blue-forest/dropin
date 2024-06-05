@@ -12,6 +12,7 @@ coverage = []
 
 [dependencies]
 dropin-compiler-recipes = { path = "../../recipes" }
+dropin-target-macros = { path = "../../target-macros" }
 
 anyhow = "1.0"
 dlmalloc = { version = "0.2", features = [ "global" ] }

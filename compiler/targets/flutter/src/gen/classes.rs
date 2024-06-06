@@ -3,7 +3,10 @@ use alloc::{
   string::String,
 };
 
-use crate::objects_getter::write_class_name;
+use crate::{
+  objects_getter::{write_class_name, ObjectGetterState},
+  Stated,
+};
 
 use super::{
   expressions::gen_expressions,
@@ -15,7 +18,8 @@ pub fn gen_classes<'a, S>(output: &mut String, state: &S) -> fmt::Result
 where
   S: Sub<'a>,
 {
-  for (trace, format) in &state.state().objects {
+  for (trace, format) in &<S as Stated<ObjectGetterState>>::state(state).objects
+  {
     write!(output, "class ")?;
     write_class_name(output, trace)?;
     write!(output, "{{")?;

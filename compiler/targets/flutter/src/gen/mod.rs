@@ -4,7 +4,9 @@ use alloc::{
 };
 use dropin_compiler_recipes::ir::Component;
 
-use crate::{objects_getter::ObjectGetterState, Stage, Stated};
+use crate::{
+  listeners::ListenersState, objects_getter::ObjectGetterState, Stage, Stated,
+};
 
 use self::{
   classes::gen_classes,
@@ -17,9 +19,15 @@ mod expressions;
 mod formats;
 mod keys;
 
-pub trait Sub<'a>: Stage + Stated<ObjectGetterState<'a>> {}
+pub trait Sub<'a>:
+  Stage + Stated<ObjectGetterState<'a>> + Stated<ListenersState<'a>>
+{
+}
 
-impl<'a, S> Sub<'a> for S where S: Stage + Stated<ObjectGetterState<'a>> {}
+impl<'a, S> Sub<'a> for S where
+  S: Stage + Stated<ObjectGetterState<'a>> + Stated<ListenersState<'a>>
+{
+}
 
 #[derive(Debug)]
 pub struct Gen<'a, S>
@@ -83,16 +91,14 @@ where
           write!(output, "this.{}", key_format.key)?;
         }
       }
+      // let scopes = &<S as Stated<ListenersState>>::state(self.sub).scopes;
       write!(
         output,
-        "}}):_core = core;\
-        @override Widget build(BuildContext context){{ \
-        return ListenerWidget(\
-        notifiers:[" //     listenersCode = 'ListenerWidget('
-                     // 'notifiers:[${listeners.join(',')}],'
-                     // 'builder:()=>';
+        "}}):_core = core;" /*\
+                            @override Widget build(BuildContext context){{ \
+                            return ..."*/
       )?;
-      write!(output, "}}}}")?;
+      write!(output, "}}")?;
       gen_classes(output, self.sub)?;
     }
     Ok(output)

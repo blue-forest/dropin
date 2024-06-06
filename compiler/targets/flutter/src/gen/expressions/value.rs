@@ -8,7 +8,10 @@ use dropin_compiler_recipes::ir::{
   ValueInner,
 };
 
-use crate::{gen::Sub, objects_getter::write_class_name};
+use crate::{
+  gen::Sub, objects_getter::write_class_name,
+  objects_getter::ObjectGetterState, Stated,
+};
 
 use super::gen_expressions;
 
@@ -65,7 +68,7 @@ where
     ValueInner::Getter(value) => {
       write!(output, "{}", value.ident)?;
       if !value.indexes.is_empty() {
-        let objects = &state.state().objects;
+        let objects = &<S as Stated<ObjectGetterState>>::state(state).objects;
         let mut trace_current = Vec::new();
         trace_current.push(value.ident.as_str());
         for key in &value.indexes {
@@ -111,7 +114,10 @@ where
       write!(output, "]")?;
     }
     ValueInner::Object(value) => {
-      if let Some(_) = state.state().objects.get(trace) {
+      if let Some(_) = <S as Stated<ObjectGetterState>>::state(state)
+        .objects
+        .get(trace)
+      {
         write_class_name(output, trace)?;
         write!(output, "(")?;
         let mut is_first = true;

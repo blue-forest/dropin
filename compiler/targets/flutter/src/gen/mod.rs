@@ -5,7 +5,8 @@ use alloc::{
 use dropin_compiler_recipes::ir::Component;
 
 use crate::{
-  listeners::ListenersState, objects_getter::ObjectGetterState, Stage, Stated,
+  imports::ImportsState, listeners::ListenersState,
+  objects_getter::ObjectGetterState, Stage, Stated,
 };
 
 use self::{
@@ -21,12 +22,18 @@ mod keys;
 mod zones;
 
 pub trait Sub<'a>:
-  Stage + Stated<ObjectGetterState<'a>> + Stated<ListenersState<'a>>
+  Stage
+  + Stated<ObjectGetterState<'a>>
+  + Stated<ListenersState<'a>>
+  + Stated<ImportsState>
 {
 }
 
 impl<'a, S> Sub<'a> for S where
-  S: Stage + Stated<ObjectGetterState<'a>> + Stated<ListenersState<'a>>
+  S: Stage
+    + Stated<ObjectGetterState<'a>>
+    + Stated<ListenersState<'a>>
+    + Stated<ImportsState>
 {
 }
 
@@ -51,9 +58,9 @@ where
     {
       let ir = self.sub.ir();
       let output = &mut output;
-      // for import in self.imports {
-      //   write!(output, "import '{import}';")?;
-      // }
+      for import in &<S as Stated<ImportsState>>::state(self.sub).imports {
+        write!(output, "import '{import}';")?;
+      }
       write!(output, "class {} extends StatelessWidget {{", ir.name)?;
       if let Some(properties) = &ir.properties {
         gen_keys(

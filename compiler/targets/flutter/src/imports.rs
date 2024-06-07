@@ -42,7 +42,7 @@ where
 
 #[derive(Debug, Default)]
 pub struct ImportsState {
-  imports: Vec<String>,
+  pub imports: Vec<String>,
 }
 
 impl ImportsState {
@@ -51,6 +51,7 @@ impl ImportsState {
     S: Stage,
   {
     let mut imports = Vec::with_capacity(1);
+    imports.push("package:flutter/material.dart".into());
     Self { imports }
   }
 }

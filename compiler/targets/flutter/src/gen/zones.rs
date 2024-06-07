@@ -17,7 +17,7 @@ pub fn gen_zone<'a, S>(
 where
   S: Sub<'a>,
 {
-  write!(output, "const Row(children: [")?;
+  write!(output, "Row(children: [")?;
   for (i, child) in zone.blocks.iter().enumerate() {
     // let trace = &[trace, &[i]].concat();
     if i != 0 {
@@ -30,7 +30,7 @@ where
         write!(output, ")")?;
       }
       ComponentChildInner::Input(input) => {
-        write!(output, "Input(onChanged: (new_text__) => {{")?;
+        write!(output, "TextField(onChanged: (new_text__) => {{")?;
         gen_getter(output, state, input.on_change.as_ref().unwrap())?;
         write!(output, "= new_text__}})")?;
       }

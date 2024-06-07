@@ -30,9 +30,14 @@ where
         write!(output, ")")?;
       }
       ComponentChildInner::Input(input) => {
-        write!(output, "TextField(onChanged: (new_text__) => {{")?;
+        write!(
+          output,
+          "SizedBox(width: 250, child: TextFormField(initialValue:"
+        )?;
         gen_getter(output, state, input.on_change.as_ref().unwrap())?;
-        write!(output, "= new_text__}})")?;
+        write!(output, ", onChanged: (newText_) => {{")?;
+        gen_getter(output, state, input.on_change.as_ref().unwrap())?;
+        write!(output, "= newText_}}))")?;
       }
     }
   }

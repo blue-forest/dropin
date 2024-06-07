@@ -4,9 +4,12 @@ use alloc::{
 };
 use dropin_compiler_recipes::ir::{Expression, ExpressionInner};
 
-use self::{
-  arithmetic::gen_arithmetic, comparison::gen_comparison, control::gen_control,
-  logic::gen_logic, value::gen_value,
+pub use self::{
+  arithmetic::gen_arithmetic,
+  comparison::gen_comparison,
+  control::gen_control,
+  logic::gen_logic,
+  value::{gen_rich_text, gen_value},
 };
 
 use super::Sub;

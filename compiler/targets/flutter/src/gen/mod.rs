@@ -11,13 +11,14 @@ use crate::{
 use self::{
   classes::gen_classes,
   keys::{gen_keys, is_undefined},
+  zones::gen_zone,
 };
 
-mod blocks;
 mod classes;
 mod expressions;
 mod formats;
 mod keys;
+mod zones;
 
 pub trait Sub<'a>:
   Stage + Stated<ObjectGetterState<'a>> + Stated<ListenersState<'a>>
@@ -91,14 +92,14 @@ where
           write!(output, "this.{}", key_format.key)?;
         }
       }
-      // let scopes = &<S as Stated<ListenersState>>::state(self.sub).scopes;
       write!(
         output,
-        "}}):_core = core;" /*\
-                            @override Widget build(BuildContext context){{ \
-                            return ..."*/
+        "}}):_core = core;\
+        @override Widget build(BuildContext context){{ \
+        return "
       )?;
-      write!(output, "}}")?;
+      gen_zone(output, self.sub, &[], ir.zone.as_ref().unwrap())?;
+      write!(output, ";}}}}")?;
       gen_classes(output, self.sub)?;
     }
     Ok(output)

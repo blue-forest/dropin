@@ -62,7 +62,7 @@ where
             write!(output, ".{trace_key}")?;
           } else {
             write!(output, "[")?;
-            gen_expressions(output, state, &trace_current, key)?;
+            gen_expressions(output, state, &trace_current, false, key)?;
             write!(output, "]")?;
           }
           trace_current.push(trace_key);
@@ -78,7 +78,7 @@ where
           write!(output, ",")?;
         }
         is_first = false;
-        gen_expressions(output, state, trace_current, value)?;
+        gen_expressions(output, state, trace_current, false, value)?;
       }
       write!(output, "]")?;
     }
@@ -96,7 +96,13 @@ where
           }
           is_first = false;
           write!(output, "{key}: ")?;
-          gen_expressions(output, state, &[trace, &[key]].concat(), value)?;
+          gen_expressions(
+            output,
+            state,
+            &[trace, &[key]].concat(),
+            false,
+            value,
+          )?;
         }
         write!(output, ")")?;
       } else {
@@ -108,7 +114,13 @@ where
           }
           is_first = false;
           write!(output, "{key}:")?;
-          gen_expressions(output, state, &[trace, &[key]].concat(), value)?;
+          gen_expressions(
+            output,
+            state,
+            &[trace, &[key]].concat(),
+            false,
+            value,
+          )?;
         }
         write!(output, "}}")?;
       }
@@ -132,26 +144,26 @@ where
     match part.rich_text_inner.as_ref().unwrap() {
       RichTextInner::Static(part) => write!(output, "{part}")?,
       RichTextInner::Dynamic(expression) => {
-        // let is_braced = if let ExpressionInner::Value(Value {
-        //   value_inner: Some(ValueInner::Getter(Getter { indexes, .. })),
-        // }) = expression.expression_inner.as_ref().unwrap()
-        // {
-        //   if indexes.is_empty() {
-        //     false
-        //   } else {
-        //     true
-        //   }
-        // } else {
-        //   true
-        // };
+        let is_braced = if let ExpressionInner::Value(Value {
+          value_inner: Some(ValueInner::Getter(Getter { indexes, .. })),
+        }) = expression.expression_inner.as_ref().unwrap()
+        {
+          if indexes.is_empty() {
+            false
+          } else {
+            true
+          }
+        } else {
+          true
+        };
         write!(output, "$")?;
-        // if is_braced {
-        write!(output, "{{")?;
-        // }
-        gen_expressions(output, state, trace, expression)?;
-        // if is_braced {
-        write!(output, "}}")?;
-        // }
+        if is_braced {
+          write!(output, "{{")?;
+        }
+        gen_expressions(output, state, trace, false, expression)?;
+        if is_braced {
+          write!(output, "}}")?;
+        }
       }
     }
   }

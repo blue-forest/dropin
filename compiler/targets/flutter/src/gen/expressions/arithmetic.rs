@@ -19,17 +19,41 @@ where
   match arithmetic.arithmetic_inner.as_ref().unwrap() {
     ArithmeticInner::Opposite(operand) => {
       write!(output, "-")?;
-      gen_expressions(output, state, &[], operand)?;
+      gen_expressions(output, state, &[], true, operand)?;
     }
     ArithmeticInner::Add(operands) => {
-      gen_expressions(output, state, &[], operands.left.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        true,
+        operands.left.as_ref().unwrap(),
+      )?;
       write!(output, "+")?;
-      gen_expressions(output, state, &[], operands.right.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        true,
+        operands.right.as_ref().unwrap(),
+      )?;
     }
     ArithmeticInner::Sub(operands) => {
-      gen_expressions(output, state, &[], operands.left.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        true,
+        operands.left.as_ref().unwrap(),
+      )?;
       write!(output, "-")?;
-      gen_expressions(output, state, &[], operands.right.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        true,
+        operands.right.as_ref().unwrap(),
+      )?;
     }
   }
   Ok(())

@@ -24,7 +24,7 @@ where
           write!(output, "&&")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], &operand)?;
+        gen_expressions(output, state, &[], true, &operand)?;
       }
     }
     LogicInner::Or(logic) => {
@@ -34,15 +34,15 @@ where
           write!(output, "||")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], &operand)?;
+        gen_expressions(output, state, &[], true, &operand)?;
       }
     }
     LogicInner::Not(logic) => {
       write!(output, "!")?;
-      gen_expressions(output, state, &[], &logic)?;
+      gen_expressions(output, state, &[], true, &logic)?;
     }
     LogicInner::Exists(logic) => {
-      gen_expressions(output, state, &[], &logic)?;
+      gen_expressions(output, state, &[], true, &logic)?;
       write!(output, "!= null")?;
     }
   }

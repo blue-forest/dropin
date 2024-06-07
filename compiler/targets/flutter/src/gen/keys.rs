@@ -37,7 +37,7 @@ where
       if let Some(default) = default {
         if !is_undefined(default) {
           write!(output, "=")?;
-          gen_expressions(output, state, trace_current, default)?;
+          gen_expressions(output, state, trace_current, false, default)?;
         }
       }
     }

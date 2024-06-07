@@ -42,6 +42,7 @@ where
             output,
             state,
             &[trace.as_slice(), &[&key_format.key]].concat(),
+            false,
             default,
           )?;
         }

@@ -19,12 +19,24 @@ where
   match control.control_inner.as_ref().unwrap() {
     ControlInner::If(control) => {
       write!(output, "if(")?;
-      gen_expressions(output, state, &[], control.condition.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        false,
+        control.condition.as_ref().unwrap(),
+      )?;
       write!(output, ") {{")?;
-      gen_expressions(output, state, &[], control.then.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        false,
+        control.then.as_ref().unwrap(),
+      )?;
       if let Some(r#else) = &control.r#else {
         write!(output, "}} else {{")?;
-        gen_expressions(output, state, &[], r#else)?;
+        gen_expressions(output, state, &[], false, r#else)?;
       }
       write!(output, "}}")?;
     }
@@ -39,7 +51,13 @@ where
         write!(output, "{arg}")?;
       }
       write!(output, "{{ return ")?;
-      gen_expressions(output, state, &[], control.body.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        false,
+        control.body.as_ref().unwrap(),
+      )?;
       write!(output, "; }}")?;
     }
     ControlInner::NamedFunction(control) => {
@@ -62,7 +80,13 @@ where
         write!(output, "{arg}")?;
       }
       write!(output, "{{ return ")?;
-      gen_expressions(output, state, &[], control.body.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        false,
+        control.body.as_ref().unwrap(),
+      )?;
       write!(output, "; }} return {}(", control.name)?;
       is_first = true;
       for arg in &control.args {
@@ -75,7 +99,13 @@ where
       write!(output, "); }}")?;
     }
     ControlInner::FunctionCall(control) => {
-      gen_expressions(output, state, &[], control.function.as_ref().unwrap())?;
+      gen_expressions(
+        output,
+        state,
+        &[],
+        true,
+        control.function.as_ref().unwrap(),
+      )?;
       write!(output, "(")?;
       let mut is_first = true;
       for arg in &control.args {
@@ -83,7 +113,7 @@ where
           write!(output, ",")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], arg)?;
+        gen_expressions(output, state, &[], false, arg)?;
       }
       write!(output, ")")?;
     }

@@ -54,11 +54,7 @@ where
       // for import in self.imports {
       //   write!(output, "import '{import}';")?;
       // }
-      write!(
-        output,
-        "class {} extends StatelessWidget {{ final Core _core;",
-        ir.name
-      )?;
+      write!(output, "class {} extends StatelessWidget {{", ir.name)?;
       if let Some(properties) = &ir.properties {
         gen_keys(
           output,
@@ -79,10 +75,14 @@ where
           &variables.keys,
         )?;
       }
-      write!(output, "{}({{required Core core", ir.name)?;
+      write!(output, "{}({{", ir.name,)?;
       if let Some(properties) = &ir.properties {
+        let mut is_first = true;
         for key_format in &properties.keys {
-          write!(output, ",")?;
+          if !is_first {
+            write!(output, ",")?;
+          }
+          is_first = false;
           let default = properties.required.get(&key_format.key);
           if let Some(default) = default {
             if is_undefined(default) {
@@ -94,7 +94,7 @@ where
       }
       write!(
         output,
-        "}}):_core = core;\
+        "}});\
         @override Widget build(BuildContext context){{ \
         return "
       )?;

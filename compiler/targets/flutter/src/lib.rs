@@ -13,6 +13,7 @@ use prost::Message;
 
 use crate::{
   gen::Gen,
+  imports::{Imports, ImportsState},
   listeners::{Listeners, ListenersState},
   objects_getter::{ObjectGetter, ObjectGetterState},
 };
@@ -32,6 +33,7 @@ impl Stage for Component {
 }
 
 mod gen;
+mod imports;
 mod listeners;
 mod objects_getter;
 
@@ -39,6 +41,7 @@ mod objects_getter;
 struct Combine<'a>(
   #[state(ObjectGetterState<'a>)] ObjectGetter<'a>,
   #[state(ListenersState<'a>)] Listeners<'a>,
+  #[state(ImportsState)] Imports<'a>,
 );
 
 #[no_mangle]
@@ -47,7 +50,8 @@ pub fn codegen(protobuf: *mut [u8]) -> CString {
   let component = Component::decode(protobuf.as_ref()).unwrap();
   let objects_getter = ObjectGetter::new(&component);
   let listeners = Listeners::new(&component);
-  let combine = Combine(objects_getter, listeners);
+  let imports = Imports::new(&component);
+  let combine = Combine(objects_getter, listeners, imports);
   let gen = Gen::new(&combine);
   CString::new(gen.gen().unwrap()).unwrap()
 }

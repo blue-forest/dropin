@@ -67,6 +67,7 @@ impl<'a> ListenersState<'a> {
         ComponentChildInner::Text(child) => {
           self_.rich_text(&[i], child.content.as_ref().unwrap());
         }
+        ComponentChildInner::Input(_child) => {}
       }
     }
     self_

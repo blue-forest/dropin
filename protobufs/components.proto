@@ -21,12 +21,18 @@ message ComponentCommon {
 message ComponentChild {
   oneof component_child_inner {
     ComponentText text = 1;
+    ComponentInput input = 2;
   };
 }
 
 message ComponentText {
   ComponentCommon common = 1;
   RichText content = 2;
+}
+
+message ComponentInput {
+  ComponentCommon common = 1;
+  Getter on_change = 2;
 }
 
 message Expression {

@@ -9,7 +9,7 @@ pub use self::{
   comparison::gen_comparison,
   control::gen_control,
   logic::gen_logic,
-  value::{gen_rich_text, gen_value},
+  value::{gen_getter, gen_rich_text, gen_value},
 };
 
 use super::Sub;

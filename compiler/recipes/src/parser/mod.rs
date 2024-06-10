@@ -20,6 +20,7 @@
  */
 
 pub use self::lexer::lexer;
+pub use self::model::parse_model;
 pub use self::token::Token;
 
 mod child;
@@ -28,8 +29,11 @@ mod expression;
 mod format;
 mod keys;
 mod lexer;
+mod model;
 mod text;
 mod token;
+
+const EXTENSION: &str = ".dropin.yml";
 
 #[dropin_compiler_recipes_macros::table(
   grammar = "compiler/recipes/src/parser/grammar.abnf"

@@ -10,7 +10,7 @@ edition.workspace = true
 [features]
 default = ["parser"]
 coverage = []
-parser = []
+parser = ["dep:anyhow"]
 
 [dependencies]
 dropin-compiler-recipes-macros = { path = "../recipes-macros" }
@@ -19,6 +19,8 @@ dropin-compiler-common = { path = "../common" }
 prost = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = "0.9"
+anyhow = { version = "1.0", optional = true }
+walkdir = "2.5.0"
 
 [build-dependencies]
 prost-build = "0.12"

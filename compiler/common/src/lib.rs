@@ -194,3 +194,21 @@ impl<'a> ToTokens for TokenKind<'a> {
     tokens.extend(extension);
   }
 }
+
+pub fn to_upper_camelcase(id: &str) -> String {
+  let mut result = String::new();
+  let mut is_capital = true;
+  for c in id.chars() {
+    if c == '_' {
+      is_capital = true;
+      continue;
+    }
+    if is_capital {
+      result.push(c.to_ascii_uppercase());
+    } else {
+      result.push(c);
+    }
+    is_capital = false;
+  }
+  result
+}

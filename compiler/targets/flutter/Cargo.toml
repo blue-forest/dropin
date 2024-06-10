@@ -12,6 +12,7 @@ coverage = []
 
 [dependencies]
 dropin-compiler-recipes = { path = "../../recipes" }
+dropin-compiler-common = { path = "../../common" }
 dropin-target-macros = { path = "../../target-macros" }
 
 anyhow = "1.0"

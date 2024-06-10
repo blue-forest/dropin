@@ -2,6 +2,19 @@ syntax = "proto3";
 
 package dropin.components;
 
+message Model {
+  string name = 1;
+  string version = 2;
+  map<string, Page> pages = 3;
+  repeated Component components = 4;
+}
+
+message Page {
+  uint64 component = 1;
+  string title = 2;
+  string path = 3;
+}
+
 message Component {
   string name = 1;
   optional Keys properties = 2;
@@ -22,7 +35,14 @@ message ComponentChild {
   oneof component_child_inner {
     ComponentText text = 1;
     ComponentInput input = 2;
+    ComponentExtern extern = 3;
   };
+}
+
+message ComponentExtern {
+  ComponentCommon common = 1;
+  string path = 2;
+  Object properties = 3;
 }
 
 message ComponentText {

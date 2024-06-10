@@ -19,11 +19,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, fs::File, io::Read, path::PathBuf};
+use std::{fmt::Write, path::PathBuf};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
-use dropin_compiler_recipes::ir::Component;
+use dropin_compiler_recipes::parser::parse_model;
 use prost::Message;
 
 #[derive(Parser)]
@@ -40,10 +40,9 @@ struct Args {
 #[derive(Subcommand)]
 enum Commands {
 	Compile {
-		name: String,
-		path: PathBuf,
-		#[arg(short, long, name = "compilation target")]
+		#[arg(name = "compilation target")]
 		target: Target,
+		path: PathBuf,
 	},
 }
 
@@ -58,16 +57,12 @@ fn main() -> Result<()> {
 	let args = Args::parse();
 
 	match args.command {
-		Commands::Compile { name, path, target } => {
-			let mut f = File::open(path)?;
-			let mut recipe = String::new();
-			f.read_to_string(&mut recipe)?;
-			let mut ir = serde_yaml::from_str::<Component>(&recipe)?;
-			ir.set_name(name);
+		Commands::Compile { path, target } => {
+			let ir = parse_model(&path).unwrap();
+			println!("{ir:?}");
 			let mut protobuf = vec![];
 			ir.encode(&mut protobuf).unwrap();
 			let protobuf = Box::into_raw(protobuf.into_boxed_slice());
-			// println!("{ir:#?}");
 			let output = match target {
 				Target::Flutter => dropin_target_flutter::codegen(protobuf),
 			}

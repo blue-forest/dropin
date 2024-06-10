@@ -4,6 +4,7 @@ use alloc::{
   string::String,
   vec::Vec,
 };
+use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{
   Component, Format, FormatInner, FormatObject, KeyFormat, Keys,
 };
@@ -134,19 +135,7 @@ pub fn write_class_name(output: &mut String, trace: &[&str]) -> fmt::Result {
       }
       "_" => write!(output, "__")?,
       _ => {
-        let mut is_capital = true;
-        for c in key.chars() {
-          if c == '_' {
-            is_capital = true;
-            continue;
-          }
-          if is_capital {
-            output.push(c.to_ascii_uppercase());
-          } else {
-            output.push(c);
-          }
-          is_capital = false;
-        }
+        write!(output, "{}", to_upper_camelcase(key))?;
       }
     }
   }

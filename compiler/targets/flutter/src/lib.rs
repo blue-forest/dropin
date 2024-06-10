@@ -32,10 +32,12 @@ impl Stage for Component {
   }
 }
 
+mod absolute_getters;
 mod gen;
 mod imports;
 mod listeners;
 mod objects_getter;
+mod setters;
 
 #[combine]
 struct Combine<'a>(

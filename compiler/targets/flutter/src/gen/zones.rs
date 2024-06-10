@@ -39,6 +39,7 @@ where
         gen_getter(output, state, input.on_change.as_ref().unwrap())?;
         write!(output, "= newText_}}))")?;
       }
+      ComponentChildInner::Extern(_) => todo!(),
     }
   }
   write!(output, "])")?;

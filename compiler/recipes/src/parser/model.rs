@@ -38,7 +38,8 @@ pub fn parse_model(root: &Path) -> Result<Model> {
     f.read_to_string(&mut recipe)?;
     let mut component = serde_yaml::from_str::<Component>(&recipe)?;
     let path_str = path.to_str().unwrap();
-    let id = &path_str[components_path_len..path_str.len() - EXTENSION.len()];
+    let id =
+      &path_str[components_path_len + 1..path_str.len() - EXTENSION.len()];
     component.set_name(to_upper_camelcase(id));
     if let Some(key) = component_to_page.remove(id) {
       let page = model.app.pages.get(key).unwrap();

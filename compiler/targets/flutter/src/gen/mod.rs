@@ -2,7 +2,7 @@ use alloc::{
   fmt::{self, Write},
   string::String,
 };
-use dropin_compiler_recipes::ir::Component;
+use dropin_compiler_recipes::ir::Model;
 
 use crate::{
   imports::ImportsState, listeners::ListenersState,
@@ -56,6 +56,8 @@ where
   pub fn gen(self) -> Result<String, fmt::Error> {
     let mut output = String::new();
     {
+      todo!()
+      /*
       let ir = self.sub.ir();
       let output = &mut output;
       for import in &<S as Stated<ImportsState>>::state(self.sub).imports {
@@ -108,6 +110,7 @@ where
       gen_zone(output, self.sub, &[], ir.zone.as_ref().unwrap())?;
       write!(output, ";}}}}")?;
       gen_classes(output, self.sub)?;
+      */
     }
     Ok(output)
   }
@@ -117,7 +120,7 @@ impl<'a, S> Stage for Gen<'a, S>
 where
   S: Sub<'a>,
 {
-  fn ir(&self) -> &Component {
+  fn ir(&self) -> &Model {
     self.sub.ir()
   }
 }

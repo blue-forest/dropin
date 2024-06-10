@@ -19,7 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, path::PathBuf};
+use std::{fmt::Write, io::Write as IoWrite, path::PathBuf};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
@@ -59,7 +59,7 @@ fn main() -> Result<()> {
 	match args.command {
 		Commands::Compile { path, target } => {
 			let ir = parse_model(&path).unwrap();
-			println!("{ir:?}");
+			println!("{ir:#?}");
 			let mut protobuf = vec![];
 			ir.encode(&mut protobuf).unwrap();
 			let protobuf = Box::into_raw(protobuf.into_boxed_slice());

@@ -1,5 +1,5 @@
 use alloc::collections::BTreeSet;
-use dropin_compiler_recipes::ir::{Component, Getter};
+use dropin_compiler_recipes::ir::{Getter, Model};
 
 use crate::{Stage, Stated};
 
@@ -26,7 +26,7 @@ impl<'a, S> Stage for Setters<'a, S>
 where
   S: Stage,
 {
-  fn ir(&self) -> &Component {
+  fn ir(&self) -> &Model {
     self.sub.ir()
   }
 }

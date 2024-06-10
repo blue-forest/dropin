@@ -1,8 +1,8 @@
 use alloc::{collections::BTreeMap, vec::Vec};
 use dropin_compiler_recipes::ir::{
-  ArithmeticInner, ComparisonInner, Component, ComponentChildInner,
-  ControlInner, Expression, ExpressionInner, LogicInner, RichText,
-  RichTextInner, ValueInner,
+  ArithmeticInner, ComparisonInner, ComponentChildInner, ControlInner,
+  Expression, ExpressionInner, LogicInner, Model, RichText, RichTextInner,
+  ValueInner,
 };
 
 use crate::{Stage, Stated};
@@ -30,7 +30,7 @@ impl<'a, S> Stage for Listeners<'a, S>
 where
   S: Stage,
 {
-  fn ir(&self) -> &Component {
+  fn ir(&self) -> &Model {
     self.sub.ir()
   }
 }
@@ -60,6 +60,8 @@ impl<'a> ListenersState<'a> {
   where
     S: Stage,
   {
+    todo!()
+    /*
     let mut self_ = Self::default();
     let ir = sub.ir();
     for (i, child) in ir.zone.as_ref().unwrap().blocks.iter().enumerate() {
@@ -72,6 +74,7 @@ impl<'a> ListenersState<'a> {
       }
     }
     self_
+    */
   }
 
   fn rich_text(&mut self, trace: &[usize], text: &'a RichText) {

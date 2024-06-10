@@ -6,7 +6,7 @@ use alloc::{
 };
 use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{
-  Component, Format, FormatInner, FormatObject, KeyFormat, Keys,
+  Format, FormatInner, FormatObject, KeyFormat, Keys, Model,
 };
 
 use crate::{Stage, Stated};
@@ -34,7 +34,7 @@ impl<'a, S> Stage for ObjectGetter<'a, S>
 where
   S: Stage,
 {
-  fn ir(&self) -> &Component {
+  fn ir(&self) -> &Model {
     self.sub.ir()
   }
 }
@@ -58,6 +58,8 @@ impl<'a> ObjectGetterState<'a> {
   where
     S: Stage,
   {
+    todo!();
+    /*
     let mut objects = BTreeMap::new();
     let ir = sub.ir();
     if let Some(variables) = &ir.variables {
@@ -68,6 +70,7 @@ impl<'a> ObjectGetterState<'a> {
     }
 
     Self { objects }
+    */
   }
 }
 

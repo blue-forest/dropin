@@ -76,7 +76,7 @@ pub fn combine(_attr: TokenStream, item: TokenStream) -> TokenStream {
   }
   stream.extend(quote!(
     impl #generics_declaration Stage for #name <#(#generics),*> {
-      fn ir(&self) -> &Component {
+      fn ir(&self) -> &Model {
         self.0.ir()
       }
     }

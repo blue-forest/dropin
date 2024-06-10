@@ -1,5 +1,5 @@
 use alloc::{string::String, vec::Vec};
-use dropin_compiler_recipes::ir::Component;
+use dropin_compiler_recipes::ir::Model;
 
 use crate::{Stage, Stated};
 
@@ -26,7 +26,7 @@ impl<'a, S> Stage for Imports<'a, S>
 where
   S: Stage,
 {
-  fn ir(&self) -> &Component {
+  fn ir(&self) -> &Model {
     self.sub.ir()
   }
 }

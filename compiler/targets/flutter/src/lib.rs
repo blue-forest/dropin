@@ -7,7 +7,7 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 
 use alloc::{boxed::Box, ffi::CString};
 use dlmalloc::GlobalDlmalloc;
-use dropin_compiler_recipes::ir::Component;
+use dropin_compiler_recipes::ir::Model;
 use dropin_target_macros::combine;
 use prost::Message;
 
@@ -19,15 +19,15 @@ use crate::{
 };
 
 trait Stage {
-  fn ir(&self) -> &Component;
+  fn ir(&self) -> &Model;
 }
 
 trait Stated<S> {
   fn state(&self) -> &S;
 }
 
-impl Stage for Component {
-  fn ir(&self) -> &Component {
+impl Stage for Model {
+  fn ir(&self) -> &Model {
     self
   }
 }
@@ -49,7 +49,7 @@ struct Combine<'a>(
 #[no_mangle]
 pub fn codegen(protobuf: *mut [u8]) -> CString {
   let protobuf = unsafe { Box::from_raw(protobuf) };
-  let component = Component::decode(protobuf.as_ref()).unwrap();
+  let component = Model::decode(protobuf.as_ref()).unwrap();
   let objects_getter = ObjectGetter::new(&component);
   let listeners = Listeners::new(&component);
   let imports = Imports::new(&component);

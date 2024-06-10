@@ -12,8 +12,10 @@ use serde_yaml::Value;
 use crate::ir::ComponentChild;
 
 use self::input::input;
+use self::r#extern::r#extern;
 use self::text::text;
 
+mod r#extern;
 mod input;
 mod text;
 
@@ -42,10 +44,11 @@ impl<'de> Deserialize<'de> for ComponentChild {
             return Ok(ComponentChild::new(match r#type {
               "text" => text(keys, map)?,
               "input" => input(keys, map)?,
+              "component" => r#extern(keys, map)?,
               _ => {
                 return Err(de::Error::unknown_variant(
                   r#type,
-                  &["text", "input"],
+                  &["text", "input", "component"],
                 ))
               }
             }));

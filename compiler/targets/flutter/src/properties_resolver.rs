@@ -6,12 +6,21 @@ use dropin_compiler_recipes::ir::{
   Component, ComponentChild, ComponentChildInner, Getter,
 };
 
-use crate::{visit::ExpressionTrace, Visit};
+use crate::{visit::ExpressionTrace, Stated, Visit};
 
 type PropertiesByComponent<'a> = BTreeMap<&'a str, PropertiesByProperty<'a>>;
 type PropertiesByProperty<'a> =
   BTreeMap<&'a str, PropertiesByVariableOwner<'a>>;
 type PropertiesByVariableOwner<'a> = BTreeMap<&'a str, Vec<&'a Getter>>;
+
+#[derive(Debug)]
+pub struct PropertiesResolverState<'a>(PropertiesByComponent<'a>);
+
+impl<'a> Stated<PropertiesByComponent<'a>> for PropertiesResolverState<'a> {
+  fn state(&self) -> &PropertiesByComponent<'a> {
+    &self.0
+  }
+}
 
 #[derive(Default)]
 pub struct PropertiesResolver<'a> {
@@ -21,15 +30,17 @@ pub struct PropertiesResolver<'a> {
   properties: PropertiesByComponent<'a>,
 }
 
-impl<'a> Visit<'a, PropertiesByComponent<'a>> for PropertiesResolver<'a> {
-  fn build(self) -> PropertiesByComponent<'a> {
-    self.properties
+impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
+  fn build(self) -> PropertiesResolverState<'a> {
+    PropertiesResolverState(self.properties)
   }
 
   fn visit_component(&mut self, component: &'a Component, _index: usize) {
     self.component_variables.clear();
-    for key_format in &component.variables.as_ref().unwrap().keys {
-      self.component_variables.insert(&key_format.key);
+    if let Some(variables) = component.variables.as_ref() {
+      for key_format in &variables.keys {
+        self.component_variables.insert(&key_format.key);
+      }
     }
     self.component_id = Some(&component.id);
     self.component_blocks = &component.zone.as_ref().unwrap().blocks;
@@ -38,21 +49,24 @@ impl<'a> Visit<'a, PropertiesByComponent<'a>> for PropertiesResolver<'a> {
   fn visit_getter(
     &mut self,
     getter: &'a Getter,
-    trace: ExpressionTrace<'a, '_>,
+    mut trace: &ExpressionTrace<'a, '_>,
   ) {
-    let mut trace = &trace;
-    while let ExpressionTrace::Nested(_, parent) = &trace {
+    while let ExpressionTrace::NestedQuantity { trace: parent, .. }
+    | ExpressionTrace::NestedText { trace: parent, .. } = &trace
+    {
       trace = parent
     }
     let ExpressionTrace::ComponentChild(trace) = trace else {
       return;
     };
-    let child = &self.component_blocks.unwrap()[trace.indexes[0]];
+    let child = &self.component_blocks[trace.indexes[0]];
     // TODO: dig into zones
-    let ComponentChildInner::Extern(r#extern) = child else {
+    let ComponentChildInner::Extern(r#extern) =
+      child.component_child_inner.as_ref().unwrap()
+    else {
       return;
     };
-    if self.component_variables.contains(&getter.ident) {
+    if self.component_variables.contains(getter.ident.as_str()) {
       self
         .properties
         .entry(self.component_id.unwrap())
@@ -67,74 +81,3 @@ impl<'a> Visit<'a, PropertiesByComponent<'a>> for PropertiesResolver<'a> {
     }
   }
 }
-
-/*
-use crate::{Stage, Stated};
-
-#[derive(Debug)]
-pub struct PropertiesResolver<'a, S>
-where
-  S: Stage,
-{
-  sub: &'a S,
-  state: PropertiesResolverState<'a>,
-}
-
-impl<'a, S> PropertiesResolver<'a, S>
-where
-  S: Stage,
-{
-  pub fn new(sub: &'a S) -> Self {
-    let state = PropertiesResolverState::new(sub);
-    Self { sub, state }
-  }
-}
-
-impl<'a, S> Stage for PropertiesResolver<'a, S>
-where
-  S: Stage,
-{
-  fn ir(&self) -> &Model {
-    self.sub.ir()
-  }
-}
-
-impl<'a, S> Stated<PropertiesResolverState<'a>> for PropertiesResolver<'a, S>
-where
-  S: Stage,
-{
-  fn state(&self) -> &PropertiesResolverState<'a> {
-    &self.state
-  }
-}
-
-
-#[derive(Debug, Default)]
-pub struct PropertiesResolverState<'a> {
-  pub properties: PropertiesByComponent<'a>,
-}
-
-impl<'a> PropertiesResolverState<'a> {
-  fn new<S>(sub: &'a S) -> Self
-  where
-    S: Stage,
-  {
-    let mut self_ = Self::default();
-    let ir = sub.ir();
-    for component in &ir.components {
-      self_.zone(component.zone.as_ref().unwrap());
-    }
-    self_
-  }
-
-  fn zone(&mut self, zone: &'a ComponentZone) {
-    for component in &zone.blocks {
-      if let ComponentChildInner::Extern(r#extern) =
-        component.component_child_inner.as_ref().unwrap()
-      {
-        r#extern.properties
-      }
-    }
-  }
-}
-*/

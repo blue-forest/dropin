@@ -1,13 +1,10 @@
 use proc_macro::TokenStream;
-use proc_macro2::Span;
-use quote::{quote, ToTokens};
-use syn::{
-  parse_quote, Fields, GenericParam, Ident, Index, ItemStruct, Meta,
-  PathArguments, Type,
-};
+use quote::quote;
 
-#[proc_macro_attribute]
-pub fn combine(_attr: TokenStream, item: TokenStream) -> TokenStream {
+#[proc_macro_derive(Stage)]
+pub fn stage(item: TokenStream) -> TokenStream {
+  quote!().into()
+  /*
   let mut r#struct: ItemStruct = syn::parse(item).unwrap();
   let generics = &mut r#struct.generics;
   let fields = &mut r#struct.fields;
@@ -82,4 +79,5 @@ pub fn combine(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
   ));
   stream.into()
+  */
 }

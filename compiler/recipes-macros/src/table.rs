@@ -23,7 +23,7 @@ use crate::{first::First, follow::Follow, rules::Rule};
 use dropin_compiler_common::TokenKind;
 use quote::{quote, ToTokens};
 use serde::{
-  ser::{SerializeMap, SerializeSeq, SerializeStruct, SerializeTuple},
+  ser::{SerializeMap, SerializeStruct},
   Serialize, Serializer,
 };
 use std::{
@@ -263,6 +263,7 @@ impl<'a> ToTokens for NonTerminals<'a> {
   }
 }
 
+/*
 struct SerializableProduction<'rules, 'table> {
   production: &'table (&'rules str, Vec<TokenKind<'rules>>),
   non_terminals: &'table HashMap<&'rules str, u64>,
@@ -305,6 +306,7 @@ impl<'rules, 'table> Serialize for SerializableTokens<'rules, 'table> {
     seq.end()
   }
 }
+*/
 
 /*impl ToTokens for SerializableTokens<'_, '_> {
   fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {

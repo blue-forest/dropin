@@ -8,12 +8,15 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 use alloc::{boxed::Box, collections::BTreeMap, string::String};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
+use dropin_target_macros::Stage;
 use prost::Message;
 
-use crate::{properties_resolver::PropertiesResolver, visit::Visit};
+use crate::{
+  properties_resolver::PropertiesResolver, stage::Stage, visit::Visit,
+};
 
-trait Stage<'a, T> {
-  fn run(self, model: &'a Model) -> T;
+trait Stated<S> {
+  fn state(&self) -> &S;
 }
 
 // mod gen;
@@ -22,10 +25,12 @@ trait Stage<'a, T> {
 // mod objects_getter;
 // mod setters;
 mod properties_resolver;
+mod stage;
 mod visit;
 
-#[derive(Stage)]
+#[derive(Stage, Default)]
 struct FirstStage<'a> {
+  // #[state(PropertiesResolverState<'a>)]
   properties_resolver: PropertiesResolver<'a>,
 }
 
@@ -33,7 +38,11 @@ struct FirstStage<'a> {
 pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let model = Model::decode(protobuf.as_ref()).unwrap();
-  todo!()
+  // let stage1 = FirstStage::default();
+  let tmp = PropertiesResolver::default();
+  let stage = Stage::new(tmp);
+  let tmp = stage.build(&model);
+  todo!("{tmp:?}");
   // let objects_getter = ObjectGetter::new(&model);
   // let listeners = Listeners::new(&model);
   // let setters = Setters::new(&model);

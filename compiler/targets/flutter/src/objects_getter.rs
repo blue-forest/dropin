@@ -68,7 +68,7 @@ impl<'a> ObjectGetterState<'a> {
       if let Some(properties) = &component.properties {
         fill_keys(&mut component_objects, properties);
       }
-      objects.insert(component.name.as_str(), component_objects);
+      objects.insert(component.term.as_str(), component_objects);
     }
     Self { objects }
   }

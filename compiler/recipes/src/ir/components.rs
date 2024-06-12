@@ -1,3 +1,5 @@
+use dropin_compiler_common::to_upper_camelcase;
+
 use super::{
   Component, ComponentChild, ComponentCommon, ComponentZone, Keys, RichText,
 };
@@ -10,7 +12,8 @@ impl Component {
     blocks: Vec<ComponentChild>,
   ) -> Self {
     Self {
-      name: String::new(),
+      id: String::new(),
+      term: String::new(),
       properties,
       variables,
       zone: Some(ComponentZone {
@@ -20,7 +23,8 @@ impl Component {
     }
   }
 
-  pub fn set_name(&mut self, name: String) {
-    self.name = name;
+  pub fn set_id(&mut self, id: String) {
+    self.term = to_upper_camelcase(&id);
+    self.id = id;
   }
 }

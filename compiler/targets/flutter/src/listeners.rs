@@ -63,7 +63,7 @@ impl<'a> ListenersState<'a> {
     let mut self_ = Self::default();
     let ir = sub.ir();
     for component in &ir.components {
-      let name = &component.name;
+      let name = &component.term;
       for (i, child) in
         component.zone.as_ref().unwrap().blocks.iter().enumerate()
       {

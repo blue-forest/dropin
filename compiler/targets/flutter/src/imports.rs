@@ -55,7 +55,7 @@ impl<'a> ImportsState<'a> {
     for component in &ir.components {
       let mut component_imports = Vec::with_capacity(1);
       component_imports.push("package:flutter/material.dart".into());
-      imports.insert(component.name.as_str(), component_imports);
+      imports.insert(component.id.as_str(), component_imports);
     }
     Self { imports }
   }

@@ -16,10 +16,11 @@ message Page {
 }
 
 message Component {
-  string name = 1;
-  optional Keys properties = 2;
-  optional Keys variables = 3;
-  ComponentZone zone = 4;
+  string id = 1;
+  string term = 2;
+  optional Keys properties = 3;
+  optional Keys variables = 4;
+  ComponentZone zone = 5;
 }
 
 message ComponentZone {

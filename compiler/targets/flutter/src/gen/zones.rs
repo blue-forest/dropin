@@ -2,6 +2,7 @@ use alloc::{
   fmt::{self, Write},
   string::String,
 };
+use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::gen::expressions::gen_rich_text;
@@ -56,7 +57,9 @@ where
         )?;
         write!(output, "= newText_}}))")?;
       }
-      ComponentChildInner::Extern(r#extern) => todo!(),
+      ComponentChildInner::Extern(r#extern) => {
+        write!(output, "{}()", to_upper_camelcase(&r#extern.path))?;
+      }
     }
   }
   write!(output, "])")?;

@@ -66,6 +66,7 @@ fn main() -> Result<()> {
 			let output = match target {
 				Target::Flutter => dropin_target_flutter::codegen(protobuf),
 			};
+			let output = unsafe { Box::from_raw(output) };
 			println!("{output:?}");
 		}
 	}

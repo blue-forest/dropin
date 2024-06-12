@@ -60,21 +60,22 @@ where
     let ir = self.sub.ir();
     for component in &ir.components {
       let mut file = String::new();
-      let name = component.name.as_str();
+      let term = component.term.as_str();
+      let id = component.id.as_str();
       {
         let file = &mut file;
         for import in <S as Stated<ImportsState>>::state(self.sub)
           .imports
-          .get(name)
+          .get(id)
           .unwrap_or(&Vec::new())
         {
           write!(file, "import '{import}';")?;
         }
-        write!(file, "class {} extends StatelessWidget {{", name)?;
+        write!(file, "class {} extends StatelessWidget {{", term)?;
         if let Some(properties) = &component.properties {
           gen_keys(
             file,
-            name,
+            id,
             self.sub,
             &[],
             true,
@@ -85,7 +86,7 @@ where
         if let Some(variables) = &component.variables {
           gen_keys(
             file,
-            name,
+            id,
             self.sub,
             &[],
             true,
@@ -116,11 +117,11 @@ where
           @override Widget build(BuildContext context){{ \
           return "
         )?;
-        gen_zone(file, name, self.sub, &[], component.zone.as_ref().unwrap())?;
+        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
         write!(file, ";}}}}")?;
-        gen_classes(file, name, self.sub)?;
+        gen_classes(file, id, self.sub)?;
       }
-      files.insert(name.into(), file);
+      files.insert(id.into(), file);
     }
     Ok(files)
   }

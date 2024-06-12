@@ -1,7 +1,7 @@
-use alloc::{collections::BTreeMap, string::String, vec::Vec};
-use dropin_compiler_recipes::ir::Model;
+use alloc::{collections::BTreeMap, fmt::Write, string::String, vec::Vec};
+use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone, Model};
 
-use crate::{Stage, Stated};
+use crate::{gen::EXTENSION, Stage, Stated};
 
 #[derive(Debug)]
 pub struct Imports<'a, S>
@@ -55,8 +55,22 @@ impl<'a> ImportsState<'a> {
     for component in &ir.components {
       let mut component_imports = Vec::with_capacity(1);
       component_imports.push("package:flutter/material.dart".into());
+      Self::zone(&mut component_imports, component.zone.as_ref().unwrap());
       imports.insert(component.id.as_str(), component_imports);
     }
     Self { imports }
+  }
+
+  fn zone(imports: &mut Vec<String>, zone: &ComponentZone) {
+    for component in &zone.blocks {
+      if let ComponentChildInner::Extern(r#extern) =
+        component.component_child_inner.as_ref().unwrap()
+      {
+        let mut import =
+          String::with_capacity(r#extern.path.len() + EXTENSION.len());
+        write!(&mut import, "{}{EXTENSION}", r#extern.path).unwrap();
+        imports.push(import);
+      }
+    }
   }
 }

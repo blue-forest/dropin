@@ -23,7 +23,7 @@ mod formats;
 mod keys;
 mod zones;
 
-const EXTENSION: &str = ".dart";
+pub const EXTENSION: &str = ".dart";
 
 pub trait Sub<'a>:
   Stage

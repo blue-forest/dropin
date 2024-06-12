@@ -96,7 +96,7 @@ where
             &variables.keys,
           )?;
         }
-        write!(file, "{}({{", ir.name,)?;
+        write!(file, "{}({{", component.term)?;
         if let Some(properties) = &component.properties {
           let mut is_first = true;
           for key_format in &properties.keys {

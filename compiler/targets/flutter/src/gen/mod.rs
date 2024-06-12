@@ -13,6 +13,7 @@ use crate::{
 
 use self::{
   classes::gen_classes,
+  expressions::gen_expressions,
   keys::{gen_keys, is_undefined},
   zones::gen_zone,
 };
@@ -80,7 +81,7 @@ where
             id,
             self.sub,
             &[],
-            true,
+            false,
             &properties.required,
             &properties.keys,
           )?;
@@ -107,6 +108,12 @@ where
               }
             }
             write!(file, "this.{}", key_format.key)?;
+            if let Some(default) = default {
+              if !is_undefined(default) {
+                write!(file, "=")?;
+                gen_expressions(file, id, self.sub, &[], false, default)?;
+              }
+            }
           }
         }
         write!(

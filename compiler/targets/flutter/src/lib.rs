@@ -5,57 +5,42 @@ extern crate alloc;
 #[global_allocator]
 static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 
-use alloc::{boxed::Box, collections::BTreeMap, ffi::CString, string::String};
+use alloc::{boxed::Box, collections::BTreeMap, string::String};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
-use dropin_target_macros::combine;
 use prost::Message;
 
-use crate::{
-  gen::Gen,
-  imports::{Imports, ImportsState},
-  listeners::{Listeners, ListenersState},
-  objects_getter::{ObjectGetter, ObjectGetterState},
-};
+use crate::{properties_resolver::PropertiesResolver, visit::Visit};
 
-trait Stage {
-  fn ir(&self) -> &Model;
+trait Stage<'a, T> {
+  fn run(self, model: &'a Model) -> T;
 }
 
-trait Stated<S> {
-  fn state(&self) -> &S;
+// mod gen;
+// mod imports;
+// mod listeners;
+// mod objects_getter;
+// mod setters;
+mod properties_resolver;
+mod visit;
+
+#[derive(Stage)]
+struct FirstStage<'a> {
+  properties_resolver: PropertiesResolver<'a>,
 }
-
-impl Stage for Model {
-  fn ir(&self) -> &Model {
-    self
-  }
-}
-
-mod absolute_getters;
-mod gen;
-mod imports;
-mod listeners;
-mod objects_getter;
-mod setters;
-
-#[combine]
-struct Combine<'a>(
-  #[state(ObjectGetterState<'a>)] ObjectGetter<'a>,
-  #[state(ListenersState<'a>)] Listeners<'a>,
-  #[state(ImportsState<'a>)] Imports<'a>,
-);
 
 #[no_mangle]
 pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let model = Model::decode(protobuf.as_ref()).unwrap();
-  let objects_getter = ObjectGetter::new(&model);
-  let listeners = Listeners::new(&model);
-  let imports = Imports::new(&model);
-  let combine = Combine(objects_getter, listeners, imports);
-  let gen = Gen::new(&combine);
-  Box::into_raw(Box::new(gen.gen().unwrap()))
+  todo!()
+  // let objects_getter = ObjectGetter::new(&model);
+  // let listeners = Listeners::new(&model);
+  // let setters = Setters::new(&model);
+  // let imports = Imports::new(&model);
+  // let combine = Combine(objects_getter, listeners, setters, imports);
+  // let gen = Gen::new(&combine);
+  // Box::into_raw(Box::new(gen.gen().unwrap()))
 }
 
 // #[cfg(debug_assertions)]

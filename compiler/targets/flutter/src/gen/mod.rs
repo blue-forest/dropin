@@ -96,14 +96,10 @@ where
             &variables.keys,
           )?;
         }
-        write!(file, "{}({{", component.term)?;
+        write!(file, "{}({{super.key", component.term)?;
         if let Some(properties) = &component.properties {
-          let mut is_first = true;
           for key_format in &properties.keys {
-            if !is_first {
-              write!(file, ",")?;
-            }
-            is_first = false;
+            write!(file, ",")?;
             let default = properties.required.get(&key_format.key);
             if let Some(default) = default {
               if is_undefined(default) {

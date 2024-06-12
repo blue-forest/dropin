@@ -12,6 +12,7 @@ use super::gen_expressions;
 
 pub fn gen_rich_text<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   trace: &[&str],
   value: &RichText,
@@ -40,7 +41,7 @@ where
         if is_braced {
           write!(output, "{{")?;
         }
-        gen_expressions(output, state, trace, false, expression)?;
+        gen_expressions(output, component, state, trace, false, expression)?;
         if is_braced {
           write!(output, "}}")?;
         }

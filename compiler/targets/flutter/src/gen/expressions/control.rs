@@ -10,6 +10,7 @@ use super::gen_expressions;
 
 pub fn gen_control<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   control: &Control,
 ) -> fmt::Result
@@ -21,6 +22,7 @@ where
       write!(output, "if(")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         false,
@@ -29,6 +31,7 @@ where
       write!(output, ") {{")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         false,
@@ -36,7 +39,7 @@ where
       )?;
       if let Some(r#else) = &control.r#else {
         write!(output, "}} else {{")?;
-        gen_expressions(output, state, &[], false, r#else)?;
+        gen_expressions(output, component, state, &[], false, r#else)?;
       }
       write!(output, "}}")?;
     }
@@ -53,6 +56,7 @@ where
       write!(output, "{{ return ")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         false,
@@ -82,6 +86,7 @@ where
       write!(output, "{{ return ")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         false,
@@ -101,6 +106,7 @@ where
     ControlInner::FunctionCall(control) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -113,7 +119,7 @@ where
           write!(output, ",")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], false, arg)?;
+        gen_expressions(output, component, state, &[], false, arg)?;
       }
       write!(output, ")")?;
     }

@@ -19,6 +19,7 @@ mod text;
 
 pub fn gen_value<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   trace: &[&str],
   value: &Value,
@@ -27,7 +28,9 @@ where
   S: Sub<'a>,
 {
   match value.value_inner.as_ref().unwrap() {
-    ValueInner::Text(value) => gen_rich_text(output, state, trace, value)?,
+    ValueInner::Text(value) => {
+      gen_rich_text(output, component, state, trace, value)?
+    }
     ValueInner::Quantity(value) => write!(output, "{value}")?,
     ValueInner::Boolean(value) => {
       if *value {
@@ -36,7 +39,7 @@ where
         write!(output, "false")?;
       }
     }
-    ValueInner::Getter(value) => gen_getter(output, state, value)?,
+    ValueInner::Getter(value) => gen_getter(output, component, state, value)?,
     ValueInner::List(values) => {
       write!(output, "[")?;
       let mut is_first = true;
@@ -46,14 +49,16 @@ where
           write!(output, ",")?;
         }
         is_first = false;
-        gen_expressions(output, state, trace_current, false, value)?;
+        gen_expressions(output, component, state, trace_current, false, value)?;
       }
       write!(output, "]")?;
     }
     ValueInner::Object(value) => {
       if let Some(_) = <S as Stated<ObjectGetterState>>::state(state)
         .objects
-        .get(trace)
+        .get(component)
+        .map(|component_objects| component_objects.get(trace))
+        .flatten()
       {
         write_class_name(output, trace)?;
         write!(output, "(")?;
@@ -66,6 +71,7 @@ where
           write!(output, "{key}: ")?;
           gen_expressions(
             output,
+            component,
             state,
             &[trace, &[key]].concat(),
             false,
@@ -84,6 +90,7 @@ where
           write!(output, "{key}:")?;
           gen_expressions(
             output,
+            component,
             state,
             &[trace, &[key]].concat(),
             false,

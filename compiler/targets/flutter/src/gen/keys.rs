@@ -11,6 +11,7 @@ use super::{expressions::gen_expressions, formats::gen_format, Sub};
 
 pub fn gen_keys<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   trace: &[&str],
   write_default: bool,
@@ -37,7 +38,14 @@ where
       if let Some(default) = default {
         if !is_undefined(default) {
           write!(output, "=")?;
-          gen_expressions(output, state, trace_current, false, default)?;
+          gen_expressions(
+            output,
+            component,
+            state,
+            trace_current,
+            false,
+            default,
+          )?;
         }
       }
     }

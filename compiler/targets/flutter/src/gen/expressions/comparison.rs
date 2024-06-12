@@ -8,6 +8,7 @@ use crate::gen::{expressions::gen_expressions, Sub};
 
 pub fn gen_comparison<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   comparison: &Comparison,
 ) -> fmt::Result
@@ -18,6 +19,7 @@ where
     ComparisonInner::EqualsTo(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -26,6 +28,7 @@ where
       write!(output, "==")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -35,6 +38,7 @@ where
     ComparisonInner::DifferentFrom(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -43,6 +47,7 @@ where
       write!(output, "!=")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -52,6 +57,7 @@ where
     ComparisonInner::In(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -60,6 +66,7 @@ where
       write!(output, ".contains(")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -70,6 +77,7 @@ where
     ComparisonInner::LessThan(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -78,6 +86,7 @@ where
       write!(output, "<")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -87,6 +96,7 @@ where
     ComparisonInner::MoreThan(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -95,6 +105,7 @@ where
       write!(output, ">")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -104,6 +115,7 @@ where
     ComparisonInner::AtLeast(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -112,6 +124,7 @@ where
       write!(output, ">=")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -121,6 +134,7 @@ where
     ComparisonInner::AtMost(comparison) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -129,6 +143,7 @@ where
       write!(output, "<=")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,

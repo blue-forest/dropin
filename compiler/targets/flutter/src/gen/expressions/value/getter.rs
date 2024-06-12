@@ -16,6 +16,7 @@ use crate::{
 
 pub fn gen_getter<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   value: &Getter,
 ) -> fmt::Result
@@ -42,14 +43,18 @@ where
           }
         }
       }
-      if objects.contains_key(&trace_current) {
+      if objects
+        .get(component)
+        .map(|objects| objects.contains_key(&trace_current))
+        .unwrap_or(false)
+      {
         if trace_key == "*" {
           panic!("Objects cannot be indexed dynamically")
         }
         write!(output, ".{trace_key}")?;
       } else {
         write!(output, "[")?;
-        gen_expressions(output, state, &trace_current, false, key)?;
+        gen_expressions(output, component, state, &trace_current, false, key)?;
         write!(output, "]")?;
       }
       trace_current.push(trace_key);

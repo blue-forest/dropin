@@ -1,4 +1,5 @@
 use alloc::{
+  collections::BTreeMap,
   fmt::{self, Write},
   string::String,
 };
@@ -14,16 +15,31 @@ use super::{
   Sub,
 };
 
-pub fn gen_classes<'a, S>(output: &mut String, state: &S) -> fmt::Result
+pub fn gen_classes<'a, S>(
+  output: &mut String,
+  component: &str,
+  state: &S,
+) -> fmt::Result
 where
   S: Sub<'a>,
 {
-  for (trace, format) in &<S as Stated<ObjectGetterState>>::state(state).objects
+  for (trace, format) in <S as Stated<ObjectGetterState>>::state(state)
+    .objects
+    .get(component)
+    .unwrap_or(&BTreeMap::new())
   {
     write!(output, "class ")?;
     write_class_name(output, trace)?;
     write!(output, "{{")?;
-    gen_keys(output, state, trace, false, &format.required, &format.keys)?;
+    gen_keys(
+      output,
+      component,
+      state,
+      trace,
+      false,
+      &format.required,
+      &format.keys,
+    )?;
 
     // constructor
     write_class_name(output, trace)?;
@@ -40,6 +56,7 @@ where
           write!(output, "=")?;
           gen_expressions(
             output,
+            component,
             state,
             &[trace.as_slice(), &[&key_format.key]].concat(),
             false,

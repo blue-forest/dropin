@@ -1,4 +1,4 @@
-use alloc::{string::String, vec::Vec};
+use alloc::{collections::BTreeMap, string::String, vec::Vec};
 use dropin_compiler_recipes::ir::Model;
 
 use crate::{Stage, Stated};
@@ -9,7 +9,7 @@ where
   S: Stage,
 {
   sub: &'a S,
-  state: ImportsState,
+  state: ImportsState<'a>,
 }
 
 impl<'a, S> Imports<'a, S>
@@ -31,27 +31,32 @@ where
   }
 }
 
-impl<'a, S> Stated<ImportsState> for Imports<'a, S>
+impl<'a, S> Stated<ImportsState<'a>> for Imports<'a, S>
 where
   S: Stage,
 {
-  fn state(&self) -> &ImportsState {
+  fn state(&self) -> &ImportsState<'a> {
     &self.state
   }
 }
 
 #[derive(Debug, Default)]
-pub struct ImportsState {
-  pub imports: Vec<String>,
+pub struct ImportsState<'a> {
+  pub imports: BTreeMap<&'a str, Vec<String>>,
 }
 
-impl ImportsState {
-  fn new<S>(_sub: &S) -> Self
+impl<'a> ImportsState<'a> {
+  fn new<S>(sub: &'a S) -> Self
   where
     S: Stage,
   {
-    let mut imports = Vec::with_capacity(1);
-    imports.push("package:flutter/material.dart".into());
+    let mut imports = BTreeMap::new();
+    let ir = sub.ir();
+    for component in &ir.components {
+      let mut component_imports = Vec::with_capacity(1);
+      component_imports.push("package:flutter/material.dart".into());
+      imports.insert(component.name.as_str(), component_imports);
+    }
     Self { imports }
   }
 }

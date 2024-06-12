@@ -10,6 +10,7 @@ use super::gen_expressions;
 
 pub fn gen_arithmetic<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   arithmetic: &Arithmetic,
 ) -> fmt::Result
@@ -19,11 +20,12 @@ where
   match arithmetic.arithmetic_inner.as_ref().unwrap() {
     ArithmeticInner::Opposite(operand) => {
       write!(output, "-")?;
-      gen_expressions(output, state, &[], true, operand)?;
+      gen_expressions(output, component, state, &[], true, operand)?;
     }
     ArithmeticInner::Add(operands) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -32,6 +34,7 @@ where
       write!(output, "+")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -41,6 +44,7 @@ where
     ArithmeticInner::Sub(operands) => {
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,
@@ -49,6 +53,7 @@ where
       write!(output, "-")?;
       gen_expressions(
         output,
+        component,
         state,
         &[],
         true,

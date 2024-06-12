@@ -10,6 +10,7 @@ use super::{expressions::gen_getter, Sub};
 
 pub fn gen_zone<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   _trace: &[usize],
   zone: &ComponentZone,
@@ -26,7 +27,13 @@ where
     match child.component_child_inner.as_ref().unwrap() {
       ComponentChildInner::Text(text) => {
         write!(output, "Text(")?;
-        gen_rich_text(output, state, &[], text.content.as_ref().unwrap())?;
+        gen_rich_text(
+          output,
+          component,
+          state,
+          &[],
+          text.content.as_ref().unwrap(),
+        )?;
         write!(output, ")")?;
       }
       ComponentChildInner::Input(input) => {
@@ -34,9 +41,19 @@ where
           output,
           "SizedBox(width: 250, child: TextFormField(initialValue:"
         )?;
-        gen_getter(output, state, input.on_change.as_ref().unwrap())?;
+        gen_getter(
+          output,
+          component,
+          state,
+          input.on_change.as_ref().unwrap(),
+        )?;
         write!(output, ", onChanged: (newText_) => {{")?;
-        gen_getter(output, state, input.on_change.as_ref().unwrap())?;
+        gen_getter(
+          output,
+          component,
+          state,
+          input.on_change.as_ref().unwrap(),
+        )?;
         write!(output, "= newText_}}))")?;
       }
       ComponentChildInner::Extern(_) => todo!(),

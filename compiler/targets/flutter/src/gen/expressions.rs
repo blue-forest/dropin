@@ -22,6 +22,7 @@ mod value;
 
 pub fn gen_expressions<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   trace: &[&str],
   is_nested: bool,
@@ -33,23 +34,23 @@ where
   let start = output.len();
   let is_parenthesized = match expression.expression_inner.as_ref().unwrap() {
     ExpressionInner::Value(value) => {
-      gen_value(output, state, trace, value)?;
+      gen_value(output, component, state, trace, value)?;
       false
     }
     ExpressionInner::Comparison(comparison) => {
-      gen_comparison(output, state, comparison)?;
+      gen_comparison(output, component, state, comparison)?;
       true
     }
     ExpressionInner::Logic(logic) => {
-      gen_logic(output, state, logic)?;
+      gen_logic(output, component, state, logic)?;
       true
     }
     ExpressionInner::Control(control) => {
-      gen_control(output, state, control)?;
+      gen_control(output, component, state, control)?;
       false
     }
     ExpressionInner::Arithmetic(arithmetic) => {
-      gen_arithmetic(output, state, arithmetic)?;
+      gen_arithmetic(output, component, state, arithmetic)?;
       true
     }
   };

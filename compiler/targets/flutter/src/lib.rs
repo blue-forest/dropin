@@ -5,7 +5,7 @@ extern crate alloc;
 #[global_allocator]
 static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 
-use alloc::{boxed::Box, ffi::CString};
+use alloc::{boxed::Box, collections::BTreeMap, ffi::CString, string::String};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
 use dropin_target_macros::combine;
@@ -43,19 +43,19 @@ mod setters;
 struct Combine<'a>(
   #[state(ObjectGetterState<'a>)] ObjectGetter<'a>,
   #[state(ListenersState<'a>)] Listeners<'a>,
-  #[state(ImportsState)] Imports<'a>,
+  #[state(ImportsState<'a>)] Imports<'a>,
 );
 
 #[no_mangle]
-pub fn codegen(protobuf: *mut [u8]) -> CString {
+pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let protobuf = unsafe { Box::from_raw(protobuf) };
-  let component = Model::decode(protobuf.as_ref()).unwrap();
-  let objects_getter = ObjectGetter::new(&component);
-  let listeners = Listeners::new(&component);
-  let imports = Imports::new(&component);
+  let model = Model::decode(protobuf.as_ref()).unwrap();
+  let objects_getter = ObjectGetter::new(&model);
+  let listeners = Listeners::new(&model);
+  let imports = Imports::new(&model);
   let combine = Combine(objects_getter, listeners, imports);
   let gen = Gen::new(&combine);
-  CString::new(gen.gen().unwrap()).unwrap()
+  Box::into_raw(Box::new(gen.gen().unwrap()))
 }
 
 // #[cfg(debug_assertions)]

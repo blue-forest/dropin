@@ -50,7 +50,7 @@ where
 
 #[derive(Debug)]
 pub struct ObjectGetterState<'a> {
-  pub objects: BTreeMap<Vec<&'a str>, &'a FormatObject>,
+  pub objects: BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>,
 }
 
 impl<'a> ObjectGetterState<'a> {
@@ -58,19 +58,19 @@ impl<'a> ObjectGetterState<'a> {
   where
     S: Stage,
   {
-    todo!();
-    /*
     let mut objects = BTreeMap::new();
     let ir = sub.ir();
-    if let Some(variables) = &ir.variables {
-      fill_keys(&mut objects, variables);
+    for component in &ir.components {
+      let mut component_objects = BTreeMap::new();
+      if let Some(variables) = &component.variables {
+        fill_keys(&mut component_objects, variables);
+      }
+      if let Some(properties) = &component.properties {
+        fill_keys(&mut component_objects, properties);
+      }
+      objects.insert(component.name.as_str(), component_objects);
     }
-    if let Some(properties) = &ir.properties {
-      fill_keys(&mut objects, properties);
-    }
-
     Self { objects }
-    */
   }
 }
 

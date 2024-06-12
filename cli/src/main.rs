@@ -19,7 +19,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, io::Write as IoWrite, path::PathBuf};
+use std::{fmt::Write, path::PathBuf};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
@@ -65,10 +65,8 @@ fn main() -> Result<()> {
 			let protobuf = Box::into_raw(protobuf.into_boxed_slice());
 			let output = match target {
 				Target::Flutter => dropin_target_flutter::codegen(protobuf),
-			}
-			.into_string()
-			.unwrap();
-			println!("{output}");
+			};
+			println!("{output:?}");
 		}
 	}
 	Ok(())

@@ -10,6 +10,7 @@ use super::gen_expressions;
 
 pub fn gen_logic<'a, S>(
   output: &mut String,
+  component: &str,
   state: &S,
   logic: &Logic,
 ) -> fmt::Result
@@ -24,7 +25,7 @@ where
           write!(output, "&&")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], true, &operand)?;
+        gen_expressions(output, component, state, &[], true, &operand)?;
       }
     }
     LogicInner::Or(logic) => {
@@ -34,15 +35,15 @@ where
           write!(output, "||")?;
         }
         is_first = false;
-        gen_expressions(output, state, &[], true, &operand)?;
+        gen_expressions(output, component, state, &[], true, &operand)?;
       }
     }
     LogicInner::Not(logic) => {
       write!(output, "!")?;
-      gen_expressions(output, state, &[], true, &logic)?;
+      gen_expressions(output, component, state, &[], true, &logic)?;
     }
     LogicInner::Exists(logic) => {
-      gen_expressions(output, state, &[], true, &logic)?;
+      gen_expressions(output, component, state, &[], true, &logic)?;
       write!(output, "!= null")?;
     }
   }

@@ -19,7 +19,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use std::{fmt::Write, path::PathBuf};
+use std::{
+	fmt::Write,
+	fs::{create_dir, remove_dir_all, File},
+	io::Write as IoWrite,
+	path::PathBuf,
+};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand, ValueEnum};
@@ -43,6 +48,8 @@ enum Commands {
 		#[arg(name = "compilation target")]
 		target: Target,
 		path: PathBuf,
+		#[arg(long, short)]
+		output: Option<PathBuf>,
 	},
 }
 
@@ -57,17 +64,34 @@ fn main() -> Result<()> {
 	let args = Args::parse();
 
 	match args.command {
-		Commands::Compile { path, target } => {
-			let ir = parse_model(&path).unwrap();
-			println!("{ir:#?}");
+		Commands::Compile {
+			path,
+			target,
+			output,
+		} => {
+			let ir = parse_model(&path)?;
 			let mut protobuf = vec![];
-			ir.encode(&mut protobuf).unwrap();
+			ir.encode(&mut protobuf)?;
 			let protobuf = Box::into_raw(protobuf.into_boxed_slice());
-			let output = match target {
+			let code = match target {
 				Target::Flutter => dropin_target_flutter::codegen(protobuf),
 			};
-			let output = unsafe { Box::from_raw(output) };
-			println!("{output:?}");
+			let code = unsafe { Box::from_raw(code) };
+			if let Some(output) = output {
+				if output.exists() {
+					remove_dir_all(&output)?;
+				}
+				create_dir(&output)?;
+				for (path, content) in *code {
+					let path = path
+						.split('/')
+						.fold(output.clone(), |path, key| path.join(key));
+					let mut file = File::create(path)?;
+					file.write(content.as_bytes())?;
+				}
+			} else {
+				println!("{}", serde_json::to_string(&code)?);
+			}
 		}
 	}
 	Ok(())

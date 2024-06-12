@@ -1,7 +1,6 @@
 use std::{collections::BTreeMap, fs::File, io::Read, path::Path};
 
 use anyhow::Result;
-use dropin_compiler_common::to_upper_camelcase;
 use serde::Deserialize;
 use walkdir::WalkDir;
 
@@ -32,7 +31,6 @@ pub fn parse_model(root: &Path) -> Result<Model> {
       continue;
     }
     let path = entry.path();
-    println!("{}", path.display());
     let mut f = File::open(path)?;
     let mut recipe = String::new();
     f.read_to_string(&mut recipe)?;

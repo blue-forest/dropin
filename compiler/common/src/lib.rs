@@ -199,7 +199,7 @@ pub fn to_upper_camelcase(id: &str) -> String {
   let mut result = String::new();
   let mut is_capital = true;
   for c in id.chars() {
-    if c == '_' {
+    if c == '_' || c == '/' {
       is_capital = true;
       continue;
     }

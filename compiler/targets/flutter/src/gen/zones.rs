@@ -56,7 +56,7 @@ where
         )?;
         write!(output, "= newText_}}))")?;
       }
-      ComponentChildInner::Extern(_) => todo!(),
+      ComponentChildInner::Extern(r#extern) => todo!(),
     }
   }
   write!(output, "])")?;

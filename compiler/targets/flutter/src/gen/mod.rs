@@ -23,6 +23,8 @@ mod formats;
 mod keys;
 mod zones;
 
+const EXTENSION: &str = ".dart";
+
 pub trait Sub<'a>:
   Stage
   + Stated<ObjectGetterState<'a>>
@@ -121,7 +123,9 @@ where
         write!(file, ";}}}}")?;
         gen_classes(file, id, self.sub)?;
       }
-      files.insert(id.into(), file);
+      let mut file_path = String::with_capacity(id.len() + EXTENSION.len());
+      write!(&mut file_path, "{id}{EXTENSION}")?;
+      files.insert(file_path, file);
     }
     Ok(files)
   }

@@ -189,7 +189,10 @@ pub fn lexer(input: &str) -> Vec<Token> {
       let char = bytes[index];
       match token.kind {
         TokenKind::Id => {
-          if !char.is_ascii_alphabetic() && char != b'_' {
+          if !char.is_ascii_alphabetic()
+            && !char.is_ascii_digit()
+            && char != b'_'
+          {
             current = tokens.next(current, index);
             index -= 1;
           }

@@ -49,12 +49,6 @@ pub struct ListenersState<'a> {
   pub scopes: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Vec<Key<'a>>>>>,
 }
 
-#[derive(Debug)]
-pub enum Key<'a> {
-  Text(&'a str),
-  Quantity(f64),
-}
-
 impl<'a> ListenersState<'a> {
   fn new<S>(sub: &'a S) -> Self
   where

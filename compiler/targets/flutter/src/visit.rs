@@ -304,6 +304,7 @@ impl ExpressionTrace<'_, '_> {
   }
 }
 
+#[derive(Debug)]
 pub struct ComponentChildTrace {
   pub indexes: Vec<usize>,
 }

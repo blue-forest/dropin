@@ -212,3 +212,9 @@ pub fn to_upper_camelcase(id: &str) -> String {
   }
   result
 }
+
+#[derive(Debug)]
+pub enum Key<'a> {
+  Text(&'a str),
+  Quantity(usize),
+}

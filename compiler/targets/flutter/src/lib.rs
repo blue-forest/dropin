@@ -8,7 +8,6 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 use alloc::{boxed::Box, collections::BTreeMap, string::String};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
-use dropin_target_macros::Stage;
 use prost::Message;
 
 use crate::{
@@ -27,12 +26,6 @@ trait Stated<S> {
 mod properties_resolver;
 mod stage;
 mod visit;
-
-#[derive(Stage, Default)]
-struct FirstStage<'a> {
-  // #[state(PropertiesResolverState<'a>)]
-  properties_resolver: PropertiesResolver<'a>,
-}
 
 #[no_mangle]
 pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {

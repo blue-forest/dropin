@@ -217,7 +217,7 @@ dependencies = [
  "dropin-compiler-common",
  "dropin-compiler-recipes",
  "dropin-target-macros",
- "indoc",
+ "itertools 0.13.0",
  "prost",
 ]
 
@@ -287,16 +287,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "indoc"
-version = "2.0.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
-
-[[package]]
 name = "itertools"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -406,7 +409,7 @@ checksum = "80b776a1b2dc779f5ee0641f8ade0125bc1298dd41a9a0c16d8bd57b42d222b1"
 dependencies = [
  "bytes",
  "heck",
- "itertools",
+ "itertools 0.12.1",
  "log",
  "multimap",
  "once_cell",
@@ -426,7 +429,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81bddcdb20abf9501610992b6759a4c888aef7d1a7247ef75e2404275ac24af1"
 dependencies = [
  "anyhow",
- "itertools",
+ "itertools 0.12.1",
  "proc-macro2",
  "quote",
  "syn",

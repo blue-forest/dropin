@@ -1,6 +1,6 @@
 use alloc::{
   borrow::Cow,
-  collections::{BTreeMap, BTreeSet},
+  collections::{BTreeMap, BTreeSet, VecDeque},
   fmt::Write,
   string::String,
   vec::Vec,
@@ -9,6 +9,7 @@ use dropin_compiler_common::Key;
 use dropin_compiler_recipes::ir::{
   Component, ComponentChild, ComponentChildInner, Getter,
 };
+use itertools::{iproduct, Itertools};
 
 use crate::{visit::ExpressionTrace, Stated, Visit};
 
@@ -44,35 +45,38 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
     let mut to_insert = PropertiesByComponent::new();
     for (redirect_component, redirect_by_property) in &self.redirections {
       for (redirect_property, redirect_by_component) in redirect_by_property {
-        for (redirect_owner, redirect_getters) in redirect_by_component {
-          let Some(props_by_property) = self.properties.get(redirect_owner)
-          else {
-            continue;
+        for (mut redirect_owner, redirect_getters) in redirect_by_component {
+          let redirect_getter = &redirect_getters[0];
+          let mut suffix = VecDeque::new();
+          let props_by_property = loop {
+            if let Some(props_by_property) = self.properties.get(redirect_owner)
+            {
+              break props_by_property;
+            }
+            let indirect = self.redirections.get(redirect_owner).unwrap();
+            let indirect =
+              indirect.get(redirect_getter.ident.as_str()).unwrap();
+            // TODO: deal with several callers
+            let (new_owner, getters) = indirect.first_key_value().unwrap();
+            for index in getters[0].indexes.iter().rev() {
+              suffix.push_front(index.clone());
+            }
+            redirect_owner = new_owner;
           };
-
-          /*
-          loop {
-            let Some(indirect_owners) = self
-              .redirections
-              .get(redirect_owner)
-              .map(|redirections| redirections.get(redirect_property))
-              .flatten()
-            else {
-              break;
-            };
-          }
-          */
+          let suffix = suffix.make_contiguous();
 
           for (_, props_by_owner) in props_by_property {
             for (prop_component, prop_getters) in props_by_owner {
-              let getters = &prop_getters
-                .iter()
-                .zip(redirect_getters)
+              let getters = &iproduct!(prop_getters, redirect_getters)
                 .map(|(prop, redirect)| {
                   Cow::Owned(Getter {
                     ident: prop.ident.clone(),
-                    indexes: [prop.indexes.as_slice(), &redirect.indexes]
-                      .concat(),
+                    indexes: [
+                      prop.indexes.as_slice(),
+                      suffix,
+                      &redirect.indexes,
+                    ]
+                    .concat(),
                   })
                 })
                 .collect::<Vec<_>>();

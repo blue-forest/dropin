@@ -17,5 +17,5 @@ dropin-target-macros = { path = "../../target-macros" }
 
 anyhow = "1.0"
 dlmalloc = { version = "0.2", features = [ "global" ] }
-indoc = "2.0"
 prost = "0.12"
+itertools = { version = "0.13.0", default-features = false }

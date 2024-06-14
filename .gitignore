@@ -2,6 +2,7 @@
 *.swo
 *.swn
 .DS_store
+.idea
 
 .coverage/
 

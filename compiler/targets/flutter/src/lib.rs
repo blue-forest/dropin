@@ -35,7 +35,7 @@ pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let tmp = PropertiesResolver::default();
   let stage = Stage::new(tmp);
   let tmp = stage.build(&model);
-  todo!("{tmp:?}");
+  todo!("{tmp:#?}");
   // let objects_getter = ObjectGetter::new(&model);
   // let listeners = Listeners::new(&model);
   // let setters = Setters::new(&model);

@@ -7,7 +7,7 @@ use dropin_compiler_common::Key;
 use dropin_compiler_recipes::ir::{
   Component, ComponentChild, ComponentChildInner, Expression, Getter,
 };
-use itertools::{iproduct, Itertools};
+use itertools::iproduct;
 
 use crate::{visit::ExpressionTrace, Stated, Visit};
 
@@ -36,8 +36,6 @@ pub struct PropertiesResolver<'a> {
 
 impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
   fn build(mut self) -> PropertiesResolverState<'a> {
-    // todo!("\n{:#?}\n{:#?}", self.properties, self.redirections);
-
     let mut to_insert = PropertiesByComponent::new();
     for (redirect_component, redirect_by_property) in &self.redirections {
       for (redirect_property, redirect_by_component) in redirect_by_property {
@@ -121,19 +119,20 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                 for (prop_component, prop_getters) in prop_by_owner {
                   let getters = &iproduct!(prop_getters, redirect_getters)
                     .map(|(prop, redirect)| {
-                      let indexes = [
-                        prop.indexes.as_slice(),
-                        suffix
-                          .get(prop_component)
-                          .and_then(|suffix| {
-                            suffix.get(redirect_getter.ident.as_str())
-                          })
-                          .unwrap_or(&[].as_mut_slice()),
-                        &redirect.indexes,
-                      ]
-                      .concat();
-                      let mut ident = prop.ident.clone();
-                      Cow::Owned(Getter { ident, indexes })
+                      Cow::Owned(Getter {
+                        ident: prop.ident.clone(),
+                        indexes: [
+                          prop.indexes.as_slice(),
+                          suffix
+                            .get(prop_component)
+                            .and_then(|suffix| {
+                              suffix.get(redirect_getter.ident.as_str())
+                            })
+                            .unwrap_or(&[].as_mut_slice()),
+                          &redirect.indexes,
+                        ]
+                        .concat(),
+                      })
                     })
                     .collect::<Vec<_>>();
                   to_insert
@@ -152,7 +151,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
       }
     }
 
-    todo!("\n{:#?}", to_insert);
+    self.properties.extend(to_insert);
     PropertiesResolverState(self.properties)
   }
 

@@ -6,6 +6,7 @@ use walkdir::WalkDir;
 
 use crate::{
   ir::{Component, Model, Page},
+  parser,
   parser::EXTENSION,
 };
 
@@ -31,8 +32,18 @@ pub fn parse_model(root: &Path) -> Result<Model> {
       continue;
     }
     let path = entry.path();
+    if !path
+      .file_name()
+      .unwrap()
+      .to_str()
+      .unwrap()
+      .ends_with(EXTENSION)
+    {
+      continue;
+    }
     let mut f = File::open(path)?;
     let mut recipe = String::new();
+    println!("path {path:?}");
     f.read_to_string(&mut recipe)?;
     let mut component = serde_yaml::from_str::<Component>(&recipe)?;
     let path_str = path.to_str().unwrap();

@@ -1,5 +1,3 @@
-use core::fmt::write;
-
 use alloc::{
   fmt::{self, Write},
   string::String,
@@ -14,7 +12,10 @@ use crate::{
   Stated,
 };
 
-use super::{expressions::gen_getter, Sub};
+use super::{
+  expressions::{gen_expressions, gen_getter},
+  Sub,
+};
 
 pub fn gen_zone<'a, S>(
   output: &mut String,
@@ -96,7 +97,24 @@ where
         write!(output, ".notifyListeners();}}))")?;
       }
       ComponentChildInner::Extern(r#extern) => {
-        write!(output, "{}()", to_upper_camelcase(&r#extern.path))?;
+        write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
+        let mut is_first = true;
+        for (key, value) in &r#extern.properties.as_ref().unwrap().values {
+          if !is_first {
+            write!(output, ",")?;
+          }
+          is_first = false;
+          write!(output, "{key}:")?;
+          gen_expressions(
+            output,
+            component,
+            state,
+            &[key.as_str()],
+            false,
+            value,
+          )?;
+        }
+        write!(output, ")")?;
       }
     }
     if is_listenable {

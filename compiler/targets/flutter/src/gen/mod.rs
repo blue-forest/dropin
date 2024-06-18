@@ -101,9 +101,12 @@ where
           <S as Stated<SettersAndListenersState>>::state(&self.sub);
         let updated_getters =
           setters_listeners.get_updated_getters(&component.id);
-        for getter in updated_getters {
+        for updated_getter in updated_getters {
           write!(file, "final ChangeNotifier ")?;
-          write_notifier_name(file, getter)?;
+          write_notifier_name(file, &updated_getter.getter)?;
+          if !updated_getter.is_external {
+            write!(file, "= ChangeNotifier()")?;
+          }
           write!(file, ";")?;
         }
 
@@ -126,10 +129,12 @@ where
             }
           }
         }
-        for getter in updated_getters {
-          write!(file, ",")?;
-          write!(file, "required this.")?;
-          write_notifier_name(file, getter)?;
+        for updated_getter in updated_getters {
+          if updated_getter.is_external {
+            write!(file, ",")?;
+            write!(file, "required this.")?;
+            write_notifier_name(file, &updated_getter.getter)?;
+          }
         }
         write!(
           file,

@@ -40,7 +40,7 @@ where
           .filter(|listener| {
             updated_getters
               .iter()
-              .position(|updated| *updated == listener.getter)
+              .position(|updated| updated.getter.as_ref() == listener.getter)
               .is_some()
           })
           .collect::<Vec<_>>()
@@ -113,6 +113,16 @@ where
             false,
             value,
           )?;
+        }
+        for updated_getter in updated_getters {
+          if let Some(updated_by) =
+            updated_getter.updated_by.get(r#extern.path.as_str())
+          {
+            write!(output, ",")?;
+            write_notifier_name(output, updated_by)?;
+            write!(output, ":")?;
+            write_notifier_name(output, &updated_getter.getter)?;
+          }
         }
         write!(output, ")")?;
       }

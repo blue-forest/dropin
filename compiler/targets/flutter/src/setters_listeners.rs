@@ -13,7 +13,7 @@ use dropin_compiler_recipes::ir::{
 
 #[derive(Debug)]
 pub struct SettersAndListenersState<'a> {
-  setters: BTreeMap<&'a str, Vec<&'a Getter>>,
+  setters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
 
@@ -29,6 +29,13 @@ pub struct Resolved<'a> {
   pub getter: Cow<'a, Getter>,
 }
 
+#[derive(Debug)]
+pub struct UpdatedGetter<'a> {
+  pub getter: Cow<'a, Getter>,
+  pub is_external: bool,
+  pub updated_by: BTreeMap<&'a str, &'a Getter>,
+}
+
 impl<'a> SettersAndListenersState<'a> {
   pub fn get_listeners(
     &self,
@@ -42,7 +49,7 @@ impl<'a> SettersAndListenersState<'a> {
       .map(|listeners| listeners.as_slice())
   }
 
-  pub fn get_updated_getters(&self, component: &str) -> &[&'a Getter] {
+  pub fn get_updated_getters(&self, component: &str) -> &[UpdatedGetter<'a>] {
     self
       .setters
       .get(component)
@@ -54,7 +61,7 @@ impl<'a> SettersAndListenersState<'a> {
 pub struct SettersAndListeners<'a, 'b> {
   resolver: &'b PropertiesResolverState<'a>,
   component: Option<&'a str>,
-  setters: BTreeMap<&'a str, Vec<&'a Getter>>,
+  setters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
 
@@ -71,6 +78,8 @@ impl<'a, 'b> SettersAndListeners<'a, 'b> {
 
 impl<'a, 'b> Visit<'a, SettersAndListenersState<'a>>
   for SettersAndListeners<'a, 'b>
+where
+  'a: 'b,
 {
   fn build(self) -> SettersAndListenersState<'a> {
     SettersAndListenersState {
@@ -90,11 +99,52 @@ impl<'a, 'b> Visit<'a, SettersAndListenersState<'a>>
   ) {
     let getter = input.on_change.as_ref().unwrap();
     let component = self.component.unwrap();
-    self
-      .setters
-      .entry(component)
-      .or_insert(Vec::with_capacity(1))
-      .push(getter);
+    if let Some(resolved) = self
+      .resolver
+      .0
+      .get(component)
+      .and_then(|resolved| resolved.get(getter.ident.as_str()))
+    {
+      for (owner, getters) in resolved {
+        for resolved_getter in getters {
+          self
+            .setters
+            .entry(owner)
+            .or_insert_with(|| {
+              let mut setters = Vec::with_capacity(1);
+              setters.push(UpdatedGetter {
+                getter: resolved_getter.clone(),
+                is_external: false,
+                updated_by: BTreeMap::new(),
+              });
+              setters
+            })
+            .last_mut()
+            .unwrap()
+            .updated_by
+            .insert(component, getter);
+        }
+      }
+      self
+        .setters
+        .entry(component)
+        .or_insert(Vec::with_capacity(1))
+        .push(UpdatedGetter {
+          getter: Cow::Borrowed(getter),
+          is_external: true,
+          updated_by: BTreeMap::new(),
+        });
+    } else {
+      self
+        .setters
+        .entry(component)
+        .or_insert(Vec::with_capacity(1))
+        .push(UpdatedGetter {
+          getter: Cow::Borrowed(getter),
+          is_external: false,
+          updated_by: BTreeMap::new(),
+        });
+    }
   }
 
   fn visit_getter(

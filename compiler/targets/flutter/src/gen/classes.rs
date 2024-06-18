@@ -42,7 +42,10 @@ where
 
     // constructor
     write_class_name(output, trace)?;
-    write!(output, "({{")?;
+    write!(output, "(")?;
+    if !format.keys.is_empty() {
+      write!(output, "{{")?;
+    }
     let mut is_first = true;
     for key_format in &format.keys {
       if !is_first {
@@ -64,8 +67,11 @@ where
         }
       }
     }
+    if !format.keys.is_empty() {
+      write!(output, "}}")?;
+    }
 
-    write!(output, "}});}}")?;
+    write!(output, ");}}")?;
   }
   Ok(())
 }

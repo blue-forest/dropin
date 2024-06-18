@@ -21,7 +21,7 @@ trait Stated<S> {
 
 // mod gen;
 // mod imports;
-// mod objects_getter;
+mod objects_getter;
 mod properties_resolver;
 mod setters_listeners;
 mod stage;

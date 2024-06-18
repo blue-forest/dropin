@@ -274,12 +274,14 @@ pub trait Visit<'a, T> {
   }
 }
 
+#[derive(Debug)]
 pub struct FormatTrace<'a> {
   pub component: &'a str,
   pub is_property: bool,
   pub keys: Vec<&'a str>,
 }
 
+#[derive(Debug)]
 pub enum ExpressionTrace<'a, 'b> {
   FormatDefaultValue(&'b FormatTrace<'a>),
   ComponentChild(&'b ComponentChildTrace),

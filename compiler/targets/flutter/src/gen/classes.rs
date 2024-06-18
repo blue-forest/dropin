@@ -24,7 +24,6 @@ where
   S: Sub<'a>,
 {
   for (trace, format) in <S as Stated<ObjectGetterState>>::state(state)
-    .objects
     .get(component)
     .unwrap_or(&BTreeMap::new())
   {

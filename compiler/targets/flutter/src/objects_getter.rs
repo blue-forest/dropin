@@ -1,4 +1,11 @@
-use alloc::{collections::BTreeMap, vec::Vec};
+use core::ops::Deref;
+
+use alloc::{
+  collections::BTreeMap,
+  fmt::{self, Write},
+  string::String,
+  vec::Vec,
+};
 use dropin_compiler_recipes::ir::FormatObject;
 
 use crate::{visit::FormatTrace, Visit};
@@ -7,6 +14,13 @@ use crate::{visit::FormatTrace, Visit};
 pub struct ObjectGetterState<'a>(
   BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>,
 );
+
+impl<'a> Deref for ObjectGetterState<'a> {
+  type Target = BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>;
+  fn deref(&self) -> &Self::Target {
+    &self.0
+  }
+}
 
 #[derive(Default)]
 pub struct ObjectGetter<'a> {
@@ -29,4 +43,31 @@ impl<'a, 'b> Visit<'a, ObjectGetterState<'a>> for ObjectGetter<'a> {
       .or_insert(BTreeMap::new())
       .insert(trace.keys.clone(), format);
   }
+}
+
+pub fn write_class_name(output: &mut String, trace: &[&str]) -> fmt::Result {
+  for key in trace {
+    match *key {
+      "*" => {
+        write!(output, "_")?;
+      }
+      "_" => write!(output, "__")?,
+      _ => {
+        let mut is_capital = true;
+        for c in key.chars() {
+          if c == '_' {
+            is_capital = true;
+            continue;
+          }
+          if is_capital {
+            output.push(c.to_ascii_uppercase());
+          } else {
+            output.push(c);
+          }
+          is_capital = false;
+        }
+      }
+    }
+  }
+  Ok(())
 }

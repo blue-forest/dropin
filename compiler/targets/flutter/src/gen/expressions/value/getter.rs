@@ -25,7 +25,7 @@ where
 {
   write!(output, "{}", value.ident)?;
   if !value.indexes.is_empty() {
-    let objects = &<S as Stated<ObjectGetterState>>::state(state).objects;
+    let objects = &<S as Stated<ObjectGetterState>>::state(state);
     let mut trace_current = Vec::new();
     trace_current.push(value.ident.as_str());
     for key in &value.indexes {

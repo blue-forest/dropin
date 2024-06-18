@@ -55,7 +55,6 @@ where
     }
     ValueInner::Object(value) => {
       if let Some(_) = <S as Stated<ObjectGetterState>>::state(state)
-        .objects
         .get(component)
         .map(|component_objects| component_objects.get(trace))
         .flatten()

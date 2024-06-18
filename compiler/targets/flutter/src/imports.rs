@@ -1,3 +1,5 @@
+use core::ops::Deref;
+
 use alloc::{collections::BTreeMap, fmt::Write, string::String, vec::Vec};
 use dropin_compiler_recipes::ir::{Component, ComponentExtern};
 
@@ -8,6 +10,13 @@ use crate::{
 
 #[derive(Debug)]
 pub struct ImportsState<'a>(BTreeMap<&'a str, Vec<String>>);
+
+impl<'a> Deref for ImportsState<'a> {
+  type Target = BTreeMap<&'a str, Vec<String>>;
+  fn deref(&self) -> &Self::Target {
+    &self.0
+  }
+}
 
 #[derive(Default)]
 pub struct Imports<'a> {

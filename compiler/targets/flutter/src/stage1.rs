@@ -2,12 +2,28 @@ use crate::{
   setters_listeners::{SettersAndListeners, SettersAndListenersState},
   stage0::Stage0State,
   visit::Visit,
+  Stated,
 };
 
 #[derive(Debug)]
 pub struct Stage1State<'a, 'b> {
   pub stage0: &'b Stage0State<'a>,
   pub setters_listeners: SettersAndListenersState<'a>,
+}
+
+impl<'a, 'b, T> Stated<T> for Stage1State<'a, 'b>
+where
+  Stage0State<'a>: Stated<T>,
+{
+  fn state(&self) -> &T {
+    self.stage0.state()
+  }
+}
+
+impl<'a, 'b> Stated<SettersAndListenersState<'a>> for Stage1State<'a, 'b> {
+  fn state(&self) -> &SettersAndListenersState<'a> {
+    &self.setters_listeners
+  }
 }
 
 pub struct Stage1<'a, 'b> {

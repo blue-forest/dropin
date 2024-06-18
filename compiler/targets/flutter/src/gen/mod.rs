@@ -7,8 +7,8 @@ use alloc::{
 use dropin_compiler_recipes::ir::Model;
 
 use crate::{
-  imports::ImportsState, listeners::ListenersState,
-  objects_getter::ObjectGetterState, Stage, Stated,
+  imports::ImportsState, objects_getter::ObjectGetterState,
+  setters_listeners::SettersAndListenersState, Stated, EXTENSION,
 };
 
 use self::{
@@ -25,17 +25,15 @@ mod keys;
 mod zones;
 
 pub trait Sub<'a>:
-  Stage
-  + Stated<ObjectGetterState<'a>>
-  + Stated<ListenersState<'a>>
+  Stated<ObjectGetterState<'a>>
+  + Stated<SettersAndListenersState<'a>>
   + Stated<ImportsState<'a>>
 {
 }
 
 impl<'a, S> Sub<'a> for S where
-  S: Stage
-    + Stated<ObjectGetterState<'a>>
-    + Stated<ListenersState<'a>>
+  S: Stated<ObjectGetterState<'a>>
+    + Stated<SettersAndListenersState<'a>>
     + Stated<ImportsState<'a>>
 {
 }
@@ -56,9 +54,11 @@ where
     Self { sub }
   }
 
-  pub fn gen(self) -> Result<BTreeMap<String, String>, fmt::Error> {
+  pub fn gen(
+    self,
+    ir: &'a Model,
+  ) -> Result<BTreeMap<String, String>, fmt::Error> {
     let mut files = BTreeMap::new();
-    let ir = self.sub.ir();
     for component in &ir.components {
       let mut file = String::new();
       let term = component.term.as_str();
@@ -66,7 +66,6 @@ where
       {
         let file = &mut file;
         for import in <S as Stated<ImportsState>>::state(self.sub)
-          .imports
           .get(id)
           .unwrap_or(&Vec::new())
         {
@@ -129,14 +128,5 @@ where
       files.insert(file_path, file);
     }
     Ok(files)
-  }
-}
-
-impl<'a, S> Stage for Gen<'a, S>
-where
-  S: Sub<'a>,
-{
-  fn ir(&self) -> &Model {
-    self.sub.ir()
   }
 }

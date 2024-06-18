@@ -8,6 +8,7 @@ static GLOBAL: GlobalDlmalloc = GlobalDlmalloc;
 use alloc::{boxed::Box, collections::BTreeMap, string::String};
 use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
+use gen::Gen;
 use prost::Message;
 
 use crate::{stage::Stage, stage0::Stage0, stage1::Stage1, visit::Visit};
@@ -18,7 +19,7 @@ trait Stated<S> {
   fn state(&self) -> &S;
 }
 
-// mod gen;
+mod gen;
 mod imports;
 mod objects_getter;
 mod properties_resolver;
@@ -34,14 +35,8 @@ pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let model = Model::decode(protobuf.as_ref()).unwrap();
   let stage0 = Stage::new(Stage0::default()).build(&model);
   let stage1 = Stage::new(Stage1::new(&stage0)).build(&model);
-  todo!("{:#?}", stage1);
-  // let objects_getter = ObjectGetter::new(&model);
-  // let listeners = Listeners::new(&model);
-  // let setters = Setters::new(&model);
-  // let imports = Imports::new(&model);
-  // let combine = Combine(objects_getter, listeners, setters, imports);
-  // let gen = Gen::new(&combine);
-  // Box::into_raw(Box::new(gen.gen().unwrap()))
+  let gen = Gen::new(&stage1);
+  Box::into_raw(Box::new(gen.gen(&model).unwrap()))
 }
 
 // #[cfg(debug_assertions)]

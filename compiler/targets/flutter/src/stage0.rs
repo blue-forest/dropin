@@ -3,6 +3,7 @@ use crate::{
   objects_getter::{ObjectGetter, ObjectGetterState},
   properties_resolver::{PropertiesResolver, PropertiesResolverState},
   visit::Visit,
+  Stated,
 };
 
 #[derive(Debug)]
@@ -10,6 +11,24 @@ pub struct Stage0State<'a> {
   pub resolver: PropertiesResolverState<'a>,
   pub object_getter: ObjectGetterState<'a>,
   pub imports: ImportsState<'a>,
+}
+
+impl<'a> Stated<PropertiesResolverState<'a>> for Stage0State<'a> {
+  fn state(&self) -> &PropertiesResolverState<'a> {
+    &self.resolver
+  }
+}
+
+impl<'a> Stated<ObjectGetterState<'a>> for Stage0State<'a> {
+  fn state(&self) -> &ObjectGetterState<'a> {
+    &self.object_getter
+  }
+}
+
+impl<'a> Stated<ImportsState<'a>> for Stage0State<'a> {
+  fn state(&self) -> &ImportsState<'a> {
+    &self.imports
+  }
 }
 
 #[derive(Default)]

@@ -1,3 +1,5 @@
+use core::fmt::write;
+
 use alloc::{
   fmt::{self, Write},
   string::String,
@@ -86,14 +88,12 @@ where
           state,
           input.on_change.as_ref().unwrap(),
         )?;
-        write!(output, ", onChanged: (newText_) => {{")?;
-        gen_getter(
-          output,
-          component,
-          state,
-          input.on_change.as_ref().unwrap(),
-        )?;
-        write!(output, "= newText_}}))")?;
+        write!(output, ", onChanged: (newText_) {{")?;
+        let on_change = input.on_change.as_ref().unwrap();
+        gen_getter(output, component, state, on_change)?;
+        write!(output, "= newText_;")?;
+        write_notifier_name(output, on_change)?;
+        write!(output, ".notifyListeners();}}))")?;
       }
       ComponentChildInner::Extern(r#extern) => {
         write!(output, "{}()", to_upper_camelcase(&r#extern.path))?;

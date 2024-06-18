@@ -24,8 +24,6 @@ mod formats;
 mod keys;
 mod zones;
 
-pub const EXTENSION: &str = ".dart";
-
 pub trait Sub<'a>:
   Stage
   + Stated<ObjectGetterState<'a>>

@@ -15,12 +15,14 @@ use crate::{
   visit::Visit,
 };
 
+pub const EXTENSION: &str = ".dart";
+
 trait Stated<S> {
   fn state(&self) -> &S;
 }
 
 // mod gen;
-// mod imports;
+mod imports;
 mod objects_getter;
 mod properties_resolver;
 mod setters_listeners;
@@ -35,7 +37,7 @@ pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let stage0 = Stage::new(Stage0::default()).build(&model);
   let stage1 =
     Stage::new(SettersAndListeners::new(&stage0.resolver)).build(&model);
-  todo!("{:#?}", stage0.object_getter);
+  todo!("{:#?}", stage0);
   // let objects_getter = ObjectGetter::new(&model);
   // let listeners = Listeners::new(&model);
   // let setters = Setters::new(&model);

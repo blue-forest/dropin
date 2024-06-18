@@ -17,7 +17,7 @@ type PropertiesByProperty<'a> =
 type PropertiesByVariableOwner<'a> = BTreeMap<&'a str, Vec<Cow<'a, Getter>>>;
 
 #[derive(Debug)]
-pub struct PropertiesResolverState<'a>(PropertiesByComponent<'a>);
+pub struct PropertiesResolverState<'a>(pub PropertiesByComponent<'a>);
 
 impl<'a> Stated<PropertiesByComponent<'a>> for PropertiesResolverState<'a> {
   fn state(&self) -> &PropertiesByComponent<'a> {

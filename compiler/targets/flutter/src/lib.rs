@@ -10,6 +10,7 @@ use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
 use prost::Message;
 
+use crate::setters::Setters;
 use crate::{
   properties_resolver::PropertiesResolver, stage::Stage, visit::Visit,
 };
@@ -22,8 +23,8 @@ trait Stated<S> {
 // mod imports;
 // mod listeners;
 // mod objects_getter;
-// mod setters;
 mod properties_resolver;
+mod setters;
 mod stage;
 mod visit;
 
@@ -31,11 +32,11 @@ mod visit;
 pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let model = Model::decode(protobuf.as_ref()).unwrap();
-  // let stage1 = FirstStage::default();
-  let tmp = PropertiesResolver::default();
-  let stage = Stage::new(tmp);
-  let tmp = stage.build(&model);
-  todo!("{tmp:#?}");
+  let stage = Stage::new(PropertiesResolver::default());
+  let resolver = stage.build(&model);
+  let stage = Stage::new(Setters::new(&resolver));
+  let setters = stage.build(&model);
+  todo!("{setters:#?}");
   // let objects_getter = ObjectGetter::new(&model);
   // let listeners = Listeners::new(&model);
   // let setters = Setters::new(&model);

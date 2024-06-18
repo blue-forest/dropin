@@ -7,8 +7,10 @@ use alloc::{
 use dropin_compiler_recipes::ir::Model;
 
 use crate::{
-  imports::ImportsState, objects_getter::ObjectGetterState,
-  setters_listeners::SettersAndListenersState, Stated, EXTENSION,
+  imports::ImportsState,
+  objects_getter::ObjectGetterState,
+  setters_listeners::{write_notifier_name, SettersAndListenersState},
+  Stated, EXTENSION,
 };
 
 use self::{
@@ -94,6 +96,17 @@ where
             &variables.keys,
           )?;
         }
+
+        let setters_listeners =
+          <S as Stated<SettersAndListenersState>>::state(&self.sub);
+        let updated_getters =
+          setters_listeners.get_updated_getters(&component.id);
+        for getter in updated_getters {
+          write!(file, "final ChangeNotifier ")?;
+          write_notifier_name(file, getter)?;
+          write!(file, ";")?;
+        }
+
         write!(file, "{}({{super.key", component.term)?;
         if let Some(properties) = &component.properties {
           for key_format in &properties.keys {
@@ -112,6 +125,11 @@ where
               }
             }
           }
+        }
+        for getter in updated_getters {
+          write!(file, ",")?;
+          write!(file, "required this.")?;
+          write_notifier_name(file, getter)?;
         }
         write!(
           file,

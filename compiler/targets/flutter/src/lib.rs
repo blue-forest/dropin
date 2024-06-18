@@ -10,10 +10,7 @@ use dlmalloc::GlobalDlmalloc;
 use dropin_compiler_recipes::ir::Model;
 use prost::Message;
 
-use crate::{
-  setters_listeners::SettersAndListeners, stage::Stage, stage0::Stage0,
-  visit::Visit,
-};
+use crate::{stage::Stage, stage0::Stage0, stage1::Stage1, visit::Visit};
 
 pub const EXTENSION: &str = ".dart";
 
@@ -28,6 +25,7 @@ mod properties_resolver;
 mod setters_listeners;
 mod stage;
 mod stage0;
+mod stage1;
 mod visit;
 
 #[no_mangle]
@@ -35,9 +33,8 @@ pub fn codegen(protobuf: *mut [u8]) -> *mut BTreeMap<String, String> {
   let protobuf = unsafe { Box::from_raw(protobuf) };
   let model = Model::decode(protobuf.as_ref()).unwrap();
   let stage0 = Stage::new(Stage0::default()).build(&model);
-  let stage1 =
-    Stage::new(SettersAndListeners::new(&stage0.resolver)).build(&model);
-  todo!("{:#?}", stage0);
+  let stage1 = Stage::new(Stage1::new(&stage0)).build(&model);
+  todo!("{:#?}", stage1);
   // let objects_getter = ObjectGetter::new(&model);
   // let listeners = Listeners::new(&model);
   // let setters = Setters::new(&model);

@@ -102,6 +102,9 @@ where
         let updated_getters =
           updated_listeners.get_updated_getters(&component.id);
         for updated_getter in updated_getters {
+          if updated_getter.is_nested {
+            continue;
+          }
           write!(file, "final ChangeNotifier ")?;
           write_notifier_name(file, &updated_getter.getter)?;
           if !updated_getter.is_external {
@@ -130,7 +133,7 @@ where
           }
         }
         for updated_getter in updated_getters {
-          if updated_getter.is_external {
+          if updated_getter.is_external && !updated_getter.is_nested {
             write!(file, ",")?;
             write!(file, "required this.")?;
             write_notifier_name(file, &updated_getter.getter)?;

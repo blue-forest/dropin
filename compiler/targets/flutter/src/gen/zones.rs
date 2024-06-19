@@ -115,6 +115,9 @@ where
           )?;
         }
         for updated_getter in updated_getters {
+          if updated_getter.is_nested {
+            continue;
+          }
           if let Some(updated_by) =
             updated_getter.updated_by.get(r#extern.path.as_str())
           {

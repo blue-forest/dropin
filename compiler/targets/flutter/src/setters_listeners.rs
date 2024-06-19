@@ -1,3 +1,4 @@
+use crate::dependencies::DependenciesState;
 use crate::properties_resolver::PropertiesResolverState;
 use crate::visit::{ComponentChildTrace, ExpressionTrace, Visit};
 use alloc::borrow::Cow;
@@ -13,7 +14,7 @@ use dropin_compiler_recipes::ir::{
 
 #[derive(Debug)]
 pub struct SettersAndListenersState<'a> {
-  setters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
+  updated_getters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
 
@@ -33,7 +34,7 @@ pub struct Resolved<'a> {
 pub struct UpdatedGetter<'a> {
   pub getter: Cow<'a, Getter>,
   pub is_external: bool,
-  pub updated_by: BTreeMap<&'a str, &'a Getter>,
+  pub updated_by: BTreeMap<&'a str, Cow<'a, Getter>>,
 }
 
 impl<'a> SettersAndListenersState<'a> {
@@ -51,7 +52,7 @@ impl<'a> SettersAndListenersState<'a> {
 
   pub fn get_updated_getters(&self, component: &str) -> &[UpdatedGetter<'a>] {
     self
-      .setters
+      .updated_getters
       .get(component)
       .map(|getters| getters.as_slice())
       .unwrap_or(&[])
@@ -60,17 +61,22 @@ impl<'a> SettersAndListenersState<'a> {
 
 pub struct SettersAndListeners<'a, 'b> {
   resolver: &'b PropertiesResolverState<'a>,
+  dependencies: &'b DependenciesState<'a>,
   component: Option<&'a str>,
-  setters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
+  updated_getters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
 
 impl<'a, 'b> SettersAndListeners<'a, 'b> {
-  pub fn new(resolver: &'b PropertiesResolverState<'a>) -> Self {
+  pub fn new(
+    resolver: &'b PropertiesResolverState<'a>,
+    dependencies: &'b DependenciesState<'a>,
+  ) -> Self {
     Self {
       resolver,
+      dependencies,
       component: None,
-      setters: BTreeMap::default(),
+      updated_getters: BTreeMap::default(),
       listeners: BTreeMap::default(),
     }
   }
@@ -81,9 +87,45 @@ impl<'a, 'b> Visit<'a, SettersAndListenersState<'a>>
 where
   'a: 'b,
 {
-  fn build(self) -> SettersAndListenersState<'a> {
+  fn build(mut self) -> SettersAndListenersState<'a> {
+    // insert indirect setters
+    let mut updated_getters_added = BTreeMap::new();
+    for (owner, updated_getters) in &mut self.updated_getters {
+      for updated_getter in updated_getters.iter_mut() {
+        let mut updated_by_added = BTreeMap::new();
+        for (updater, updater_getter) in &updated_getter.updated_by {
+          for wrapper in self.dependencies.between(owner, updater).iter() {
+            let wrapper_getters = self
+              .resolver
+              .redirections
+              .get(updater)
+              .and_then(|resolved| resolved.get(updater_getter.ident.as_str()))
+              .and_then(|resolved| resolved.get(wrapper))
+              .map(|resolved| resolved.as_slice())
+              .unwrap_or(&[]);
+            for wrapper_getter in wrapper_getters {
+              updated_getters_added.insert(
+                *wrapper,
+                Vec::from([UpdatedGetter {
+                  getter: wrapper_getter.clone(),
+                  is_external: true,
+                  updated_by: BTreeMap::from([(
+                    *updater,
+                    updater_getter.clone(),
+                  )]),
+                }]),
+              );
+              updated_by_added.insert(*wrapper, wrapper_getter.clone());
+            }
+          }
+        }
+        updated_getter.updated_by.extend(updated_by_added);
+      }
+    }
+    self.updated_getters.extend(updated_getters_added);
+
     SettersAndListenersState {
-      setters: self.setters,
+      updated_getters: self.updated_getters,
       listeners: self.listeners,
     }
   }
@@ -101,14 +143,13 @@ where
     let component = self.component.unwrap();
     if let Some(resolved) = self
       .resolver
-      .0
       .get(component)
       .and_then(|resolved| resolved.get(getter.ident.as_str()))
     {
       for (owner, getters) in resolved {
         for resolved_getter in getters {
           self
-            .setters
+            .updated_getters
             .entry(owner)
             .or_insert_with(|| {
               let mut setters = Vec::with_capacity(1);
@@ -122,11 +163,11 @@ where
             .last_mut()
             .unwrap()
             .updated_by
-            .insert(component, getter);
+            .insert(component, Cow::Borrowed(getter));
         }
       }
       self
-        .setters
+        .updated_getters
         .entry(component)
         .or_insert(Vec::with_capacity(1))
         .push(UpdatedGetter {
@@ -136,7 +177,7 @@ where
         });
     } else {
       self
-        .setters
+        .updated_getters
         .entry(component)
         .or_insert(Vec::with_capacity(1))
         .push(UpdatedGetter {
@@ -169,7 +210,6 @@ where
     let component = self.component.unwrap();
     let resolved = if let Some(resolved) = self
       .resolver
-      .0
       .get(component)
       .and_then(|resolved| resolved.get(getter.ident.as_str()))
     {

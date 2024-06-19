@@ -19,6 +19,7 @@ trait Stated<S> {
   fn state(&self) -> &S;
 }
 
+mod dependencies;
 mod gen;
 mod imports;
 mod objects_getter;

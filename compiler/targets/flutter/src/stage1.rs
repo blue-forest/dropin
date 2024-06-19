@@ -35,7 +35,10 @@ impl<'a, 'b> Stage1<'a, 'b> {
   pub fn new(stage0: &'b Stage0State<'a>) -> Self {
     Self {
       stage0,
-      setters_listeners: SettersAndListeners::new(&stage0.resolver),
+      setters_listeners: SettersAndListeners::new(
+        &stage0.resolver,
+        &stage0.dependencies,
+      ),
     }
   }
 }

@@ -1,3 +1,5 @@
+use core::ops::Deref;
+
 use alloc::{
   borrow::Cow,
   collections::{BTreeMap, BTreeSet, VecDeque},
@@ -17,11 +19,21 @@ type PropertiesByProperty<'a> =
 type PropertiesByVariableOwner<'a> = BTreeMap<&'a str, Vec<Cow<'a, Getter>>>;
 
 #[derive(Debug)]
-pub struct PropertiesResolverState<'a>(pub PropertiesByComponent<'a>);
+pub struct PropertiesResolverState<'a> {
+  properties: PropertiesByComponent<'a>,
+  pub redirections: PropertiesByComponent<'a>,
+}
 
-impl<'a> Stated<PropertiesByComponent<'a>> for PropertiesResolverState<'a> {
-  fn state(&self) -> &PropertiesByComponent<'a> {
-    &self.0
+impl<'a> Stated<PropertiesResolverState<'a>> for PropertiesResolverState<'a> {
+  fn state(&self) -> &PropertiesResolverState<'a> {
+    &self
+  }
+}
+
+impl<'a> Deref for PropertiesResolverState<'a> {
+  type Target = PropertiesByComponent<'a>;
+  fn deref(&self) -> &Self::Target {
+    &self.properties
   }
 }
 
@@ -115,35 +127,35 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
               .collect::<BTreeMap<_, _>>();
 
             for props_by_property in all_props_by_property {
-              for prop_by_owner in props_by_property.values() {
-                for (prop_component, prop_getters) in prop_by_owner {
-                  let getters = &iproduct!(prop_getters, redirect_getters)
-                    .map(|(prop, redirect)| {
-                      Cow::Owned(Getter {
-                        ident: prop.ident.clone(),
-                        indexes: [
-                          prop.indexes.as_slice(),
-                          suffix
-                            .get(prop_component)
-                            .and_then(|suffix| {
-                              suffix.get(redirect_getter.ident.as_str())
-                            })
-                            .unwrap_or(&[].as_mut_slice()),
-                          &redirect.indexes,
-                        ]
-                        .concat(),
-                      })
+              let prop_by_owner =
+                &props_by_property[redirect_getter.ident.as_str()];
+              for (prop_component, prop_getters) in prop_by_owner {
+                let getters = iproduct!(prop_getters, redirect_getters)
+                  .map(|(prop, redirect)| {
+                    Cow::Owned(Getter {
+                      ident: prop.ident.clone(),
+                      indexes: [
+                        prop.indexes.as_slice(),
+                        suffix
+                          .get(prop_component)
+                          .and_then(|suffix| {
+                            suffix.get(redirect_getter.ident.as_str())
+                          })
+                          .unwrap_or(&[].as_mut_slice()),
+                        &redirect.indexes,
+                      ]
+                      .concat(),
                     })
-                    .collect::<Vec<_>>();
-                  to_insert
-                    .entry(redirect_component)
-                    .or_insert(PropertiesByProperty::new())
-                    .entry(redirect_property)
-                    .or_insert(PropertiesByVariableOwner::new())
-                    .entry(prop_component)
-                    .and_modify(|current| current.extend_from_slice(getters))
-                    .or_insert(getters.clone());
-                }
+                  })
+                  .collect::<Vec<_>>();
+                to_insert
+                  .entry(redirect_component)
+                  .or_insert(PropertiesByProperty::new())
+                  .entry(redirect_property)
+                  .or_insert(PropertiesByVariableOwner::new())
+                  .entry(prop_component)
+                  .and_modify(|current| current.extend_from_slice(&getters))
+                  .or_insert(getters);
               }
             }
           }
@@ -152,7 +164,10 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
     }
 
     self.properties.extend(to_insert);
-    PropertiesResolverState(self.properties)
+    PropertiesResolverState {
+      properties: self.properties,
+      redirections: self.redirections,
+    }
   }
 
   fn visit_component(&mut self, component: &'a Component, _index: usize) {

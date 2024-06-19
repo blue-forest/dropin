@@ -69,5 +69,6 @@ pub fn write_class_name(output: &mut String, trace: &[&str]) -> fmt::Result {
       }
     }
   }
+  write!(output, "Object")?;
   Ok(())
 }

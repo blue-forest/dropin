@@ -135,9 +135,10 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
               .collect::<BTreeMap<_, _>>();
 
             for props_by_property in all_props_by_property {
-              let prop_by_owner =
-                &props_by_property[redirect_getter.ident.as_str()];
-              for (prop_component, prop_getters) in prop_by_owner {
+              for (prop_component, prop_getters) in props_by_property
+                .get(redirect_getter.ident.as_str())
+                .unwrap_or(&BTreeMap::new())
+              {
                 let getters = iproduct!(prop_getters, redirect_getters)
                   .map(|(prop, redirect)| {
                     Cow::Owned(Getter {

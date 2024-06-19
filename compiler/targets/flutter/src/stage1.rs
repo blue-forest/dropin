@@ -1,5 +1,5 @@
 use crate::{
-  setters_listeners::{SettersAndListeners, SettersAndListenersState},
+  setters_listeners::{UpdatedAndListeners, UpdatedAndListenersState},
   stage0::Stage0State,
   visit::Visit,
   Stated,
@@ -8,7 +8,7 @@ use crate::{
 #[derive(Debug)]
 pub struct Stage1State<'a, 'b> {
   pub stage0: &'b Stage0State<'a>,
-  pub setters_listeners: SettersAndListenersState<'a>,
+  pub setters_listeners: UpdatedAndListenersState<'a>,
 }
 
 impl<'a, 'b, T> Stated<T> for Stage1State<'a, 'b>
@@ -20,22 +20,22 @@ where
   }
 }
 
-impl<'a, 'b> Stated<SettersAndListenersState<'a>> for Stage1State<'a, 'b> {
-  fn state(&self) -> &SettersAndListenersState<'a> {
+impl<'a, 'b> Stated<UpdatedAndListenersState<'a>> for Stage1State<'a, 'b> {
+  fn state(&self) -> &UpdatedAndListenersState<'a> {
     &self.setters_listeners
   }
 }
 
 pub struct Stage1<'a, 'b> {
   stage0: &'b Stage0State<'a>,
-  setters_listeners: SettersAndListeners<'a, 'b>,
+  setters_listeners: UpdatedAndListeners<'a, 'b>,
 }
 
 impl<'a, 'b> Stage1<'a, 'b> {
   pub fn new(stage0: &'b Stage0State<'a>) -> Self {
     Self {
       stage0,
-      setters_listeners: SettersAndListeners::new(
+      setters_listeners: UpdatedAndListeners::new(
         &stage0.resolver,
         &stage0.dependencies,
       ),

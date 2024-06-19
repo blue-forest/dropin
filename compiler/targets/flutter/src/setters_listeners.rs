@@ -13,7 +13,7 @@ use dropin_compiler_recipes::ir::{
 };
 
 #[derive(Debug)]
-pub struct SettersAndListenersState<'a> {
+pub struct UpdatedAndListenersState<'a> {
   updated_getters: BTreeMap<&'a str, Vec<UpdatedGetter<'a>>>,
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
@@ -37,7 +37,7 @@ pub struct UpdatedGetter<'a> {
   pub updated_by: BTreeMap<&'a str, Cow<'a, Getter>>,
 }
 
-impl<'a> SettersAndListenersState<'a> {
+impl<'a> UpdatedAndListenersState<'a> {
   pub fn get_listeners(
     &self,
     component: &str,
@@ -59,7 +59,7 @@ impl<'a> SettersAndListenersState<'a> {
   }
 }
 
-pub struct SettersAndListeners<'a, 'b> {
+pub struct UpdatedAndListeners<'a, 'b> {
   resolver: &'b PropertiesResolverState<'a>,
   dependencies: &'b DependenciesState<'a>,
   component: Option<&'a str>,
@@ -67,7 +67,7 @@ pub struct SettersAndListeners<'a, 'b> {
   listeners: BTreeMap<&'a str, BTreeMap<Vec<usize>, Vec<Listener<'a>>>>,
 }
 
-impl<'a, 'b> SettersAndListeners<'a, 'b> {
+impl<'a, 'b> UpdatedAndListeners<'a, 'b> {
   pub fn new(
     resolver: &'b PropertiesResolverState<'a>,
     dependencies: &'b DependenciesState<'a>,
@@ -82,12 +82,12 @@ impl<'a, 'b> SettersAndListeners<'a, 'b> {
   }
 }
 
-impl<'a, 'b> Visit<'a, SettersAndListenersState<'a>>
-  for SettersAndListeners<'a, 'b>
+impl<'a, 'b> Visit<'a, UpdatedAndListenersState<'a>>
+  for UpdatedAndListeners<'a, 'b>
 where
   'a: 'b,
 {
-  fn build(mut self) -> SettersAndListenersState<'a> {
+  fn build(mut self) -> UpdatedAndListenersState<'a> {
     // insert indirect setters
     let mut updated_getters_added = BTreeMap::new();
     for (owner, updated_getters) in &mut self.updated_getters {
@@ -124,7 +124,7 @@ where
     }
     self.updated_getters.extend(updated_getters_added);
 
-    SettersAndListenersState {
+    UpdatedAndListenersState {
       updated_getters: self.updated_getters,
       listeners: self.listeners,
     }

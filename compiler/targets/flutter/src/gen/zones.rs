@@ -8,7 +8,7 @@ use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::{
   gen::expressions::gen_rich_text,
-  setters_listeners::{write_notifier_name, SettersAndListenersState},
+  setters_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated,
 };
 
@@ -28,7 +28,7 @@ where
   S: Sub<'a>,
 {
   write!(output, "Row(children: [")?;
-  let setters_listeners = <S as Stated<SettersAndListenersState>>::state(state);
+  let setters_listeners = <S as Stated<UpdatedAndListenersState>>::state(state);
   let updated_getters = setters_listeners.get_updated_getters(component);
   for (i, child) in zone.blocks.iter().enumerate() {
     let trace = &[trace, &[i]].concat();

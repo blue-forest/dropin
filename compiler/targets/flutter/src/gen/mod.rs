@@ -73,18 +73,7 @@ where
         {
           write!(file, "import '{import}';")?;
         }
-        write!(file, "class {} extends StatelessWidget {{", term)?;
-        if let Some(properties) = &component.properties {
-          gen_keys(
-            file,
-            id,
-            self.sub,
-            &[],
-            false,
-            &properties.required,
-            &properties.keys,
-          )?;
-        }
+        write!(file, "class {term}_State extends State<{term}> {{")?;
         if let Some(variables) = &component.variables {
           gen_keys(
             file,
@@ -110,7 +99,49 @@ where
           write!(file, ";")?;
         }
 
-        write!(file, "{}({{super.key", component.term)?;
+        write!(file, "{term}_State(")?;
+        let mut is_first = true;
+        for updated_getter in updated_getters {
+          if updated_getter.is_external {
+            if is_first {
+              write!(file, "{{")?;
+            } else {
+              write!(file, ",")?;
+            }
+            is_first = false;
+            write!(file, "required this.")?;
+            write_notifier_name(file, &updated_getter.getter)?;
+          }
+        }
+        if !is_first {
+          write!(file, "}}")?;
+        }
+        write!(file, ");")?;
+
+        write!(
+          file,
+          "@override Widget build(BuildContext context){{ \
+          return "
+        )?;
+        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
+        write!(file, ";}}}}")?;
+        write!(file, "class {term} extends StatefulWidget {{")?;
+        if let Some(properties) = &component.properties {
+          gen_keys(
+            file,
+            id,
+            self.sub,
+            &[],
+            false,
+            &properties.required,
+            &properties.keys,
+          )?;
+        }
+        write!(
+          file,
+          "@override State<{term}> createState() => {term}_State();\
+          {term}({{super.key",
+        )?;
         if let Some(properties) = &component.properties {
           for key_format in &properties.keys {
             write!(file, ",")?;
@@ -136,14 +167,7 @@ where
             write_notifier_name(file, &updated_getter.getter)?;
           }
         }
-        write!(
-          file,
-          "}});\
-          @override Widget build(BuildContext context){{ \
-          return "
-        )?;
-        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
-        write!(file, ";}}}}")?;
+        write!(file, "}});}}")?;
         gen_classes(file, id, self.sub)?;
       }
       let mut file_path = String::with_capacity(id.len() + EXTENSION.len());

@@ -9,7 +9,7 @@ use dropin_compiler_recipes::ir::Model;
 use crate::{
   imports::ImportsState,
   objects_getter::ObjectGetterState,
-  setters_listeners::{write_notifier_name, UpdatedAndListenersState},
+  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated, EXTENSION,
 };
 
@@ -97,10 +97,10 @@ where
           )?;
         }
 
-        let setters_listeners =
+        let updated_listeners =
           <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
         let updated_getters =
-          setters_listeners.get_updated_getters(&component.id);
+          updated_listeners.get_updated_getters(&component.id);
         for updated_getter in updated_getters {
           write!(file, "final ChangeNotifier ")?;
           write_notifier_name(file, &updated_getter.getter)?;

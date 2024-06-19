@@ -1,6 +1,6 @@
 use crate::{
-  setters_listeners::{UpdatedAndListeners, UpdatedAndListenersState},
   stage0::Stage0State,
+  updated_listeners::{UpdatedAndListeners, UpdatedAndListenersState},
   visit::Visit,
   Stated,
 };
@@ -8,7 +8,7 @@ use crate::{
 #[derive(Debug)]
 pub struct Stage1State<'a, 'b> {
   pub stage0: &'b Stage0State<'a>,
-  pub setters_listeners: UpdatedAndListenersState<'a>,
+  pub updated_listeners: UpdatedAndListenersState<'a>,
 }
 
 impl<'a, 'b, T> Stated<T> for Stage1State<'a, 'b>
@@ -22,20 +22,20 @@ where
 
 impl<'a, 'b> Stated<UpdatedAndListenersState<'a>> for Stage1State<'a, 'b> {
   fn state(&self) -> &UpdatedAndListenersState<'a> {
-    &self.setters_listeners
+    &self.updated_listeners
   }
 }
 
 pub struct Stage1<'a, 'b> {
   stage0: &'b Stage0State<'a>,
-  setters_listeners: UpdatedAndListeners<'a, 'b>,
+  updated_listeners: UpdatedAndListeners<'a, 'b>,
 }
 
 impl<'a, 'b> Stage1<'a, 'b> {
   pub fn new(stage0: &'b Stage0State<'a>) -> Self {
     Self {
       stage0,
-      setters_listeners: UpdatedAndListeners::new(
+      updated_listeners: UpdatedAndListeners::new(
         &stage0.resolver,
         &stage0.dependencies,
       ),
@@ -47,7 +47,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
   fn build(self) -> Stage1State<'a, 'b> {
     Stage1State {
       stage0: self.stage0,
-      setters_listeners: self.setters_listeners.build(),
+      updated_listeners: self.updated_listeners.build(),
     }
   }
 
@@ -56,7 +56,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     component: &'a dropin_compiler_recipes::ir::Component,
     index: usize,
   ) {
-    self.setters_listeners.visit_component(component, index);
+    self.updated_listeners.visit_component(component, index);
   }
 
   fn visit_variables(
@@ -64,7 +64,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     variables: &'a dropin_compiler_recipes::ir::Keys,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_variables(variables, trace);
+    self.updated_listeners.visit_variables(variables, trace);
   }
 
   fn visit_properties(
@@ -72,7 +72,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     properties: &'a dropin_compiler_recipes::ir::Keys,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_properties(properties, trace);
+    self.updated_listeners.visit_properties(properties, trace);
   }
 
   fn visit_format(
@@ -80,7 +80,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::Format,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format(format, trace);
+    self.updated_listeners.visit_format(format, trace);
   }
 
   fn visit_format_text(
@@ -88,7 +88,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatText,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_text(format, trace);
+    self.updated_listeners.visit_format_text(format, trace);
   }
 
   fn visit_format_any(
@@ -96,7 +96,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatCommon,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_any(format, trace);
+    self.updated_listeners.visit_format_any(format, trace);
   }
 
   fn visit_format_boolean(
@@ -104,7 +104,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatBoolean,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_boolean(format, trace);
+    self.updated_listeners.visit_format_boolean(format, trace);
   }
 
   fn visit_format_choices(
@@ -112,7 +112,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatChoices,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_choices(format, trace);
+    self.updated_listeners.visit_format_choices(format, trace);
   }
 
   fn visit_format_date(
@@ -120,7 +120,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatDate,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_date(format, trace);
+    self.updated_listeners.visit_format_date(format, trace);
   }
 
   fn visit_format_index(
@@ -128,7 +128,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatIndex,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_index(format, trace);
+    self.updated_listeners.visit_format_index(format, trace);
   }
 
   fn visit_format_list(
@@ -136,7 +136,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatList,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_list(format, trace);
+    self.updated_listeners.visit_format_list(format, trace);
   }
 
   fn visit_format_object(
@@ -144,7 +144,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatObject,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_object(format, trace);
+    self.updated_listeners.visit_format_object(format, trace);
   }
 
   fn visit_format_quantity(
@@ -152,7 +152,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     format: &'a dropin_compiler_recipes::ir::FormatQuantity,
     trace: &crate::visit::FormatTrace<'a>,
   ) {
-    self.setters_listeners.visit_format_quantity(format, trace);
+    self.updated_listeners.visit_format_quantity(format, trace);
   }
 
   fn visit_expression(
@@ -160,7 +160,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     expression: &'a dropin_compiler_recipes::ir::Expression,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_expression(expression, trace);
+    self.updated_listeners.visit_expression(expression, trace);
   }
 
   fn visit_text(
@@ -168,7 +168,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     text: &'a dropin_compiler_recipes::ir::RichText,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_text(text, trace);
+    self.updated_listeners.visit_text(text, trace);
   }
 
   fn visit_quantity(
@@ -176,7 +176,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     quantity: f64,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_quantity(quantity, trace);
+    self.updated_listeners.visit_quantity(quantity, trace);
   }
 
   fn visit_boolean(
@@ -184,7 +184,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     boolean: bool,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_boolean(boolean, trace);
+    self.updated_listeners.visit_boolean(boolean, trace);
   }
 
   fn visit_getter(
@@ -192,7 +192,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     getter: &'a dropin_compiler_recipes::ir::Getter,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_getter(getter, trace);
+    self.updated_listeners.visit_getter(getter, trace);
   }
 
   fn visit_list(
@@ -200,7 +200,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     list: &'a dropin_compiler_recipes::ir::List,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_list(list, trace);
+    self.updated_listeners.visit_list(list, trace);
   }
 
   fn visit_object(
@@ -208,11 +208,11 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     object: &'a dropin_compiler_recipes::ir::Object,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_object(object, trace);
+    self.updated_listeners.visit_object(object, trace);
   }
 
   fn visit_undefined(&mut self, trace: &crate::visit::ExpressionTrace<'a, '_>) {
-    self.setters_listeners.visit_undefined(trace);
+    self.updated_listeners.visit_undefined(trace);
   }
 
   fn visit_equals_to(
@@ -220,7 +220,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     equals_to: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_equals_to(equals_to, trace);
+    self.updated_listeners.visit_equals_to(equals_to, trace);
   }
 
   fn visit_different_from(
@@ -229,7 +229,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
     self
-      .setters_listeners
+      .updated_listeners
       .visit_different_from(different_from, trace);
   }
 
@@ -238,7 +238,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     r#in: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_in(r#in, trace);
+    self.updated_listeners.visit_in(r#in, trace);
   }
 
   fn visit_less_than(
@@ -246,7 +246,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     less_than: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_less_than(less_than, trace);
+    self.updated_listeners.visit_less_than(less_than, trace);
   }
 
   fn visit_more_than(
@@ -254,7 +254,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     more_than: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_more_than(more_than, trace);
+    self.updated_listeners.visit_more_than(more_than, trace);
   }
 
   fn visit_at_least(
@@ -262,7 +262,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     at_least: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_at_least(at_least, trace);
+    self.updated_listeners.visit_at_least(at_least, trace);
   }
 
   fn visit_at_most(
@@ -270,7 +270,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     at_most: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_at_most(at_most, trace);
+    self.updated_listeners.visit_at_most(at_most, trace);
   }
 
   fn visit_and(
@@ -278,7 +278,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     and: &'a dropin_compiler_recipes::ir::Operands,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_and(and, trace);
+    self.updated_listeners.visit_and(and, trace);
   }
 
   fn visit_or(
@@ -286,7 +286,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     or: &'a dropin_compiler_recipes::ir::Operands,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_or(or, trace);
+    self.updated_listeners.visit_or(or, trace);
   }
 
   fn visit_not(
@@ -294,7 +294,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     not: &'a dropin_compiler_recipes::ir::Expression,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_not(not, trace);
+    self.updated_listeners.visit_not(not, trace);
   }
 
   fn visit_exists(
@@ -302,7 +302,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     exists: &'a dropin_compiler_recipes::ir::Expression,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_exists(exists, trace);
+    self.updated_listeners.visit_exists(exists, trace);
   }
 
   fn visit_if(
@@ -310,7 +310,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     r#if: &'a dropin_compiler_recipes::ir::If,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_if(r#if, trace);
+    self.updated_listeners.visit_if(r#if, trace);
   }
 
   fn visit_anonymous_function(
@@ -319,7 +319,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
     self
-      .setters_listeners
+      .updated_listeners
       .visit_anonymous_function(anonymous_function, trace);
   }
 
@@ -329,7 +329,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
     self
-      .setters_listeners
+      .updated_listeners
       .visit_named_function(named_function, trace);
   }
 
@@ -339,7 +339,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
     self
-      .setters_listeners
+      .updated_listeners
       .visit_function_call(function_call, trace);
   }
 
@@ -348,7 +348,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     opposite: &'a dropin_compiler_recipes::ir::Expression,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_opposite(opposite, trace);
+    self.updated_listeners.visit_opposite(opposite, trace);
   }
 
   fn visit_add(
@@ -356,7 +356,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     add: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_add(add, trace);
+    self.updated_listeners.visit_add(add, trace);
   }
 
   fn visit_sub(
@@ -364,7 +364,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     sub: &'a dropin_compiler_recipes::ir::Binary,
     trace: &crate::visit::ExpressionTrace<'a, '_>,
   ) {
-    self.setters_listeners.visit_sub(sub, trace);
+    self.updated_listeners.visit_sub(sub, trace);
   }
 
   fn visit_zone(
@@ -372,7 +372,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     zone: &'a dropin_compiler_recipes::ir::ComponentZone,
     trace: &crate::visit::ComponentChildTrace,
   ) {
-    self.setters_listeners.visit_zone(zone, trace);
+    self.updated_listeners.visit_zone(zone, trace);
   }
 
   fn visit_child(
@@ -380,7 +380,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     child: &'a dropin_compiler_recipes::ir::ComponentChild,
     trace: &crate::visit::ComponentChildTrace,
   ) {
-    self.setters_listeners.visit_child(child, trace);
+    self.updated_listeners.visit_child(child, trace);
   }
 
   fn visit_child_text(
@@ -388,7 +388,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     text: &'a dropin_compiler_recipes::ir::ComponentText,
     trace: &crate::visit::ComponentChildTrace,
   ) {
-    self.setters_listeners.visit_child_text(text, trace);
+    self.updated_listeners.visit_child_text(text, trace);
   }
 
   fn visit_child_input(
@@ -396,7 +396,7 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     input: &'a dropin_compiler_recipes::ir::ComponentInput,
     trace: &crate::visit::ComponentChildTrace,
   ) {
-    self.setters_listeners.visit_child_input(input, trace);
+    self.updated_listeners.visit_child_input(input, trace);
   }
 
   fn visit_child_extern(
@@ -404,6 +404,6 @@ impl<'a, 'b> Visit<'a, Stage1State<'a, 'b>> for Stage1<'a, 'b> {
     r#extern: &'a dropin_compiler_recipes::ir::ComponentExtern,
     trace: &crate::visit::ComponentChildTrace,
   ) {
-    self.setters_listeners.visit_child_extern(r#extern, trace);
+    self.updated_listeners.visit_child_extern(r#extern, trace);
   }
 }

@@ -67,7 +67,7 @@ where
           write!(
             output,
             "ListenableBuilder(\
-          listenable:",
+            listenable:",
           )?;
           write_notifier_name(output, listener.getter)?;
           write!(
@@ -104,7 +104,11 @@ where
         write!(output, ", onChanged: (newText_) {{")?;
         let on_change = input.on_change.as_ref().unwrap();
         gen_getter(output, component, state, on_change)?;
-        write!(output, "= newText_;")?;
+        write!(
+          output,
+          "= newText_;\
+          widget."
+        )?;
         write_notifier_name(output, on_change)?;
         write!(output, ".notifyListeners();}}))")?;
       }
@@ -136,7 +140,7 @@ where
           {
             write!(output, ",")?;
             write_notifier_name(output, updated_by)?;
-            write!(output, ":")?;
+            write!(output, ": widget.")?;
             write_notifier_name(output, &updated_getter.getter)?;
           }
         }

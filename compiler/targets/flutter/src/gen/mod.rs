@@ -84,10 +84,21 @@ where
             self.sub,
             &[],
             true,
+            false,
             &variables.required,
             &variables.keys,
           )?;
         }
+
+        write!(
+          file,
+          "{term}_State();\
+          @override Widget build(BuildContext context){{ \
+          return "
+        )?;
+        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
+        write!(file, ";}}}}")?;
+        write!(file, "class {term} extends StatefulWidget {{")?;
 
         let updated_listeners =
           <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
@@ -101,33 +112,6 @@ where
           write!(file, ";")?;
         }
 
-        write!(file, "{term}_State(")?;
-        let mut is_first = true;
-        for notifier in &notifiers {
-          if notifier.is_external {
-            if is_first {
-              write!(file, "{{")?;
-            } else {
-              write!(file, ",")?;
-            }
-            is_first = false;
-            write!(file, "required this.")?;
-            write_notifier_name(file, &notifier.getter)?;
-          }
-        }
-        if !is_first {
-          write!(file, "}}")?;
-        }
-        write!(file, ");")?;
-
-        write!(
-          file,
-          "@override Widget build(BuildContext context){{ \
-          return "
-        )?;
-        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
-        write!(file, ";}}}}")?;
-        write!(file, "class {term} extends StatefulWidget {{")?;
         if let Some(properties) = &component.properties {
           gen_keys(
             file,
@@ -135,6 +119,7 @@ where
             self.sub,
             &[],
             false,
+            true,
             &properties.required,
             &properties.keys,
           )?;

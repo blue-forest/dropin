@@ -104,16 +104,19 @@ where
           state,
           input.on_change.as_ref().unwrap(),
         )?;
-        write!(output, ", onChanged: (newText_) {{")?;
-        let on_change = input.on_change.as_ref().unwrap();
-        gen_getter(output, component, state, on_change)?;
-        write!(
-          output,
-          "= newText_;\
-          widget."
-        )?;
-        write_notifier_name(output, on_change)?;
-        write!(output, ".notifyListeners();}}))")?;
+        write!(output, ", onChanged: widget.")?;
+        write_updater_name(output, input.on_change.as_ref().unwrap())?;
+        write!(output, "))")?;
+        // write!(output, ", onChanged: (newText_) {{")?;
+        // let on_change = input.on_change.as_ref().unwrap();
+        // gen_getter(output, component, state, on_change)?;
+        // write!(
+        //   output,
+        //   "= newText_;\
+        //   widget."
+        // )?;
+        // write_notifier_name(output, on_change)?;
+        // write!(output, ".notifyListeners();}}))")?;
       }
       ComponentChildInner::Extern(r#extern) => {
         write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;

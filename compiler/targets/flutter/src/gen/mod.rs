@@ -7,6 +7,7 @@ use alloc::{
 use dropin_compiler_recipes::ir::Model;
 
 use crate::{
+  formats::FormatsState,
   imports::ImportsState,
   objects_getter::ObjectGetterState,
   properties_resolver::PropertiesResolverState,
@@ -34,6 +35,7 @@ pub trait Sub<'a>:
   + Stated<UpdatedAndListenersState<'a>>
   + Stated<ImportsState<'a>>
   + Stated<PropertiesResolverState<'a>>
+  + Stated<FormatsState<'a>>
 {
 }
 
@@ -42,6 +44,7 @@ impl<'a, S> Sub<'a> for S where
     + Stated<UpdatedAndListenersState<'a>>
     + Stated<ImportsState<'a>>
     + Stated<PropertiesResolverState<'a>>
+    + Stated<FormatsState<'a>>
 {
 }
 

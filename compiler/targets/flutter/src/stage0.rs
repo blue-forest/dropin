@@ -1,5 +1,6 @@
 use crate::{
   dependencies::{Dependencies, DependenciesState},
+  formats::FormatsState,
   imports::{Imports, ImportsState},
   objects_getter::{ObjectGetter, ObjectGetterState},
   properties_resolver::{PropertiesResolver, PropertiesResolverState},
@@ -13,6 +14,7 @@ pub struct Stage0State<'a> {
   pub object_getter: ObjectGetterState<'a>,
   pub imports: ImportsState<'a>,
   pub dependencies: DependenciesState<'a>,
+  pub formats: FormatsState<'a>,
 }
 
 impl<'a> Stated<PropertiesResolverState<'a>> for Stage0State<'a> {
@@ -39,12 +41,19 @@ impl<'a> Stated<DependenciesState<'a>> for Stage0State<'a> {
   }
 }
 
+impl<'a> Stated<FormatsState<'a>> for Stage0State<'a> {
+  fn state(&self) -> &FormatsState<'a> {
+    &self.formats
+  }
+}
+
 #[derive(Default)]
 pub struct Stage0<'a> {
   resolver: PropertiesResolver<'a>,
   object_getter: ObjectGetter<'a>,
   imports: Imports<'a>,
   dependencies: Dependencies<'a>,
+  formats: FormatsState<'a>,
 }
 
 impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
@@ -53,11 +62,13 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     let object_getter = self.object_getter.build();
     let imports = self.imports.build();
     let dependencies = self.dependencies.build();
+    let formats = self.formats.build();
     Stage0State {
       resolver,
       object_getter,
       imports,
       dependencies,
+      formats,
     }
   }
 
@@ -70,6 +81,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_component(component, index);
     self.imports.visit_component(component, index);
     self.dependencies.visit_component(component, index);
+    self.formats.visit_component(component, index);
   }
 
   fn visit_variables(
@@ -81,6 +93,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_variables(variables, trace);
     self.imports.visit_variables(variables, trace);
     self.dependencies.visit_variables(variables, trace);
+    self.formats.visit_variables(variables, trace);
   }
 
   fn visit_properties(
@@ -92,6 +105,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_properties(properties, trace);
     self.imports.visit_properties(properties, trace);
     self.dependencies.visit_properties(properties, trace);
+    self.formats.visit_properties(properties, trace);
   }
 
   fn visit_format(
@@ -103,6 +117,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format(format, trace);
     self.imports.visit_format(format, trace);
     self.dependencies.visit_format(format, trace);
+    self.formats.visit_format(format, trace);
   }
 
   fn visit_format_text(
@@ -114,6 +129,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_text(format, trace);
     self.imports.visit_format_text(format, trace);
     self.dependencies.visit_format_text(format, trace);
+    self.formats.visit_format_text(format, trace);
   }
 
   fn visit_format_any(
@@ -125,6 +141,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_any(format, trace);
     self.imports.visit_format_any(format, trace);
     self.dependencies.visit_format_any(format, trace);
+    self.formats.visit_format_any(format, trace);
   }
 
   fn visit_format_boolean(
@@ -136,6 +153,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_boolean(format, trace);
     self.imports.visit_format_boolean(format, trace);
     self.dependencies.visit_format_boolean(format, trace);
+    self.formats.visit_format_boolean(format, trace);
   }
 
   fn visit_format_choices(
@@ -147,6 +165,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_choices(format, trace);
     self.imports.visit_format_choices(format, trace);
     self.dependencies.visit_format_choices(format, trace);
+    self.formats.visit_format_choices(format, trace);
   }
 
   fn visit_format_date(
@@ -158,6 +177,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_date(format, trace);
     self.imports.visit_format_date(format, trace);
     self.dependencies.visit_format_date(format, trace);
+    self.formats.visit_format_date(format, trace);
   }
 
   fn visit_format_index(
@@ -169,6 +189,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_index(format, trace);
     self.imports.visit_format_index(format, trace);
     self.dependencies.visit_format_index(format, trace);
+    self.formats.visit_format_index(format, trace);
   }
 
   fn visit_format_list(
@@ -180,6 +201,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_list(format, trace);
     self.imports.visit_format_list(format, trace);
     self.dependencies.visit_format_list(format, trace);
+    self.formats.visit_format_list(format, trace);
   }
 
   fn visit_format_object(
@@ -191,6 +213,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_object(format, trace);
     self.imports.visit_format_object(format, trace);
     self.dependencies.visit_format_object(format, trace);
+    self.formats.visit_format_object(format, trace);
   }
 
   fn visit_format_quantity(
@@ -202,6 +225,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_format_quantity(format, trace);
     self.imports.visit_format_quantity(format, trace);
     self.dependencies.visit_format_quantity(format, trace);
+    self.formats.visit_format_quantity(format, trace);
   }
 
   fn visit_expression(
@@ -213,6 +237,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_expression(expression, trace);
     self.imports.visit_expression(expression, trace);
     self.dependencies.visit_expression(expression, trace);
+    self.formats.visit_expression(expression, trace);
   }
 
   fn visit_text(
@@ -224,6 +249,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_text(text, trace);
     self.imports.visit_text(text, trace);
     self.dependencies.visit_text(text, trace);
+    self.formats.visit_text(text, trace);
   }
 
   fn visit_quantity(
@@ -235,6 +261,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_quantity(quantity, trace);
     self.imports.visit_quantity(quantity, trace);
     self.dependencies.visit_quantity(quantity, trace);
+    self.formats.visit_quantity(quantity, trace);
   }
 
   fn visit_boolean(
@@ -246,6 +273,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_boolean(boolean, trace);
     self.imports.visit_boolean(boolean, trace);
     self.dependencies.visit_boolean(boolean, trace);
+    self.formats.visit_boolean(boolean, trace);
   }
 
   fn visit_getter(
@@ -257,6 +285,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_getter(getter, trace);
     self.imports.visit_getter(getter, trace);
     self.dependencies.visit_getter(getter, trace);
+    self.formats.visit_getter(getter, trace);
   }
 
   fn visit_list(
@@ -268,6 +297,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_list(list, trace);
     self.imports.visit_list(list, trace);
     self.dependencies.visit_list(list, trace);
+    self.formats.visit_list(list, trace);
   }
 
   fn visit_object(
@@ -279,6 +309,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_object(object, trace);
     self.imports.visit_object(object, trace);
     self.dependencies.visit_object(object, trace);
+    self.formats.visit_object(object, trace);
   }
 
   fn visit_undefined(&mut self, trace: &crate::visit::ExpressionTrace<'a, '_>) {
@@ -286,6 +317,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_undefined(trace);
     self.imports.visit_undefined(trace);
     self.dependencies.visit_undefined(trace);
+    self.formats.visit_undefined(trace);
   }
 
   fn visit_equals_to(
@@ -297,6 +329,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_equals_to(equals_to, trace);
     self.imports.visit_equals_to(equals_to, trace);
     self.dependencies.visit_equals_to(equals_to, trace);
+    self.formats.visit_equals_to(equals_to, trace);
   }
 
   fn visit_different_from(
@@ -323,6 +356,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_in(r#in, trace);
     self.imports.visit_in(r#in, trace);
     self.dependencies.visit_in(r#in, trace);
+    self.formats.visit_in(r#in, trace);
   }
 
   fn visit_less_than(
@@ -334,6 +368,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_less_than(less_than, trace);
     self.imports.visit_less_than(less_than, trace);
     self.dependencies.visit_less_than(less_than, trace);
+    self.formats.visit_less_than(less_than, trace);
   }
 
   fn visit_more_than(
@@ -345,6 +380,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_more_than(more_than, trace);
     self.imports.visit_more_than(more_than, trace);
     self.dependencies.visit_more_than(more_than, trace);
+    self.formats.visit_more_than(more_than, trace);
   }
 
   fn visit_at_least(
@@ -356,6 +392,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_at_least(at_least, trace);
     self.imports.visit_at_least(at_least, trace);
     self.dependencies.visit_at_least(at_least, trace);
+    self.formats.visit_at_least(at_least, trace);
   }
 
   fn visit_at_most(
@@ -367,6 +404,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_at_most(at_most, trace);
     self.imports.visit_at_most(at_most, trace);
     self.dependencies.visit_at_most(at_most, trace);
+    self.formats.visit_at_most(at_most, trace);
   }
 
   fn visit_and(
@@ -378,6 +416,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_and(and, trace);
     self.imports.visit_and(and, trace);
     self.dependencies.visit_and(and, trace);
+    self.formats.visit_and(and, trace);
   }
 
   fn visit_or(
@@ -389,6 +428,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_or(or, trace);
     self.imports.visit_or(or, trace);
     self.dependencies.visit_or(or, trace);
+    self.formats.visit_or(or, trace);
   }
 
   fn visit_not(
@@ -400,6 +440,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_not(not, trace);
     self.imports.visit_not(not, trace);
     self.dependencies.visit_not(not, trace);
+    self.formats.visit_not(not, trace);
   }
 
   fn visit_exists(
@@ -411,6 +452,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_exists(exists, trace);
     self.imports.visit_exists(exists, trace);
     self.dependencies.visit_exists(exists, trace);
+    self.formats.visit_exists(exists, trace);
   }
 
   fn visit_if(
@@ -422,6 +464,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_if(r#if, trace);
     self.imports.visit_if(r#if, trace);
     self.dependencies.visit_if(r#if, trace);
+    self.formats.visit_if(r#if, trace);
   }
 
   fn visit_anonymous_function(
@@ -467,6 +510,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_function_call(function_call, trace);
     self.imports.visit_function_call(function_call, trace);
     self.dependencies.visit_function_call(function_call, trace);
+    self.formats.visit_function_call(function_call, trace);
   }
 
   fn visit_opposite(
@@ -478,6 +522,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_opposite(opposite, trace);
     self.imports.visit_opposite(opposite, trace);
     self.dependencies.visit_opposite(opposite, trace);
+    self.formats.visit_opposite(opposite, trace);
   }
 
   fn visit_add(
@@ -489,6 +534,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_add(add, trace);
     self.imports.visit_add(add, trace);
     self.dependencies.visit_add(add, trace);
+    self.formats.visit_add(add, trace);
   }
 
   fn visit_sub(
@@ -500,6 +546,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_sub(sub, trace);
     self.imports.visit_sub(sub, trace);
     self.dependencies.visit_sub(sub, trace);
+    self.formats.visit_sub(sub, trace);
   }
 
   fn visit_zone(
@@ -511,6 +558,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_zone(zone, trace);
     self.imports.visit_zone(zone, trace);
     self.dependencies.visit_zone(zone, trace);
+    self.formats.visit_zone(zone, trace);
   }
 
   fn visit_child(
@@ -522,6 +570,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_child(child, trace);
     self.imports.visit_child(child, trace);
     self.dependencies.visit_child(child, trace);
+    self.formats.visit_child(child, trace);
   }
 
   fn visit_child_text(
@@ -533,6 +582,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_child_text(text, trace);
     self.imports.visit_child_text(text, trace);
     self.dependencies.visit_child_text(text, trace);
+    self.formats.visit_child_text(text, trace);
   }
 
   fn visit_child_input(
@@ -544,6 +594,7 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_child_input(input, trace);
     self.imports.visit_child_input(input, trace);
     self.dependencies.visit_child_input(input, trace);
+    self.formats.visit_child_input(input, trace);
   }
 
   fn visit_child_extern(
@@ -555,5 +606,6 @@ impl<'a> Visit<'a, Stage0State<'a>> for Stage0<'a> {
     self.object_getter.visit_child_extern(r#extern, trace);
     self.imports.visit_child_extern(r#extern, trace);
     self.dependencies.visit_child_extern(r#extern, trace);
+    self.formats.visit_child_extern(r#extern, trace);
   }
 }

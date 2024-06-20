@@ -20,6 +20,7 @@ trait Stated<S> {
 }
 
 mod dependencies;
+mod formats;
 mod gen;
 mod imports;
 mod objects_getter;

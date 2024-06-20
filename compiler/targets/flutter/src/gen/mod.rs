@@ -1,12 +1,10 @@
 use alloc::{
-  borrow::Cow,
   collections::BTreeMap,
   fmt::{self, Write},
   string::String,
   vec::Vec,
 };
-use dropin_compiler_recipes::ir::{Getter, Model};
-use itertools::Itertools;
+use dropin_compiler_recipes::ir::Model;
 
 use crate::{
   imports::ImportsState,
@@ -101,27 +99,14 @@ where
 
         let updated_listeners =
           <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
-        let updated_getters =
-          updated_listeners.get_updated_getters(&component.id);
-        let mut updated_getters_written = Vec::<&Getter>::new();
-        for updated_getter in updated_getters {
-          if updated_getter.is_nested {
-            continue;
-          }
-          if updated_getters_written
-            .iter()
-            .position(|getter| *getter == updated_getter.getter.as_ref())
-            .is_some()
-          {
-            continue;
-          }
+        let notifiers = updated_listeners.get_notifiers(&component.id);
+        for notifier in &notifiers {
           write!(file, "final ChangeNotifier ")?;
-          write_notifier_name(file, &updated_getter.getter)?;
-          if !updated_getter.is_external {
+          write_notifier_name(file, &notifier.getter)?;
+          if !notifier.is_external {
             write!(file, "= ChangeNotifier()")?;
           }
           write!(file, ";")?;
-          updated_getters_written.push(updated_getter.getter.as_ref());
         }
 
         write!(file, "{}({{super.key", component.term)?;
@@ -143,20 +128,11 @@ where
             }
           }
         }
-        updated_getters_written.clear();
-        for updated_getter in updated_getters {
-          if updated_getter.is_external && !updated_getter.is_nested {
-            if updated_getters_written
-              .iter()
-              .position(|getter| *getter == updated_getter.getter.as_ref())
-              .is_some()
-            {
-              continue;
-            }
+        for updated_getter in notifiers {
+          if updated_getter.is_external {
             write!(file, ",")?;
             write!(file, "required this.")?;
             write_notifier_name(file, &updated_getter.getter)?;
-            updated_getters_written.push(updated_getter.getter.as_ref());
           }
         }
         write!(

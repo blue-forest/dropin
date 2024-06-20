@@ -8,8 +8,8 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{
-  Component, ComponentInput, ExpressionInner, Getter, RichText, RichTextInner,
-  RichTextPart, Value, ValueInner,
+  Component, ComponentInput, Expression, ExpressionInner, Getter, RichText,
+  RichTextInner, RichTextPart, Value, ValueInner,
 };
 
 #[derive(Debug)]
@@ -26,11 +26,13 @@ pub struct Listener<'a> {
 
 #[derive(Debug)]
 pub struct Resolved<'a> {
+  #[allow(unused)] // useful later
   pub owner: &'a str,
+  #[allow(unused)] // useful later
   pub getter: Cow<'a, Getter>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct UpdatedGetter<'a> {
   pub getter: Cow<'a, Getter>,
   pub is_external: bool,
@@ -57,6 +59,36 @@ impl<'a> UpdatedAndListenersState<'a> {
       .get(component)
       .map(|getters| getters.as_slice())
       .unwrap_or(&[])
+  }
+
+  pub fn get_notifiers(&self, component: &str) -> Vec<UpdatedGetter<'a>> {
+    let updated_getters = self.get_updated_getters(component);
+    let mut result = Vec::<UpdatedGetter>::with_capacity(updated_getters.len());
+    for current in updated_getters {
+      if current.is_nested {
+        continue;
+      }
+      let mut is_added_modified = false;
+      for added in &mut result {
+        if added.getter == current.getter {
+          for (owner, current_getter) in &current.updated_by {
+            if let Some(added_getter) = added.updated_by.get_mut(owner) {
+              if current_getter.indexes.len() < added_getter.indexes.len() {
+                *added_getter = current_getter.clone();
+              }
+            } else {
+              added.updated_by.insert(owner, current_getter.clone());
+            }
+          }
+          is_added_modified = true;
+        }
+      }
+      if is_added_modified {
+        continue;
+      }
+      result.push(current.clone())
+    }
+    result
   }
 }
 

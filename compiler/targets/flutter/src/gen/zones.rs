@@ -29,7 +29,7 @@ where
 {
   write!(output, "Row(children: [")?;
   let updated_listeners = <S as Stated<UpdatedAndListenersState>>::state(state);
-  let updated_getters = updated_listeners.get_updated_getters(component);
+  let notifiers = &updated_listeners.get_notifiers(component);
   for (i, child) in zone.blocks.iter().enumerate() {
     if i != 0 {
       write!(output, ",")?;
@@ -41,7 +41,7 @@ where
         listeners
           .iter()
           .filter(|listener| {
-            updated_getters
+            notifiers
               .iter()
               .position(|updated| updated.getter.as_ref() == listener.getter)
               .is_some()
@@ -125,10 +125,7 @@ where
             value,
           )?;
         }
-        for updated_getter in updated_getters {
-          if updated_getter.is_nested {
-            continue;
-          }
+        for updated_getter in notifiers {
           if let Some(updated_by) =
             updated_getter.updated_by.get(r#extern.path.as_str())
           {

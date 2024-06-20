@@ -7,6 +7,7 @@ use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::{
+  formats::FormatsState,
   gen::expressions::gen_rich_text,
   objects_getter::ObjectGetterState,
   properties_resolver::PropertiesResolverState,
@@ -18,6 +19,7 @@ use crate::{
 
 use super::{
   expressions::{gen_expressions, gen_getter},
+  formats::gen_format,
   Sub,
 };
 
@@ -113,6 +115,7 @@ where
         let mut is_first = true;
         let objects = <S as Stated<ObjectGetterState>>::state(state);
         let resolver = <S as Stated<PropertiesResolverState>>::state(state);
+        let formats = <S as Stated<FormatsState>>::state(state);
         for (key, value) in &r#extern.properties.as_ref().unwrap().values {
           if !is_first {
             write!(output, ",")?;
@@ -145,7 +148,20 @@ where
             if resolver
               .is_variable(component, updated_getter.getter.ident.as_str())
             {
-              write!(output, "() {{/*TODO*/}}")?;
+              let format = formats
+                .format_of(component, &updated_getter.getter)
+                .unwrap();
+              write!(output, "(")?;
+              gen_format(output, state, &[], &format)?;
+              write!(output, " new_) {{")?;
+              gen_getter(output, component, state, &updated_getter.getter)?;
+              write!(
+                output,
+                "= new_;\
+                widget."
+              )?;
+              write_notifier_name(output, &updated_getter.getter)?;
+              write!(output, ".notifyListeners();}}")?;
             } else {
               write!(output, "widget.")?;
               write_updater_name(output, &updated_getter.getter)?;

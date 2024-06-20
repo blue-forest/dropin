@@ -8,6 +8,7 @@ use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::{
   gen::expressions::gen_rich_text,
+  objects_getter::ObjectGetterState,
   updated_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated,
 };
@@ -110,6 +111,7 @@ where
       ComponentChildInner::Extern(r#extern) => {
         write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
         let mut is_first = true;
+        let objects = <S as Stated<ObjectGetterState>>::state(state);
         for (key, value) in &r#extern.properties.as_ref().unwrap().values {
           if !is_first {
             write!(output, ",")?;
@@ -124,6 +126,9 @@ where
             false,
             value,
           )?;
+          if objects.contains_object(&r#extern.path, &[key]) {
+            write!(output, " as dynamic")?;
+          }
         }
         for updated_getter in notifiers {
           if let Some(updated_by) =

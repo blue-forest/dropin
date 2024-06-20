@@ -25,11 +25,11 @@ impl<'a> Visit<'a, FormatsState<'a>> for FormatsState<'a> {
     component: &'a dropin_compiler_recipes::ir::Component,
     _index: usize,
   ) {
-    self
-      .properties
-      .insert(&component.id, component.properties.as_ref().unwrap());
-    self
-      .variables
-      .insert(&component.id, component.variables.as_ref().unwrap());
+    if let Some(properties) = component.properties.as_ref() {
+      self.properties.insert(&component.id, properties);
+    }
+    if let Some(variables) = component.variables.as_ref() {
+      self.variables.insert(&component.id, variables);
+    }
   }
 }

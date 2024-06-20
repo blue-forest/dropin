@@ -274,7 +274,17 @@ pub fn write_notifier_name(
   output: &mut String,
   getter: &Getter,
 ) -> fmt::Result {
-  write!(output, "notifier{}", to_upper_camelcase(&getter.ident))?;
+  write!(output, "notifier")?;
+  write_getter_name(output, getter)
+}
+
+pub fn write_updater_name(output: &mut String, getter: &Getter) -> fmt::Result {
+  write!(output, "updater")?;
+  write_getter_name(output, getter)
+}
+
+fn write_getter_name(output: &mut String, getter: &Getter) -> fmt::Result {
+  write!(output, "{}", to_upper_camelcase(&getter.ident))?;
   for key in &getter.indexes {
     let ExpressionInner::Value(Value {
       value_inner: Some(value_inner),

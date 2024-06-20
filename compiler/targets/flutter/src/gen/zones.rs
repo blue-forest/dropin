@@ -9,7 +9,10 @@ use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 use crate::{
   gen::expressions::gen_rich_text,
   objects_getter::ObjectGetterState,
-  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
+  properties_resolver::PropertiesResolverState,
+  updated_listeners::{
+    write_notifier_name, write_updater_name, UpdatedAndListenersState,
+  },
   Stated,
 };
 
@@ -116,6 +119,7 @@ where
         write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
         let mut is_first = true;
         let objects = <S as Stated<ObjectGetterState>>::state(state);
+        let resolver = <S as Stated<PropertiesResolverState>>::state(state);
         for (key, value) in &r#extern.properties.as_ref().unwrap().values {
           if !is_first {
             write!(output, ",")?;
@@ -142,6 +146,17 @@ where
             write_notifier_name(output, updated_by)?;
             write!(output, ": widget.")?;
             write_notifier_name(output, &updated_getter.getter)?;
+            write!(output, ",")?;
+            write_updater_name(output, updated_by)?;
+            write!(output, ":")?;
+            if resolver
+              .is_variable(component, updated_getter.getter.ident.as_str())
+            {
+              write!(output, "() {{/*TODO*/}}")?;
+            } else {
+              write!(output, "widget.")?;
+              write_updater_name(output, &updated_getter.getter)?;
+            }
           }
         }
         write!(output, ")")?;

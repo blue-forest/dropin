@@ -10,7 +10,9 @@ use crate::{
   imports::ImportsState,
   objects_getter::ObjectGetterState,
   properties_resolver::PropertiesResolverState,
-  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
+  updated_listeners::{
+    write_notifier_name, write_updater_name, UpdatedAndListenersState,
+  },
   Stated, EXTENSION,
 };
 
@@ -108,6 +110,13 @@ where
           write_notifier_name(file, &notifier.getter)?;
           if !notifier.is_external {
             write!(file, "= ChangeNotifier()")?;
+          } else {
+            write!(
+              file,
+              ";\
+              final void Function() "
+            )?;
+            write_updater_name(file, &notifier.getter)?;
           }
           write!(file, ";")?;
         }
@@ -147,11 +156,14 @@ where
             }
           }
         }
-        for updated_getter in notifiers {
-          if updated_getter.is_external {
+        for notifier in notifiers {
+          if notifier.is_external {
             write!(file, ",")?;
             write!(file, "required this.")?;
-            write_notifier_name(file, &updated_getter.getter)?;
+            write_notifier_name(file, &notifier.getter)?;
+            write!(file, ",")?;
+            write!(file, "required this.")?;
+            write_updater_name(file, &notifier.getter)?;
           }
         }
         write!(file, "}});}}")?;

@@ -1,3 +1,5 @@
+use core::cmp::min;
+
 use crate::dependencies::DependenciesState;
 use crate::properties_resolver::PropertiesResolverState;
 use crate::visit::{ComponentChildTrace, ExpressionTrace, Visit};
@@ -8,8 +10,8 @@ use alloc::string::String;
 use alloc::vec::Vec;
 use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{
-  Component, ComponentInput, Expression, ExpressionInner, Getter, RichText,
-  RichTextInner, RichTextPart, Value, ValueInner,
+  Component, ComponentInput, ExpressionInner, Getter, RichText, RichTextInner,
+  RichTextPart, Value, ValueInner,
 };
 
 #[derive(Debug)]
@@ -65,23 +67,28 @@ impl<'a> UpdatedAndListenersState<'a> {
     let updated_getters = self.get_updated_getters(component);
     let mut result = Vec::<UpdatedGetter>::with_capacity(updated_getters.len());
     for current in updated_getters {
-      if current.is_nested {
-        continue;
-      }
       let mut is_added_modified = false;
       for added in &mut result {
-        if added.getter == current.getter {
-          for (owner, current_getter) in &current.updated_by {
-            if let Some(added_getter) = added.updated_by.get_mut(owner) {
-              if current_getter.indexes.len() < added_getter.indexes.len() {
-                *added_getter = current_getter.clone();
-              }
-            } else {
-              added.updated_by.insert(owner, current_getter.clone());
-            }
+        let Some(common_notifier) =
+          get_common_notifier(&added.getter, &current.getter)
+        else {
+          continue;
+        };
+        added.getter = Cow::Owned(common_notifier);
+
+        for (owner, current_getter) in &current.updated_by {
+          if let Some((common_notifier, added_getter)) =
+            added.updated_by.get_mut(owner).and_then(|added_getter| {
+              get_common_notifier(&added_getter, &current_getter)
+                .map(|common_notifier| (common_notifier, added_getter))
+            })
+          {
+            *added_getter = Cow::Owned(common_notifier);
+          } else {
+            added.updated_by.insert(owner, current_getter.clone());
           }
-          is_added_modified = true;
         }
+        is_added_modified = true;
       }
       if is_added_modified {
         continue;
@@ -357,4 +364,43 @@ fn add<'a>(
       updated_by_added.insert(*wrapper, wrapper_getter.clone());
     }
   }
+}
+
+fn get_common_notifier(getter1: &Getter, getter2: &Getter) -> Option<Getter> {
+  if getter1.ident != getter2.ident {
+    return None;
+  }
+
+  let mut common_split = None;
+  for (i, (added_index, current_index)) in
+    getter1.indexes.iter().zip(&getter2.indexes).enumerate()
+  {
+    let ExpressionInner::Value(Value { value_inner }) =
+      added_index.expression_inner.as_ref().unwrap()
+    else {
+      common_split = Some(i);
+      break;
+    };
+    match value_inner.as_ref().unwrap() {
+      ValueInner::Text(_) => {}
+      ValueInner::Quantity(_) => {}
+      _ => {
+        common_split = Some(i);
+        break;
+      }
+    }
+    if added_index != current_index {
+      return None;
+    }
+  }
+  let common_split =
+    common_split.unwrap_or(min(getter1.indexes.len(), getter2.indexes.len()));
+  Some(Getter {
+    ident: getter1.ident.clone(),
+    indexes: if getter1.indexes.len() > getter2.indexes.len() {
+      getter1.indexes[..common_split].to_vec()
+    } else {
+      getter2.indexes[..common_split].to_vec()
+    },
+  })
 }

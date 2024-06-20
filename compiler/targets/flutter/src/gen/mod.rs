@@ -100,8 +100,8 @@ where
 
         write!(file, "{term}_State(")?;
         let mut is_first = true;
-        for updated_getter in updated_getters {
-          if updated_getter.is_external {
+        for notifier in &notifiers {
+          if notifier.is_external {
             if is_first {
               write!(file, "{{")?;
             } else {
@@ -109,7 +109,7 @@ where
             }
             is_first = false;
             write!(file, "required this.")?;
-            write_notifier_name(file, &updated_getter.getter)?;
+            write_notifier_name(file, &notifier.getter)?;
           }
         }
         if !is_first {

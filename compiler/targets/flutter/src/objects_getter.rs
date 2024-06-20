@@ -15,6 +15,11 @@ pub struct ObjectGetterState<'a>(
   BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>,
 );
 
+/*
+impl<'a> ObjectGetterState<'a> {
+}
+*/
+
 impl<'a> Deref for ObjectGetterState<'a> {
   type Target = BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>;
   fn deref(&self) -> &Self::Target {

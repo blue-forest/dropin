@@ -9,7 +9,7 @@ use dropin_compiler_recipes::ir::{
 };
 
 use crate::{
-  gen::{expressions::gen_expressions, Sub},
+  gen::{expressions::gen_expressions, keys::is_undefined, Sub},
   objects_getter::ObjectGetterState,
   Stated,
 };
@@ -43,13 +43,21 @@ where
           }
         }
       }
-      if objects
+      if let Some(format) = objects
         .get(component)
-        .map(|objects| objects.contains_key(&trace_current))
-        .unwrap_or(false)
+        .and_then(|objects| objects.get(&trace_current))
       {
         if trace_key == "*" {
           panic!("Objects cannot be indexed dynamically")
+        }
+        let mut is_required = false;
+        if let Some(default) = format.required.get(trace_key) {
+          if is_undefined(default) {
+            is_required = true;
+          }
+        }
+        if !is_required {
+          write!(output, "?")?;
         }
         write!(output, ".{trace_key}")?;
       } else {

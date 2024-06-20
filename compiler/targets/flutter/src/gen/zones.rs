@@ -65,8 +65,6 @@ where
           ", builder: (BuildContext context, Widget? child) => "
         )?;
       }
-    } else if i != 0 {
-      write!(output, ",")?;
     }
     match child.component_child_inner.as_ref().unwrap() {
       ComponentChildInner::Text(text) => {

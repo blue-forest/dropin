@@ -382,11 +382,11 @@ fn get_common_notifier(getter1: &Getter, getter2: &Getter) -> Option<Getter> {
   }
 
   let mut common_split = None;
-  for (i, (added_index, current_index)) in
+  for (i, (index1, index2)) in
     getter1.indexes.iter().zip(&getter2.indexes).enumerate()
   {
     let ExpressionInner::Value(Value { value_inner }) =
-      added_index.expression_inner.as_ref().unwrap()
+      index1.expression_inner.as_ref().unwrap()
     else {
       common_split = Some(i);
       break;
@@ -399,7 +399,7 @@ fn get_common_notifier(getter1: &Getter, getter2: &Getter) -> Option<Getter> {
         break;
       }
     }
-    if added_index != current_index {
+    if index1 != index2 {
       return None;
     }
   }

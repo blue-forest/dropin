@@ -70,6 +70,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                 if let Some(child_suffix) =
                   child.and_then(|child| suffix.get(child))
                 {
+                  // 1
                   let child_suffix = child_suffix.clone();
                   let suffix = suffix.entry(owner).or_insert(BTreeMap::new());
                   for (prop, indexes) in child_suffix.into_iter().rev() {
@@ -81,6 +82,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                   }
                 }
                 if let Some(props_by_property) = self.properties.get(owner) {
+                  // 2
                   if let Some(suffix_child) =
                     suffix.get(owner).map(|child| (*child).clone())
                   {
@@ -94,6 +96,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                   all_props_by_property.push(props_by_property);
                   continue;
                 }
+                // 3
                 let indirect =
                   self.redirections.get(owner).unwrap().get(ident).unwrap();
                 for (new_owner, getters) in indirect {
@@ -134,37 +137,36 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
               })
               .collect::<BTreeMap<_, _>>();
 
-            for props_by_property in all_props_by_property {
-              for (prop_component, prop_getters) in props_by_property
-                .get(redirect_getter.ident.as_str())
-                .unwrap_or(&BTreeMap::new())
-              {
-                let getters = iproduct!(prop_getters, redirect_getters)
-                  .map(|(prop, redirect)| {
-                    Cow::Owned(Getter {
-                      ident: prop.ident.clone(),
-                      indexes: [
-                        prop.indexes.as_slice(),
-                        suffix
-                          .get(prop_component)
-                          .and_then(|suffix| {
-                            suffix.get(redirect_getter.ident.as_str())
-                          })
-                          .unwrap_or(&[].as_mut_slice()),
-                        &redirect.indexes,
-                      ]
-                      .concat(),
+            for props_by_property in &all_props_by_property {
+              for props_by_owner in props_by_property.values() {
+                for (prop_component, prop_getters) in props_by_owner {
+                  let getters = iproduct!(prop_getters, redirect_getters)
+                    .map(|(prop, redirect)| {
+                      Cow::Owned(Getter {
+                        ident: prop.ident.clone(),
+                        indexes: [
+                          prop.indexes.as_slice(),
+                          suffix
+                            .get(prop_component)
+                            .and_then(|suffix| {
+                              suffix.get(redirect_getter.ident.as_str())
+                            })
+                            .unwrap_or(&[].as_mut_slice()),
+                          &redirect.indexes,
+                        ]
+                        .concat(),
+                      })
                     })
-                  })
-                  .collect::<Vec<_>>();
-                properties_to_insert
-                  .entry(redirect_component)
-                  .or_insert(PropertiesByProperty::new())
-                  .entry(redirect_property)
-                  .or_insert(PropertiesByVariableOwner::new())
-                  .entry(prop_component)
-                  .and_modify(|current| current.extend_from_slice(&getters))
-                  .or_insert(getters);
+                    .collect::<Vec<_>>();
+                  properties_to_insert
+                    .entry(redirect_component)
+                    .or_insert(PropertiesByProperty::new())
+                    .entry(redirect_property)
+                    .or_insert(PropertiesByVariableOwner::new())
+                    .entry(prop_component)
+                    .and_modify(|current| current.extend_from_slice(&getters))
+                    .or_insert(getters);
+                }
               }
             }
           }
@@ -174,6 +176,8 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
 
     props_by_component_add_all(&mut self.properties, properties_to_insert);
     props_by_component_add_all(&mut self.redirections, redirections_to_insert);
+
+    // todo!("{:#?}\n{:#?}", self.properties, self.redirections);
 
     PropertiesResolverState {
       properties: self.properties,

@@ -31,6 +31,9 @@ where
   let updated_listeners = <S as Stated<UpdatedAndListenersState>>::state(state);
   let updated_getters = updated_listeners.get_updated_getters(component);
   for (i, child) in zone.blocks.iter().enumerate() {
+    if i != 0 {
+      write!(output, ",")?;
+    }
     let trace = &[trace, &[i]].concat();
     let updated_listeners = updated_listeners
       .get_listeners(component, trace)
@@ -62,8 +65,7 @@ where
           ", builder: (BuildContext context, Widget? child) => "
         )?;
       }
-    }
-    if i != 0 {
+    } else if i != 0 {
       write!(output, ",")?;
     }
     match child.component_child_inner.as_ref().unwrap() {

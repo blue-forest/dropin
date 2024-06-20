@@ -11,6 +11,7 @@ use dropin_compiler_recipes::ir::{
 use crate::{
   gen::{expressions::gen_expressions, keys::is_undefined, Sub},
   objects_getter::ObjectGetterState,
+  properties_resolver::PropertiesResolverState,
   Stated,
 };
 
@@ -23,6 +24,11 @@ pub fn gen_getter<'a, S>(
 where
   S: Sub<'a>,
 {
+  if !<S as Stated<PropertiesResolverState>>::state(state)
+    .is_variable(component, &value.ident)
+  {
+    write!(output, "widget.")?;
+  }
   write!(output, "{}", value.ident)?;
   if !value.indexes.is_empty() {
     let objects = &<S as Stated<ObjectGetterState>>::state(state);

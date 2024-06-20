@@ -9,6 +9,7 @@ use dropin_compiler_recipes::ir::Model;
 use crate::{
   imports::ImportsState,
   objects_getter::ObjectGetterState,
+  properties_resolver::PropertiesResolverState,
   updated_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated, EXTENSION,
 };
@@ -30,6 +31,7 @@ pub trait Sub<'a>:
   Stated<ObjectGetterState<'a>>
   + Stated<UpdatedAndListenersState<'a>>
   + Stated<ImportsState<'a>>
+  + Stated<PropertiesResolverState<'a>>
 {
 }
 
@@ -37,6 +39,7 @@ impl<'a, S> Sub<'a> for S where
   S: Stated<ObjectGetterState<'a>>
     + Stated<UpdatedAndListenersState<'a>>
     + Stated<ImportsState<'a>>
+    + Stated<PropertiesResolverState<'a>>
 {
 }
 

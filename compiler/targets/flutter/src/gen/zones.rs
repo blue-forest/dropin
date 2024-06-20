@@ -48,24 +48,35 @@ where
           })
           .collect::<Vec<_>>()
       });
-    let mut is_listenable = false;
-    if let Some(updated_listeners) = updated_listeners {
-      if !updated_listeners.is_empty() {
-        assert_eq!(updated_listeners.len(), 1, "TODO: add Listenable.merge()");
-        is_listenable = true;
-        let listener = &updated_listeners[0];
-        write!(
-          output,
-          "ListenableBuilder(\
+    let is_listenable = if let ComponentChildInner::Extern(_) =
+      child.component_child_inner.as_ref().unwrap()
+    {
+      false
+    } else {
+      let mut is_listenable = false;
+      if let Some(updated_listeners) = updated_listeners {
+        if !updated_listeners.is_empty() {
+          assert_eq!(
+            updated_listeners.len(),
+            1,
+            "TODO: add Listenable.merge()"
+          );
+          is_listenable = true;
+          let listener = &updated_listeners[0];
+          write!(
+            output,
+            "ListenableBuilder(\
           listenable:",
-        )?;
-        write_notifier_name(output, listener.getter)?;
-        write!(
-          output,
-          ", builder: (BuildContext context, Widget? child) => "
-        )?;
+          )?;
+          write_notifier_name(output, listener.getter)?;
+          write!(
+            output,
+            ", builder: (BuildContext context, Widget? child) => "
+          )?;
+        }
       }
-    }
+      is_listenable
+    };
     match child.component_child_inner.as_ref().unwrap() {
       ComponentChildInner::Text(text) => {
         write!(output, "Text(")?;

@@ -8,7 +8,8 @@ use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::{
   gen::expressions::gen_rich_text,
-  setters_listeners::{write_notifier_name, SettersAndListenersState},
+  objects_getter::ObjectGetterState,
+  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated,
 };
 
@@ -28,44 +29,55 @@ where
   S: Sub<'a>,
 {
   write!(output, "Row(children: [")?;
-  let setters_listeners = <S as Stated<SettersAndListenersState>>::state(state);
-  let updated_getters = setters_listeners.get_updated_getters(component);
+  let updated_listeners = <S as Stated<UpdatedAndListenersState>>::state(state);
+  let notifiers = &updated_listeners.get_notifiers(component);
   for (i, child) in zone.blocks.iter().enumerate() {
+    if i != 0 {
+      write!(output, ",")?;
+    }
     let trace = &[trace, &[i]].concat();
-    let updated_listeners = setters_listeners
+    let updated_listeners = updated_listeners
       .get_listeners(component, trace)
       .map(|listeners| {
         listeners
           .iter()
           .filter(|listener| {
-            updated_getters
+            notifiers
               .iter()
               .position(|updated| updated.getter.as_ref() == listener.getter)
               .is_some()
           })
           .collect::<Vec<_>>()
       });
-    let mut is_listenable = false;
-    if let Some(updated_listeners) = updated_listeners {
-      if !updated_listeners.is_empty() {
-        assert_eq!(updated_listeners.len(), 1, "TODO: add Listenable.merge()");
-        is_listenable = true;
-        let listener = &updated_listeners[0];
-        write!(
-          output,
-          "ListenableBuilder(\
+    let is_listenable = if let ComponentChildInner::Extern(_) =
+      child.component_child_inner.as_ref().unwrap()
+    {
+      false
+    } else {
+      let mut is_listenable = false;
+      if let Some(updated_listeners) = updated_listeners {
+        if !updated_listeners.is_empty() {
+          assert_eq!(
+            updated_listeners.len(),
+            1,
+            "TODO: add Listenable.merge()"
+          );
+          is_listenable = true;
+          let listener = &updated_listeners[0];
+          write!(
+            output,
+            "ListenableBuilder(\
           listenable:",
-        )?;
-        write_notifier_name(output, listener.getter)?;
-        write!(
-          output,
-          ", builder: (BuildContext context, Widget? child) => "
-        )?;
+          )?;
+          write_notifier_name(output, listener.getter)?;
+          write!(
+            output,
+            ", builder: (BuildContext context, Widget? child) => "
+          )?;
+        }
       }
-    }
-    if i != 0 {
-      write!(output, ",")?;
-    }
+      is_listenable
+    };
     match child.component_child_inner.as_ref().unwrap() {
       ComponentChildInner::Text(text) => {
         write!(output, "Text(")?;
@@ -99,6 +111,7 @@ where
       ComponentChildInner::Extern(r#extern) => {
         write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
         let mut is_first = true;
+        let objects = <S as Stated<ObjectGetterState>>::state(state);
         for (key, value) in &r#extern.properties.as_ref().unwrap().values {
           if !is_first {
             write!(output, ",")?;
@@ -113,8 +126,11 @@ where
             false,
             value,
           )?;
+          if objects.contains_object(&r#extern.path, &[key]) {
+            write!(output, " as dynamic")?;
+          }
         }
-        for updated_getter in updated_getters {
+        for updated_getter in notifiers {
           if let Some(updated_by) =
             updated_getter.updated_by.get(r#extern.path.as_str())
           {

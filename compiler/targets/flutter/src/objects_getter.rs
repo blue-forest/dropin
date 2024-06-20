@@ -1,4 +1,4 @@
-use core::ops::Deref;
+use core::ops::{Bound, Deref};
 
 use alloc::{
   collections::BTreeMap,
@@ -14,6 +14,25 @@ use crate::{visit::FormatTrace, Visit};
 pub struct ObjectGetterState<'a>(
   BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>,
 );
+
+impl<'a> ObjectGetterState<'a> {
+  pub fn contains_object(&self, component: &'a str, keys: &[&'a str]) -> bool {
+    let Some(component_objects) = self.get(component) else {
+      return false;
+    };
+    component_objects
+      .range((Bound::Included(keys.to_vec()), Bound::Unbounded))
+      .next()
+      .map(|(k, _)| {
+        if &k[..keys.len()] == keys {
+          true
+        } else {
+          false
+        }
+      })
+      .unwrap_or(false)
+  }
+}
 
 impl<'a> Deref for ObjectGetterState<'a> {
   type Target = BTreeMap<&'a str, BTreeMap<Vec<&'a str>, &'a FormatObject>>;
@@ -69,5 +88,6 @@ pub fn write_class_name(output: &mut String, trace: &[&str]) -> fmt::Result {
       }
     }
   }
+  write!(output, "Object")?;
   Ok(())
 }

@@ -24,10 +24,10 @@ mod gen;
 mod imports;
 mod objects_getter;
 mod properties_resolver;
-mod setters_listeners;
 mod stage;
 mod stage0;
 mod stage1;
+mod updated_listeners;
 mod visit;
 
 #[no_mangle]

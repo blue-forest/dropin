@@ -9,7 +9,7 @@ use dropin_compiler_recipes::ir::Model;
 use crate::{
   imports::ImportsState,
   objects_getter::ObjectGetterState,
-  setters_listeners::{write_notifier_name, SettersAndListenersState},
+  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
   Stated, EXTENSION,
 };
 
@@ -28,14 +28,14 @@ mod zones;
 
 pub trait Sub<'a>:
   Stated<ObjectGetterState<'a>>
-  + Stated<SettersAndListenersState<'a>>
+  + Stated<UpdatedAndListenersState<'a>>
   + Stated<ImportsState<'a>>
 {
 }
 
 impl<'a, S> Sub<'a> for S where
   S: Stated<ObjectGetterState<'a>>
-    + Stated<SettersAndListenersState<'a>>
+    + Stated<UpdatedAndListenersState<'a>>
     + Stated<ImportsState<'a>>
 {
 }
@@ -86,14 +86,13 @@ where
           )?;
         }
 
-        let setters_listeners =
-          <S as Stated<SettersAndListenersState>>::state(&self.sub);
-        let updated_getters =
-          setters_listeners.get_updated_getters(&component.id);
-        for updated_getter in updated_getters {
+        let updated_listeners =
+          <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
+        let notifiers = updated_listeners.get_notifiers(&component.id);
+        for notifier in &notifiers {
           write!(file, "final ChangeNotifier ")?;
-          write_notifier_name(file, &updated_getter.getter)?;
-          if !updated_getter.is_external {
+          write_notifier_name(file, &notifier.getter)?;
+          if !notifier.is_external {
             write!(file, "= ChangeNotifier()")?;
           }
           write!(file, ";")?;
@@ -160,7 +159,7 @@ where
             }
           }
         }
-        for updated_getter in updated_getters {
+        for updated_getter in notifiers {
           if updated_getter.is_external {
             write!(file, ",")?;
             write!(file, "required this.")?;

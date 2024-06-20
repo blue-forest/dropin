@@ -48,7 +48,9 @@ pub struct PropertiesResolver<'a> {
 
 impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
   fn build(mut self) -> PropertiesResolverState<'a> {
-    let mut to_insert = PropertiesByComponent::new();
+    let mut properties_to_insert = PropertiesByComponent::new();
+    let mut redirections_to_insert = PropertiesByComponent::new();
+
     for (redirect_component, redirect_by_property) in &self.redirections {
       for (redirect_property, redirect_by_component) in redirect_by_property {
         for (redirect_owner, redirect_getters) in redirect_by_component {
@@ -68,6 +70,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                 if let Some(child_suffix) =
                   child.and_then(|child| suffix.get(child))
                 {
+                  // 1
                   let child_suffix = child_suffix.clone();
                   let suffix = suffix.entry(owner).or_insert(BTreeMap::new());
                   for (prop, indexes) in child_suffix.into_iter().rev() {
@@ -79,6 +82,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                   }
                 }
                 if let Some(props_by_property) = self.properties.get(owner) {
+                  // 2
                   if let Some(suffix_child) =
                     suffix.get(owner).map(|child| (*child).clone())
                   {
@@ -92,6 +96,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                   all_props_by_property.push(props_by_property);
                   continue;
                 }
+                // 3
                 let indirect =
                   self.redirections.get(owner).unwrap().get(ident).unwrap();
                 for (new_owner, getters) in indirect {
@@ -110,6 +115,12 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
                       Some(owner),
                     ));
                   }
+                  redirections_to_insert
+                    .entry(redirect_component)
+                    .or_insert(PropertiesByProperty::new())
+                    .entry(redirect_property)
+                    .or_insert(PropertiesByVariableOwner::new())
+                    .insert(*new_owner, getters.clone());
                 }
               }
             }
@@ -126,36 +137,36 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
               })
               .collect::<BTreeMap<_, _>>();
 
-            for props_by_property in all_props_by_property {
-              let prop_by_owner =
-                &props_by_property[redirect_getter.ident.as_str()];
-              for (prop_component, prop_getters) in prop_by_owner {
-                let getters = iproduct!(prop_getters, redirect_getters)
-                  .map(|(prop, redirect)| {
-                    Cow::Owned(Getter {
-                      ident: prop.ident.clone(),
-                      indexes: [
-                        prop.indexes.as_slice(),
-                        suffix
-                          .get(prop_component)
-                          .and_then(|suffix| {
-                            suffix.get(redirect_getter.ident.as_str())
-                          })
-                          .unwrap_or(&[].as_mut_slice()),
-                        &redirect.indexes,
-                      ]
-                      .concat(),
+            for props_by_property in &all_props_by_property {
+              for props_by_owner in props_by_property.values() {
+                for (prop_component, prop_getters) in props_by_owner {
+                  let getters = iproduct!(prop_getters, redirect_getters)
+                    .map(|(prop, redirect)| {
+                      Cow::Owned(Getter {
+                        ident: prop.ident.clone(),
+                        indexes: [
+                          prop.indexes.as_slice(),
+                          suffix
+                            .get(prop_component)
+                            .and_then(|suffix| {
+                              suffix.get(redirect_getter.ident.as_str())
+                            })
+                            .unwrap_or(&[].as_mut_slice()),
+                          &redirect.indexes,
+                        ]
+                        .concat(),
+                      })
                     })
-                  })
-                  .collect::<Vec<_>>();
-                to_insert
-                  .entry(redirect_component)
-                  .or_insert(PropertiesByProperty::new())
-                  .entry(redirect_property)
-                  .or_insert(PropertiesByVariableOwner::new())
-                  .entry(prop_component)
-                  .and_modify(|current| current.extend_from_slice(&getters))
-                  .or_insert(getters);
+                    .collect::<Vec<_>>();
+                  properties_to_insert
+                    .entry(redirect_component)
+                    .or_insert(PropertiesByProperty::new())
+                    .entry(redirect_property)
+                    .or_insert(PropertiesByVariableOwner::new())
+                    .entry(prop_component)
+                    .and_modify(|current| current.extend_from_slice(&getters))
+                    .or_insert(getters);
+                }
               }
             }
           }
@@ -163,7 +174,11 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
       }
     }
 
-    self.properties.extend(to_insert);
+    props_by_component_add_all(&mut self.properties, properties_to_insert);
+    props_by_component_add_all(&mut self.redirections, redirections_to_insert);
+
+    // todo!("{:#?}\n{:#?}", self.properties, self.redirections);
+
     PropertiesResolverState {
       properties: self.properties,
       redirections: self.redirections,
@@ -235,5 +250,27 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
       .entry(self.component_id.unwrap())
       .or_insert(Vec::with_capacity(1))
       .push(Cow::Borrowed(getter));
+  }
+}
+
+fn props_by_component_add_all<'a>(
+  destination: &mut PropertiesByComponent<'a>,
+  other: PropertiesByComponent<'a>,
+) {
+  for (component, by_prop) in other {
+    let entry = destination
+      .entry(component)
+      .or_insert(PropertiesByProperty::new());
+    for (prop, by_owner) in by_prop {
+      let entry = entry
+        .entry(prop)
+        .or_insert(PropertiesByVariableOwner::new());
+      for (owner, getters) in by_owner {
+        entry
+          .entry(owner)
+          .or_insert(Vec::with_capacity(getters.len()))
+          .extend(getters);
+      }
+    }
   }
 }

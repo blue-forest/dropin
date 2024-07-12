@@ -244,9 +244,9 @@ where
       .get(component)
       .and_then(|resolved| resolved.get(getter.ident.as_str()))
     {
-      resolved
+      resolved.clone()
     } else {
-      &BTreeMap::from([(component, Vec::from([Cow::Borrowed(getter)]))])
+      BTreeMap::from([(component, Vec::from([Cow::Borrowed(getter)]))])
     };
     let mut listener = Listener {
       getter,

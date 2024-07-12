@@ -43,8 +43,8 @@ impl<'a> Visit<'a, ImportsState<'a>> for Imports<'a> {
   ) {
     let imports = self.imports.get_mut(self.component.unwrap()).unwrap();
     let mut import =
-      String::with_capacity(r#extern.path.len() + EXTENSION.len());
-    write!(&mut import, "{}{EXTENSION}", r#extern.path).unwrap();
+      String::with_capacity(r#extern.id.len() + EXTENSION.len());
+    write!(&mut import, "{}{EXTENSION}", r#extern.id).unwrap();
     imports.push(import);
   }
 }

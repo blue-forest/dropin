@@ -255,7 +255,7 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
       &mut self.redirections
     };
     to_insert
-      .entry(&r#extern.path)
+      .entry(&r#extern.id)
       .or_insert(PropertiesByProperty::new())
       .entry(property_key)
       .or_insert(PropertiesByVariableOwner::new())

@@ -111,7 +111,7 @@ where
         write!(output, "))")?;
       }
       ComponentChildInner::Extern(r#extern) => {
-        write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
+        write!(output, "{}(", to_upper_camelcase(&r#extern.id))?;
         let mut is_first = true;
         let objects = <S as Stated<ObjectGetterState>>::state(state);
         let resolver = <S as Stated<PropertiesResolverState>>::state(state);
@@ -130,13 +130,13 @@ where
             false,
             value,
           )?;
-          if objects.contains_object(&r#extern.path, &[key]) {
+          if objects.contains_object(&r#extern.id, &[key]) {
             write!(output, " as dynamic")?;
           }
         }
         for updated_getter in notifiers {
           if let Some(updated_by) =
-            updated_getter.updated_by.get(r#extern.path.as_str())
+            updated_getter.updated_by.get(r#extern.id.as_str())
           {
             write!(output, ",")?;
             write_notifier_name(output, updated_by)?;

@@ -5,6 +5,7 @@ use alloc::{
   vec::Vec,
 };
 use dropin_compiler_recipes::ir::Model;
+use formats::gen_format;
 
 use crate::{
   formats::FormatsState,
@@ -107,8 +108,11 @@ where
 
         let updated_listeners =
           <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
+        let formats = <S as Stated<FormatsState>>::state(&self.sub);
         let notifiers = updated_listeners.get_notifiers(&component.id);
         for notifier in &notifiers {
+          let format =
+            formats.format_of(&component.id, &notifier.getter).unwrap();
           write!(file, "final ChangeNotifier ")?;
           write_notifier_name(file, &notifier.getter)?;
           if !notifier.is_external {
@@ -117,8 +121,10 @@ where
             write!(
               file,
               ";\
-              final void Function() "
+              final void Function("
             )?;
+            gen_format(file, self.sub, &[], &format)?;
+            write!(file, ") ")?;
             write_updater_name(file, &notifier.getter)?;
           }
           write!(file, ";")?;

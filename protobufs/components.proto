@@ -42,7 +42,7 @@ message ComponentChild {
 
 message ComponentExtern {
   ComponentCommon common = 1;
-  string path = 2;
+  string id = 2;
   Object properties = 3;
 }
 

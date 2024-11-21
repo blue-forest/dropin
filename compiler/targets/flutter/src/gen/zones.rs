@@ -7,14 +7,19 @@ use dropin_compiler_common::to_upper_camelcase;
 use dropin_compiler_recipes::ir::{ComponentChildInner, ComponentZone};
 
 use crate::{
+  formats::FormatsState,
   gen::expressions::gen_rich_text,
   objects_getter::ObjectGetterState,
-  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
+  properties_resolver::PropertiesResolverState,
+  updated_listeners::{
+    write_notifier_name, write_updater_name, UpdatedAndListenersState,
+  },
   Stated,
 };
 
 use super::{
   expressions::{gen_expressions, gen_getter},
+  formats::gen_format,
   Sub,
 };
 
@@ -67,7 +72,7 @@ where
           write!(
             output,
             "ListenableBuilder(\
-          listenable:",
+            listenable:",
           )?;
           write_notifier_name(output, listener.getter)?;
           write!(
@@ -101,17 +106,16 @@ where
           state,
           input.on_change.as_ref().unwrap(),
         )?;
-        write!(output, ", onChanged: (newText_) {{")?;
-        let on_change = input.on_change.as_ref().unwrap();
-        gen_getter(output, component, state, on_change)?;
-        write!(output, "= newText_;")?;
-        write_notifier_name(output, on_change)?;
-        write!(output, ".notifyListeners();}}))")?;
+        write!(output, ", onChanged: widget.")?;
+        write_updater_name(output, input.on_change.as_ref().unwrap())?;
+        write!(output, "))")?;
       }
       ComponentChildInner::Extern(r#extern) => {
-        write!(output, "{}(", to_upper_camelcase(&r#extern.path))?;
+        write!(output, "{}(", to_upper_camelcase(&r#extern.id))?;
         let mut is_first = true;
         let objects = <S as Stated<ObjectGetterState>>::state(state);
+        let resolver = <S as Stated<PropertiesResolverState>>::state(state);
+        let formats = <S as Stated<FormatsState>>::state(state);
         for (key, value) in &r#extern.properties.as_ref().unwrap().values {
           if !is_first {
             write!(output, ",")?;
@@ -126,18 +130,42 @@ where
             false,
             value,
           )?;
-          if objects.contains_object(&r#extern.path, &[key]) {
+          if objects.contains_object(&r#extern.id, &[key]) {
             write!(output, " as dynamic")?;
           }
         }
         for updated_getter in notifiers {
           if let Some(updated_by) =
-            updated_getter.updated_by.get(r#extern.path.as_str())
+            updated_getter.updated_by.get(r#extern.id.as_str())
           {
             write!(output, ",")?;
             write_notifier_name(output, updated_by)?;
-            write!(output, ":")?;
+            write!(output, ": widget.")?;
             write_notifier_name(output, &updated_getter.getter)?;
+            write!(output, ",")?;
+            write_updater_name(output, updated_by)?;
+            write!(output, ":")?;
+            if resolver
+              .is_variable(component, updated_getter.getter.ident.as_str())
+            {
+              let format = formats
+                .format_of(component, &updated_getter.getter)
+                .unwrap();
+              write!(output, "(")?;
+              gen_format(output, state, &[], &format)?;
+              write!(output, " new_) {{")?;
+              gen_getter(output, component, state, &updated_getter.getter)?;
+              write!(
+                output,
+                "= new_;\
+                widget."
+              )?;
+              write_notifier_name(output, &updated_getter.getter)?;
+              write!(output, ".notifyListeners();}}")?;
+            } else {
+              write!(output, "widget.")?;
+              write_updater_name(output, &updated_getter.getter)?;
+            }
           }
         }
         write!(output, ")")?;

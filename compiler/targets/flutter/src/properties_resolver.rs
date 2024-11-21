@@ -20,8 +20,15 @@ type PropertiesByVariableOwner<'a> = BTreeMap<&'a str, Vec<Cow<'a, Getter>>>;
 
 #[derive(Debug)]
 pub struct PropertiesResolverState<'a> {
+  component_variables: BTreeMap<&'a str, BTreeSet<&'a str>>,
   properties: PropertiesByComponent<'a>,
   pub redirections: PropertiesByComponent<'a>,
+}
+
+impl<'a> PropertiesResolverState<'a> {
+  pub fn is_variable(&self, component: &str, ident: &str) -> bool {
+    self.component_variables[component].contains(ident)
+  }
 }
 
 impl<'a> Stated<PropertiesResolverState<'a>> for PropertiesResolverState<'a> {
@@ -41,7 +48,7 @@ impl<'a> Deref for PropertiesResolverState<'a> {
 pub struct PropertiesResolver<'a> {
   component_id: Option<&'a str>,
   component_blocks: &'a [ComponentChild],
-  component_variables: BTreeSet<&'a str>,
+  component_variables: BTreeMap<&'a str, BTreeSet<&'a str>>,
   properties: PropertiesByComponent<'a>,
   redirections: PropertiesByComponent<'a>,
 }
@@ -180,18 +187,22 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
     // todo!("{:#?}\n{:#?}", self.properties, self.redirections);
 
     PropertiesResolverState {
+      component_variables: self.component_variables,
       properties: self.properties,
       redirections: self.redirections,
     }
   }
 
   fn visit_component(&mut self, component: &'a Component, _index: usize) {
-    self.component_variables.clear();
+    let mut component_variables = BTreeSet::new();
     if let Some(variables) = component.variables.as_ref() {
       for key_format in &variables.keys {
-        self.component_variables.insert(&key_format.key);
+        component_variables.insert(key_format.key.as_str());
       }
     }
+    self
+      .component_variables
+      .insert(&component.id, component_variables);
     self.component_id = Some(&component.id);
     self.component_blocks = &component.zone.as_ref().unwrap().blocks;
   }
@@ -236,14 +247,15 @@ impl<'a> Visit<'a, PropertiesResolverState<'a>> for PropertiesResolver<'a> {
     let Some(Key::Text(property_key)) = key else {
       unreachable!();
     };
-    let to_insert = if self.component_variables.contains(getter.ident.as_str())
+    let to_insert = if self.component_variables[self.component_id.unwrap()]
+      .contains(getter.ident.as_str())
     {
       &mut self.properties
     } else {
       &mut self.redirections
     };
     to_insert
-      .entry(&r#extern.path)
+      .entry(&r#extern.id)
       .or_insert(PropertiesByProperty::new())
       .entry(property_key)
       .or_insert(PropertiesByVariableOwner::new())

@@ -244,9 +244,9 @@ where
       .get(component)
       .and_then(|resolved| resolved.get(getter.ident.as_str()))
     {
-      resolved
+      resolved.clone()
     } else {
-      &BTreeMap::from([(component, Vec::from([Cow::Borrowed(getter)]))])
+      BTreeMap::from([(component, Vec::from([Cow::Borrowed(getter)]))])
     };
     let mut listener = Listener {
       getter,
@@ -274,7 +274,17 @@ pub fn write_notifier_name(
   output: &mut String,
   getter: &Getter,
 ) -> fmt::Result {
-  write!(output, "notifier{}", to_upper_camelcase(&getter.ident))?;
+  write!(output, "notifier")?;
+  write_getter_name(output, getter)
+}
+
+pub fn write_updater_name(output: &mut String, getter: &Getter) -> fmt::Result {
+  write!(output, "updater")?;
+  write_getter_name(output, getter)
+}
+
+fn write_getter_name(output: &mut String, getter: &Getter) -> fmt::Result {
+  write!(output, "{}", to_upper_camelcase(&getter.ident))?;
   for key in &getter.indexes {
     let ExpressionInner::Value(Value {
       value_inner: Some(value_inner),
@@ -372,11 +382,11 @@ fn get_common_notifier(getter1: &Getter, getter2: &Getter) -> Option<Getter> {
   }
 
   let mut common_split = None;
-  for (i, (added_index, current_index)) in
+  for (i, (index1, index2)) in
     getter1.indexes.iter().zip(&getter2.indexes).enumerate()
   {
     let ExpressionInner::Value(Value { value_inner }) =
-      added_index.expression_inner.as_ref().unwrap()
+      index1.expression_inner.as_ref().unwrap()
     else {
       common_split = Some(i);
       break;
@@ -389,7 +399,7 @@ fn get_common_notifier(getter1: &Getter, getter2: &Getter) -> Option<Getter> {
         break;
       }
     }
-    if added_index != current_index {
+    if index1 != index2 {
       return None;
     }
   }

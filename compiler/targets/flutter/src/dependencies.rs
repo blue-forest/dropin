@@ -75,6 +75,6 @@ impl<'a> Visit<'a, DependenciesState<'a>> for Dependencies<'a> {
       .deps
       .entry(self.component.unwrap())
       .or_insert(BTreeSet::new())
-      .insert(&r#extern.path);
+      .insert(&r#extern.id);
   }
 }

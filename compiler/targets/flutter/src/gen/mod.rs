@@ -5,11 +5,16 @@ use alloc::{
   vec::Vec,
 };
 use dropin_compiler_recipes::ir::Model;
+use formats::gen_format;
 
 use crate::{
+  formats::FormatsState,
   imports::ImportsState,
   objects_getter::ObjectGetterState,
-  updated_listeners::{write_notifier_name, UpdatedAndListenersState},
+  properties_resolver::PropertiesResolverState,
+  updated_listeners::{
+    write_notifier_name, write_updater_name, UpdatedAndListenersState,
+  },
   Stated, EXTENSION,
 };
 
@@ -30,6 +35,8 @@ pub trait Sub<'a>:
   Stated<ObjectGetterState<'a>>
   + Stated<UpdatedAndListenersState<'a>>
   + Stated<ImportsState<'a>>
+  + Stated<PropertiesResolverState<'a>>
+  + Stated<FormatsState<'a>>
 {
 }
 
@@ -37,6 +44,8 @@ impl<'a, S> Sub<'a> for S where
   S: Stated<ObjectGetterState<'a>>
     + Stated<UpdatedAndListenersState<'a>>
     + Stated<ImportsState<'a>>
+    + Stated<PropertiesResolverState<'a>>
+    + Stated<FormatsState<'a>>
 {
 }
 
@@ -73,18 +82,7 @@ where
         {
           write!(file, "import '{import}';")?;
         }
-        write!(file, "class {} extends StatelessWidget {{", term)?;
-        if let Some(properties) = &component.properties {
-          gen_keys(
-            file,
-            id,
-            self.sub,
-            &[],
-            false,
-            &properties.required,
-            &properties.keys,
-          )?;
-        }
+        write!(file, "class {term}_State extends State<{term}> {{")?;
         if let Some(variables) = &component.variables {
           gen_keys(
             file,
@@ -92,24 +90,63 @@ where
             self.sub,
             &[],
             true,
+            false,
             &variables.required,
             &variables.keys,
           )?;
         }
 
+        write!(
+          file,
+          "{term}_State();\
+          @override Widget build(BuildContext context){{ \
+          return "
+        )?;
+        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
+        write!(file, ";}}}}")?;
+        write!(file, "class {term} extends StatefulWidget {{")?;
+
         let updated_listeners =
           <S as Stated<UpdatedAndListenersState>>::state(&self.sub);
+        let formats = <S as Stated<FormatsState>>::state(&self.sub);
         let notifiers = updated_listeners.get_notifiers(&component.id);
         for notifier in &notifiers {
+          let format =
+            formats.format_of(&component.id, &notifier.getter).unwrap();
           write!(file, "final ChangeNotifier ")?;
           write_notifier_name(file, &notifier.getter)?;
           if !notifier.is_external {
             write!(file, "= ChangeNotifier()")?;
+          } else {
+            write!(
+              file,
+              ";\
+              final void Function("
+            )?;
+            gen_format(file, self.sub, &[], &format)?;
+            write!(file, ") ")?;
+            write_updater_name(file, &notifier.getter)?;
           }
           write!(file, ";")?;
         }
 
-        write!(file, "{}({{super.key", component.term)?;
+        if let Some(properties) = &component.properties {
+          gen_keys(
+            file,
+            id,
+            self.sub,
+            &[],
+            false,
+            true,
+            &properties.required,
+            &properties.keys,
+          )?;
+        }
+        write!(
+          file,
+          "@override State<{term}> createState() => {term}_State();\
+          {term}({{super.key",
+        )?;
         if let Some(properties) = &component.properties {
           for key_format in &properties.keys {
             write!(file, ",")?;
@@ -128,21 +165,17 @@ where
             }
           }
         }
-        for updated_getter in notifiers {
-          if updated_getter.is_external {
+        for notifier in notifiers {
+          if notifier.is_external {
             write!(file, ",")?;
             write!(file, "required this.")?;
-            write_notifier_name(file, &updated_getter.getter)?;
+            write_notifier_name(file, &notifier.getter)?;
+            write!(file, ",")?;
+            write!(file, "required this.")?;
+            write_updater_name(file, &notifier.getter)?;
           }
         }
-        write!(
-          file,
-          "}});\
-          @override Widget build(BuildContext context){{ \
-          return "
-        )?;
-        gen_zone(file, id, self.sub, &[], component.zone.as_ref().unwrap())?;
-        write!(file, ";}}}}")?;
+        write!(file, "}});}}")?;
         gen_classes(file, id, self.sub)?;
       }
       let mut file_path = String::with_capacity(id.len() + EXTENSION.len());

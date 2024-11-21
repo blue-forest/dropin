@@ -15,6 +15,7 @@ pub fn gen_keys<'a, S>(
   state: &S,
   trace: &[&str],
   write_default: bool,
+  is_final: bool,
   required: &BTreeMap<String, Expression>,
   keys: &[KeyFormat],
 ) -> fmt::Result
@@ -22,6 +23,9 @@ where
   S: Sub<'a>,
 {
   for key_format in keys {
+    if is_final {
+      write!(output, "final ")?;
+    }
     let trace_current = &[trace, &[key_format.key.as_str()]].concat();
     let default = required.get(&key_format.key);
     gen_format(

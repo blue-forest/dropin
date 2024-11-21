@@ -2,7 +2,7 @@ use proc_macro::TokenStream;
 use quote::quote;
 
 #[proc_macro_derive(Stage)]
-pub fn stage(item: TokenStream) -> TokenStream {
+pub fn stage(_item: TokenStream) -> TokenStream {
   quote!().into()
   /*
   let mut r#struct: ItemStruct = syn::parse(item).unwrap();

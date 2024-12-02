@@ -19,11 +19,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-use clap::{
-	error::{Error, ErrorKind, KindFormatter},
-	Parser,
-};
-use dropin::{Args, Target};
+use clap::error::{Error, ErrorKind, KindFormatter};
+//use dropin::{Args, Target};
+
+#[derive(Debug, PartialEq)]
+enum Target {
+	Flutter,
+	Typescript,
+	Wasm,
+}
+
+#[derive(Debug)]
+struct Args {
+	input: String,
+	target: Target,
+}
+
+impl Args {
+	fn try_parse_from(
+		mut _command: Vec<&str>,
+	) -> Result<Self, Error<KindFormatter>> {
+		unimplemented!()
+	}
+}
 
 #[test]
 fn version() {
@@ -98,11 +116,11 @@ fn target_typescript() {
 }
 
 #[test]
-fn target_dart() {
+fn target_flutter() {
 	let result = test_command(vec!["-t", "dart", "a b"]);
 	assert!(result.is_ok());
 	let args = result.unwrap();
-	assert_eq!(args.target, Target::Dart);
+	assert_eq!(args.target, Target::Flutter);
 	assert_eq!(args.input, "a b");
 }
 
